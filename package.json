@@ -1,0 +1,24 @@
+{
+  "name": "cyphers",
+  "version": "1.0.0",
+  "description": "cyphers-google-cloud",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "cyphers"
+  ],
+  "author": "nodohan",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "is-mobile": "^3.0.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.1"
+  }
+}
