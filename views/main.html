@@ -7,7 +7,7 @@
         }
         
         input[type='text'] {
-            width: 75%;
+            width: 78%;
         }
         
         .con {
@@ -16,7 +16,7 @@
             margin-left: 20px;
             padding: 15px;
             position: relative;
-            width: 480px;
+            width: 500px;
             height: 650px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
@@ -28,7 +28,7 @@
             margin-left: 20px;
             padding: 15px;
             position: relative;
-            width: 1010px;
+            width: 1050px;
             height: 100px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
@@ -53,6 +53,7 @@
         .infoLayer {
             overflow: auto;
             height: 550px;
+            background-color: #35353526;
         }
         
         .infoLayer div {
@@ -111,10 +112,12 @@
         var backgroundImg = [
             "http://static.cyphers.co.kr/media/wallpaper/Ndc6/Cyphers_Ndc6_1680_1050.jpg" // 6인의 사이퍼
             , "http://static.cyphers.co.kr/media/wallpaper/Bruce/Cyphers_Bruce_1680_1050.jpg" // 부루스
-            , "http://static.cyphers.co.kr/media/wallpaper/Eldive/Cyphers_Eldive_1680_1050.jpg" // 엘리
+            , "http://static.cyphers.co.kr/media/wallpaper/Ellie/Cyphers_Ellie_1680_1050.jpg" // 엘리
             , "http://static.cyphers.co.kr/media/wallpaper/Issac/Cyphers_Issac_1680_1050.jpg" // 이작
             , "http://static.cyphers.co.kr/media/wallpaper/Hotaru/Cyphers_Hotaru_1680_1050.jpg" //호타루
             , "http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg" // 쌍닌자
+            , "http://static.cyphers.co.kr/media/wallpaper/Peter/Cyphers_Peter_1680_1050.jpg" //피터
+            , "http://static.cyphers.co.kr/media/wallpaper/CharlotteWithDeimus/Cyphers_Cwd_1680_1050.jpg" //다무 샬럿
         ];
 
         $(document).ready(function() {
@@ -127,7 +130,7 @@
 <body class="body">
 
     <div id="main">
-        <div class="con" style="width: 1010px;height: 20px;">
+        <div class="con" style="width: 1050px;height: 20px;">
             <b>마을주민1 검색기</b>
             <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
             <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
@@ -153,7 +156,7 @@
             - 검색 일자는 이번 시즌부터 검색이 됩니다. </br>
             </br>
             <h2>패치노트</h2>
-            - 2021-04-03 일반전 검색기능 개발 </br>
+            - 2021-04-04 MOBILE UI 1차 수정 <br/> - 2021-04-03 PC UI 1차 수정 <br/> - 2021-04-03 일반전 검색기능 개발 </br>
             - 2021-04-02 사용자 조회 실패시 오류 메시지 추가 </br>
             - 2021-04-02 게임판수가 10판이하일때 오류가 발생하던 현상 수정 </br>
             - 2021-04-01#2 검색시간을 UTC로 검색하던 이슈 수정(최근9시간 누락) </br>
