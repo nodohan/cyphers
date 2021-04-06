@@ -28,7 +28,19 @@ app.get('/', function(req, res) {
         console.log("PC다!!");
         res.render('main.html');
     }
-}).get('/getUserInfo', function(req, res) {
+});
+
+app.get('/userDetail', function(req, res) {
+    if (isMobile(req)) {
+        console.log("detail 모바일이다!!");
+        res.render('mobileUserDetail.html');
+    } else {
+        console.log("detail PC다!!");
+        res.render('userDetail.html');
+    }
+});
+
+app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
     nickOpt.qs.nickname = nickname;
     new api().call(nickOpt).then(async result => {
