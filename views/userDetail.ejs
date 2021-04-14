@@ -1,0 +1,278 @@
+<html lang="ko">
+
+<head>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        .body {
+            background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
+        }
+        
+        input[type='text'] {
+            width: 73%;
+        }
+        
+        .con {
+            margin-top: 10px;
+            float: left;
+            margin-left: 20px;
+            padding: 15px;
+            position: relative;
+            width: 500px;
+            /* height: 650px; */
+            height: 740px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+        }
+        
+        .bottom {
+            margin-top: 20px;
+            float: left;
+            margin-left: 20px;
+            padding: 15px;
+            position: relative;
+            width: 1020px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            overflow: auto;
+        }
+        
+        .red {
+            color: red;
+        }
+        
+        .blue {
+            color: blue;
+        }
+        
+        .infoDiv {
+            color: black;
+            background-color: yellow;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        
+        .infoLayer2 {
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 660px;
+        }
+        
+        .infoLayer2 div {
+            float: left;
+            padding: 1px;
+        }
+        
+        .drawIcon {
+            width: 30px;
+            height: 30px;
+        }
+        
+        #main {
+            width: 1100px;
+            margin: 0px auto;
+        }
+        
+        .bold {
+            font-weight: bold;
+        }
+        
+        .width100p {
+            width: 100%;
+        }
+        
+        .width33p {
+            width: 33%;
+        }
+        
+        .width25p {
+            width: 25%;
+        }
+        
+        .width45p {
+            width: 45%;
+        }
+        
+        .parent {
+            display: table;
+            table-layout: fixed;
+        }
+        
+        .child {
+            display: table-cell;
+        }
+        
+        .mapCard {
+            background-color: #c2beff;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <script src="/js/apiUserDetailCall.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var tankerIcon = "http://static.cyphers.co.kr/img/game_position/position1.jpg";
+        var adIcon = "http://static.cyphers.co.kr/img/game_position/position3.jpg";
+        var meleeIcon = "http://static.cyphers.co.kr/img/game_position/position2.jpg";
+        var suppIcon = "http://static.cyphers.co.kr/img/game_position/position4.jpg";
+
+        var backgroundImg = [
+            "http://static.cyphers.co.kr/media/wallpaper/Ndc6/Cyphers_Ndc6_1680_1050.jpg" // 6인의 사이퍼
+            , "http://static.cyphers.co.kr/media/wallpaper/Bruce/Cyphers_Bruce_1680_1050.jpg" // 부루스
+            , "http://static.cyphers.co.kr/media/wallpaper/Ellie/Cyphers_Ellie_1680_1050.jpg" // 엘리
+            , "http://static.cyphers.co.kr/media/wallpaper/Issac/Cyphers_Issac_1680_1050.jpg" // 이작
+            , "http://static.cyphers.co.kr/media/wallpaper/Hotaru/Cyphers_Hotaru_1680_1050.jpg" //호타루
+            , "http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg" // 쌍닌자
+            , "http://static.cyphers.co.kr/media/wallpaper/Peter/Cyphers_Peter_1680_1050.jpg" //피터
+            , "http://static.cyphers.co.kr/media/wallpaper/CharlotteWithDeimus/Cyphers_Cwd_1680_1050.jpg" //다무 샬럿
+        ];
+
+        $(document).ready(function() {
+            var imgUrl = backgroundImg[getRandomInt(0, backgroundImg.length)];
+            $(".body").css("background-image", "url(" + imgUrl + ")");
+
+            let nickname = '<%=searchNickname%>';
+            if (nickname != '') {
+                $("#nickNames").val(nickname);
+                search('nickNames');
+            }
+
+            $("#mainMenu").removeClass("active");
+            $("#userDetailMenu").addClass("active");
+        });
+    </script>
+</head>
+
+<body class="body">
+    <%- include  ("./menu") %>
+
+        <div id="main">
+            <div class="con" style="width: 1020px;height: 50px;">
+                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked />
+                <label for="gameType_rating"> 공식 </label>
+                <input type="radio" name="gameType" id="gameType_normal" value="normal" />
+                <label for="gameType_normal"> 일반 </label>
+            </div>
+            <div id="con1" class="con">
+                <h3>상세</h3>
+                <input type="text" id="nickNames" onKeyPress="if(event.keyCode == 13) { search('nickNames'); } " placeholder="한명만 검색하세요" />
+                <input type="button" value="검색" onCdivck="search('nickNames');">
+                <input type="button" value="초기화" onCdivck="clearDiv('con1_2');"></br>
+                <div id="con1_2" class="infoLayer2"> </div>
+            </div>
+            <div id="con2" class="con">
+                <h3>맵별 승률</h3>
+                <div id="con2_2" class="infoLayer2"> </div>
+            </div>
+        </div>
+
+        <div id="template" class="infoDiv" style="display:none">
+            <div id="defaultDiv">
+                <div id="gameTypeDiv" class="red bold width100p"></div>
+                <div class="width100p">
+                    <div id="nickNameDiv" class="width25p bold"></div>
+                    <div id="levelDiv" class="width25p"></div>
+                    <div id="clanDiv" class="width33p"></div>
+                </div>
+                <div class="width100p">
+                    <div class="width25p">현재 rp : <span id="currRP" class="bold red"></span></div>
+                    <div class="width25p">최고 rp : <span id="maxRP"></span></div>
+                    <div id="playGameDiv">
+                        <!-- 승률 : 50% [100승 101패 2중단]-->
+                    </div>
+                </div>
+            </div>
+            <div id="positionDiv">
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+            </div>
+            <div id="recentlyDiv">
+                <div class="width100p bold" id="recentlyDivTitle">
+                    <!--최근 10게임 -->
+                </div>
+                <div id="recentlyResultDiv" class="width100p parent">
+
+                </div>
+            </div>
+            <div id="mostCharDiv">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+
+        <div id="template2" style="display:none">
+            <div id="river" class="mapCard">
+                <div class="bold width100p">리버포드</div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+            <div id="metro" class="mapCard">
+                <div class="bold width100p">메트로폴리스</div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+            <div id="bristol" class="mapCard">
+                <div class="bold width100p">브리스톨</div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+            <div id="spring" class="mapCard">
+                <div class="bold width100p">스프링필드</div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+            <div id="asia" class="mapCard">
+                <div class="bold width100p">그랑플람 아시아지부</div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
+                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>
+
+</html>
