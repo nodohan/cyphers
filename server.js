@@ -27,22 +27,37 @@ var playerInfo = {
 app.get('/', function(req, res) {
     if (isMobile(req)) {
         console.log("모바일이다!!");
-        res.render('mobile.html');
+        res.render('./mobile/main.html');
     } else {
         console.log("PC다!!");
-        res.render('main.html');
+        res.render('main');
     }
 });
 
 app.get('/userDetail', function(req, res) {
+    //res.json();
+
     if (isMobile(req)) {
         console.log("detail 모바일이다!!");
-        res.render('mobileUserDetail.html');
+        res.render('./mobile/userDetail.html', { 'searchNickname': req.query.nickname });
     } else {
         console.log("detail PC다!!");
-        res.render('userDetail.html');
+        res.render('userDetail', { 'searchNickname': req.query.nickname });
     }
 });
+
+app.get('/userVs', function(req, res) {
+    //res.json();
+
+    if (isMobile(req)) {
+        console.log("userVs 모바일이다!!");
+        res.render('./mobile/userVs');
+    } else {
+        console.log("userVs PC다!!");
+        res.render('userVs');
+    }
+});
+
 
 app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
