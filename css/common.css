@@ -1,0 +1,133 @@
+.body {
+    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
+}
+
+input[type='text'] {
+    width: 73%;
+}
+
+table {
+    background-color: white;
+}
+
+table th,
+table td {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.table tbody td:nth-child(3n-1) {
+    border-left: 2px solid #bfb1b3;
+}
+
+.con {
+    margin-top: 10px;
+    float: left;
+    margin-left: 20px;
+    padding: 15px;
+    position: relative;
+    width: 500px;
+    /* height: 650px; */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.bottom {
+    margin-top: 20px;
+    float: left;
+    margin-left: 20px;
+    padding: 15px;
+    position: relative;
+    width: 1020px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+    overflow: auto;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.infoDiv {
+    color: black;
+    background-color: yellow;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.infoLayer {
+    overflow: auto;
+    height: 550px;
+    background-color: #35353526;
+}
+
+.infoLayer div {
+    float: left;
+    padding: 1px;
+}
+
+.infoLayer2 {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 660px;
+}
+
+.infoLayer2 div {
+    float: left;
+    padding: 1px;
+}
+
+.drawIcon {
+    width: 30px;
+    height: 30px;
+}
+
+#main {
+    width: 1100px;
+    margin: 0px auto;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.width100p {
+    width: 100%;
+}
+
+.width33p {
+    width: 33%;
+}
+
+.width25p {
+    width: 25%;
+}
+
+.width45p {
+    width: 45%;
+}
+
+.parent {
+    display: table;
+    table-layout: fixed;
+}
+
+.child {
+    display: table-cell;
+}
+
+.kda {
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.mapCard {
+    background-color: #c2beff;
+    margin-top: 10px;
+    border-radius: 5px;
+}
