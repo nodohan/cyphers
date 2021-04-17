@@ -1,151 +1,98 @@
 <html lang="ko">
 
 <head>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <style>
-        .body {
-            background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
-        }
-        
-        input[type='text'] {
-            width: 73%;
-        }
-        
-        .con {
-            margin-top: 10px;
-            float: left;
-            margin-left: 20px;
-            padding: 15px;
-            position: relative;
-            width: 500px;
-            /* height: 650px; */
-            height: 740px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-        }
-        
-        .bottom {
-            margin-top: 20px;
-            float: left;
-            margin-left: 20px;
-            padding: 15px;
-            position: relative;
-            width: 1020px;
-            height: 100px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            overflow: auto;
-        }
-        
-        .red {
-            color: red;
-        }
-        
-        .blue {
-            color: blue;
-        }
-        
-        .infoDiv {
-            color: black;
-            background-color: yellow;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-        
-        .infoLayer2 {
-            overflow-x: hidden;
-            overflow-y: auto;
-            height: 660px;
-        }
-        
-        .infoLayer2 div {
-            float: left;
-            padding: 1px;
-        }
-        
-        .drawIcon {
-            width: 30px;
-            height: 30px;
-        }
-        
-        #main {
-            width: 1100px;
-            margin: 0px auto;
-        }
-        
-        .bold {
-            font-weight: bold;
-        }
-        
-        .width100p {
-            width: 100%;
-        }
-        
-        .width33p {
-            width: 33%;
-        }
-        
-        .width25p {
-            width: 25%;
-        }
-        
-        .width45p {
-            width: 45%;
-        }
-        
-        .parent {
-            display: table;
-            table-layout: fixed;
-        }
-        
-        .child {
-            display: table-cell;
-        }
-        
-        .mapCard {
-            background-color: #c2beff;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-    </style>
+    <%- include  ("./layout/head") %>
 
-    <script src="/js/apiUserDetailCall.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        var tankerIcon = "http://static.cyphers.co.kr/img/game_position/position1.jpg";
-        var adIcon = "http://static.cyphers.co.kr/img/game_position/position3.jpg";
-        var meleeIcon = "http://static.cyphers.co.kr/img/game_position/position2.jpg";
-        var suppIcon = "http://static.cyphers.co.kr/img/game_position/position4.jpg";
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#mainMenu").removeClass("active");
+                $("#userDetailMenu").addClass("active");
 
-        var backgroundImg = [
-            "http://static.cyphers.co.kr/media/wallpaper/Ndc6/Cyphers_Ndc6_1680_1050.jpg" // 6인의 사이퍼
-            , "http://static.cyphers.co.kr/media/wallpaper/Bruce/Cyphers_Bruce_1680_1050.jpg" // 부루스
-            , "http://static.cyphers.co.kr/media/wallpaper/Ellie/Cyphers_Ellie_1680_1050.jpg" // 엘리
-            , "http://static.cyphers.co.kr/media/wallpaper/Issac/Cyphers_Issac_1680_1050.jpg" // 이작
-            , "http://static.cyphers.co.kr/media/wallpaper/Hotaru/Cyphers_Hotaru_1680_1050.jpg" //호타루
-            , "http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg" // 쌍닌자
-            , "http://static.cyphers.co.kr/media/wallpaper/Peter/Cyphers_Peter_1680_1050.jpg" //피터
-            , "http://static.cyphers.co.kr/media/wallpaper/CharlotteWithDeimus/Cyphers_Cwd_1680_1050.jpg" //다무 샬럿
-        ];
+                let nickname = '<%=searchNickname%>';
+                if (nickname != '') {
+                    $("#nickNames").val(nickname);
+                    searchDetail();
+                }
+            });
 
-        $(document).ready(function() {
-            var imgUrl = backgroundImg[getRandomInt(0, backgroundImg.length)];
-            $(".body").css("background-image", "url(" + imgUrl + ")");
-
-            let nickname = '<%=searchNickname%>';
-            if (nickname != '') {
-                $("#nickNames").val(nickname);
-                search('nickNames');
+            function searchDetail() {
+                searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
             }
 
-            $("#mainMenu").removeClass("active");
-            $("#userDetailMenu").addClass("active");
-        });
-    </script>
+            function setUserDetailInfo(data) {
+                let gameType = $("input[name='gameType']:checked").val();
+
+                $("#con1_2").empty();
+                $("#con2_2").empty();
+
+                drawLeftInfo(gameType, data);
+                drawRightInfo(gameType, data);
+            }
+
+            function drawRightInfo(gameType, data) {
+                var div = $("#template2").clone();
+
+                var rows = data.matches.rows;
+                drawMapInfo(rows, div, 101, "#river"); //리버포트
+                drawMapInfo(rows, div, 102, "#metro"); //메트로폴리스
+                drawMapInfo(rows, div, 103, "#bristol"); //브리스톨
+                drawMapInfo(rows, div, 104, "#spring"); //스프링필드
+                drawMapInfo(rows, div, 105, "#asia"); //그랑플람 아시아 지부
+
+                div.show();
+
+                $("#con2_2").empty().append(div);
+            }
+
+            function drawLeftInfo(gameType, data) {
+                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
+                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+
+                //기본 정보
+                var clone = $("#template").clone();
+                clone.attr("id", getUserDivId(gameType, data.nickname));
+                $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
+                $(clone).find("#nickNameDiv").text(data.nickname);
+                $(clone).find("#levelDiv").text(data.grade + "급");
+                $(clone).find("#clanDiv").text(data.clanName);
+
+                $(clone).find("#currRP").text(data.ratingPoint);
+                $(clone).find("#maxRP").text(data.maxRatingPoint);
+                //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+
+                var rows = data.matches.rows;
+
+                //포지션 별 승률
+                drawPosition(clone, rows);
+
+                //최근 5경기 결과
+                drawRecently(clone, rows);
+
+                //자주하는 캐릭
+                var userChar = extractChar(rows, sortCase);
+                drawCharInfo(clone, userChar, "자주하는 TOP"); //"높은승률 TOP"
+
+                clone.show();
+                $("#con1_2").prepend(clone);
+            }
+
+            /***
+             * 맵별 포지션 승률
+             */
+            function drawMapInfo(rows, div, mapId, mapName) {
+                //포지션별 승률
+                var mapRow = extractMap(rows, mapId);
+                drawPosition(div.find(mapName), mapRow);
+
+                var userMapChar = extractChar(mapRow, highScore);
+                drawCharInfo(div.find(mapName).find("#often"), userMapChar, "높은승률 TOP");
+            }
+        </script>
 </head>
 
 <body class="body">
-    <%- include  ("./menu") %>
+    <%- include  ("./layout/menu") %>
 
         <div id="main">
             <div class="con" style="width: 1020px;height: 50px;">
@@ -156,8 +103,8 @@
             </div>
             <div id="con1" class="con">
                 <h3>상세</h3>
-                <input type="text" id="nickNames" onKeyPress="if(event.keyCode == 13) { search('nickNames'); } " placeholder="한명만 검색하세요" />
-                <input type="button" value="검색" onCdivck="search('nickNames');">
+                <input type="text" id="nickNames" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " placeholder="한명만 검색하세요" />
+                <input type="button" value="검색" onCdivck="searchDetail();">
                 <input type="button" value="초기화" onCdivck="clearDiv('con1_2');"></br>
                 <div id="con1_2" class="infoLayer2"> </div>
             </div>
