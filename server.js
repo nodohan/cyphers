@@ -7,6 +7,10 @@ const logger = require('./config/winston');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use('/js', express.static(__dirname + "/js"));
+app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
+app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
 
 const port = 8080;
 
