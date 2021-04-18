@@ -43,16 +43,18 @@ function analyzeGame(matches, myRow, pRow) {
 function getMatchGameInfo(my, you) {
     return item = {
         "result": my.playInfo.result,
-        "my": getPlayInfo(my.playInfo),
-        "you": getPlayInfo(you.playInfo)
+        "my": getPlayInfo(my),
+        "you": getPlayInfo(you)
     };
 }
 
-function getPlayInfo(playInfo) {
+function getPlayInfo(info) {
+    let playInfo = info.playInfo;
+
     return {
         "charId": playInfo.characterId,
         "charName": playInfo.characterName,
-        "position": position.name,
+        "position": info.position.name,
         "kill": playInfo.killCount,
         "death": playInfo.deathCount,
         "assist": playInfo.assistCount,
