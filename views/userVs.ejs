@@ -54,12 +54,6 @@
             function focusMove() {
                 $("#nickNames2").focus();
             }
-
-            function userVs(data) {
-                let row = data.matches.row;
-                var team = extractWithTeam(row, $("#nickNames").val());
-                var enemy = extractWithEnemy(row, $("#nickNames2").val());
-            }
         </script>
 </head>
 
@@ -83,9 +77,8 @@
 
                 </div>
 
-
                 <div style="display:none">
-                    <table id="templateTable" class="table table-striped">
+                    <table id="templateTable" class="vsTable table table-striped">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col"></th>
