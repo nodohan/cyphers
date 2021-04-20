@@ -1,3 +1,8 @@
+var tankerIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position1.jpg'>";
+var meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position2.jpg'>";
+var adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
+var suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
+
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -162,20 +167,61 @@ function getUserDivId(gameType, nickname) {
     return nickname + "_" + gameType;
 }
 
-function drawRecently(div, rows) {
+function drawInGameDetailScore(data) {
+    let playInfo = data.playInfo;
+
+    let score = "<tr><td>" + winLoseKo(playInfo.result) + "</td>";
+    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+    score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+    score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+    score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+
+    return score;
+}
+
+function getPositionIcon(type) {
+    let icon = "";
+    switch (type) {
+        case "탱커":
+            icon = tankerIcon;
+            break;
+        case "근거리딜러":
+            icon = meleeIcon;
+            break;
+        case "원거리딜러":
+            icon = adIcon;
+            break;
+        case "서포터":
+            icon = suppIcon;
+            break;
+    }
+    return icon;
+}
+
+function drawRecently(div, rows, userDivId) {
     var i = Math.min(10, rows.length);
     $(div).find("#recentlyDivTitle").text("최근 " + i + "게임");
-    var parent = $(div).find("#recentlyResultDiv");
+
+    var title = $(div).find("#recentlyResultDiv");
+    title.find("a").attr("data-target", "#" + userDivId + "Modal");
+
+    var body = $("#templateModal").clone();
+    body.attr("id", userDivId + "Modal");
+    body.attr("aria-labelledby", userDivId + "ModalLabel");
+    body.find("#templateModalLabel").attr("id", userDivId + "ModalLabel");
+
+    var titleText = "";
     for (var j = 0; j < i; j++) {
-        parent.append(winLoseKo(rows[j].playInfo.result));
+        titleText += winLoseKo(rows[j].playInfo.result);
+        body.find("tbody").append(drawInGameDetailScore(rows[j]));
     }
-    //여백 만들기용
-    parent.append("<span class='child' ></span>");
-    parent.append("<span class='child' ></span>");
+    title.prepend(titleText);
+    $("#modalDiv").append(body);
 }
 
 function winLoseKo(result) {
-    return (result == "win") ? "<span class='child bold red'>승</span> " : "<span class='child bold blue'>패</span> ";
+    return (result == "win") ? "<span class='red'>승</span> " : "<span class='blue'>패</span> ";
 }
 
 function drawOften(div, info) {

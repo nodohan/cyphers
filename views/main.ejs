@@ -9,9 +9,10 @@
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
                 var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
 
+                var userDivId = getUserDivId(gameType, data.nickname);
                 //기본 정보 
                 var clone = $("#template").clone();
-                clone.attr("id", getUserDivId(gameType, data.nickname));
+                clone.attr("id", userDivId);
                 $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
 
                 $(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><b>[더]</b></a>");
@@ -25,11 +26,10 @@
 
                 var rows = data.matches.rows;
 
-
                 drawPosition(clone, rows);
 
-                //최근 5경기 결과
-                drawRecently(clone, rows);
+                //최근 10경기 결과
+                drawRecently(clone, rows, userDivId);
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
@@ -93,21 +93,54 @@
                 <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
                 <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
             </div>
-            <div id="recentlyDiv">
-                <div class="width100p bold" id="recentlyDivTitle">
-                    <!--최근 10게임 -->
-                </div>
-                <div id="recentlyResultDiv" class="width100p parent">
-
-                </div>
-            </div>
             <div id="mostCharDiv">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                 <div id="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
+            <div id="recentlyDiv" class="width100p">
+                <div class="width100p bold" id="recentlyDivTitle">
+                    <!--최근 10게임 -->
+                </div>
+                <div id="recentlyResultDiv">
+                    <a data-toggle="modal" data-target="#templateModal">[더보기]</a>
+                </div>
+            </div>
         </div>
+
+        <div id="modalDiv">
+            <!-- 모달 영역 -->
+            <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="templateTable" class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">포지션</th>
+                                        <th scope="col">캐릭터</th>
+                                        <th scope="col">KDA</th>
+                                        <th scope="col">딜량</th>
+                                        <th scope="col">피해량</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 </body>
 
 </html>
