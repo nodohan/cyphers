@@ -32,10 +32,20 @@
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
-                drawOften(clone, userChar);
+                drawOften(clone, userChar, drawCharCardVer);
 
                 clone.show();
                 $("#" + divName).prepend(clone);
+            }
+
+            function drawCharCardVer(div, charInfo) {
+                var card = $(div).find("#cardTemp").clone();
+                card.removeAttr("id");
+                card.removeAttr("hidden");
+                card.find(".col-md-5").append("<img class='drawOften' src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
+                var pov = (charInfo.win * 100) / charInfo.count;
+                card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
+                div.append(card);
             }
         </script>
 </head>
@@ -96,6 +106,18 @@
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                 <div id="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
+                    <div id="cardTemp" class="card" hidden>
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="recentlyDiv" class="width100p">
