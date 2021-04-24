@@ -15,13 +15,12 @@
                 clone.attr("id", userDivId);
                 $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
 
-                $(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><b>[더]</b></a>");
+                $(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(clone).find("#levelDiv").text(data.grade + "급");
                 $(clone).find("#clanDiv").text(data.clanName);
 
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
-                //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
 
                 var rows = data.matches.rows;
