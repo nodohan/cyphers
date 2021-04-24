@@ -147,3 +147,12 @@ table td {
 .longText {
     width: 70%;
 }
+
+#mostCharDetailDiv {
+    width: 100%;
+}
+
+#mostCharDetailDiv .card {
+    width: 25%;
+    background-color: white;
+}
