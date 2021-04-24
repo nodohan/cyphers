@@ -224,11 +224,15 @@ function winLoseKo(result) {
     return (result == "win") ? "<span class='red'>승</span> " : "<span class='blue'>패</span> ";
 }
 
-function drawOften(div, info) {
-    let count = Math.min(3, info.length);
+function drawOften(div, info, drawCharFunc) {
+    let count = Math.min(4, info.length);
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (var i = 0; i < count; i++) {
-        drawChar(div.find("#mostCharDetailDiv"), info[i]);
+        if (typeof drawCharFunc == 'function') {
+            drawCharFunc(div.find("#mostCharDetailDiv"), info[i]);
+        } else {
+            drawChar(div.find("#mostCharDetailDiv"), info[i]);
+        }
     }
 }
 
