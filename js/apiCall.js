@@ -201,10 +201,8 @@ function getPositionIcon(type) {
 
 function drawRecently(div, rows, userDivId) {
     var i = Math.min(10, rows.length);
-    $(div).find("#recentlyDivTitle").text("최근 " + i + "게임");
-
-    var title = $(div).find("#recentlyResultDiv");
-    title.find("a").attr("data-target", "#" + userDivId + "Modal");
+    var title = $(div).find("#recentlyDivTitle");
+    title.prepend("최근 " + i + "게임 :");
 
     var body = $("#templateModal").clone();
     body.attr("id", userDivId + "Modal");
@@ -216,7 +214,9 @@ function drawRecently(div, rows, userDivId) {
         titleText += winLoseKo(rows[j].playInfo.result);
         body.find("tbody").append(drawInGameDetailScore(rows[j]));
     }
-    title.prepend(titleText);
+    title.append(titleText);
+    title.append("<a data-toggle='modal' data-target='#" + userDivId + "Modal'>[더보기]</a>");
+
     $("#modalDiv").append(body);
 }
 
@@ -247,8 +247,9 @@ function drawCharicter(charId) {
 }
 
 function appendPlayTypeInfo(div, type, typeId) {
-    var infoStr = (type == null) ? "없음" : type.rate.toFixed(0) + "% (" + type.rateInfo + ")";
-    $(div).find("#" + typeId + "Span").text(infoStr);
+    var infoStr = (type == null) ? "0% <br><small class='text-muted'> 0승 0패</small>" : type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
+    //57% <br> <small class="text-muted">79승 60패 </small>
+    $(div).find("#" + typeId + "Span").empty().append(infoStr);
 }
 
 function clearDiv(divId) {
@@ -324,7 +325,6 @@ function highScore(a, b) {
     return 0;
 }
 
-
 function sortCase(a, b) {
     if (a.count < b.count) {
         return 1;
@@ -334,7 +334,6 @@ function sortCase(a, b) {
     }
     return 0;
 }
-
 
 // 맵관련 
 function extractMap(data, mapId) {

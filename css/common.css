@@ -63,7 +63,7 @@ table td {
 
 .infoDiv {
     color: black;
-    background-color: yellow;
+    background-color: #d7ebff;
     margin-top: 10px;
     border-radius: 5px;
 }
@@ -76,13 +76,12 @@ table td {
 
 .infoLayer div {
     float: left;
-    padding: 1px;
+    padding: 1px 0px 0px 0px;
 }
 
 .infoLayer2 {
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 660px;
+    min-height: 631px;
+    max-height: 660px;
 }
 
 .infoLayer2 div {
@@ -93,6 +92,11 @@ table td {
 .drawIcon {
     width: 30px;
     height: 30px;
+}
+
+.drawIcon45 {
+    width: 45px;
+    height: 45px;
 }
 
 #main {
@@ -135,7 +139,7 @@ table td {
 }
 
 .mapCard {
-    background-color: #c2beff;
+    background-color: #ffffff;
     margin-top: 10px;
     border-radius: 5px;
 }
@@ -155,4 +159,31 @@ table td {
 #mostCharDetailDiv .card {
     width: 25%;
     background-color: white;
+}
+
+#positionDiv {
+    float: left;
+    width: 100%;
+}
+
+.mapCard .card {
+    width: 25%;
+    background-color: #88c8ff3d;
+}
+
+.infoDiv .card {
+    width: 25%;
+    background-color: white;
+}
+
+.card-body {
+    min-width: 64px;
+}
+
+.card div {
+    padding: 0px;
+}
+
+#recentlyDivTitle span {
+    margin-left: 5px;
 }

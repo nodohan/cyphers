@@ -42,7 +42,7 @@
                 var card = $(div).find("#cardTemp").clone();
                 card.removeAttr("id");
                 card.removeAttr("hidden");
-                card.find(".col-md-5").append("<img class='drawOften' src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
+                card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
                 var pov = (charInfo.win * 100) / charInfo.count;
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
                 div.append(card);
@@ -96,16 +96,66 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 포지션별 승률 -->
             <div id="positionDiv">
-                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"> <span id="tankerSpan"></span></div>
-                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"> <span id="meleeSpan"></span></div>
-                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"> <span id="adSpan"></span></div>
-                <div class="width45p"><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"> <span id="suppSpan"></span></div>
+                <div id="positionTanker" class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="positionMelee" class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="positionAd" class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="positionSupp" class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="suppSpan" class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- 자주하는 캐릭-->
             <div id="mostCharDiv">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                 <div id="mostCharDetailDiv">
-                    <!-- 자주하는 캐릭 top3 -->
                     <div id="cardTemp" class="card" hidden>
                         <div class="row no-gutters">
                             <div class="col-md-5">
@@ -113,7 +163,9 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="card-body">
-                                    <p class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                                    <p class="card-text">
+                                        <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -124,9 +176,9 @@
                 <div class="width100p bold" id="recentlyDivTitle">
                     <!--최근 10게임 -->
                 </div>
-                <div id="recentlyResultDiv">
+                <!-- <div id="recentlyResultDiv">
                     <a data-toggle="modal" data-target="#templateModal">[더보기]</a>
-                </div>
+                </div>  -->
             </div>
         </div>
 
