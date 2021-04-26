@@ -115,11 +115,9 @@
             <div id="con1" class="con">
                 <h3>상세</h3>
                 <input type="text" class="longText" id="nickNames" onkeypress="if(event.keyCode == 13) { searchDetail(); } " placeholder="한명만 검색하세요">
-                <input type="button" value="검색" oncdivck="searchDetail();">
-                <input type="button" value="초기화" oncdivck="clearDiv('con1_2');"><br>
+                <input type="button" value="검색" onClick="searchDetail();">
+                <input type="button" value="초기화" onClick`="clearDiv('con1_2');"><br>
                 <div id="con1_2" class="infoLayer2">
-
-
 
                     <div id="마을주민1_rating" class="infoDiv" style="">
                         <div id="defaultDiv">
@@ -202,9 +200,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
 

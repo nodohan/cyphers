@@ -34,6 +34,17 @@ app.get('/', function(req, res) {
     }
 });
 
+app.get('/test', function(req, res) {
+    if (isMobile(req)) {
+        console.log("모바일이다!!");
+        res.render('./mobile/test');
+    } else {
+        console.log("PC다!!");
+        res.render('test');
+    }
+});
+
+
 app.get('/userDetail', function(req, res) {
     //res.json();
 
@@ -62,6 +73,7 @@ app.get('/userVs', function(req, res) {
 app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
     nickOpt.qs.nickname = nickname;
+    console.log(nickOpt);
     new api().call(nickOpt).then(async result => {
         console.log("사용자", result);
         let json = JSON.parse(result);
