@@ -17,7 +17,7 @@ const port = 8080;
 const apiKey = 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp';
 var nickOpt = {
     uri: "https://api.neople.co.kr/cy/players",
-    qs: { nickname: '마을주민1', wordType: 'full', limit: 30, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
+    qs: { nickname: '', wordType: 'match', limit: 30, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
 };
 var playerInfo = {
     url: "https://api.neople.co.kr/cy/players/",
