@@ -14,10 +14,11 @@ app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS boots
 
 const port = 8080;
 
+var seasonStartDay = '2021-02-18 00:00';
 const apiKey = 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp';
 var nickOpt = {
     uri: "https://api.neople.co.kr/cy/players",
-    qs: { nickname: '', wordType: 'match', limit: 30, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
+    qs: { nickname: '', wordType: 'match', limit: 3, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
 };
 var playerInfo = {
     url: "https://api.neople.co.kr/cy/players/",
@@ -44,7 +45,6 @@ app.get('/test', function(req, res) {
     }
 });
 
-
 app.get('/userDetail', function(req, res) {
     //res.json();
 
@@ -69,11 +69,11 @@ app.get('/userVs', function(req, res) {
     }
 });
 
-
 app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
     nickOpt.qs.nickname = nickname;
-    console.log(nickOpt);
+    //console.log(nickOpt);
+
     new api().call(nickOpt).then(async result => {
         console.log("사용자", result);
         let json = JSON.parse(result);
@@ -85,18 +85,35 @@ app.get('/getUserInfo', function(req, res) {
 
         let userId = json.rows[0].playerId;
         let gameType = req.query.gameType;
-        var matchInfo = {
-            url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
-            qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp', gameTypeId: gameType, limit: 100, startDate: '2021-02-18 00:00', endDate: now() }
+
+        var result = null;
+        let diffDay = dateDiff(seasonStartDay, new Date());
+        let startDate = seasonStartDay;
+        let endDate = getMinDay(addDays(startDate, 90), new Date());
+
+        while (diffDay >= 0) {
+            console.log("ㅎㅇㅎㅇ", startDate, endDate);
+            result = mergeJson(result, await getUserInfoCall(userId, gameType, startDate, endDate));
+            startDate = endDate;
+            endDate = getMinDay(addDays(startDate, 90), new Date());
+            diffDay = diffDay - 90;
         }
-        console.log("요청전의 endDate ", matchInfo.qs.endDate);
-
-        matchInfo.url = matchInfo.url.replace("#playerId#", userId);
-
-        var item = await getMatchInfo(matchInfo, null);
-        res.send(item);
+        res.send(result);
     });
 });
+
+async function getUserInfoCall(userId, gameType, startDate, endDate) {
+    var matchInfo = {
+            url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
+            qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp', gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
+        }
+        //console.log("요청전의 endDate ", matchInfo.qs.endDate);
+
+    matchInfo.url = matchInfo.url.replace("#playerId#", userId);
+
+    var item = await getMatchInfo(matchInfo, null);
+    return item;
+}
 
 function isMobile(req) {
     var ua = req.headers['user-agent'].toLowerCase();
@@ -108,18 +125,24 @@ function isMobile(req) {
 
 async function getMatchInfo(matchInfo, mergeData) {
     var result = await new api().call(matchInfo);
-    console.log("뭐받음");
+    //console.log("뭐받음", result);
     var resultJson = JSON.parse(result);
-    if (mergeData == null) {
-        mergeData = resultJson;
-    } else {
-        mergeData.matches.rows = mergeData.matches.rows.concat(resultJson.matches.rows);
-    }
+    mergeData = mergeJson(mergeData, resultJson);
     var next = resultJson.matches.next;
     if (next != null) {
         //console.log("NEXT가 있어요 ", next);
         matchInfo.qs.next = next;
         await getMatchInfo(matchInfo, mergeData);
+    }
+
+    return mergeData;
+}
+
+function mergeJson(mergeData, resultJson) {
+    if (mergeData == null) {
+        mergeData = resultJson;
+    } else {
+        mergeData.matches.rows = mergeData.matches.rows.concat(resultJson.matches.rows);
     }
 
     return mergeData;
@@ -161,3 +184,28 @@ function now() {
 app.listen(port, () => {
     logger.info('Server START listening on port ' + port);
 })
+
+
+// 두개의 날짜를 비교하여 차이를 알려준다.
+function dateDiff(_date1, _date2) {
+    var diffDate_1 = _date1 instanceof Date ? _date1 : new Date(_date1);
+    var diffDate_2 = _date2 instanceof Date ? _date2 : new Date(_date2);
+
+    diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth() + 1, diffDate_1.getDate());
+    diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth() + 1, diffDate_2.getDate());
+
+    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+    diff = Math.ceil(diff / (1000 * 3600 * 24));
+
+    return diff;
+}
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+function getMinDay(date1, date2) {
+    return date1.getTime() < date2.getTime() ? date1 : date2;
+}
