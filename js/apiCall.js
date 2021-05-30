@@ -209,6 +209,7 @@ function drawRecently(div, rows, userDivId) {
     body.attr("aria-labelledby", userDivId + "ModalLabel");
     body.find("#templateModalLabel").attr("id", userDivId + "ModalLabel");
 
+    rows.sort(sortDate);
     var titleText = "";
     for (var j = 0; j < i; j++) {
         titleText += winLoseKo(rows[j].playInfo.result);
@@ -330,6 +331,17 @@ function sortCase(a, b) {
         return 1;
     }
     if (a.count > b.count) {
+        return -1;
+    }
+    return 0;
+}
+
+
+function sortDate(a, b) {
+    if (a.date < b.date) {
+        return 1;
+    }
+    if (a.date > b.date) {
         return -1;
     }
     return 0;
