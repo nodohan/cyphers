@@ -20,10 +20,6 @@ var nickOpt = {
     uri: "https://api.neople.co.kr/cy/players",
     qs: { nickname: '', wordType: 'match', limit: 3, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
 };
-var playerInfo = {
-    url: "https://api.neople.co.kr/cy/players/",
-    qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
-}
 
 app.get('/', function(req, res) {
     if (isMobile(req)) {
@@ -75,7 +71,7 @@ app.get('/getUserInfo', function(req, res) {
     //console.log(nickOpt);
 
     new api().call(nickOpt).then(async result => {
-        console.log("사용자", result);
+        //console.log("사용자", result);
         let json = JSON.parse(result);
 
         if (json.rows == null || json.rows.length == 0) {
@@ -92,7 +88,6 @@ app.get('/getUserInfo', function(req, res) {
         let endDate = getMinDay(addDays(startDate, 90), new Date());
 
         while (diffDay >= 0) {
-            console.log("ㅎㅇㅎㅇ", startDate, endDate);
             result = mergeJson(result, await getUserInfoCall(userId, gameType, startDate, endDate));
             startDate = endDate;
             endDate = getMinDay(addDays(startDate, 90), new Date());
