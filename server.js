@@ -97,6 +97,19 @@ app.get('/getUserInfo', function(req, res) {
     });
 });
 
+app.get('/getMatchInfo', function(req, res) {
+    var matchOpt = {
+        uri: "https://api.neople.co.kr/cy/matches/",
+        qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
+    }
+    matchOpt.uri += req.query.matchId;
+    new api().call(matchOpt).then(async result => {
+        //console.log("match", result);
+        console.log("match 받음");
+        res.send(JSON.parse(result));
+    });
+});
+
 async function getUserInfoCall(userId, gameType, startDate, endDate) {
     var matchInfo = {
             url: "https://api.neople.co.kr/cy/players/#playerId#/matches",

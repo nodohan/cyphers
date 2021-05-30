@@ -84,13 +84,13 @@
             <div id="defaultDiv">
                 <div id="gameTypeDiv" class="red bold width100p"></div>
                 <div class="width100p">
-                    <div id="nickNameDiv" class="width25p bold"> </div>
-                    <div id="levelDiv" class="width25p"></div>
-                    <div id="clanDiv" class="width33p"></div>
+                    <div id="nickNameDiv" class=" bold"> </div>
+                    <div id="levelDiv" class=""></div>
+                    <div id="clanDiv" class=""></div>
                 </div>
                 <div class="width100p">
-                    <div class="width25p">현재 rp : <span id="currRP" class="bold red"></span></div>
-                    <div class="width25p">최고 rp : <span id="maxRP"></span></div>
+                    <div class="width45p">현재 rp : <span id="currRP" class="bold red"></span> (<span id="maxRP"></span>)</div>
+                    <!-- <div class="width25p">최고 rp : </div> -->
                     <div id="playGameDiv">
                         <!-- 승률 : 50% [100승 101패 2중단]-->
                     </div>
@@ -185,7 +185,7 @@
         <div id="modalDiv">
             <!-- 모달 영역 -->
             <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
@@ -194,7 +194,7 @@
                         </button>
                         </div>
                         <div class="modal-body">
-                            <table id="templateTable" class="table table-striped">
+                            <table id="templateTable" class="table table-striped table-condensed">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col"></th>
@@ -203,6 +203,7 @@
                                         <th scope="col">KDA</th>
                                         <th scope="col">딜량</th>
                                         <th scope="col">피해량</th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -213,7 +214,26 @@
             </div>
         </div>
 
-
+        <div style="display:none">
+            <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">포지션</th>
+                        <th scope="col">캐릭</th>
+                        <th scope="col">닉</th>
+                        <th scope="col">레벨</th>
+                        <th scope="col">KDA</th>
+                        <th scope="col">킬</th>
+                        <th scope="col">데스</th>
+                        <th scope="col">도움</th>
+                        <th scope="col">딜량</th>
+                        <th scope="col">피해량</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 </body>
 
 </html>

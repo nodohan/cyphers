@@ -47,6 +47,7 @@ function analyzeGame(matches, myRow, pRow) {
 
 function getMatchGameInfo(my, you) {
     return item = {
+        "matchId": my.matchId,
         "result": my.playInfo.result,
         "my": getPlayInfo(my),
         "you": getPlayInfo(you)
@@ -115,6 +116,10 @@ function searchUser(inputId, divName, nickName, callback) {
                 callback(data);
             }
             setUserInfo(gameType, divName, data);
+        },
+        error: function(data) {
+            alert(nickName + "님의 정보가 없습니다.");
+            return;
         }
     }).done(function() {
 
@@ -133,6 +138,10 @@ function asyncUserInfo(gameType, nickName) {
                 return;
             }
             result = data;
+        },
+        error: function(data) {
+            alert(nickName + "님의 정보가 없습니다.");
+            return;
         }
     }).done(function() {
 
@@ -167,16 +176,109 @@ function getUserDivId(gameType, nickname) {
     return nickname + "_" + gameType;
 }
 
-function drawInGameDetailScore(data) {
+function searchMatch(matchId, callback) {
+    var div = $(".m" + matchId);
+    var divVs = $("#m" + matchId + "Modal");
+
+    if (div.text().length != 0 || divVs.text().length != 0) {
+        if (typeof callback == 'function') {
+            callback(matchId, null);
+        }
+        return;
+    }
+
+    var result;
+    $.ajax({
+        async: false,
+        url: "/getMatchInfo",
+        data: { 'matchId': matchId },
+        success: function(data) {
+            if (typeof callback == 'function') {
+                callback(matchId, data);
+            }
+            drawMatch(matchId, data);
+        }
+    }).done(function() {
+
+    });
+    return result;
+}
+
+function drawMatch(matchId, result) {
+    let prefixMatchId = "m" + matchId;
+    var data;
+    console.log(typeof result);
+    console.log(data);
+    if (typeof result == 'string') {
+        data = JSON.parse(result);
+    } else {
+        data = result;
+    }
+    var div = $("." + prefixMatchId);
+    let table = $("#matchInfoTemplate").clone();
+    table.attr("id", prefixMatchId + "div");
+    var tbody = table.find("tbody");
+
+    let winTeam = getTeam(data.teams, "win", data.players);
+    let loseTeam = getTeam(data.teams, "lose", data.players);
+
+    for (idx in winTeam) {
+        tbody.append(drawInGameDetailScore(winTeam[idx], true));
+    }
+    //tbody.append("")
+    for (idx in loseTeam) {
+        tbody.append(drawInGameDetailScore(loseTeam[idx], true));
+    }
+
+    div.append(table);
+}
+
+function getTeam(team, result, players) {
+    let findTeam = team[0].result == result ? team[0].players : team[1].players;
+    var resultTeam = players.filter(player => findTeam.includes(player.playerId));
+    resultTeam.forEach(item => item.playInfo.result = result);
+
+    return resultTeam;
+}
+
+function drawInGameDetailScore(data, detail = false) {
+    let matchId = data.matchId;
     let playInfo = data.playInfo;
+    let score = "";
 
-    let score = "<tr><td>" + winLoseKo(playInfo.result) + "</td>";
-    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-    score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-    score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-    score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+    if (detail) {
+        score = "<tr>";
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td>" + data.nickname + "</td>";
+        score += "<td>" + playInfo.level + "</td>";
+        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += "<td class='kda'>" + playInfo.killCount + "</td>";
+        score += "<td class='kda'>" + playInfo.deathCount + "</td>";
+        score += "<td class='kda'>" + playInfo.assistCount + "</td>";
+        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+    } else {
+        score = "<tr>";
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
+    }
+    score += "</tr>"
 
+    // 상세 정보 
+    if (!detail) {
+        score += "<tr>";
+        score += "<td class='hiddenRow' colspan='7'>";
+        score += "<div class='collapse m" + matchId + "'></div>";
+        score += "</td>";
+        score += "</tr>";
+    }
     return score;
 }
 
