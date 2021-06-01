@@ -223,11 +223,11 @@ function drawMatch(matchId, result) {
     let loseTeam = getTeam(data.teams, "lose", data.players);
 
     for (idx in winTeam) {
-        tbody.append(drawInGameDetailScore(winTeam[idx], true));
+        tbody.append(drawInGameDetailScore(winTeam[idx], true, "table-primary"));
     }
     //tbody.append("")
     for (idx in loseTeam) {
-        tbody.append(drawInGameDetailScore(loseTeam[idx], true));
+        tbody.append(drawInGameDetailScore(loseTeam[idx], true, "table-danger"));
     }
 
     div.append(table);
@@ -241,13 +241,13 @@ function getTeam(team, result, players) {
     return resultTeam;
 }
 
-function drawInGameDetailScore(data, detail = false) {
+function drawInGameDetailScore(data, detail = false, trClass) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
     let score = "";
 
     if (detail) {
-        score = "<tr>";
+        score = "<tr class='" + trClass + "'>";
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
