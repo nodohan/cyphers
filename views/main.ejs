@@ -5,23 +5,20 @@
 
     <%- include  ("./layout/head") %>
         <script type="text/javascript">
-            function setUserInfo(gameType, divName, data) {
-                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+            $(document).ready(function() {
+                let nickname = '<%=searchNickname%>';
+                if (nickname != '') {
+                    $("#nickNames").val(nickname);
+                    search('nickNames', 'con1_2');
+                }
+            });
 
+            function setUserInfo(gameType, divName, data) {
                 var userDivId = getUserDivId(gameType, data.nickname);
                 //기본 정보 
                 var clone = $("#template").clone();
                 clone.attr("id", userDivId);
-                $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
-
-                $(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
-                $(clone).find("#levelDiv").text(data.grade + "급");
-                $(clone).find("#clanDiv").text(data.clanName);
-
-                $(clone).find("#currRP").text(data.ratingPoint);
-                $(clone).find("#maxRP").text(data.maxRatingPoint);
-                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                defaultInfo(gameType, clone, data);
 
                 var rows = data.matches.rows;
 
@@ -36,6 +33,21 @@
 
                 clone.show();
                 $("#" + divName).prepend(clone);
+            }
+
+            function defaultInfo(gameType, clone, data) {
+                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
+                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+
+                $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
+
+                $(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
+                $(clone).find("#levelDiv").text(data.grade + "급");
+                $(clone).find("#clanDiv").text(data.clanName);
+
+                $(clone).find("#currRP").text(data.ratingPoint);
+                $(clone).find("#maxRP").text(data.maxRatingPoint);
+                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
 
             function drawCharCardVer(div, charInfo) {
