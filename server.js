@@ -3,6 +3,83 @@ var express = require('express');
 var app = express();
 const logger = require('./config/winston');
 
+//var maria = require('./maria');
+let pool;
+
+
+
+//const maria = require('mysql');
+const maria = require('promise-mysql');
+
+
+// [START cloud_sql_mysql_mysql_create_tcp]
+const createTcpPool = async config => {
+    return await maria.createPool({
+        host: '34.69.192.141',
+        port: 3306,
+        user: 'cyphers',
+        password: 'P@ssw0rd',
+        database: 'cyphers'
+    });
+};
+// [END cloud_sql_mysql_mysql_create_tcp]
+
+const createPool = async() => {
+    const config = {
+        // [START cloud_sql_mysql_mysql_limit]
+        // 'connectionLimit' is the maximum number of connections the pool is allowed
+        // to keep at once.
+        connectionLimit: 5,
+        // [END cloud_sql_mysql_mysql_limit]
+
+        // [START cloud_sql_mysql_mysql_timeout]
+        // 'connectTimeout' is the maximum number of milliseconds before a timeout
+        // occurs during the initial connection to the database.
+        connectTimeout: 10000, // 10 seconds
+        // 'acquireTimeout' is the maximum number of milliseconds to wait when
+        // checking out a connection from the pool before a timeout error occurs.
+        acquireTimeout: 10000, // 10 seconds
+        // 'waitForConnections' determines the pool's action when no connections are
+        // free. If true, the request will queued and a connection will be presented
+        // when ready. If false, the pool will call back with an error.
+        waitForConnections: true, // Default: true
+        // 'queueLimit' is the maximum number of requests for connections the pool
+        // will queue at once before returning an error. If 0, there is no limit.
+        queueLimit: 0, // Default: 0
+        // [END cloud_sql_mysql_mysql_timeout]
+
+        // [START cloud_sql_mysql_mysql_backoff]
+        // The mysql module automatically uses exponential delays between failed
+        // connection attempts.
+        // [END cloud_sql_mysql_mysql_backoff]
+    };
+
+    return await createTcpPool(config);
+
+};
+
+const ensureSchema = async pool => {
+    // Wait for tables to be created (if they don't already exist).
+    await pool.query(
+        `CREATE TABLE IF NOT EXISTS votes
+        ( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL,
+        candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );`
+    );
+    console.log("Ensured that table 'votes' exists");
+};
+
+const createPoolAndEnsureSchema = async() =>
+    await createPool()
+    .then(async pool => {
+        await ensureSchema(pool);
+        return pool;
+    })
+    .catch(err => {
+        logger.error(err);
+        throw err;
+    });
+
+
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -24,10 +101,10 @@ var nickOpt = {
 app.get('/', function(req, res) {
     if (isMobile(req)) {
         console.log("모바일이다!!");
-        res.render('./mobile/main.html');
+        res.render('./mobile/main.html', { 'searchNickname': req.query.nickname });
     } else {
         console.log("PC다!!");
-        res.render('main');
+        res.render('main', { 'searchNickname': req.query.nickname });
     }
 });
 
@@ -62,6 +139,22 @@ app.get('/userVs', function(req, res) {
     } else {
         console.log("userVs PC다!!");
         res.render('userVs');
+    }
+});
+
+app.get('/matches', function(req, res) {
+    console.log("userVs PC다!!");
+    res.render('matches');
+});
+
+app.get('/stats', function(req, res) {
+
+    if (isMobile(req)) {
+        console.log("userVs 모바일이다!!");
+        res.render('./mobile/userVs');
+    } else {
+        console.log("userVs PC다!!");
+        res.render('stats');
     }
 });
 
@@ -109,6 +202,88 @@ app.get('/getMatchInfo', function(req, res) {
         res.send(JSON.parse(result));
     });
 });
+
+
+app.get('/combi', function(req, res) {
+    if (isMobile(req)) {
+        res.render('./mobile/combi');
+    } else {
+        res.render('combi');
+    }
+});
+
+app.get('/combiTotalCount', async function(req, res) {
+
+    pool = pool || (await createPoolAndEnsureSchema());
+    // [START cloud_sql_mysql_mysql_connection]
+    try {
+        let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL ";
+        let [result] = await pool.query(query);
+        console.log(result);
+
+        res.send({ 'totalCount': result.cnt })
+    } catch (err) {
+        // If something goes wrong, handle the error in this section. This might
+        // involve retrying or adjusting parameters depending on the situation.
+        // [START_EXCLUDE]
+        logger.error(err);
+        return res
+            .status(500)
+            .send('오류 발생')
+            .end();
+        // [END_EXCLUDE]
+    }
+
+});
+
+app.get('/combiSearch', async function(req, res) {
+    let type = req.query.position;
+    let count = 50;
+    if (type == 'tankerJoin') {
+        count = 100;
+    } else if (type == 'attackerJoin') {
+        count = 50;
+    } else if (type == 'allJoin') {
+        count = 4;
+    }
+
+
+    let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
+    query += "       SELECT ";
+    query += "            " + type + " as combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win, COUNT(IF(matchResult = '패', 1, NULL)) lose ";
+    query += "            , GROUP_CONCAT(matchId) matchIds  ";
+    query += "        FROM matchdetail  ";
+    query += "        WHERE 1=1  ";
+    if (req.query.charName) {
+        let charNames = req.query.charName.split(" ");
+        for (idx in charNames) {
+            query += "        and " + type + " like '%" + charNames[idx] + "%'	 ";
+        }
+    }
+    query += "        GROUP BY " + type + " ";
+    query += "    ) a  ";
+    query += "    WHERE total >= " + count + " ";
+    query += "    ORDER BY late DESC";
+
+    pool = pool || (await createPoolAndEnsureSchema());
+    // [START cloud_sql_mysql_mysql_connection]
+    try {
+        let rows = await pool.query(query);
+        console.log(rows);
+        res.send(rows); // rows 를 보내주자
+    } catch (err) {
+        // If something goes wrong, handle the error in this section. This might
+        // involve retrying or adjusting parameters depending on the situation.
+        // [START_EXCLUDE]
+        logger.error(err);
+        return res
+            .status(500)
+            .send('오류 발생')
+            .end();
+        // [END_EXCLUDE]
+    }
+});
+
 
 async function getUserInfoCall(userId, gameType, startDate, endDate) {
     var matchInfo = {
