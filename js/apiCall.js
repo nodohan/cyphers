@@ -207,8 +207,7 @@ function searchMatch(matchId, callback) {
 function drawMatch(matchId, result) {
     let prefixMatchId = "m" + matchId;
     var data;
-    console.log(typeof result);
-    console.log(data);
+    //console.log(data);
     if (typeof result == 'string') {
         data = JSON.parse(result);
     } else {
@@ -252,13 +251,19 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
         score += "<td>" + data.nickname + "</td>";
-        score += "<td>" + playInfo.level + "</td>";
-        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-        score += "<td class='kda'>" + playInfo.killCount + "</td>";
-        score += "<td class='kda'>" + playInfo.deathCount + "</td>";
-        score += "<td class='kda'>" + playInfo.assistCount + "</td>";
-        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+
+        if (isMobile) {
+            score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        } else {
+            score += "<td>" + playInfo.level + "</td>";
+            score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"
+            score += "<td class='kda'>" + playInfo.killCount + "</td>";
+            score += "<td class='kda'>" + playInfo.deathCount + "</td>";
+            score += "<td class='kda'>" + playInfo.assistCount + "</td>";
+            score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+            score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+        }
+
     } else {
         score = "<tr>";
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
@@ -268,6 +273,7 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
         score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
+
     }
     score += "</tr>"
 
@@ -304,7 +310,9 @@ function getPositionIcon(type) {
 function drawRecently(div, rows, userDivId) {
     var i = Math.min(10, rows.length);
     var title = $(div).find("#recentlyDivTitle");
-    title.prepend("최근 " + i + "게임 :");
+    if (!isMobile) {
+        title.prepend("최근 " + i + "게임:");
+    }
 
     var body = $("#templateModal").clone();
     body.attr("id", userDivId + "Modal");

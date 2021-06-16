@@ -101,7 +101,7 @@ var nickOpt = {
 app.get('/', function(req, res) {
     if (isMobile(req)) {
         console.log("모바일이다!!");
-        res.render('./mobile/main.html', { 'searchNickname': req.query.nickname });
+        res.render('./mobile/main', { 'searchNickname': req.query.nickname });
     } else {
         console.log("PC다!!");
         res.render('main', { 'searchNickname': req.query.nickname });
@@ -269,7 +269,6 @@ app.get('/combiSearch', async function(req, res) {
     // [START cloud_sql_mysql_mysql_connection]
     try {
         let rows = await pool.query(query);
-        console.log(rows);
         res.send(rows); // rows 를 보내주자
     } catch (err) {
         // If something goes wrong, handle the error in this section. This might

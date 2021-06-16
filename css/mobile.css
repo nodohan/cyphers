@@ -1,0 +1,204 @@
+.top {
+    margin-top: 10px;
+    float: left;
+    margin-left: 10px;
+    padding: 14px;
+    position: relative;
+    width: 95%;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.top-long {
+    margin-top: 10px;
+    float: left;
+    margin-left: 10px;
+    padding: 14px;
+    position: relative;
+    width: 95%;
+    height: 90px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+#main {
+    margin: 55px 0px 0px 0px;
+}
+
+.body {
+    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
+}
+
+table {
+    background-color: white;
+}
+
+table th,
+table td {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.hiddenRow {
+    padding: 0 !important;
+}
+
+.vsTable tbody td:nth-child(3n-1) {
+    border-left: 2px solid #bfb1b3;
+}
+
+.con {
+    margin-top: 10px;
+    float: left;
+    margin-left: 10px;
+    padding: 10px;
+    position: relative;
+    width: 95%;
+    min-height: 650px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.bottom {
+    margin-top: 20px;
+    float: left;
+    margin-left: 10px;
+    padding: 15px;
+    position: relative;
+    width: 95%;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+    overflow: auto;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.infoDiv {
+    color: black;
+    background-color: #d7ebff;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.infoLayer {
+    overflow-y: scroll;
+    height: 550px;
+    background-color: #35353526;
+}
+
+.infoLayer div {
+    float: left;
+    padding: 1px 0px 0px 0px;
+}
+
+.infoLayer2 {
+    min-height: 631px;
+    max-height: 660px;
+}
+
+.infoLayer2 div {
+    float: left;
+    padding: 1px;
+}
+
+.drawIcon {
+    width: 30px;
+    height: 30px;
+}
+
+.drawIcon45 {
+    width: 45px;
+    height: 45px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.width100p {
+    width: 100%;
+}
+
+.width33p {
+    width: 33%;
+}
+
+.width25p {
+    width: 25%;
+}
+
+.width45p {
+    width: 45%;
+}
+
+.parent {
+    display: table;
+    table-layout: fixed;
+}
+
+.child {
+    display: table-cell;
+}
+
+.kda {
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.mapCard {
+    background-color: #ffffff;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.shortText {
+    width: 15%;
+}
+
+.longText {
+    width: 85%;
+}
+
+#mostCharDetailDiv {
+    width: 100%;
+}
+
+#mostCharDetailDiv .card {
+    width: 25%;
+    background-color: white;
+}
+
+#positionDiv {
+    float: left;
+    width: 100%;
+}
+
+.mapCard .card {
+    width: 25%;
+    background-color: #88c8ff3d;
+}
+
+.infoDiv .card {
+    width: 25%;
+    background-color: white;
+}
+
+.card-body {
+    min-width: 64px;
+}
+
+.card div {
+    padding: 0px;
+}
+
+#recentlyDivTitle span {
+    margin-left: 5px;
+}

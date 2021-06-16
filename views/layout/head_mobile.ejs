@@ -1,0 +1,32 @@
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi">
+
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/mobile.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="/bootstrap/bootstrap.min.js"></script>
+<script src="/js/apiCall.js" crossorigin="anonymous"></script>
+<script src="/js/ieChecker.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    var isMobile = true;
+
+    var backgroundImg = [
+        "http://static.cyphers.co.kr/media/wallpaper/Ndc6/Cyphers_Ndc6_1680_1050.jpg" // 6인의 사이퍼
+        , "http://static.cyphers.co.kr/media/wallpaper/Bruce/Cyphers_Bruce_1680_1050.jpg" // 부루스
+        , "http://static.cyphers.co.kr/media/wallpaper/Ellie/Cyphers_Ellie_1680_1050.jpg" // 엘리
+        , "http://static.cyphers.co.kr/media/wallpaper/Issac/Cyphers_Issac_1680_1050.jpg" // 이작
+        , "http://static.cyphers.co.kr/media/wallpaper/Hotaru/Cyphers_Hotaru_1680_1050.jpg" //호타루
+        , "http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg" // 쌍닌자
+        , "http://static.cyphers.co.kr/media/wallpaper/Peter/Cyphers_Peter_1680_1050.jpg" //피터
+        , "http://static.cyphers.co.kr/media/wallpaper/CharlotteWithDeimus/Cyphers_Cwd_1680_1050.jpg" //다무 샬럿
+    ];
+
+    $(document).ready(function() {
+        var imgUrl = backgroundImg[getRandomInt(0, backgroundImg.length)];
+        $(".body").css("background-image", "url(" + imgUrl + ")");
+
+        $("#mainMenu").addClass("active");
+        $("#userDetailMenu").removeClass("active");
+    });
+</script>
