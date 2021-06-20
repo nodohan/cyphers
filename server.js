@@ -6,11 +6,8 @@ const logger = require('./config/winston');
 //var maria = require('./maria');
 let pool;
 
-
-
 //const maria = require('mysql');
 const maria = require('promise-mysql');
-
 
 // [START cloud_sql_mysql_mysql_create_tcp]
 const createTcpPool = async config => {
@@ -219,8 +216,6 @@ app.get('/combiTotalCount', async function(req, res) {
     try {
         let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL ";
         let [result] = await pool.query(query);
-        console.log(result);
-
         res.send({ 'totalCount': result.cnt })
     } catch (err) {
         // If something goes wrong, handle the error in this section. This might
@@ -328,39 +323,6 @@ function mergeJson(mergeData, resultJson) {
     }
 
     return mergeData;
-}
-
-function now() {
-    const curr = new Date();
-    const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
-
-    // 3. UTC to KST (UTC + 9시간)
-    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-
-    var date = new Date(utc + (KR_TIME_DIFF));
-    var yyyy = date.getFullYear();
-    var gg = date.getDate();
-    var mm = (date.getMonth() + 1);
-
-    if (gg < 10)
-        gg = "0" + gg;
-
-    if (mm < 10)
-        mm = "0" + mm;
-
-    var cur_day = yyyy + "-" + mm + "-" + gg;
-
-    var hours = date.getHours()
-    var minutes = date.getMinutes()
-    var seconds = date.getSeconds();
-
-    if (hours < 10)
-        hours = "0" + hours;
-
-    if (minutes < 10)
-        minutes = "0" + minutes;
-
-    return cur_day + " " + hours + ":" + minutes;
 }
 
 app.listen(port, () => {
