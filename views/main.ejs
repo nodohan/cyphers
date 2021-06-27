@@ -22,6 +22,9 @@
 
                 var rows = data.matches.rows;
 
+                //파티별
+                drawPartyType(clone.find("#playParty"), rows);
+                //포지션별 
                 drawPosition(clone, rows);
 
                 //최근 10경기 결과
@@ -48,6 +51,65 @@
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
+
+            //파티별 승률 (솔로/파티)
+            function drawPartyType(clone, row) {
+                let partyJson = extractParty(row);
+                let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
+                let partyAllCnt = partyJson.all.win + partyJson.all.lose;
+
+                clone.append("솔플: " + soloAllCnt + "전 " + partyJson.solo.win + "승 " + partyJson.solo.lose + "패, ");
+                clone.append("파티: " + partyAllCnt + "전 " + partyJson.all.win + "승 " + partyJson.all.lose + "패 ");
+            }
+
+            function extractParty(rows) {
+                let partyResult = {
+                    solo: {
+                        win: 0,
+                        lose: 0
+                    },
+                    all: {
+                        win: 0,
+                        lose: 0
+                    },
+                    two: {
+                        win: 0,
+                        lose: 0
+                    },
+                    three: {
+                        win: 0,
+                        lose: 0
+                    },
+                    five: {
+                        win: 0,
+                        lose: 0
+                    },
+                };
+
+                let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
+                partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
+                partyResult.solo.lose = (solo.length - partyResult.solo.win);
+
+                let party = rows.filter(row => row.playInfo.partyInfo.length != 0);
+                for (let i in party) {
+                    let playInfo = party[i].playInfo;
+                    let cnt = playInfo.partyUserCount;
+
+                    addPlayResult(partyResult.all, playInfo);
+                    if (cnt == 2) {
+                        addPlayResult(partyResult.two, playInfo);
+                    } else if (cnt == 3) {
+                        addPlayResult(partyResult.three, playInfo);
+                    } else if (cnt == 5) {
+                        addPlayResult(partyResult.five, playInfo);
+                    }
+                }
+                return partyResult;
+            }
+
+            function addPlayResult(subPartyResult, data) {
+                subPartyResult[data.result]++;
             }
 
             function drawCharCardVer(div, charInfo) {
@@ -103,6 +165,9 @@
                     <div id="playGameDiv">
                         <!-- 승률 : 50% [100승 101패 2중단]-->
                     </div>
+                </div>
+                <div id="playParty" class="width100p">
+
                 </div>
             </div>
 
