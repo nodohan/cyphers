@@ -111,7 +111,7 @@
                 var card = $(div).find("#cardTemp").clone();
                 card.removeAttr("id");
                 card.removeAttr("hidden");
-                card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
+                card.find(".charImg").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
                 var pov = (charInfo.win * 100) / charInfo.count;
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
                 div.append(card);
@@ -222,10 +222,10 @@
                 <div id="mostCharDetailDiv">
                     <div id="cardTemp" class="card" hidden>
                         <div class="row no-gutters">
-                            <div class="col-md-5">
+                            <div class="charImg">
                                 <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
                             </div>
-                            <div class="col-md-7">
+                            <div>
                                 <div class="card-body">
                                     <p class="card-text">
                                         <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
