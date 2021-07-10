@@ -14,6 +14,15 @@ function search(inputId, divName, callback) {
     names.forEach(name => searchUser(inputId, divName, name, callback));
 }
 
+function searchWait(inputId, divName, callback) {
+    var names = $("#" + inputId).val().split(" ");
+
+    for (idx in names) {
+        setTimeout(() => searchUser(inputId, divName, names[idx], callback), 100);
+    }
+}
+
+
 function searchVsUser(gameType, myName, partnerName) {
     let my = asyncUserInfo(gameType, myName);
     let partner = asyncUserInfo(gameType, partnerName);
