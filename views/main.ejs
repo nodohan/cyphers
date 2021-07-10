@@ -24,6 +24,7 @@
 
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
+
                 //포지션별 
                 drawPosition(clone, rows);
 
@@ -66,29 +67,57 @@
                 clone.append("파티: " + partyAllCnt + "전 " + partyJson.all.win + "승 " + partyJson.all.lose + "패 <br>    ");
 
                 if (partyJson.two.all != 0) {
-                    let partyResult = getEachPartyResult(partyJson.two.party);
-                    clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 <a href='#' onClick=\"alert(\'" + partyResult + "\');\" > [클릭]</a>,    ");
+                    clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
+                    clone.append("<a data-toggle='collapse' href='#two" + userDivId + "' role='button' aria-expanded='false' aria-controls='two" + userDivId + "'' >[상세]</a>,    ");
                 }
 
                 if (partyJson.three.all != 0) {
-                    let partyResult = getEachPartyResult(partyJson.three.party);
-                    clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 <a href='#' onClick=\"alert(\'" + partyResult + "\');\" > [클릭]</a>,    ");
+                    clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
+                    clone.append("<a data-toggle='collapse' href='#three" + userDivId + "' role='button' aria-expanded='false' aria-controls='three" + userDivId + "'' >[상세]</a>,    ");
                 }
 
                 if (partyJson.five.all != 0) {
-                    let partyResult = getEachPartyResult(partyJson.five.party);
-                    clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 <a href='#' onClick=\"alert(\'" + partyResult + "\');\" > [클릭]</a>");
+                    clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
+                    clone.append("<a data-toggle='collapse' href='#five" + userDivId + "' role='button' aria-expanded='false' aria-controls='five" + userDivId + "'' >[상세]</a>,    ");
                 }
 
+                clone.append("<br><div class='row'>");
+                if (partyJson.two.all != 0) {
+                    let partyResult = getEachPartyResult(partyJson.two.party);
+                    clone.append("<div class='collapse multi-collapse' id='two" + userDivId + "'>" + partyResult + "</div>");
+                }
+                if (partyJson.three.all != 0) {
+                    let partyResult = getEachPartyResult(partyJson.three.party);
+                    clone.append("<div class='collapse multi-collapse' id='three" + userDivId + "'>" + partyResult + "</div>");
+                }
+                if (partyJson.five.all != 0) {
+                    let partyResult = getEachPartyResult(partyJson.five.party);
+                    clone.append("<div class='collapse multi-collapse' id='five" + userDivId + "'>" + partyResult + "</div>");
+                }
+
+                clone.append("</div>");
             }
 
             function getEachPartyResult(arr) {
-                let resultMsg = "";
+                let resultTable = "<table class='table'> ";
+                resultTable += "<thead class='thead-dark'><tr>";
+                resultTable += "<th scope='col'>파티원</th>";
+                resultTable += "<th scope='col'>승</th>";
+                resultTable += "<th scope='col'>패</th>";
+                resultTable += "</tr></thead><tbody>";
+
                 for (idx in arr) {
                     let row = arr[idx];
-                    resultMsg += row.name + "와 " + row.win + "승 " + row.lose + "패\\n";
+                    resultTable += "<tr>";
+                    resultTable += "<th scope='row'>" + row.name + "</th>";
+                    resultTable += "<td>" + row.win + "</td>";
+                    resultTable += "<td>" + row.lose + "</td>";
+                    resultTable += "</tr>";
+
                 }
-                return resultMsg;
+                resultTable += "</tbody></table>";
+
+                return resultTable;
             }
 
             function extractParty(rows) {
