@@ -18,7 +18,9 @@ function searchWait(inputId, divName, callback) {
     var names = $("#" + inputId).val().split(" ");
 
     for (idx in names) {
-        setTimeout(() => searchUser(inputId, divName, names[idx], callback), 100);
+        let userName = names[idx];
+        let time = idx * 100;
+        setTimeout(() => searchUser(inputId, divName, userName, callback), time);
     }
 }
 
