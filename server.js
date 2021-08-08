@@ -12,9 +12,9 @@ const maria = require('promise-mysql');
 // [START cloud_sql_mysql_mysql_create_tcp]
 const createTcpPool = async config => {
     return await maria.createPool({
-        host: '34.69.192.141',
+        host: '114.207.113.136',
         port: 3306,
-        user: 'cyphers',
+        user: 'nodo',
         password: 'P@ssw0rd',
         database: 'cyphers'
     });
@@ -52,17 +52,10 @@ const createPool = async() => {
     };
 
     return await createTcpPool(config);
-
 };
 
 const ensureSchema = async pool => {
-    // Wait for tables to be created (if they don't already exist).
-    await pool.query(
-        `CREATE TABLE IF NOT EXISTS votes
-        ( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL,
-        candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );`
-    );
-    console.log("Ensured that table 'votes' exists");
+    await pool.query(`SELECT 1;`);
 };
 
 const createPoolAndEnsureSchema = async() =>
