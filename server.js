@@ -272,6 +272,32 @@ app.get('/combiSearch', async function(req, res) {
 });
 
 
+//
+
+app.get('/getNicknameHistory', async function(req, res) {
+    let playerId = req.query.playerId;
+
+    let query = "SELECT * FROM nickNames WHERE playerId = '" + playerId + "' order by checkingDate desc";
+
+    pool = pool || (await createPoolAndEnsureSchema());
+    // [START cloud_sql_mysql_mysql_connection]
+    try {
+        let rows = await pool.query(query);
+        res.send(rows); // rows 를 보내주자
+    } catch (err) {
+        // If something goes wrong, handle the error in this section. This might
+        // involve retrying or adjusting parameters depending on the situation.
+        // [START_EXCLUDE]
+        logger.error(err);
+        return res
+            .status(500)
+            .send('오류 발생')
+            .end();
+        // [END_EXCLUDE]
+    }
+});
+
+
 async function getUserInfoCall(userId, gameType, startDate, endDate) {
     var matchInfo = {
             url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
