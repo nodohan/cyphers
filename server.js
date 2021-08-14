@@ -113,7 +113,7 @@ app.get('/userDetail', function(req, res) {
 
     if (isMobile(req)) {
         console.log("detail 모바일이다!!");
-        res.render('./mobile/userDetail.html', { 'searchNickname': req.query.nickname });
+        res.render('./mobile/userDetail', { 'searchNickname': req.query.nickname });
     } else {
         console.log("detail PC다!!");
         res.render('userDetail', { 'searchNickname': req.query.nickname });

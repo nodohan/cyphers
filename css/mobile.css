@@ -5,7 +5,7 @@
     padding: 14px;
     position: relative;
     width: 95%;
-    height: 50px;
+    height: 100px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
 }
@@ -97,11 +97,6 @@ table td {
 .infoLayer div {
     float: left;
     padding: 1px 0px 0px 0px;
-}
-
-.infoLayer2 {
-    min-height: 631px;
-    max-height: 660px;
 }
 
 .infoLayer2 div {
