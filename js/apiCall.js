@@ -396,8 +396,9 @@ function extractPlayType(rows, type) {
 }
 
 function drawCharInfo(div, info, title) {
-    let count = Math.min(3, info.length);
-    $(div).find("#mostCharTitleDiv").text(title + count + "(5판이상)");
+    let gt = 1;
+    let count = Math.min(gt, info.length);
+    $(div).find("#mostCharTitleDiv").text(title + count + "(" + gt + "판 이상)");
     for (var i = 0; i < count; i++) {
         drawChar(div.find("#mostCharDetailDiv"), info[i]);
     }
@@ -430,8 +431,9 @@ function extractChar(rows, sort) {
 
     // arr[name]으로 하니 index가 안잡혀서 sort가 안먹어 ㅠㅠ
     var sorted = [];
+    let charGtCnt = 2;
     charNames.forEach(name => {
-        if (result[name].count >= 5) {
+        if (result[name].count >= charGtCnt) {
             sorted.push(result[name]);
         }
     });
