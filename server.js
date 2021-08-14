@@ -230,10 +230,12 @@ app.get('/combiSearch', async function(req, res) {
     if (type == 'tankerJoin') {
         count = 100;
     } else if (type == 'attackerJoin') {
-        count = 50;
+        count = 30;
     } else if (type == 'allJoin') {
         count = 4;
     }
+    //당분간 조합 3건 이상만
+    count = 3;
 
 
     let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
@@ -241,7 +243,7 @@ app.get('/combiSearch', async function(req, res) {
     query += "            " + type + " as combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win, COUNT(IF(matchResult = '패', 1, NULL)) lose ";
     query += "            , GROUP_CONCAT(matchId) matchIds  ";
     query += "        FROM matchdetail  ";
-    query += "        WHERE 1=1  ";
+    query += "        WHERE 1=1 and season = '2021U' ";
     if (req.query.charName) {
         let charNames = req.query.charName.split(" ");
         for (idx in charNames) {
