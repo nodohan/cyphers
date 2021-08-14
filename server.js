@@ -207,7 +207,7 @@ app.get('/combiTotalCount', async function(req, res) {
     pool = pool || (await createPoolAndEnsureSchema());
     // [START cloud_sql_mysql_mysql_connection]
     try {
-        let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL ";
+        let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL and season = '2021U' ";
         let [result] = await pool.query(query);
         res.send({ 'totalCount': result.cnt })
     } catch (err) {
