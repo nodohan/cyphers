@@ -478,3 +478,19 @@ function sortDate(a, b) {
 function extractMap(data, mapId) {
     return data.filter(row => row.map.mapId == mapId);
 }
+
+
+function historyNickname(playerId, callback) {
+    var result;
+    $.ajax({
+        async: false,
+        url: "/getNicknameHistory",
+        data: { 'playerId': playerId },
+        success: function(data) {
+            callback(data);
+        }
+    }).done(function() {
+
+    });
+
+}
