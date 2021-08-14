@@ -319,21 +319,25 @@ function getPositionIcon(type) {
 }
 
 function drawRecently(div, rows, userDivId) {
-    var i = Math.min(10, rows.length);
+    var headCount = Math.min(10, rows.length);
+    var bodyCount = Math.min(20, rows.length);
+
     var title = $(div).find("#recentlyDivTitle");
     if (!isMobile) {
-        title.prepend("최근 " + i + "게임:");
+        title.prepend("최근 " + headCount + "게임:");
     }
 
     var body = $("#templateModal").clone();
     body.attr("id", userDivId + "Modal");
     body.attr("aria-labelledby", userDivId + "ModalLabel");
-    body.find("#templateModalLabel").attr("id", userDivId + "ModalLabel");
+    body.find("#templateModalLabel").attr("id", userDivId + "ModalLabel").empty().append("최근 " + bodyCount + "게임");
 
     rows.sort(sortDate);
     var titleText = "";
-    for (var j = 0; j < i; j++) {
-        titleText += winLoseKo(rows[j].playInfo.result);
+    for (var j = 0; j < bodyCount; j++) {
+        if (j < headCount) {
+            titleText += winLoseKo(rows[j].playInfo.result);
+        }
         body.find("tbody").append(drawInGameDetailScore(rows[j]));
     }
     title.append(titleText);
