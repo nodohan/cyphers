@@ -19,7 +19,7 @@ function searchWait(inputId, divName, callback) {
 
     for (idx in names) {
         let userName = names[idx];
-        let time = idx * 100;
+        let time = idx * 50;
         setTimeout(() => searchUser(inputId, divName, userName, callback), time);
     }
 }
