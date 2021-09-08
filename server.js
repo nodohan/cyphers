@@ -90,6 +90,7 @@ var nickOpt = {
 };
 
 app.get('/', function(req, res) {
+    getIp(req, "main");
     if (isMobile(req)) {
         console.log("모바일이다!!");
         res.render('./mobile/main', { 'searchNickname': req.query.nickname });
@@ -99,17 +100,8 @@ app.get('/', function(req, res) {
     }
 });
 
-app.get('/test', function(req, res) {
-    if (isMobile(req)) {
-        console.log("모바일이다!!");
-        res.render('./mobile/test');
-    } else {
-        console.log("PC다!!");
-        res.render('test');
-    }
-});
-
 app.get('/userDetail', function(req, res) {
+    getIp(req, "userDetail");
     //res.json();
 
     if (isMobile(req)) {
@@ -122,7 +114,7 @@ app.get('/userDetail', function(req, res) {
 });
 
 app.get('/userVs', function(req, res) {
-    //res.json();
+    getIp(req, "userVs");
 
     if (isMobile(req)) {
         console.log("userVs 모바일이다!!");
@@ -206,15 +198,11 @@ app.get('/combi', function(req, res) {
 app.get('/combiTotalCount', async function(req, res) {
 
     pool = pool || (await createPoolAndEnsureSchema());
-    // [START cloud_sql_mysql_mysql_connection]
     try {
         let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL and season = '2021U' ";
         let [result] = await pool.query(query);
         res.send({ 'totalCount': result.cnt })
     } catch (err) {
-        // If something goes wrong, handle the error in this section. This might
-        // involve retrying or adjusting parameters depending on the situation.
-        // [START_EXCLUDE]
         logger.error(err);
         return res
             .status(500)
@@ -273,9 +261,6 @@ app.get('/combiSearch', async function(req, res) {
         // [END_EXCLUDE]
     }
 });
-
-
-//
 
 app.get('/getNicknameHistory', async function(req, res) {
     let playerId = req.query.playerId;
@@ -429,18 +414,22 @@ function isMobile(req) {
 }
 
 async function getMatchInfo(matchInfo, mergeData) {
-    var result = await new api().call(matchInfo);
-    //console.log("뭐받음", result);
-    var resultJson = JSON.parse(result);
-    mergeData = mergeJson(mergeData, resultJson);
-    var next = resultJson.matches.next;
-    if (next != null) {
-        //console.log("NEXT가 있어요 ", next);
-        matchInfo.qs.next = next;
-        await getMatchInfo(matchInfo, mergeData);
-    }
+    try {
+        var result = await new api().call(matchInfo);
+        //console.log("뭐받음", result);
+        var resultJson = JSON.parse(result);
+        mergeData = mergeJson(mergeData, resultJson);
+        var next = resultJson.matches.next;
+        if (next != null) {
+            //console.log("NEXT가 있어요 ", next);
+            matchInfo.qs.next = next;
+            await getMatchInfo(matchInfo, mergeData);
+        }
 
-    return mergeData;
+        return mergeData;
+    } catch (err) {
+        return null;
+    }
 }
 
 function mergeJson(mergeData, resultJson) {
@@ -451,6 +440,14 @@ function mergeJson(mergeData, resultJson) {
     }
 
     return mergeData;
+}
+
+
+function getIp(req, title) {
+    const ip = req.headers['x-forwarded-for'] || req.ip;
+    logger.debug("{} 아이피: {}", title, ip);
+    console.log(title + "아이피: " + ip);
+    return ip;
 }
 
 app.listen(port, () => {
