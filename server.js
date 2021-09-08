@@ -2,6 +2,7 @@ const api = require('./api');
 var express = require('express');
 var app = express();
 const logger = require('./config/winston');
+const scheduler = require('node-schedule');
 
 //var maria = require('./maria');
 let pool;
