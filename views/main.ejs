@@ -129,7 +129,7 @@
                 for (idx in arr) {
                     let row = arr[idx];
                     resultTable += "<tr>";
-                    resultTable += "<th scope='row'>" + row.name + "</th>";
+                    resultTable += "<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />" + row.name + "</a></th>";
                     resultTable += "<td>" + row.win + "</td>";
                     resultTable += "<td>" + row.lose + "</td>";
                     resultTable += "</tr>";
@@ -140,6 +140,16 @@
                 return resultTable;
             }
 
+            function partyUserSearch(aTagObj) {
+                let aTag = $(aTagObj);
+                let partyUserNames = aTag.text().replace(","," ");
+                let conId = aTag.closest(".infoLayer").attr("id");
+
+                let inputId = conId == "con1_2" ? 'nickNames' : 'nickNames2';
+                $("#" + inputId).val(partyUserNames);
+                search( inputId, conId);
+            }
+            
             function extractParty(rows) {
                 let partyResult = {
                     solo: {
