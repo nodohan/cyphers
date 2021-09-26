@@ -1,7 +1,7 @@
 const api = require('./api');
 var express = require('express');
 var app = express();
-const logger = require('./config/winston');
+global.logger = require('./config/winston');
 const scheduler = require('node-schedule');
 
 //var maria = require('./maria');
@@ -70,7 +70,7 @@ const createPoolAndEnsureSchema = async() =>
         throw err;
     });
 
-
+const loggerCatcher = require('./config/logger-catcher');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -79,6 +79,7 @@ app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/j
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
 app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
+app.use(loggerCatcher());
 
 const port = 8080;
 
