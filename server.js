@@ -93,23 +93,18 @@ var nickOpt = {
 app.get('/', function(req, res) {
     getIp(req, "main");
     if (isMobile(req)) {
-        console.log("모바일이다!!");
         res.render('./mobile/main', { 'searchNickname': req.query.nickname });
     } else {
-        console.log("PC다!!");
         res.render('main', { 'searchNickname': req.query.nickname });
     }
 });
 
 app.get('/userDetail', function(req, res) {
     getIp(req, "userDetail");
-    //res.json();
 
     if (isMobile(req)) {
-        console.log("detail 모바일이다!!");
         res.render('./mobile/userDetail', { 'searchNickname': req.query.nickname });
     } else {
-        console.log("detail PC다!!");
         res.render('userDetail', { 'searchNickname': req.query.nickname });
     }
 });
@@ -118,26 +113,21 @@ app.get('/userVs', function(req, res) {
     getIp(req, "userVs");
 
     if (isMobile(req)) {
-        console.log("userVs 모바일이다!!");
         res.render('./mobile/userVs');
     } else {
-        console.log("userVs PC다!!");
         res.render('userVs');
     }
 });
 
 app.get('/matches', function(req, res) {
-    console.log("userVs PC다!!");
     res.render('matches');
 });
 
 app.get('/stats', function(req, res) {
 
     if (isMobile(req)) {
-        console.log("userVs 모바일이다!!");
         res.render('./mobile/userVs');
     } else {
-        console.log("userVs PC다!!");
         res.render('stats');
     }
 });
@@ -145,10 +135,10 @@ app.get('/stats', function(req, res) {
 app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
     nickOpt.qs.nickname = nickname;
-    //console.log(nickOpt);
+    //logger.debug(nickOpt);
 
     new api().call(nickOpt).then(async result => {
-        //console.log("사용자", result);
+        //logger.debug("사용자", result);
         let json = JSON.parse(result);
 
         if (json.rows == null || json.rows.length == 0) {
@@ -181,8 +171,6 @@ app.get('/getMatchInfo', function(req, res) {
     }
     matchOpt.uri += req.query.matchId;
     new api().call(matchOpt).then(async result => {
-        //console.log("match", result);
-        console.log("match 받음");
         res.send(JSON.parse(result));
     });
 });
@@ -305,7 +293,7 @@ app.get('/insertMatches', function(req, res) {
         ip = ip.toString().split(",")[1].trim();
     }
 
-    console.log("call insertMatches ip", ip);
+    logger.debug("call insertMatches ip", ip);
     if (!allowIps.includes(ip)) {
         return res
             .status(403)
@@ -381,7 +369,7 @@ async function insertMatchId(rows) {
 
     rows.forEach(async function(matchId) {
         try {
-            //console.log(matchId);
+            //logger.debug(matchId);
             let query = "INSERT INTO matches (matchId, season) VALUES ( '" + matchId + "', '2021U' ); "
             result += await pool.query(query);
         } catch (err) {
@@ -399,7 +387,7 @@ async function getUserInfoCall(userId, gameType, startDate, endDate) {
         qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp', gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
     }
 
-    //console.log("요청전의 qs ", matchInfo.qs);
+    //logger.debug("요청전의 qs ", matchInfo.qs);
 
     matchInfo.url = matchInfo.url.replace("#playerId#", userId);
 
@@ -417,12 +405,12 @@ function isMobile(req) {
 async function getMatchInfo(matchInfo, mergeData) {
     try {
         var result = await new api().call(matchInfo);
-        //console.log("뭐받음", result);
+        //logger.debug("뭐받음", result);
         var resultJson = JSON.parse(result);
         mergeData = mergeJson(mergeData, resultJson);
         var next = resultJson.matches.next;
         if (next != null) {
-            //console.log("NEXT가 있어요 ", next);
+            //logger.debug("NEXT가 있어요 ", next);
             matchInfo.qs.next = next;
             await getMatchInfo(matchInfo, mergeData);
         }
@@ -443,11 +431,9 @@ function mergeJson(mergeData, resultJson) {
     return mergeData;
 }
 
-
 function getIp(req, title) {
     const ip = req.headers['x-forwarded-for'] || req.ip;
-    logger.debug("{} 아이피: {}", title, ip);
-    console.log(title + "아이피: " + ip);
+    logger.debug("아이피: %s", ip);
     return ip;
 }
 
