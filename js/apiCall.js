@@ -261,7 +261,13 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-        score += "<td>" + data.nickname + "</td>";
+
+        //이름 검색 지원
+        if(typeof partyUserSearch == 'function') {
+            score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";
+        } else {
+            score += "<td>" + data.nickname + "</td>";
+        }
 
         if (isMobile) {
             score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"

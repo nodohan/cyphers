@@ -144,6 +144,7 @@
                 let aTag = $(aTagObj);
                 let partyUserNames = aTag.text().replace(","," ");
                 let conId = aTag.closest(".infoLayer").attr("id");
+                conId = conId == null ? "con2_2" : conId;
 
                 let inputId = conId == "con1_2" ? 'nickNames' : 'nickNames2';
                 $("#" + inputId).val(partyUserNames);
