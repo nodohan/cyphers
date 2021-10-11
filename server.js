@@ -123,15 +123,6 @@ app.get('/matches', function(req, res) {
     res.render('matches');
 });
 
-app.get('/stats', function(req, res) {
-
-    if (isMobile(req)) {
-        res.render('./mobile/userVs');
-    } else {
-        res.render('stats');
-    }
-});
-
 app.get('/getUserInfo', function(req, res) {
     var nickname = req.query.nickname;
     nickOpt.qs.nickname = nickname;
