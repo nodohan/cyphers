@@ -35,7 +35,7 @@ app.get('/', function(req, res) {
     if (isMobile(req)) {
         res.render('./mobile/main', { 'searchNickname': req.query.nickname });
     } else {
-        res.render('main', { 'searchNickname': req.query.nickname });
+        res.render('./pc/main', { 'searchNickname': req.query.nickname });
     }
 });
 
@@ -45,7 +45,7 @@ app.get('/userDetail', function(req, res) {
     if (isMobile(req)) {
         res.render('./mobile/userDetail', { 'searchNickname': req.query.nickname });
     } else {
-        res.render('userDetail', { 'searchNickname': req.query.nickname });
+        res.render('./pc/userDetail', { 'searchNickname': req.query.nickname });
     }
 });
 
@@ -55,7 +55,7 @@ app.get('/userVs', function(req, res) {
     if (isMobile(req)) {
         res.render('./mobile/userVs');
     } else {
-        res.render('userVs');
+        res.render('./pc/userVs');
     }
 });
 
@@ -111,7 +111,7 @@ app.get('/combi', function(req, res) {
     if (isMobile(req)) {
         res.render('./mobile/combi');
     } else {
-        res.render('combi');
+        res.render('./pc/combi');
     }
 });
 

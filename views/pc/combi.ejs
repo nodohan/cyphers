@@ -3,7 +3,7 @@
 
 <head>
 
-    <%- include  ("./layout/head") %>
+    <%- include  ("../layout/head") %>
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
@@ -94,7 +94,7 @@
 </head>
 
 <body class="body">
-    <%- include  ("./layout/menu") %>
+    <%- include  ("../layout/menu") %>
 
         <div id="main">
             <div class="top" style="height: 100px;">
@@ -102,7 +102,8 @@
                 <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
                 <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
 
-                <div> * 랭킹 500위 내 <span id="totalCount">3만 5천건</span>건의 통계이며 전체 3판이상 데이터만 제공합니다.
+                <div>
+                    * 시즌시작일 ~ 2021년 10월 10일까지는 <b>랭킹 500위 이내 사용자</b>, <br> &nbsp; 이후 <b>전체 사용자</b>의 <span id="totalCount">3만 5천건</span>의 기록을 통계로 낸 데이터입니다.
                 </div>
             </div>
             <div id="con1" class="con">
