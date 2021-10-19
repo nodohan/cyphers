@@ -4,71 +4,11 @@ var app = express();
 global.logger = require('./config/winston');
 const scheduler = require('node-schedule');
 
-//var maria = require('./maria');
+var maria = require('./config/maria');
 let pool;
 
-//const maria = require('mysql');
-const maria = require('promise-mysql');
 
-// [START cloud_sql_mysql_mysql_create_tcp]
-const createTcpPool = async config => {
-    return await maria.createPool({
-        host: '114.207.113.136',
-        port: 3306,
-        user: 'nodo',
-        password: 'P@ssw0rd',
-        database: 'cyphers'
-    });
-};
-// [END cloud_sql_mysql_mysql_create_tcp]
 
-const createPool = async() => {
-    const config = {
-        // [START cloud_sql_mysql_mysql_limit]
-        // 'connectionLimit' is the maximum number of connections the pool is allowed
-        // to keep at once.
-        connectionLimit: 5,
-        // [END cloud_sql_mysql_mysql_limit]
-
-        // [START cloud_sql_mysql_mysql_timeout]
-        // 'connectTimeout' is the maximum number of milliseconds before a timeout
-        // occurs during the initial connection to the database.
-        connectTimeout: 10000, // 10 seconds
-        // 'acquireTimeout' is the maximum number of milliseconds to wait when
-        // checking out a connection from the pool before a timeout error occurs.
-        acquireTimeout: 10000, // 10 seconds
-        // 'waitForConnections' determines the pool's action when no connections are
-        // free. If true, the request will queued and a connection will be presented
-        // when ready. If false, the pool will call back with an error.
-        waitForConnections: true, // Default: true
-        // 'queueLimit' is the maximum number of requests for connections the pool
-        // will queue at once before returning an error. If 0, there is no limit.
-        queueLimit: 0, // Default: 0
-        // [END cloud_sql_mysql_mysql_timeout]
-
-        // [START cloud_sql_mysql_mysql_backoff]
-        // The mysql module automatically uses exponential delays between failed
-        // connection attempts.
-        // [END cloud_sql_mysql_mysql_backoff]
-    };
-
-    return await createTcpPool(config);
-};
-
-const ensureSchema = async pool => {
-    await pool.query(`SELECT 1;`);
-};
-
-const createPoolAndEnsureSchema = async() =>
-    await createPool()
-    .then(async pool => {
-        await ensureSchema(pool);
-        return pool;
-    })
-    .catch(err => {
-        logger.error(err);
-        throw err;
-    });
 
 const loggerCatcher = require('./config/logger-catcher');
 
@@ -176,8 +116,8 @@ app.get('/combi', function(req, res) {
 });
 
 app.get('/combiTotalCount', async function(req, res) {
+    pool = await maria.getPool();
 
-    pool = pool || (await createPoolAndEnsureSchema());
     try {
         let query = "SELECT COUNT(1) cnt FROM matches WHERE matchdate IS NOT NULL and season = '2021U' ";
         let [result] = await pool.query(query);
@@ -224,7 +164,7 @@ app.get('/combiSearch', async function(req, res) {
     query += "    WHERE total >= " + count + " ";
     query += "    ORDER BY late DESC";
 
-    pool = pool || (await createPoolAndEnsureSchema());
+    pool = await maria.getPool();
     // [START cloud_sql_mysql_mysql_connection]
     try {
         let rows = await pool.query(query);
@@ -247,7 +187,7 @@ app.get('/getNicknameHistory', async function(req, res) {
 
     let query = "SELECT * FROM nickNames WHERE playerId = '" + playerId + "' order by checkingDate desc";
 
-    pool = pool || (await createPoolAndEnsureSchema());
+    pool = await maria.getPool();
     // [START cloud_sql_mysql_mysql_connection]
     try {
         let rows = await pool.query(query);
