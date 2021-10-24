@@ -11,8 +11,6 @@ const logger = require('./config/winston');
 
 
 
-const loggerCatcher = require('./config/logger-catcher');
-
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use('/js', express.static(__dirname + "/js"));
