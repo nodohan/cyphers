@@ -1,7 +1,7 @@
-const api = require('./api');
 var express = require('express');
 var app = express();
 global.logger = require('./config/winston');
+const api = require('./api');
 const scheduler = require('node-schedule');
 
 var maria = require('./config/maria');
@@ -22,13 +22,6 @@ app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS boots
 app.use(loggerCatcher());
 
 const port = 8080;
-
-var seasonStartDay = '2021-02-18 00:00';
-const apiKey = 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp';
-var nickOpt = {
-    uri: "https://api.neople.co.kr/cy/players",
-    qs: { nickname: '', wordType: 'match', limit: 3, apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
-};
 
 app.get('/', function(req, res) {
     getIp(req, "main");
@@ -59,53 +52,13 @@ app.get('/userVs', function(req, res) {
     }
 });
 
-app.get('/matches', function(req, res) {
-    res.render('matches');
+app.get('/getUserInfo', async function(req, res) {
+    res.send(await new api().searchUser(req.query.nickname, req.query.gameType));
 });
 
-app.get('/getUserInfo', function(req, res) {
-    var nickname = req.query.nickname;
-    nickOpt.qs.nickname = nickname;
-    //logger.debug(nickOpt);
-
-    new api().call(nickOpt).then(async result => {
-        //logger.debug("사용자", result);
-        let json = JSON.parse(result);
-
-        if (json.rows == null || json.rows.length == 0) {
-            res.send("{ 'resultCode' : -1 }");
-            return;
-        }
-
-        let userId = json.rows[0].playerId;
-        let gameType = req.query.gameType;
-
-        var result = null;
-        let diffDay = dateDiff(seasonStartDay, new Date());
-        let startDate = seasonStartDay;
-        let endDate = getMinDay(addDays(startDate, 90), new Date());
-
-        while (diffDay >= 0) {
-            result = mergeJson(result, await getUserInfoCall(userId, gameType, startDate, endDate));
-            startDate = endDate;
-            endDate = getMinDay(addDays(startDate, 90), new Date());
-            diffDay = diffDay - 90;
-        }
-        res.send(result);
-    });
+app.get('/getMatchInfo', async function(req, res) {
+    res.send(await new api().searchMatchInfo(req.query.matchId));
 });
-
-app.get('/getMatchInfo', function(req, res) {
-    var matchOpt = {
-        uri: "https://api.neople.co.kr/cy/matches/",
-        qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp' }
-    }
-    matchOpt.uri += req.query.matchId;
-    new api().call(matchOpt).then(async result => {
-        res.send(JSON.parse(result));
-    });
-});
-
 
 app.get('/combi', function(req, res) {
     if (isMobile(req)) {
@@ -145,7 +98,6 @@ app.get('/combiSearch', async function(req, res) {
     }
     //당분간 조합 3건 이상만
     count = 3;
-
 
     let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
     query += "       SELECT ";
@@ -421,17 +373,6 @@ async function insertMatchId(rows) {
 }
 
 
-async function getUserInfoCall(userId, gameType, startDate, endDate) {
-    var matchInfo = {
-        url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
-        qs: { apikey: 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp', gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
-    }
-
-    //logger.debug("요청전의 qs ", matchInfo.qs);
-
-    matchInfo.url = matchInfo.url.replace("#playerId#", userId);
-
-    return await getMatchInfo(matchInfo, null);
 }
 
 function isMobile(req) {
@@ -447,35 +388,6 @@ function isMobile(req) {
     return false;
 }
 
-async function getMatchInfo(matchInfo, mergeData) {
-    try {
-        var result = await new api().call(matchInfo);
-        //logger.debug("뭐받음", result);
-        var resultJson = JSON.parse(result);
-        mergeData = mergeJson(mergeData, resultJson);
-        var next = resultJson.matches.next;
-        if (next != null) {
-            //logger.debug("NEXT가 있어요 ", next);
-            matchInfo.qs.next = next;
-            await getMatchInfo(matchInfo, mergeData);
-        }
-
-        return mergeData;
-    } catch (err) {
-        return null;
-    }
-}
-
-function mergeJson(mergeData, resultJson) {
-    if (mergeData == null) {
-        mergeData = resultJson;
-    } else {
-        mergeData.matches.rows = mergeData.matches.rows.concat(resultJson.matches.rows);
-    }
-
-    return mergeData;
-}
-
 function getIp(req, title) {
     const ip = req.headers['x-forwarded-for'] || req.ip;
     logger.debug("아이피: %s", ip);
@@ -485,33 +397,3 @@ function getIp(req, title) {
 app.listen(port, () => {
     logger.info('Server START listening on port ' + port);
 })
-
-
-// 두개의 날짜를 비교하여 차이를 알려준다.
-function dateDiff(_date1, _date2) {
-    var diffDate_1 = _date1 instanceof Date ? _date1 : new Date(_date1);
-    var diffDate_2 = _date2 instanceof Date ? _date2 : new Date(_date2);
-
-    diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth() + 1, diffDate_1.getDate());
-    diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth() + 1, diffDate_2.getDate());
-
-    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
-    diff = Math.ceil(diff / (1000 * 3600 * 24));
-
-    return diff;
-}
-
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
-
-function getMinDay(date1, date2) {
-    return date1.getTime() < date2.getTime() ? date1 : date2;
-}
-
-function getYYYYMMDD() {
-    var rightNow = new Date();
-    return rightNow.toISOString().slice(0, 10).replace(/-/g, "");
-}
