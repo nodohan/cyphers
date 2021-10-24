@@ -162,7 +162,10 @@ app.get('/getNicknameHistory', async function(req, res) {
     }
 });
 
+function getIp(req, title) {
     const ip = req.headers['x-forwarded-for'] || req.ip;
+    logger.debug("아이피: %s", ip);
+    return ip;
 }
 
 function isMobile(req) {
@@ -176,12 +179,6 @@ function isMobile(req) {
         return true;
     }
     return false;
-}
-
-function getIp(req, title) {
-    const ip = req.headers['x-forwarded-for'] || req.ip;
-    logger.debug("아이피: %s", ip);
-    return ip;
 }
 
 app.listen(port, () => {
