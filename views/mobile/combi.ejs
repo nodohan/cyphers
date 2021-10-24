@@ -93,15 +93,16 @@
     <%- include  ("../layout/menu_mobile") %>
 
         <div id="main">
-            <div class="top" style="height: 130px">
+            <div class="top" style="height: 150px;">
                 <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
                 <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
                 <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
 
                 <div>
-                    * 랭킹 500위 이내 사용자의 <span id="totalCount">3만 5천건</span>의 통계 제공
+                    * 시즌시작일 ~ 2021년 10월 10일까지는 랭킹 500위 이내 사용자, 이후는 전체 사용자의 <span id="totalCount">3만 5천건</span>의 기록을 통계로 낸 데이터입니다.
                 </div>
-                <div><b> <a href="http://cyphers.doseh.co.kr" >cyphers.doseh.co.kr</a></b> 로 이사합니다 <br>(여긴 9월말까지 유지해요~) </div>
+                <!-- <div>* 탱커 100판이상, 딜러 30판이상, 전체 4판이상 데이터만 제공합니다. </div>-->
+                <div>* 전체 3판이상 데이터만 제공합니다. </div>
             </div>
             <div id="con1" class="con">
                 <h3>특정 조합/캐릭검색 </h3>
