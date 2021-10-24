@@ -1,12 +1,13 @@
+global.logger = require('./config/winston');
 var express = require('express');
 var app = express();
-global.logger = require('./config/winston');
 const api = require('./api');
 const scheduler = require('node-schedule');
-
 var maria = require('./config/maria');
 let pool;
 
+const loggerCatcher = require('./config/logger-catcher');
+const logger = require('./config/winston');
 
 
 
