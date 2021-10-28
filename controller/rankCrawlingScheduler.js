@@ -46,32 +46,29 @@ module.exports = (scheduler, maria) => {
 
         for (let i = 1; i <= 150; i++) {
             if (run) {
-                await getHtml(i)
-                    .then(html => {
-                        let rankList = [];
-                        const $ = cheerio.load(html.data);
-                        const $bodyList = $(".total_rank tbody tr");
+                let html = await getHtml(i);
+                let rankList = [];
+                const $ = cheerio.load(html.data);
+                const $bodyList = $(".total_rank tbody tr");
 
-                        if ($bodyList.length != 50) {
-                            logger.debug("랭킹 크롤링 끝")
-                            run = false;
-                        }
+                if ($bodyList.length != 50) {
+                    logger.debug("랭킹 크롤링 끝");
+                    run = false;
+                }
 
-                        $bodyList.each(function(i, row) {
+                $bodyList.each(function(i, row) {
 
-                            let rank = $($(row).find("td").get(0)).clone();
-                            rank.find(".chg_num").remove();
+                    let rank = $($(row).find("td").get(0)).clone();
+                    rank.find(".chg_num").remove();
 
-                            rankList[i] = {
-                                today: todayYYYYMMDD,
-                                rank: rank.text().replace(/\t/gi, "").replace("\n", ""),
-                                name: $($(row).find("td").get(1)).find("a").text(),
-                                rp: $($(row).find("td").get(3)).text()
-                            };
-                        });
-
-                        return rankList;
-                    })
+                    rankList[i] = {
+                        today: todayYYYYMMDD,
+                        rank: rank.text().replace(/\t/gi, "").replace("\n", ""),
+                        name: $($(row).find("td").get(1)).find("a").text(),
+                        rp: $($(row).find("td").get(3)).text()
+                    };
+                });
+                logger.debug("랭킹 페이지 %s! insert 시작 ", i);
                 await insertRank(pool, rankList);
             }
         }
