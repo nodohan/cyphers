@@ -38,6 +38,7 @@ module.exports = (scheduler, maria) => {
     });
 
     async function getRanks() {
+        var pool = await maria.getPool();
         let run = true;
         var todayYYYYMMDD = getYYYYMMDD();
 
@@ -71,7 +72,7 @@ module.exports = (scheduler, maria) => {
 
                         return rankList;
                     })
-                    .then(jsonList => insertRank(jsonList));;
+                await insertRank(pool, rankList);
             }
         }
     }
@@ -84,9 +85,8 @@ module.exports = (scheduler, maria) => {
         }
     };
 
-    async function insertRank(jsonList) {
+    async function insertRank(pool, jsonList) {
         let result = 0;
-        pool = await maria.getPool();
 
         jsonList.forEach(async function(json) {
             try {
