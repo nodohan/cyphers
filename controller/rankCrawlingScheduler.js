@@ -43,7 +43,7 @@ module.exports = (scheduler, maria) => {
 
         logger.debug("today string %s", todayYYYYMMDD);
 
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 150; i++) {
             if (run) {
                 await getHtml(i)
                     .then(html => {
