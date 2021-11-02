@@ -15,6 +15,10 @@ const matchScehduler = require('./controller/matchListScheduler')(scheduler, mar
 //스케쥴러2. 랭킹 크롤링
 const rankScheduler = require('./controller/rankCrawlingScheduler')(scheduler, maria);
 
+//랭킹 차트
+const rankChart = require('./controller/rankChart')(scheduler, maria);
+
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use('/js', express.static(__dirname + "/js"));
@@ -24,12 +28,14 @@ app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
 app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
 app.use('/rank', rankScheduler);
 app.use('/matches', matchScehduler);
+app.use('/rankChart', rankChart);
+
 app.use(loggerCatcher());
 
 const port = 8080;
 
 app.get('/', function(req, res) {
-    getIp(req, "main");
+    getIp(req);
     if (isMobile(req)) {
         res.render('./mobile/main', { 'searchNickname': req.query.nickname });
     } else {
@@ -162,7 +168,13 @@ app.get('/getNicknameHistory', async function(req, res) {
     }
 });
 
-function getIp(req, title) {
+app.get('/userChart', function(req, res) {
+    getIp(req);
+
+    res.render('./pc/userChart');
+});
+
+function getIp(req) {
     const ip = req.headers['x-forwarded-for'] || req.ip;
     logger.debug("아이피: %s", ip);
     return ip;

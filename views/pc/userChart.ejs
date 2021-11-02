@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include  ("../layout/head") %>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script type="text/javascript">
+            var myChart;
+
+            $(document).ready(function() {
+                $("input[type='text']").css("width", "15%");
+
+                $("#mainMenu").removeClass("active");
+                $("#userChart").addClass("active");
+
+                const ctx = $("#myChart");
+                myChart = new Chart(ctx, config);
+            });
+
+            function userRankSearch() {
+                let nickName = $("#nickNames").val();
+                $("#nickNames").val("");
+
+                searchUserRank(nickName, drawRank);
+            }
+
+            function searchUserRank(nickName) {
+                var result;
+                $.ajax({
+                    async: false,
+                    url: "/rankChart/userRank",
+                    data: {
+                        'nickname': nickName,
+                    },
+                    success: function(data) {
+                        if (data.resultCode == -1) {
+                            alert(nickName + "님의 정보가 없습니다.");
+                            return;
+                        }
+                        drawRank(nickName, data);
+                    },
+                    error: function(data) {
+                        alert(nickName + "님의 정보가 없습니다.");
+                        return;
+                    }
+                }).done(function() {
+
+                });
+                return result;
+            }
+
+            function drawRank(nickName, row) {
+                let dataset = {
+                    label: nickName,
+                    data: row,
+                    fill: false,
+                    borderColor: 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')',
+                    tension: 0.1
+                }
+                addData(dataset);
+            }
+
+            function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+            }
+
+            function addData(data) {
+                myChart.data.datasets.push(data);
+                myChart.update();
+            }
+
+            const config = {
+                type: 'line',
+                //data: data,
+                options: {
+                    scales: {
+                        yAxis: {
+                            reverse: true,
+                            min: 1,
+                            //  max: 10000
+                        }
+                    }
+
+                }
+            };
+        </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu") %>
+
+        <div id="main">
+            <div class="top">
+                <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
+                <input type="button" value="검색" onClick="userRankSearch();">
+                <input type="button" value="초기화" onClick="clearDiv('con1_2');"></br>
+                10월 11일부터 집계된 랭킹 그래프를 제공합니다. 버그가 존재합니다. 추후 수정 예정
+            </div>
+            <div id="con1" class="con" style="width:98%">
+                <h3>랭킹추이</h3>
+                <div id="con1_2" class="table-responsive">
+                    <canvas id="myChart" width="900" height="400"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+</body>
+
+</html>
