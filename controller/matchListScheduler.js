@@ -4,11 +4,12 @@ module.exports = (scheduler, maria) => {
 
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
-    var time = "30 23 * * *";
-    scheduler.scheduleJob(time, function() {
-        logger.info("call scheduler");
-        insertMatches();
-        logger.info("end scheduler");
+    var time = "30 23 * * *"; // 리얼용
+    //var time = "32 23 * * *"; // 테스트중
+    scheduler.scheduleJob(time, async function() {
+        logger.info("call match scheduler");
+        await insertMatches(null, new Date());
+        logger.info("end match scheduler");
     });
 
     //test
@@ -31,17 +32,19 @@ module.exports = (scheduler, maria) => {
         return insertMatches(res);
     });
 
-    async function insertMatches(res) {
+    async function insertMatches(res, day) {
         let query = "SELECT playerId FROM rank where rankDate = '" + getYYYYMMDD() + "'; ";
         let pool = await maria.getPool();
 
         try {
             let rows = await pool.query(query);
-            let result = mergeMatchIds(rows);
-            res.send(result > 0); // rows 를 보내주자
+            let result = mergeMatchIds(rows, day);
+            if (res) {
+                res.send(result > 0); // rows 를 보내주자
+            }
         } catch (err) {
             logger.error(err);
-            if (res != null) {
+            if (res) {
                 return res
                     .status(500)
                     .send('오류 발생')
@@ -55,20 +58,22 @@ module.exports = (scheduler, maria) => {
         return date.toISOString().replace('T', ' ').substring(0, 16);
     }
 
-    async function mergeMatchIds(rows) {
-        let yesterday = timestamp(addDays(new Date(), -1));
-        let today = timestamp(new Date());
+    async function mergeMatchIds(rows, day = new Date()) {
+        let yesterday = timestamp(addDays(day, -1));
+        let today = timestamp(day);
+
+        logger.debug("search matchList today = %s, yesterday = %s", today, yesterday);
 
         //사용자 매칭 데이터 검색 
         let promiseItems = [];
         for (idx in rows) {
             let playerId = rows[idx].playerId;
+            //logger.debug("search user matchList username= %s", playerId);
+
             let time = idx * 50;
             let item = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    //await new api().getUserInfoCall(playerId, "rating", yesterday, today);
-                    //resolve(getUserInfoCall(playerId, "rating", yesterday, today));
-                    resolve(new api().getUserInfoCall(playerId, "rating", yesterday, today));
+                setTimeout(async() => {
+                    resolve(await searchUserInfoCall(playerId, yesterday, today));
                 }, time);
             });
             promiseItems.push(item);
@@ -83,20 +88,24 @@ module.exports = (scheduler, maria) => {
                     Array.prototype.push.apply(matches, rows);
                 }
             }
-
             const setMatch = new Set(matches);
             const uniqMatch = [...setMatch];
             return insertMatchId(uniqMatch);
         });
     }
 
+    async function searchUserInfoCall(playerId, yesterday, today) {
+        logger.debug("search UserInfo Call %s", playerId);
+        return new api().getUserInfoCall(playerId, "rating", yesterday, today);
+    }
+
     async function insertMatchId(rows) {
         let result = 0;
-        // [START cloud_sql_mysql_mysql_connection]
+        let pool = await maria.getPool();
 
         rows.forEach(async function(matchId) {
             try {
-                //logger.debug(matchId);
+                logger.debug(matchId);
                 let query = "INSERT INTO matches (matchId, season) VALUES ( '" + matchId + "', '2021U' ); "
                 result += await pool.query(query);
             } catch (err) {
