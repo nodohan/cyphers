@@ -10,10 +10,10 @@ const loggerCatcher = require('./config/logger-catcher');
 const logger = require('./config/winston');
 
 //스케쥴러1. 매치리스트 
-const matchScehduler = require('./controller/matchListScheduler')(scheduler, maria);
+const matchScehduler = require('./controller/matchListScheduler')(scheduler, maria, loggerCatcher);
 
 //스케쥴러2. 랭킹 크롤링
-const rankScheduler = require('./controller/rankCrawlingScheduler')(scheduler, maria);
+const rankScheduler = require('./controller/rankCrawlingScheduler')(scheduler, maria, loggerCatcher);
 
 //랭킹 차트
 const rankChart = require('./controller/rankChart')(scheduler, maria, loggerCatcher);
@@ -44,7 +44,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/userDetail', function(req, res) {
-    getIp(req, "userDetail");
+    getIp(req);
 
     if (isMobile(req)) {
         res.render('./mobile/userDetail', { 'searchNickname': req.query.nickname });
@@ -54,7 +54,7 @@ app.get('/userDetail', function(req, res) {
 });
 
 app.get('/userVs', function(req, res) {
-    getIp(req, "userVs");
+    getIp(req);
 
     if (isMobile(req)) {
         res.render('./mobile/userVs');
@@ -147,7 +147,6 @@ app.get('/combiSearch', async function(req, res) {
 
 app.get('/getNicknameHistory', async function(req, res) {
     let playerId = req.query.playerId;
-
     let query = "SELECT * FROM nickNames WHERE playerId = '" + playerId + "' order by checkingDate desc";
 
     pool = await maria.getPool();
