@@ -29,9 +29,9 @@ function searchVsUser(gameType, myName, partnerName) {
     let my = asyncUserInfo(gameType, myName);
     let partner = asyncUserInfo(gameType, partnerName);
 
-    let widthGameMatchIds = getMatchGames(my, partner);
+    let withGameMatchIds = getMatchGames(my, partner);
 
-    return analyzeGame(widthGameMatchIds, my.matches.rows, partner.matches.rows);
+    return analyzeGame(withGameMatchIds, my.matches.rows, partner.matches.rows);
 }
 
 function analyzeGame(matches, myRow, pRow) {
@@ -84,10 +84,10 @@ function getMatchGames(my, partner) {
     var myMatches = getMatches(my.matches.rows);
     var pMatches = getMatches(partner.matches.rows);
 
-    return widthGames(myMatches, pMatches);
+    return withGames(myMatches, pMatches);
 }
 
-function widthGames(match1, match2) {
+function withGames(match1, match2) {
     var ret = [];
     for (var i in match1) {
         if (match2.indexOf(match1[i]) > -1) {
