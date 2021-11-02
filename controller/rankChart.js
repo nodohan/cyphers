@@ -1,7 +1,8 @@
 const logger = require('../config/winston');
 
-module.exports = (scheduler, maria) => {
+module.exports = (scheduler, maria, logger) => {
     const app = require('express').Router();
+    app.use(logger());
 
     app.get('/userRank', async function(req, res) {
         let userName = req.query.nickname;

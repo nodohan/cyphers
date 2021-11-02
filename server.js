@@ -16,7 +16,7 @@ const matchScehduler = require('./controller/matchListScheduler')(scheduler, mar
 const rankScheduler = require('./controller/rankCrawlingScheduler')(scheduler, maria);
 
 //랭킹 차트
-const rankChart = require('./controller/rankChart')(scheduler, maria);
+const rankChart = require('./controller/rankChart')(scheduler, maria, loggerCatcher);
 
 
 app.engine('html', require('ejs').renderFile);
