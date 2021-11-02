@@ -58,6 +58,7 @@ function analyzeGame(matches, myRow, pRow) {
 
 function getMatchGameInfo(my, you) {
     return item = {
+        "date": my.date,
         "matchId": my.matchId,
         "result": my.playInfo.result,
         "my": getPlayInfo(my),

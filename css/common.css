@@ -28,7 +28,11 @@ table td {
     padding: 0 !important;
 }
 
-.vsTable tbody td:nth-child(3n-1) {
+.vsTable tbody td:nth-child(3n) {
+    border-left: 2px solid #bfb1b3;
+}
+
+.vsTable tbody td:nth-child(2) {
     border-left: 2px solid #bfb1b3;
 }
 
