@@ -264,7 +264,7 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
 
         //이름 검색 지원
-        if(typeof partyUserSearch == 'function') {
+        if (typeof partyUserSearch == 'function') {
             score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";
         } else {
             score += "<td>" + data.nickname + "</td>";
