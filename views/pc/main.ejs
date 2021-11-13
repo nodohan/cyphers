@@ -122,16 +122,23 @@
                 let resultTable = "<table class='table'> ";
                 resultTable += "<thead class='thead-dark'><tr>";
                 resultTable += "<th scope='col'>파티원</th>";
+                resultTable += "<th scope='col'>겜수</th>";
                 resultTable += "<th scope='col'>승</th>";
                 resultTable += "<th scope='col'>패</th>";
+                resultTable += "<th scope='col'>승률</th>";
                 resultTable += "</tr></thead><tbody>";
 
                 for (idx in arr) {
                     let row = arr[idx];
+                    let total = row.win + row.lose;
+                    let rate = ((row.win * 100) / total).toFixed(0) + "%";
+
                     resultTable += "<tr>";
                     resultTable += "<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />" + row.name + "</a></th>";
+                    resultTable += "<td>" + total + "</td>";
                     resultTable += "<td>" + row.win + "</td>";
                     resultTable += "<td>" + row.lose + "</td>";
+                    resultTable += "<td>" + rate + "</td>";
                     resultTable += "</tr>";
 
                 }
@@ -158,24 +165,24 @@
                         lose: 0
                     },
                     all: {
-                        all: 0,
+                        count: 0,
                         win: 0,
                         lose: 0
                     },
                     two: {
-                        all: 0,
+                        count: 0,
                         win: 0,
                         lose: 0,
                         party: {}
                     },
                     three: {
-                        all: 0,
+                        count: 0,
                         win: 0,
                         lose: 0,
                         party: {}
                     },
                     five: {
-                        all: 0,
+                        count: 0,
                         win: 0,
                         lose: 0,
                         party: {}
@@ -201,12 +208,28 @@
                         addPlayResult(partyResult.five, matchId, playInfo, true);
                     }
                 }
+
+                partyResult.two.party = partySort(partyResult.two.party, sortCase);
+                partyResult.three.party = partySort(partyResult.three.party, sortCase);
+                partyResult.five.party = partySort(partyResult.five.party, sortCase);
+
                 return partyResult;
+            }
+
+            function partySort(party, sort) {
+                let keys = Object.keys(party);
+                var sorted = [];
+                keys.forEach(key => {
+                    sorted.push(party[key]);
+                });
+
+                sorted.sort(sort);
+                return sorted;
             }
 
             function addPlayResult(subPartyResult, matchId, data, isParty) {
                 subPartyResult[data.result]++;
-                subPartyResult["all"]++;
+                subPartyResult["count"]++;
 
                 if (isParty) {
                     let partyId = data.partyInfo.map(row => row.playerId).sort().join(",");
@@ -216,12 +239,12 @@
                         subPartyResult.party[partyId] = {
                             matchId: [],
                             name: "",
-                            all: 0,
+                            count: 0,
                             win: 0,
                             lose: 0
                         };
                     }
-                    subPartyResult.party[partyId].all++;
+                    subPartyResult.party[partyId].count++;
                     subPartyResult.party[partyId][data.result]++;
                     subPartyResult.party[partyId].name = partyName;
                     subPartyResult.party[partyId].matchId.push(matchId);
