@@ -6,12 +6,44 @@
     <%- include  ("../layout/head") %>
         <script type="text/javascript">
             $(document).ready(function() {
+                callLoadingBar(false);
+                setDatePicker();
+
                 $("#mainMenu").removeClass("active");
                 $("#combi").addClass("active");
                 getCombiCount();
             });
 
+            function setDatePicker() {
+                var yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                var yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+                $('#fromDt').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    iconsLibrary: 'fontawesome',
+                    locale: 'kr-ko',
+                    minDate: '2021-07-15',
+                    value: '2021-07-15',
+                    format: 'yyyy-mm-dd',
+                    maxDate: yesterday
+                });
+
+                $('#toDt').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    iconsLibrary: 'fontawesome',
+                    locale: 'kr-ko',
+                    format: 'yyyy-mm-dd',
+                    value: yesterdayStr,
+                    minDate: function() {
+                        return $('#fromDt').val();
+                    },
+                    maxDate: yesterday
+                });
+            }
+
             function numberWithCommas(x) {
+                // 걍 toLocaleString() 할까..
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
 
@@ -44,18 +76,32 @@
                 }
             }
 
+            function callLoadingBar(show) {
+                if (show) {
+                    $("#loadingbutton").show();
+                    $("#searchButton").hide();
+                } else {
+                    $("#loadingbutton").hide();
+                    $("#searchButton").show();
+                }
+            }
+
             function searchCombi() {
                 onOffEvent();
+                callLoadingBar(true);
 
                 let position = $("input[name='position']:checked").val();
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: "/combiSearch",
                     data: {
                         'position': position,
-                        'charName': $("#charName").val()
+                        'charName': $("#charName").val(),
+                        'fromDt': $("#fromDt").val(),
+                        'toDt': $("#toDt").val()
                     },
                     success: function(data) {
+                        callLoadingBar(false);
                         onOffEvent(true);
                         $("#con1_2").empty();
 
@@ -82,12 +128,13 @@
 
                     },
                     error: function(data) {
+                        callLoadingBar(false);
                         alert("해당 정보가 없습니다.");
                         onOffEvent(true);
                         return;
                     }
                 }).done(function() {
-
+                    callLoadingBar(false);
                 });
             }
         </script>
@@ -98,12 +145,25 @@
 
         <div id="main">
             <div class="top" style="height: 100px;">
-                <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
-                <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
-                <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
+                <div class="topLeft">
+                    <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
+                    <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
+                    <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
+                    <div>
+                        <div class="datepickerDiv">
+                            <input class="datepicker" id="fromDt">
+                        </div>
 
-                <div>
+                        <div class="datepickerDiv">
+                            <input class="datepicker" id="toDt">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topRight">
                     * 시즌시작일 ~ 2021년 10월 10일까지는 <b>랭킹 500위 이내 사용자</b>, <br> &nbsp; 이후 <b>전체 사용자</b>의 <span id="totalCount">3만 5천건</span>의 기록을 통계로 낸 데이터입니다.
+                    <br> &nbsp; 집계는 매일 자정에 진행합니다.
+
                 </div>
             </div>
             <div id="con1" class="con">
@@ -111,6 +171,10 @@
                 <span>공란가능, 띄워쓰기로 구분</span>
                 <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
                 <input type="button" id="searchButton" value="검색" onClick="searchCombi();">
+                <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
                 <div id="con1_2" class="infoLayer"> </div>
             </div>
 
@@ -168,6 +232,7 @@
                 <tbody></tbody>
             </table>
         </div>
+
 </body>
 
 </html>

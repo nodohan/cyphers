@@ -195,3 +195,18 @@ table td {
 #recentlyDivTitle span {
     margin-left: 5px;
 }
+
+.datepickerDiv {
+    float: left;
+    width: 150px;
+}
+
+.topLeft {
+    float: left;
+    width: 30%
+}
+
+.topRight {
+    float: left;
+    width: 70%
+}

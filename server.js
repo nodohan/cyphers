@@ -113,9 +113,13 @@ app.get('/combiSearch', async function(req, res) {
     let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
     query += "       SELECT ";
     query += "            " + type + " as combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win, COUNT(IF(matchResult = '패', 1, NULL)) lose ";
-    query += "            , GROUP_CONCAT(matchId) matchIds  ";
-    query += "        FROM matchdetail  ";
+    query += "            , GROUP_CONCAT(detail.matchId) matchIds  ";
+    query += "        FROM matchdetail detail ";
+    query += "        inner join ( "
+    query += "            select matchId, matchDate from matches where matchDate between '" + req.query.fromDt + "' and '" + req.query.toDt + "'  ";
+    query += "        ) matches on matches.matchId = detail.matchId "
     query += "        WHERE 1=1 and season = '2021U' ";
+
     if (req.query.charName) {
         let charNames = req.query.charName.split(" ");
         for (idx in charNames) {
@@ -125,7 +129,9 @@ app.get('/combiSearch', async function(req, res) {
     query += "        GROUP BY " + type + " ";
     query += "    ) a  ";
     query += "    WHERE total >= " + count + " ";
-    query += "    ORDER BY late DESC";
+    query += "    ORDER BY total DESC";
+
+    logger.debug(query);
 
     pool = await maria.getPool();
     // [START cloud_sql_mysql_mysql_connection]
