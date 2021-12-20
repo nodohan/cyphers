@@ -51,9 +51,22 @@
                 $(clone).find("#levelDiv").text(data.grade + "급 ");
                 $(clone).find("#clanDiv").text(data.clanName);
 
-                $(clone).find("#currRP").text(data.ratingPoint);
-                $(clone).find("#maxRP").text(data.maxRatingPoint);
+                getTierColerName($(clone).find("#tierName"), data.tierName);
+                if (data.ratingPoint != null) {
+                    $(clone).find("#currRP").text(data.ratingPoint);
+                    $(clone).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+                }
+
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
+
+            function getTierColerName(span, tierName) {
+                let name = tierName;
+                if (name == null) {
+                    name = "Unrank";
+                }
+                span.addClass(name);
+                span.text(name);
             }
 
             function nickHistory(nickId) {
@@ -64,7 +77,7 @@
                 let info = "";
                 for (idx in data) {
                     let row = data[idx];
-                    info += row.season + " " + row.nickname + " 체크일(닉변일아님):" + row.checkingDate + "\n";
+                    info += row.season + " " + row.nickname + " 체크일:" + row.checkingDate + "\n";
                 }
                 if (data.length == 0) {
                     info = "수집된 닉변기록이 없습니다";
@@ -300,7 +313,7 @@
                     <div id="clanDiv" class=""></div>
                 </div>
                 <div class="width100p">
-                    <div class="width45p">현재 rp : <span id="currRP" class="bold red"></span> (<span id="maxRP"></span>)</div>
+                    <div class="width45p">rp : <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span> <span id="maxRP"></span></div>
                     <!-- <div class="width25p">최고 rp : </div> -->
                     <div id="playGameDiv">
                         <!-- 승률 : 50% [100승 101패 2중단]-->

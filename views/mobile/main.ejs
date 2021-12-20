@@ -42,9 +42,22 @@
                 $(div).find("#levelDiv").text(data.grade + "급");
                 $(div).find("#clanDiv").text(data.clanName);
 
-                $(div).find("#currRP").text(data.ratingPoint);
-                $(div).find("#maxRP").text(data.maxRatingPoint);
+                getTierColerName($(div).find("#tierName"), data.tierName);
+                if (data.ratingPoint != null) {
+                    $(div).find("#currRP").text(data.ratingPoint);
+                    $(div).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+                }
+
                 $(div).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
+
+            function getTierColerName(span, tierName) {
+                let name = tierName;
+                if (name == null) {
+                    name = "Unrank";
+                }
+                span.addClass(name);
+                span.text(name);
             }
 
             function nickHistory(nickId) {
@@ -252,7 +265,7 @@
                     <div id="clanDiv" class=""></div>
                 </div>
                 <div class="width100p">
-                    <div class="width45p">현재 rp : <span id="currRP" class="bold red"></span> (<span id="maxRP"></span>)</div>
+                    <div class="width100p">RP : <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span><span id="maxRP"></span></div>
                     <!-- <div class="width25p">최고 rp : </div> -->
                     <div id="playGameDiv">
                         <!-- 승률 : 50% [100승 101패 2중단]-->

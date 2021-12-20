@@ -210,3 +210,33 @@ table td {
     float: left;
     width: 70%
 }
+
+.ACE {
+    color: rgb(255, 0, 174);
+    font-weight: bold;
+}
+
+.JOKER {
+    color: rgb(129, 0, 184);
+    font-weight: bold;
+}
+
+.GOLD {
+    color: rgb(211, 144, 0);
+    font-weight: bold;
+}
+
+.SILVER {
+    color: rgb(109, 109, 109);
+    font-weight: bold;
+}
+
+.BRONZE {
+    color: rgb(129, 80, 24);
+    font-weight: bold;
+}
+
+.UNRANK {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
