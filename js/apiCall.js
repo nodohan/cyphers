@@ -112,7 +112,7 @@ function searchUser(inputId, divName, nickName, callback) {
 
     $.ajax({
         url: "/getUserInfo",
-        data: { 'nickname': nickName, 'gameType': gameType },
+        data: { 'nickname': nickName, 'gameType': gameType, 'device': (isMobile ? 'mobile' : 'pc') },
         success: function(data) {
             if (data.resultCode == -1) {
                 alert(nickName + "님의 정보가 없습니다.");
