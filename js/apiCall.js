@@ -24,7 +24,6 @@ function searchWait(inputId, divName, callback) {
     }
 }
 
-
 function searchVsUser(gameType, myName, partnerName) {
     let my = asyncUserInfo(gameType, myName);
     let partner = asyncUserInfo(gameType, partnerName);
@@ -103,6 +102,11 @@ function getMatches(rows) {
 }
 
 function searchUser(inputId, divName, nickName, callback) {
+    if (nickName == "") {
+        alert("검색어를 입력해 주세요");
+        return;
+    }
+
     let gameType = $("input[name='gameType']:checked").val();
     if (isDuplicate(gameType, nickName)) {
         var input = $("#" + inputId);
