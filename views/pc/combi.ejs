@@ -47,6 +47,21 @@
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
 
+            function isValid() {
+                let pattern = /[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/;
+                if (!pattern.test($("#fromDt").val())) {
+                    alert("시작일이 유효하지 않습니다");
+                    return false;
+                }
+
+                if (!pattern.test($("#toDt").val())) {
+                    alert("종료일이 유효하지 않습니다");
+                    return false;
+                }
+
+                return true;
+            }
+
             function getCombiCount() {
                 $.ajax({
                     async: false,
@@ -87,6 +102,10 @@
             }
 
             function searchCombi() {
+                if (!isValid()) {
+                    return;
+                }
+
                 onOffEvent();
                 callLoadingBar(true);
 
