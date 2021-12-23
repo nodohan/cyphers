@@ -64,7 +64,7 @@
 
             function getCombiCount() {
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: "/combiTotalCount",
                     success: function(result) {
                         $("#totalCount").empty().append(numberWithCommas(result.totalCount) + '건');
