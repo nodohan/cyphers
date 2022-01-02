@@ -57,8 +57,7 @@ class api {
                 let json = JSON.parse(result);
 
                 if (json.rows == null || json.rows.length == 0) {
-                    res.send("{ 'resultCode' : -1 }");
-                    return;
+                    return { 'resultCode': -1 };
                 }
 
                 let userId = json.rows[0].playerId;
