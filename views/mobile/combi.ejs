@@ -6,10 +6,46 @@
     <%- include  ("../layout/head_mobile") %>
         <script type="text/javascript">
             $(document).ready(function() {
+                callLoadingBar(false);
+                setDatePicker();
+
                 $("#mainMenu").removeClass("active");
                 $("#combi").addClass("active");
                 getCombiCount();
             });
+
+
+            function setDatePicker() {
+                var yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                var yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+                $('#fromDt').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    iconsLibrary: 'fontawesome',
+                    width: 170,
+                    locale: 'kr-ko',
+                    minDate: '2021-07-15',
+                    value: '2021-07-15',
+                    format: 'yyyy-mm-dd',
+                    maxDate: yesterday
+                });
+
+                $('#toDt').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    iconsLibrary: 'fontawesome',
+                    width: 170,
+                    locale: 'kr-ko',
+                    format: 'yyyy-mm-dd',
+                    value: yesterdayStr,
+                    minDate: function() {
+                        return $('#fromDt').val();
+                    },
+                    maxDate: yesterday
+                });
+
+                $(".gj-datepicker").css("float", "left");
+            }
 
             function numberWithCommas(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -44,8 +80,38 @@
                 }
             }
 
+            function callLoadingBar(show) {
+                if (show) {
+                    $("#loadingbutton").show();
+                    $("#searchButton").hide();
+                } else {
+                    $("#loadingbutton").hide();
+                    $("#searchButton").show();
+                }
+            }
+
+            function isValid() {
+                let pattern = /[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/;
+                if (!pattern.test($("#fromDt").val())) {
+                    alert("시작일이 유효하지 않습니다");
+                    return false;
+                }
+
+                if (!pattern.test($("#toDt").val())) {
+                    alert("종료일이 유효하지 않습니다");
+                    return false;
+                }
+
+                return true;
+            }
+
             function searchCombi() {
+                if (!isValid()) {
+                    return;
+                }
+
                 onOffEvent();
+                callLoadingBar(true);
 
                 let position = $("input[name='position']:checked").val();
                 $.ajax({
@@ -97,6 +163,13 @@
                 <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
                 <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
                 <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
+                <div>
+                    <div class="datepickerDiv">
+                        <input class="datepicker" id="fromDt">
+                        <input class="datepicker" id="toDt">
+                    </div>
+
+                </div>
 
                 <div>
                     * 시즌시작일 ~ 2021년 10월 10일까지는 랭킹 500위 이내 사용자, 이후는 전체 사용자의 <span id="totalCount">3만 5천건</span>의 기록을 통계로 낸 데이터입니다.
@@ -109,6 +182,10 @@
                 <span>공란가능, 띄워쓰기로 구분</span>
                 <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
                 <input type="button" id="searchButton" value="검색" onClick="searchCombi();">
+                <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
                 <div id="con1_2" class="infoLayer"> </div>
             </div>
 
