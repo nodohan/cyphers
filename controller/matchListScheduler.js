@@ -2,14 +2,18 @@ module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../api');
 
+    const isRun = false;
+
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
     var time = "30 23 * * *"; // 리얼용
     //var time = "32 23 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
-        logger.info("call match scheduler");
-        await insertMatches(null, new Date());
-        logger.info("end match scheduler");
+        if (isRun) {
+            logger.info("call match scheduler");
+            await insertMatches(null, new Date());
+            logger.info("end match scheduler");
+        }
     });
 
     //test

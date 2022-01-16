@@ -6,11 +6,15 @@ module.exports = (scheduler, maria) => {
     const axios = require("axios");
     const cheerio = require("cheerio");
 
+    const isRun = false;
+
     var rankSchedulerTime = "00 13 * * *";
     scheduler.scheduleJob(rankSchedulerTime, function() {
-        logger.info("call rank scheduler");
-        getRanks();
-        logger.info("end rank scheduler");
+        if (isRun) {
+            logger.info("call rank scheduler");
+            getRanks();
+            logger.info("end rank scheduler");
+        }
     });
 
     app.get('/getHtml', function(req, res) {
