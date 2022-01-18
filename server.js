@@ -1,6 +1,9 @@
 global.logger = require('./config/winston');
 var express = require('express');
 var app = express();
+var favicon = require('serve-favicon');
+var path = require('path');
+
 const api = require('./api');
 const commonUtil = require('./controller/commonUtil');
 const scheduler = require('node-schedule');
@@ -24,6 +27,7 @@ const userHistory = require('./controller/userHistory')(scheduler, maria, logger
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
+app.use(favicon(path.join(__dirname, 'ico', 'favicon.ico')))
 app.use('/js', express.static(__dirname + "/js"));
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
