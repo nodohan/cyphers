@@ -2,7 +2,7 @@ const mariadb = require('promise-mysql');
 
 class maria {
     constructor() {
-        var pool;
+        var POOL = null;
 
         this.createTcpPool = async(config) => {
             return await mariadb.createPool({
@@ -19,7 +19,7 @@ class maria {
             const config = {
                 // [START cloud_sql_mysql_mysql_limit]
                 // 'connectionLimit' is the maximum number of connections the pool is allowed to keep at once.
-                connectionLimit: 5,
+                connectionLimit: 50,
                 // [END cloud_sql_mysql_mysql_limit]
                 // [START cloud_sql_mysql_mysql_timeout]
                 connectTimeout: 10000,
@@ -41,7 +41,9 @@ class maria {
         this.createPoolAndEnsureSchema = async() =>
             await this.createPool()
             .then(async(pool) => {
+                logger.debug("create pool");
                 await this.ensureSchema(pool);
+                POOL = pool;
                 return pool;
             })
             .catch(err => {
@@ -50,7 +52,7 @@ class maria {
             });
 
         this.getPool = () => {
-            return pool || this.createPoolAndEnsureSchema();
+            return POOL || this.createPoolAndEnsureSchema(); 
         };
     }
 }
