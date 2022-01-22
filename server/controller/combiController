@@ -32,7 +32,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let type = req.query.position;
         let count = req.query.count;
         if (count == null) {
-            count = 1;
+            count = 10;
         }
 
         let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
@@ -49,6 +49,10 @@ module.exports = (scheduler, maria, acclogger) => {
             let charNames = req.query.charName.split(" ");
             for (idx in charNames) {
                 query += "        and " + type + " like '%" + charNames[idx] + "%'	 ";
+            }
+
+            if (req.query.count == null && charNames.length >= 3) {
+                count = 1;
             }
         }
         query += "        GROUP BY " + type + " ";
