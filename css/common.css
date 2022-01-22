@@ -203,12 +203,12 @@ table td {
 
 .topLeft {
     float: left;
-    width: 30%
+    width: 50%
 }
 
 .topRight {
     float: left;
-    width: 70%
+    width: 50%
 }
 
 .ACE {
@@ -239,4 +239,8 @@ table td {
 .UNRANK {
     color: rgb(0, 0, 0);
     font-weight: bold;
+}
+
+.shortInput {
+    width: 60px;
 }

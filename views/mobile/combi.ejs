@@ -11,7 +11,7 @@
 
                 $("#mainMenu").removeClass("active");
                 $("#combi").addClass("active");
-                getCombiCount();
+                //getCombiCount();
             });
 
 
@@ -54,7 +54,7 @@
             function getCombiCount() {
                 $.ajax({
                     async: true,
-                    url: "/combiTotalCount",
+                    url: "/combi/combiTotalCount",
                     success: function(result) {
                         $("#totalCount").empty().append(numberWithCommas(result.totalCount) + '건');
                     },
@@ -115,13 +115,16 @@
 
                 let position = $("input[name='position']:checked").val();
                 $.ajax({
-                    async: false,
-                    url: "/combiSearch",
+                    async: true,
+                    url: "/combi/combiSearch",
                     data: {
                         'position': position,
-                        'charName': $("#charName").val()
+                        'charName': $("#charName").val(),
+                        'fromDt': $("#fromDt").val(),
+                        'toDt': $("#toDt").val()
                     },
                     success: function(data) {
+                        callLoadingBar(false);
                         onOffEvent(true);
                         //console.log(data);
                         $("#con1_2").empty();
@@ -144,12 +147,13 @@
 
                     },
                     error: function(data) {
+                        callLoadingBar(false);
                         alert("해당 정보가 없습니다.");
                         onOffEvent(true);
                         return;
                     }
                 }).done(function() {
-
+                    callLoadingBar(false);
                 });
             }
         </script>
@@ -159,23 +163,16 @@
     <%- include  ("../layout/menu_mobile") %>
 
         <div id="main">
-            <div class="top" style="height: 150px;">
+            <div class="top" style="height: 100px;">
+                <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
                 <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
                 <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
-                <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
                 <div>
                     <div class="datepickerDiv">
                         <input class="datepicker" id="fromDt">
                         <input class="datepicker" id="toDt">
                     </div>
-
                 </div>
-
-                <div>
-                    * 시즌시작일 ~ 2021년 10월 10일까지는 랭킹 500위 이내 사용자, 이후는 전체 사용자의 <span id="totalCount">3만 5천건</span>의 기록을 통계로 낸 데이터입니다.
-                </div>
-                <!-- <div>* 탱커 100판이상, 딜러 30판이상, 전체 4판이상 데이터만 제공합니다. </div>-->
-                <div>* 전체 3판이상 데이터만 제공합니다. </div>
             </div>
             <div id="con1" class="con">
                 <h3>특정 조합/캐릭검색 </h3>
@@ -183,8 +180,7 @@
                 <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
                 <input type="button" id="searchButton" value="검색" onClick="searchCombi();">
                 <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>                    
                 </button>
                 <div id="con1_2" class="infoLayer"> </div>
             </div>

@@ -65,7 +65,7 @@
             function getCombiCount() {
                 $.ajax({
                     async: true,
-                    url: "/combiTotalCount",
+                    url: "/combi/combiTotalCount",
                     success: function(result) {
                         $("#totalCount").empty().append(numberWithCommas(result.totalCount) + '건');
                     },
@@ -112,12 +112,13 @@
                 let position = $("input[name='position']:checked").val();
                 $.ajax({
                     async: true,
-                    url: "/combiSearch",
+                    url: "/combi/combiSearch",
                     data: {
                         'position': position,
                         'charName': $("#charName").val(),
                         'fromDt': $("#fromDt").val(),
-                        'toDt': $("#toDt").val()
+                        'toDt': $("#toDt").val(),
+                        'count': $("#count").val()
                     },
                     success: function(data) {
                         callLoadingBar(false);
@@ -165,9 +166,12 @@
         <div id="main">
             <div class="top" style="height: 100px;">
                 <div class="topLeft">
+                    <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
                     <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
                     <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
-                    <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
+
+                    <input type="number" class="shortInput" name="count" id="count" value="3"> 판 이상
+
                     <div>
                         <div class="datepickerDiv">
                             <input class="datepicker" id="fromDt">
