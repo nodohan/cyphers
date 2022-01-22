@@ -1,4 +1,4 @@
-const commonUtil = require('./commonUtil');
+const commonUtil = require('../util/commonUtil');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();

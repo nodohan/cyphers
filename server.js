@@ -5,7 +5,7 @@ var favicon = require('serve-favicon');
 var path = require('path');
 
 const api = require('./api');
-const commonUtil = require('./controller/commonUtil');
+const commonUtil = require('./server/util/commonUtil');
 const scheduler = require('node-schedule');
 var maria = require('./config/maria');
 let pool;
