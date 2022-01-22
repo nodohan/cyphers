@@ -1,5 +1,3 @@
-const logger = require('../config/winston');
-
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
 

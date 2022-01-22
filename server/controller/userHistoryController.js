@@ -1,9 +1,8 @@
-const logger = require('../config/winston');
 const commonUtil = require('./commonUtil');
 
-module.exports = (scheduler, maria, logger) => {
+module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
-    app.use(logger());
+    app.use(acclogger());
 
     app.get('/nicknameHistory', function(req, res) {
         if (commonUtil.isMobile(req)) {
