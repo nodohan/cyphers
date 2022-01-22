@@ -1,6 +1,6 @@
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
-    const api = require('../api');
+    const api = require('../../api');
 
     const isRun = false;
 
