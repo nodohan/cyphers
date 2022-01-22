@@ -14,16 +14,16 @@ const loggerCatcher = require('./config/logger-catcher');
 const logger = require('./config/winston');
 
 //스케쥴러1. 매치리스트 
-const matchScehduler = require('./controller/matchListScheduler')(scheduler, maria, loggerCatcher);
+const matchScehduler = require('./server/scheduler/matchListScheduler')(scheduler, maria, loggerCatcher);
 
 //스케쥴러2. 랭킹 크롤링
-const rankScheduler = require('./controller/rankCrawlingScheduler')(scheduler, maria, loggerCatcher);
+const rankScheduler = require('./server/scheduler/rankCrawlingScheduler')(scheduler, maria, loggerCatcher);
 
 //랭킹 차트
-const rankChart = require('./controller/rankChart')(scheduler, maria, loggerCatcher);
+const rankChart = require('./server/controller/rankChartController')(scheduler, maria, loggerCatcher);
 
 // 닉변이력
-const userHistory = require('./controller/userHistory')(scheduler, maria, loggerCatcher);
+const userHistory = require('./server/controller/userHistoryController')(scheduler, maria, loggerCatcher);
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');

@@ -9,6 +9,7 @@ module.exports = (scheduler, maria) => {
     const isRun = false;
 
     var rankSchedulerTime = "00 13 * * *";
+    //var rankSchedulerTime = "08 20 * * *";
     scheduler.scheduleJob(rankSchedulerTime, function() {
         if (isRun) {
             logger.info("call rank scheduler");
