@@ -52,7 +52,7 @@ class maria {
             });
 
         this.getPool = () => {
-            return POOL || this.createPoolAndEnsureSchema(); 
+            return POOL || this.createPoolAndEnsureSchema();
         };
     }
 }
