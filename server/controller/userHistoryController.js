@@ -31,10 +31,14 @@ module.exports = (scheduler, maria, acclogger) => {
 
     async function searchNickname(userName) {
         let query = "SELECT season, nickname, DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate "
-        query += " FROM nickNames "
-        query += " WHERE playerId = (  "
+        query += " FROM nickNames nick "
+        query += " LEFT JOIN player pl ON pl.playerId = nick.playerId  "
+        query += " WHERE nick.playerId = (  "
         query += "     SELECT playerId FROM nickNames WHERE nickname = '" + userName + "' ";
-        query += " ) ORDER BY checkingDate DESC; ";
+        query += " ) and ( pl.privateYn IS NULL OR pl.privateYn != 'Y' ) "
+        query += " ORDER BY checkingDate DESC; ";
+
+        logger.debug("닉변검색: " + userName);
 
         let pool = await maria.getPool();
 

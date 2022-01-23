@@ -85,7 +85,11 @@ app.get('/getMatchInfo', async function(req, res) {
 
 app.get('/getNicknameHistory', async function(req, res) {
     let playerId = req.query.playerId;
-    let query = "SELECT * FROM nickNames WHERE playerId = '" + playerId + "' order by checkingDate desc";
+    let query = "SELECT nick.* FROM nickNames nick ";
+    query += " LEFT JOIN player pl ON pl.playerId = nick.playerId ";
+    query += " WHERE nick.playerId = '" + playerId + "' ";
+    query += " and ( pl.privateYn IS NULL OR pl.privateYn != 'Y' )  ";
+    query += " ORDER BY checkingDate desc";
 
     pool = await maria.getPool();
     // [START cloud_sql_mysql_mysql_connection]
