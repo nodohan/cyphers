@@ -42,12 +42,6 @@ module.exports = (scheduler, maria, acclogger) => {
             return rows;
         } catch (err) {
             logger.error(err);
-            if (res) {
-                return res
-                    .status(500)
-                    .send('오류 발생')
-                    .end();
-            }
         }
 
         return null;
