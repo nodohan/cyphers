@@ -18,6 +18,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
         if (userNicknameList == null) {
             res.send({ resultCode: -1 });
+            return;
         }
 
         let result = userNicknameList.map(row => {
