@@ -1,13 +1,16 @@
+const logger = require('../../config/winston');
+
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../../api');
 
-    const isRun = false;
+    const isRun = true;
+    const isDebug = true;
 
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
-    var time = "30 23 * * *"; // 리얼용
-    //var time = "32 23 * * *"; // 테스트중
+    var time = "00 01 * * *"; // 리얼용
+    //var time = "10 18 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
         if (isRun) {
             logger.info("call match scheduler");
@@ -36,10 +39,11 @@ module.exports = (scheduler, maria) => {
         return insertMatches(res);
     });
 
-    async function insertMatches(res, day) {
-        let query = "SELECT playerId FROM rank where rankDate = '" + getYYYYMMDD() + "'; ";
-        let pool = await maria.getPool();
+    async function insertMatches(res, day = new Date()) {
+        let query = "SELECT playerId FROM rank where rankDate = '" + getYYYYMMDD(addDays(day, -1)) + "'; ";
+        printQuery(query);
 
+        let pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
             let result = mergeMatchIds(rows, day);
@@ -62,11 +66,22 @@ module.exports = (scheduler, maria) => {
         return date.toISOString().replace('T', ' ').substring(0, 16);
     }
 
-    async function mergeMatchIds(rows, day = new Date()) {
-        let yesterday = timestamp(addDays(day, -1));
-        let today = timestamp(day);
+    function setFromDay(date) {
+        date.setHours(0, 0, 0, 0);
+        return date;
+    }
 
-        logger.debug("search matchList today = %s, yesterday = %s", today, yesterday);
+    function setEndDay(date) {
+        date.setHours(23, 59, 59, 999);
+        return date;
+    }
+
+    async function mergeMatchIds(rows, day = new Date()) {
+
+        let yesterday = timestamp(setFromDay(addDays(day, -1)));
+        let today = timestamp(setEndDay(addDays(day, -1)));
+
+        logger.debug("search matchList yesterday = %s, today = %s", yesterday, today);
 
         //사용자 매칭 데이터 검색 
         let promiseItems = [];
@@ -120,13 +135,20 @@ module.exports = (scheduler, maria) => {
         return result;
     }
 
-    function getYYYYMMDD() {
-        var rightNow = new Date();
-        return rightNow.toISOString().slice(0, 10).replace(/-/g, "");
+    function printQuery(query) {
+        if (isDebug) {
+            logger.debug(query);
+        }
+    }
+
+    function getYYYYMMDD(date) {
+        let day = new Date(date.getTime());
+        day.setHours(day.getHours() + 9);
+        return day.toISOString().slice(0, 10).replace(/-/g, "");
     }
 
     function addDays(date, days) {
-        var result = new Date(date);
+        var result = new Date(date.getTime());
         result.setDate(result.getDate() + days);
         return result;
     }
