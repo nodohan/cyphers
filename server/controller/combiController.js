@@ -31,6 +31,7 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/combiSearch', async function(req, res) {
         let type = req.query.position;
         let count = req.query.count;
+        let order = req.query.order == 'count' ? 'total' : 'late';
         if (count == null) {
             count = 10;
         }
@@ -58,7 +59,7 @@ module.exports = (scheduler, maria, acclogger) => {
         query += "        GROUP BY " + type + " ";
         query += "    ) a  ";
         query += "    WHERE total >= " + count + " ";
-        query += "    ORDER BY total DESC";
+        query += "    ORDER BY " + order + " DESC";
 
         logger.debug(query);
 

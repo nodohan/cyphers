@@ -114,6 +114,8 @@
                 callLoadingBar(true);
 
                 let position = $("input[name='position']:checked").val();
+                let order = $("input[name='order']:checked").val();
+
                 $.ajax({
                     async: true,
                     url: "/combi/combiSearch",
@@ -121,7 +123,9 @@
                         'position': position,
                         'charName': $("#charName").val(),
                         'fromDt': $("#fromDt").val(),
-                        'toDt': $("#toDt").val()
+                        'toDt': $("#toDt").val(),
+                        'count': $("#count").val(),
+                        'order': order
                     },
                     success: function(data) {
                         callLoadingBar(false);
@@ -163,10 +167,18 @@
     <%- include  ("../layout/menu_mobile") %>
 
         <div id="main">
-            <div class="top" style="height: 100px;">
-                <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
-                <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
-                <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
+            <div class="top" style="height: 125px;">
+                <div>
+                    <input type="radio" name="position" id="gameType_allJoin" value="allJoin" /><label for="gameType_allJoin"> 전체조합 </label>
+                    <input type="radio" name="position" id="gameType_attacker" value="attackerJoin" checked /><label for="gameType_attacker"> 딜러조합 </label>
+                    <input type="radio" name="position" id="gameType_tanker" value="tankerJoin" /><label for="gameType_tanker"> 탱커조합 </label>
+                </div>
+                <div>
+                    <input type="radio" name="order" id="order_count" value="count" checked /><label for="order_count"> 판수순 </label>
+                    <input type="radio" name="order" id="order_victory" value="victory" /><label for="order_victory"> 승률순 </label>
+
+                    <input type="number" class="width25p" id="count" value="10">판 이상
+                </div>
                 <div>
                     <div class="datepickerDiv">
                         <input class="datepicker" id="fromDt">
