@@ -105,8 +105,8 @@
             <div id="con1" class="con">
                 <h3>상세</h3>
                 <input type="text" class="longText" id="nickNames" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " placeholder="한명만 검색하세요" />
-                <input type="button" value="검색" onCdivck="searchDetail();">
-                <input type="button" value="초기화" onCdivck="clearDiv('con1_2');"></br>
+                <input type="button" value="검색" onClick="searchDetail();">
+                <input type="button" value="초기화" onClick="clearDiv('con1_2');clearDiv('con2_2');"></br>
                 <div id="con1_2" class="infoLayer2">
 
                 </div>
