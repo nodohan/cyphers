@@ -5,7 +5,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    const isRun = true;
+    const isRun = false;
     const isDebug = true;
 
     //스케쥴러 또는 웹 url call
