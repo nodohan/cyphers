@@ -17,5 +17,36 @@ function isMobile(req) {
     return false;
 }
 
+function getYYYYMMDD(date, delHyphen = true) {
+    let day = new Date(date.getTime());
+    day.setHours(day.getHours() + 9);
+    if (delHyphen) {
+        return day.toISOString().slice(0, 10).replace(/-/g, "");
+    } else {
+        return day.toISOString().slice(0, 10);
+    }
+}
 
-module.exports = { getIp, isMobile };
+function addDays(date, days) {
+    var result = new Date(date.getTime());
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+function timestamp(date) {
+    date.setHours(date.getHours() + 9);
+    return date.toISOString().replace('T', ' ').substring(0, 16);
+}
+
+function setFromDay(date) {
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+function setEndDay(date) {
+    date.setHours(23, 59, 59, 999);
+    return date;
+}
+
+
+module.exports = { getIp, isMobile, getYYYYMMDD, addDays, timestamp, setFromDay, setEndDay };

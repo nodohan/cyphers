@@ -1,10 +1,11 @@
 const logger = require('../../config/winston');
+const commonUtil = require('../util/commonUtil');
 
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../../api');
 
-    const isRun = true;
+    const isRun = false;
     const isDebug = true;
 
     //스케쥴러 또는 웹 url call
@@ -40,7 +41,7 @@ module.exports = (scheduler, maria) => {
     });
 
     async function insertMatches(res, day = new Date()) {
-        let query = "SELECT playerId FROM rank where rankDate = '" + getYYYYMMDD(addDays(day, -1)) + "'; ";
+        let query = "SELECT playerId FROM rank where rankDate = '" + commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1)) + "'; ";
         printQuery(query);
 
         let pool = await maria.getPool();
@@ -61,25 +62,10 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    function timestamp(date) {
-        date.setHours(date.getHours() + 9);
-        return date.toISOString().replace('T', ' ').substring(0, 16);
-    }
-
-    function setFromDay(date) {
-        date.setHours(0, 0, 0, 0);
-        return date;
-    }
-
-    function setEndDay(date) {
-        date.setHours(23, 59, 59, 999);
-        return date;
-    }
-
     async function mergeMatchIds(rows, day = new Date()) {
 
-        let yesterday = timestamp(setFromDay(addDays(day, -1)));
-        let today = timestamp(setEndDay(addDays(day, -1)));
+        let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
+        let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(day, -1)));
 
         logger.debug("search matchList yesterday = %s, today = %s", yesterday, today);
 
@@ -141,17 +127,6 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    function getYYYYMMDD(date) {
-        let day = new Date(date.getTime());
-        day.setHours(day.getHours() + 9);
-        return day.toISOString().slice(0, 10).replace(/-/g, "");
-    }
-
-    function addDays(date, days) {
-        var result = new Date(date.getTime());
-        result.setDate(result.getDate() + days);
-        return result;
-    }
 
     return app;
 }
