@@ -1,3 +1,4 @@
+const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
 
 module.exports = (scheduler, maria, acclogger) => {
@@ -36,11 +37,18 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/statsList', async function(req, res) {
-        let todayStr = commonUtil.getYYYYMMDD(new Date(), false);
+        let today = new Date();
+        if (today.getHours() <= 2) {
+            today = commonUtil.addDays(today, -1);
+        }
+
+        let todayStr = commonUtil.getYYYYMMDD(today, false);
         pool = await maria.getPool();
 
         try {
             let query = " SELECT * FROM match_stats WHERE statsDate = '" + todayStr + "' ";
+            logger.debug(query);
+
             let row = await pool.query(query);
             res.send({ 'row': row });
         } catch (err) {
