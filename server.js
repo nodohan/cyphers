@@ -49,9 +49,18 @@ const port = 8080;
 app.get('/', function(req, res) {
     commonUtil.getIp(req);
     if (commonUtil.isMobile(req)) {
-        res.render('./mobile/main', { 'searchNickname': req.query.nickname });
+        res.render('./mobile/stats');
     } else {
-        res.render('./pc/main', { 'searchNickname': req.query.nickname });
+        res.render('./pc/stats');
+    }
+}); 
+
+app.get('/userSearch', function(req, res) {
+    commonUtil.getIp(req);
+    if (commonUtil.isMobile(req)) {
+        res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
+    } else {
+        res.render('./pc/userSearch', { 'searchNickname': req.query.nickname });
     }
 });
 
