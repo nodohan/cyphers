@@ -28,6 +28,12 @@ const userHistory = require('./server/controller/userHistoryController')(schedul
 // 조합통계 
 const combi = require('./server/controller/combiController')(scheduler, maria, loggerCatcher);
 
+//스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
+const statsSche = require('./server/scheduler/statsScheduler')(scheduler, maria, loggerCatcher);
+
+//스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
+const stats = require('./server/controller/statsController')(scheduler, maria, loggerCatcher);
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'ico', 'favicon.ico')))
@@ -41,6 +47,8 @@ app.use('/matches', matchScehduler);
 app.use('/rankChart', rankChart);
 app.use('/history', userHistory);
 app.use('/combi', combi);
+app.use('/statsSche', statsSche);
+app.use('/stats', stats);
 
 app.use(loggerCatcher());
 

@@ -227,3 +227,46 @@ table td {
     color: rgb(0, 0, 0);
     font-weight: bold;
 }
+
+
+#statsMain {
+    /* width: 1400px; */
+
+    margin: 55px 0px 0px 0px;
+}
+
+.topNoheight {
+    margin-top: 10px;
+    float: left;
+    padding: 15px;
+    position: relative;
+    /* width: 1400px; */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.conLayer {
+    margin-top: 10px;
+    float: left;
+    padding: 15px;
+    position: relative;
+    /* width: 700px; */
+    /* min-height: 750px; */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.conStats {
+    margin-bottom: 10px;
+    float: left;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+    background-color: rgb(173 173 173 / 80%);
+    border-radius: 7px;
+}
+
+.charImg {
+    width: 38px;
+    height : 38px;
+}

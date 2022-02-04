@@ -10,6 +10,7 @@
     border-radius: 7px;
 }
 
+
 .body {
     background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
 }
@@ -243,4 +244,41 @@ table td {
 
 .shortInput {
     width: 60px;
+}
+
+
+#statsMain {
+    width: 1400px;
+    margin: 0px auto;
+}
+
+.topNoheight {
+    margin-top: 10px;
+    float: left;
+    padding: 15px;
+    position: relative;
+    width: 1400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.conLayer {
+    margin-top: 10px;
+    float: left;
+    padding: 15px;
+    position: relative;
+    width: 700px;
+    min-height: 750px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.conStats {
+    margin-bottom: 10px;
+    float: left;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+    background-color: rgb(173 173 173 / 80%);
+    border-radius: 7px;
 }

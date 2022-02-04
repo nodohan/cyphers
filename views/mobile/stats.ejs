@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include  ("../layout/head_mobile") %>
+    <script src="/js/charImage.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            
+            var myChart;
+
+            $(document).ready(function() {
+                $("#mainMenu").removeClass("active");
+                getStats("statsCountList", drawCount);
+                getStats("statsList", drawStatsList);
+            });
+
+            function drawCount(data) {
+                let div = $("#statsCountDiv");
+                div.empty();
+
+                let table = "<table class='table table-bordered table-striped'>";
+                let tr = "<thead><tr>";
+                let tbody = "<tbody><tr>";
+                let endTbody = "</tr></tbody></table>";
+
+                let th = "";
+                let td = "";
+                let trCount = 1;
+                let first = true;
+                for (idx in data.row) {
+                    let item = data.row[idx];
+                    th += "<th>" + item.dates + "</th>";
+                    td += "<td>" + item.cnt.toLocaleString() + "</td>";
+                    if (trCount % 5 == 0) {
+                        let newTable = table + tr + th + tbody + td + endTbody;
+                        th = "";
+                        td = "";
+                        if(first){
+                            $("#statsCountDiv").append(newTable);
+                            first = false;
+                        }else {
+                            $("#moreCountDiv").append(newTable);
+                        }
+                    }
+                    trCount++;
+                }
+            }
+
+            function drawStatsList(data) {
+                drawStatsListDiv("wBestTanker",  dataFilter(data.row, "W", "TANKER", "DESC"));
+                drawStatsListDiv("wWorstTanker", dataFilter(data.row, "W", "TANKER", "ASC"));
+                drawStatsListDiv("wBestAttack",  dataFilter(data.row, "W", "ATTACK", "DESC"));
+                drawStatsListDiv("wWorstAttack", dataFilter(data.row, "W", "ATTACK", "ASC"));
+
+                drawStatsListDiv("mBestTanker",  dataFilter(data.row, "M", "TANKER", "DESC"));
+                drawStatsListDiv("mWorstTanker", dataFilter(data.row, "M", "TANKER", "ASC"));
+                drawStatsListDiv("mBestAttack",  dataFilter(data.row, "M", "ATTACK", "DESC"));
+                drawStatsListDiv("mWorstAttack", dataFilter(data.row, "M", "ATTACK", "ASC"));
+            }
+
+            function dataFilter(row, statsType, combiType, order){
+                let list = row.filter(item => item.statsType == statsType)
+                          .filter(item => item.combiType == combiType)
+                          .filter(item => item.order == order)
+                          .sort(order == "DESC" ? lateDesc : lateAsc);
+                return list;
+            }
+
+            function drawStatsListDiv(divId, data){
+                //console.log(divId, data, data.length);
+
+                var table = $("#matchInfoTemplate").clone();
+                table.removeAttr("id");
+                let tbody = table.find("tbody");
+
+                if (data.length == 0) {
+                    let tr = "<tr><td colspan='5'>데이터가 없습니다.</td></tr>";
+                    tbody.append(tr);
+                }
+
+                let idx = 0;
+                for (idx in data) {
+                    if(idx >= 3){
+                        break;
+                    }
+                    let row = data[idx];
+                    let tr = "<tr>";
+                    //console.log(row.combi.split("|"));
+                    tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
+                    tr += "<td>" + row.total + "</td>";
+                    tr += "<td>" + row.win + "</td>";
+                    tr += "<td>" + row.lose + "</td>";
+                    tr += "<td>" + row.late + "%</td>";
+                    tbody.append(tr);
+                }
+
+                $("#"+divId).append(table);
+            }
+
+            function getChars(arr){
+                let images = "";
+                for(idx in arr){
+                    images += "&nbsp;<img class='charImg' data-item='"+arr[idx]+"' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
+                }
+                return images;
+            }
+
+            function getStats(url, callback) {
+                var result;
+                $.ajax({
+                    async: true,
+                    url: "/stats/" + url,
+                    success: function(data) {
+                        if (data.resultCode == -1) {
+                            return;
+                        }
+                        callback(data);
+                    },
+                    error: function(data) {
+                        return;
+                    }
+                }).done(function() {
+
+                });
+                return result;
+            }
+        </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu_mobile") %>
+
+        <div id="statsMain">
+            <div class="topNoheight">
+                <h3>주간 공식 집계 판수 
+                    <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreCountDiv" aria-expanded="true"></i>
+                </h3> 
+                <div id="statsCountDiv">
+
+                </div>
+
+                <div id="moreCountDiv" class="collapse">
+
+                </div>
+            </div>
+            <div id="con1" class="conLayer" >
+                <h3> 이번달 조합 </h3>
+                <div class="conStats">
+                    <h4>BEST 5</h4>
+                    <div id="mBestTanker"><h5>탱커</h5></div>
+                    <div id="mBestAttack"><h5>딜러</h5></div>
+                </div>
+                <div class="conStats">
+                    <h4>WORST 5</h4>
+                    <div id="mWorstTanker"><h5>탱커</h5></div>
+                    <div id="mWorstAttack"><h5>딜러</h5></div>
+                </div>
+            </div>
+            <div id="con2" class="conLayer" >
+                <h3> 금주 조합 </h3> 
+                <div class="conStats">
+                    <h4>BEST 5</h4>
+                    <div id="wBestTanker"><h5>탱커</h5></div>
+                    <div id="wBestAttack"><h5>딜러</h5></div>
+                </div>
+                <div class="conStats">
+                    <h4>WORST 5</h4>
+                    <div id="wWorstTanker"><h5>탱커</h5></div>
+                    <div id="wWorstAttack"><h5>딜러</h5></div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div style="display:none">
+            <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">조합</th>
+                        <th scope="col">판수</th>
+                        <th scope="col">승</th>
+                        <th scope="col">패</th>
+                        <th scope="col">승률</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+
+</body>
+
+</html>

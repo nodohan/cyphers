@@ -464,6 +464,27 @@ function highScore(a, b) {
     return 0;
 }
 
+function lateDesc(a, b) {
+    if (a.late < b.late) {
+        return 1;
+    }
+    if (a.late > b.late) {
+        return -1;
+    }
+    return 0;
+}
+
+function lateAsc(a, b) {
+    if (a.late > b.late) {
+        return 1;
+    }
+    if (a.late < b.late) {
+        return -1;
+    }
+    return 0;
+}
+
+
 function sortCase(a, b) {
     if (a.count < b.count) {
         return 1;
