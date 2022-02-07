@@ -69,7 +69,8 @@ module.exports = (scheduler, maria, acclogger) => {
         let totalCount = combiType == "ATTACK" ? 20 : 30;
 
         let query = " INSERT INTO match_stats  \n";
-        query += " SELECT '" + todayStr + "', '" + statsType + "', '" + combiType + "', '" + order + "' \n";
+        query += " SELECT '" + todayStr + "', '" + statsType + "', '" + combiType + "' \n ";
+        query += " , '" + startDateStr +"', '" + todayStr +"', '" + order +"' \n ";
         query += "       , combi, total, win, lose, CEILING( win / total * 100 ) AS late \n";
         query += " FROM ( \n";
         query += " 	SELECT \n";
