@@ -282,3 +282,9 @@ table td {
     background-color: rgb(173 173 173 / 80%);
     border-radius: 7px;
 }
+
+
+.h3Span {
+    font-weight:500;
+    font-size: 1.75rem;
+}
