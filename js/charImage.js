@@ -70,3 +70,4 @@ charMap.set('제이', '7685d0e5c2b3a123fd627184c94c5e4d');
 charMap.set('웨슬리', '64e6ec54c35e780c45eb2606ddee8914');
 charMap.set('카를로스', 'f0548e3e7385dd2bc6af26f43ccbc246');
 charMap.set('시바', 'ea370f7b3d39ab4982cf53bb50e911ec');
+charMap.set('카인', 'fa1340686cb8400dc5a7b0eb291a5a54');
