@@ -97,10 +97,13 @@
                 $("#"+divId).append(table);
             }
 
-            function getChars(arr){
+            function getChars(arr) {
                 let images = "";
-                for(idx in arr){
-                    images += "&nbsp;&nbsp;&nbsp;<img data-item='"+arr[idx]+"' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
+                if (arr == "") {
+                    return "<spna style='font-size:32px;'>탱커 없음</span>";
+                }
+                for (idx in arr) {
+                    images += "&nbsp;&nbsp;&nbsp;<img data-item='" + arr[idx] + "' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
                 }
                 return images;
             }

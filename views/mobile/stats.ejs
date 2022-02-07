@@ -99,6 +99,9 @@
 
             function getChars(arr){
                 let images = "";
+                if(arr == ""){ 
+                    return "<spna style='font-size:25px;'>탱커 없음</span>";
+                }
                 for(idx in arr){
                     images += "&nbsp;<img class='charImg' data-item='"+arr[idx]+"' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
                 }
