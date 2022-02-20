@@ -34,14 +34,6 @@
                 }
             }
 
-
-            function printChar(row){
-                for(idx in row){
-                    let playInfo = row[idx].playInfo; 
-                    console.log(playInfo.characterId, playInfo.characterName);
-                }
-            }
-
             function setUserInfo(gameType, divName, data) {
                 var userDivId = getUserDivId(gameType, data.nickname);
                 //기본 정보 
