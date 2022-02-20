@@ -98,6 +98,10 @@ table td {
     padding: 1px;
 }
 
+.mostCharDiv {
+    width: 100%
+}
+
 .drawIcon {
     width: 30px;
     height: 30px;
