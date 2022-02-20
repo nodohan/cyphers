@@ -3,7 +3,8 @@ const request = require('request-promise-native');
 class api {
     constructor() {
 
-        var seasonStartDay = '2021-07-15 12:00'; //이번시즌 시작일 
+        var newSeasonStartDay = "2022-02-17 11:00";
+        var seasonStartDay = "2021-07-15 12:00"; //이번시즌 시작일 
         //var seasonStartDay = '2021-08-05 10:00'; // 인틈 삭제일
         const apiKey = 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp';
 
@@ -49,8 +50,15 @@ class api {
             }
         };
 
+
+        let newSeasonDay = new Date(newSeasonStartDay);
         this.searchUser = async function(nickname, gameType) {
             nickOpt.qs.nickname = nickname;
+
+            let today = new Date();
+            if (today >= newSeasonDay) {
+                seasonStartDay = newSeasonStartDay;
+            }
 
             return await this.call(nickOpt).then(async(result) => {
                 logger.debug("사용자 %s", result);
