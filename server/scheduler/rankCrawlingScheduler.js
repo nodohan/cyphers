@@ -80,7 +80,8 @@ module.exports = (scheduler, maria) => {
 
     const getHtml = async(page) => {
         try {
-            return await axios.get("http://cyphers.nexon.com/cyphers/article/ranking/total/19/" + page);
+            //return await axios.get("http://cyphers.nexon.com/cyphers/article/ranking/total/19/" + page);
+            return await axios.get("http://cyphers.nexon.com/cyphers/article/ranking/total/20/" + page);
         } catch (error) {
             logger.error(error);
         }
