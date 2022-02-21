@@ -3,9 +3,8 @@
 
 <head>
     <%- include  ("../layout/head") %>
-    <script src="/js/charImage.js" crossorigin="anonymous"></script>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            
             var myChart;
 
             $(document).ready(function() {
@@ -35,10 +34,10 @@
                         let newTable = table + tr + th + tbody + td + endTbody;
                         th = "";
                         td = "";
-                        if(first){
+                        if (first) {
                             $("#statsCountDiv").append(newTable);
                             first = false;
-                        }else {
+                        } else {
                             $("#moreCountDiv").append(newTable);
                         }
                     }
@@ -47,28 +46,36 @@
             }
 
             function drawStatsList(data) {
-                drawStatsListDiv("wBestTanker",  dataFilter(data.row, "W", "TANKER", "DESC"));
+                let wList = dataFilter(data.row, "W", "TANKER", "DESC");
+                setStatsWDueDate("W", wList[0]);
+                drawStatsListDiv("wBestTanker", wList);
                 drawStatsListDiv("wWorstTanker", dataFilter(data.row, "W", "TANKER", "ASC"));
-                drawStatsListDiv("wBestAttack",  dataFilter(data.row, "W", "ATTACK", "DESC"));
+                drawStatsListDiv("wBestAttack", dataFilter(data.row, "W", "ATTACK", "DESC"));
                 drawStatsListDiv("wWorstAttack", dataFilter(data.row, "W", "ATTACK", "ASC"));
 
-                drawStatsListDiv("mBestTanker",  dataFilter(data.row, "M", "TANKER", "DESC"));
+                let mList = dataFilter(data.row, "M", "TANKER", "DESC");
+                setStatsWDueDate("M", mList[0]);
+                drawStatsListDiv("mBestTanker", mList);
                 drawStatsListDiv("mWorstTanker", dataFilter(data.row, "M", "TANKER", "ASC"));
-                drawStatsListDiv("mBestAttack",  dataFilter(data.row, "M", "ATTACK", "DESC"));
+                drawStatsListDiv("mBestAttack", dataFilter(data.row, "M", "ATTACK", "DESC"));
                 drawStatsListDiv("mWorstAttack", dataFilter(data.row, "M", "ATTACK", "ASC"));
             }
 
-            function dataFilter(row, statsType, combiType, order){
+            function dataFilter(row, statsType, combiType, order) {
                 let list = row.filter(item => item.statsType == statsType)
-                          .filter(item => item.combiType == combiType)
-                          .filter(item => item.order == order)
-                          .sort(order == "DESC" ? lateDesc : lateAsc);
+                    .filter(item => item.combiType == combiType)
+                    .filter(item => item.order == order)
+                    .sort(order == "DESC" ? lateDesc : lateAsc);
                 return list;
             }
 
-            function drawStatsListDiv(divId, data){
-                //console.log(divId, data, data.length);
+            function setStatsWDueDate(type, item) {
+                let span = (type == "W") ? $("#wDueSpan") : $("#mDueSpan");
+                span.empty();
+                span.append(item.statsFromDate + "~" + item.statsToDate);
+            }
 
+            function drawStatsListDiv(divId, data) {
                 var table = $("#matchInfoTemplate").clone();
                 table.removeAttr("id");
                 let tbody = table.find("tbody");
@@ -80,12 +87,11 @@
 
                 let idx = 0;
                 for (idx in data) {
-                    if(idx >= 3){
+                    if (idx >= 5) {
                         break;
                     }
                     let row = data[idx];
                     let tr = "<tr>";
-                    console.log(row.combi.split("|"));
                     tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
                     tr += "<td>" + row.total + "</td>";
                     tr += "<td>" + row.win + "</td>";
@@ -94,7 +100,7 @@
                     tbody.append(tr);
                 }
 
-                $("#"+divId).append(table);
+                $("#" + divId).append(table);
             }
 
             function getChars(arr) {
@@ -135,9 +141,9 @@
 
         <div id="statsMain">
             <div class="topNoheight">
-                <h3>주간 공식 집계 판수 
+                <h3>주간 공식 집계 판수
                     <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreCountDiv" aria-expanded="true"></i>
-                </h3> 
+                </h3>
                 <div id="statsCountDiv">
 
                 </div>
@@ -146,35 +152,51 @@
 
                 </div>
             </div>
-            <div id="con1" class="conLayer" >
-                <h3> 이번달 조합 </h3>
+            <div id="con1" class="conLayer">
+                <span class="h3Span"> 최근 30일 조합 </span> ( <span id="mDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
                 <div class="conStats">
                     <h4>BEST 5</h4>
-                    <div id="mBestTanker"><h5>탱커</h5></div>
-                    <div id="mBestAttack"><h5>딜러</h5></div>
+                    <div id="mBestTanker">
+                        <h5>탱커</h5>
+                    </div>
+                    <div id="mBestAttack">
+                        <h5>딜러</h5>
+                    </div>
                 </div>
                 <div class="conStats">
                     <h4>WORST 5</h4>
-                    <div id="mWorstTanker"><h5>탱커</h5></div>
-                    <div id="mWorstAttack"><h5>딜러</h5></div>
+                    <div id="mWorstTanker">
+                        <h5>탱커</h5>
+                    </div>
+                    <div id="mWorstAttack">
+                        <h5>딜러</h5>
+                    </div>
                 </div>
             </div>
-            <div id="con2" class="conLayer" >
-                <h3> 금주 조합 </h3> 
+            <div id="con2" class="conLayer">
+                <span class="h3Span"> 금주 조합 </span> ( <span id="wDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
                 <div class="conStats">
                     <h4>BEST 5</h4>
-                    <div id="wBestTanker"><h5>탱커</h5></div>
-                    <div id="wBestAttack"><h5>딜러</h5></div>
+                    <div id="wBestTanker">
+                        <h5>탱커</h5>
+                    </div>
+                    <div id="wBestAttack">
+                        <h5>딜러</h5>
+                    </div>
                 </div>
                 <div class="conStats">
                     <h4>WORST 5</h4>
-                    <div id="wWorstTanker"><h5>탱커</h5></div>
-                    <div id="wWorstAttack"><h5>딜러</h5></div>
+                    <div id="wWorstTanker">
+                        <h5>탱커</h5>
+                    </div>
+                    <div id="wWorstAttack">
+                        <h5>딜러</h5>
+                    </div>
                 </div>
             </div>
         </div>
 
-        
+
         <div style="display:none">
             <table id="matchInfoTemplate" class="table table-striped table-condensed">
                 <thead class="thead-light">
