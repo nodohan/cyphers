@@ -267,6 +267,11 @@ table td {
 }
 
 .charImg {
+    /*width: 35px;
+    height: 35px;*/
+}
+
+.charImgSmall {
     width: 38px;
-    height : 38px;
+    height: 38px;
 }
