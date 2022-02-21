@@ -64,18 +64,15 @@ module.exports = (scheduler, maria) => {
     }
 
     async function mergeMatchIds(rows, day = new Date()) {
-
         let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
         let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(day, -1)));
 
-        logger.debug("search matchList yesterday = %s, today = %s", yesterday, today);
+        logger.debug("search matchList yesterday = %s, today = %s, length= %d", yesterday, today, rows.length);
 
         //사용자 매칭 데이터 검색 
         let promiseItems = [];
         for (idx in rows) {
             let playerId = rows[idx].playerId;
-            //logger.debug("search user matchList username= %s", playerId);
-
             let time = idx * 50;
             let item = new Promise((resolve, reject) => {
                 setTimeout(async() => {
@@ -121,13 +118,6 @@ module.exports = (scheduler, maria) => {
 
         return result;
     }
-
-    function printQuery(query) {
-        if (isDebug) {
-            logger.debug(query);
-        }
-    }
-
 
     return app;
 }

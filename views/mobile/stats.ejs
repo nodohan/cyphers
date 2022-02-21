@@ -3,9 +3,8 @@
 
 <head>
     <%- include  ("../layout/head_mobile") %>
-    <script src="/js/charImage.js" crossorigin="anonymous"></script>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            
             var myChart;
 
             $(document).ready(function() {
@@ -35,10 +34,10 @@
                         let newTable = table + tr + th + tbody + td + endTbody;
                         th = "";
                         td = "";
-                        if(first){
+                        if (first) {
                             $("#statsCountDiv").append(newTable);
                             first = false;
-                        }else {
+                        } else {
                             $("#moreCountDiv").append(newTable);
                         }
                     }

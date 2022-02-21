@@ -10,7 +10,6 @@
     border-radius: 7px;
 }
 
-
 .body {
     background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
 }
@@ -250,7 +249,6 @@ table td {
     width: 60px;
 }
 
-
 #statsMain {
     width: 1400px;
     margin: 0px auto;
@@ -287,8 +285,7 @@ table td {
     border-radius: 7px;
 }
 
-
 .h3Span {
-    font-weight:500;
+    font-weight: 500;
     font-size: 1.75rem;
 }

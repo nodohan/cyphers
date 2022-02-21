@@ -268,7 +268,7 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
 
         console.log(playInfo.characterId, playInfo.characterName);
- 
+
         //이름 검색 지원
         if (typeof partyUserSearch == 'function') {
             score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";

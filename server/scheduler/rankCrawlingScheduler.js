@@ -16,6 +16,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
+    // "/rank/getHtml"    
     app.get('/getHtml', function(req, res) {
         let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
         const ip = req.headers['x-forwarded-for'] || req.ip;
@@ -71,7 +72,7 @@ module.exports = (scheduler, maria) => {
                         rp: $($(row).find("td").get(3)).text()
                     };
                 });
-                logger.debug("랭킹 페이지 %s! insert 시작 ", i);
+                //logger.debug("랭킹 페이지 %s! insert 시작 ", i);
                 await insertRank(pool, rankList);
             }
         }
