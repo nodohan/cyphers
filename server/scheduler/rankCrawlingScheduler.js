@@ -94,12 +94,12 @@ module.exports = (scheduler, maria) => {
                     return;
                 }
 
-                let query = "INSERT INTO rank (rankDate, rankNumber, playerId, nickname, season) "
-                query += " SELECT '" + json.today + "', '" + json.rank + "', nick.playerId, '" + json.name + "' , '2021U' "
-                query += " FROM nickNames nick"
-                query += " WHERE nick.nickname = '" + json.name + "' ";
+                let query = `INSERT INTO rank (rankDate, rankNumber, playerId, nickname, season, rp) `;
+                query += ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022H', ${json.rp} `;
+                query += ` FROM nickNames nick`;
+                query += ` WHERE nick.nickname = '${json.name}' `;
 
-                //logger.debug(query);
+                logger.debug(query);
 
                 result += await pool.query(query);
             } catch (err) {

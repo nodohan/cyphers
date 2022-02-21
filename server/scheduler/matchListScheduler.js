@@ -41,8 +41,9 @@ module.exports = (scheduler, maria) => {
     });
 
     async function insertMatches(res, day = new Date()) {
-        let query = "SELECT playerId FROM rank where rankDate = '" + commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1)) + "'; ";
-        printQuery(query);
+        let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
+        let query = `SELECT playerId FROM rank where rankDate = '${searchDateStr}'; `;
+        logger.debug(query);
 
         let pool = await maria.getPool();
         try {
@@ -111,7 +112,7 @@ module.exports = (scheduler, maria) => {
         rows.forEach(async function(matchId) {
             try {
                 logger.debug(matchId);
-                let query = "INSERT INTO matches (matchId, season) VALUES ( '" + matchId + "', '2021U' ); "
+                let query = `INSERT INTO matches (matchId, season) VALUES ( '${matchId}', '2022H' ); `;
                 result += await pool.query(query);
             } catch (err) {
                 logger.error(err);

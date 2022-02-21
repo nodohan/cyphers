@@ -68,24 +68,24 @@ module.exports = (scheduler, maria, acclogger) => {
         let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";
         let totalCount = combiType == "ATTACK" ? 20 : 30;
 
-        let query = " INSERT INTO match_stats  \n";
-        query += " SELECT '" + todayStr + "', '" + statsType + "', '" + combiType + "' \n ";
-        query += " , '" + startDateStr +"', '" + todayStr +"', '" + order +"' \n ";
-        query += "       , combi, total, win, lose, CEILING( win / total * 100 ) AS late \n";
-        query += " FROM ( \n";
-        query += " 	SELECT \n";
-        query += " 		" + combiTarget + " AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  \n";
-        query += " 		, COUNT(IF(matchResult = '패', 1, NULL)) lose \n";
-        query += " 		, GROUP_CONCAT(detail.matchId) matchIds \n";
-        query += " 	FROM matchdetail detail \n";
-        query += " 	INNER JOIN (   \n";
-        query += " 		SELECT matchId FROM matches WHERE matchDate BETWEEN '" + startDateStr + "' AND '" + todayStr + "' \n";
-        query += " 	) matches ON matches.matchId = detail.matchId \n";
-        query += " 	GROUP BY " + combiTarget + " \n";
-        query += " ) a   \n";
-        query += " WHERE total >= " + totalCount + " \n";
-        query += " ORDER BY late " + order + " \n";
-        query += " LIMIT 10 \n";
+        let query = ` INSERT INTO match_stats  \n`;
+        query += ` SELECT '${todayStr}', '${statsType}', '${combiType}' \n `;
+        query += ` , '${startDateStr}', '${todayStr}', '${order}' \n `;
+        query += `       , combi, total, win, lose, CEILING( win / total * 100 ) AS late \n`;
+        query += ` FROM ( \n`;
+        query += ` 	SELECT \n`;
+        query += ` 		${combiTarget} AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  \n`;
+        query += ` 		, COUNT(IF(matchResult = '패', 1, NULL)) lose \n`;
+        query += ` 		, GROUP_CONCAT(detail.matchId) matchIds \n`;
+        query += ` 	FROM matchdetail detail \n`;
+        query += ` 	INNER JOIN (   \n`;
+        query += ` 		SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDateStr}' AND '${todayStr}' \n`;
+        query += ` 	) matches ON matches.matchId = detail.matchId \n`;
+        query += ` 	GROUP BY ${combiTarget} \n`;
+        query += ` ) a   \n`;
+        query += ` WHERE total >= ${totalCount} \n`;
+        query += ` ORDER BY late ${order} \n`;
+        query += ` LIMIT 10 \n`;
 
         logger.debug(query);
 
