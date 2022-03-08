@@ -238,11 +238,11 @@ function drawMatch(matchId, result) {
     let loseTeam = getTeam(data.teams, "lose", data.players);
 
     for (idx in winTeam) {
-        tbody.append(drawInGameDetailScore(winTeam[idx], true, "table-primary"));
+        tbody.append(drawInGameDetail(winTeam[idx], "table-primary"));
     }
     //tbody.append("")
     for (idx in loseTeam) {
-        tbody.append(drawInGameDetailScore(loseTeam[idx], true, "table-danger"));
+        tbody.append(drawInGameDetail(loseTeam[idx], "table-danger"));
     }
 
     div.append(table);
@@ -256,64 +256,63 @@ function getTeam(team, result, players) {
     return resultTeam;
 }
 
-function drawInGameDetailScore(data, detail = false, trClass) {
+function drawInGameList(data) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
     let score = "";
 
-    if (detail) {
-        score = "<tr class='" + trClass + "'>";
-        //score += "<td>" + data.date + "</td>";
-        //score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+    score = "<tr>";
+    score += "<td>" + data.date + "</td>";
+    score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
+    score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+    score += "<td>" + playInfo.level + "</td>";
+    score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+    score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+    score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+    score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
+    score += "</tr>"
+    score += "<tr>";
+    score += "<td class='hiddenRow' colspan='10'>";
+    score += "<div class='collapse m" + matchId + "'></div>";
+    score += "</td>";
+    score += "</tr>";
+    return score;
+}
 
-        //이름 검색 지원
-        if (typeof partyUserSearch == 'function') {
-            score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";
-        } else {
-            score += "<td>" + data.nickname + "</td>";
-        }
+function drawInGameDetail(data, trClass) {
+    let matchId = data.matchId;
+    let playInfo = data.playInfo;
+    let score = "";
 
-        if (isMobile) {
-            score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-        } else {
-            score += "<td>" + playInfo.level + "</td>";
-            score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"
-            score += "<td class='kda'>" + playInfo.killCount + "</td>";
-            score += "<td class='kda'>" + playInfo.deathCount + "</td>";
-            score += "<td class='kda'>" + playInfo.assistCount + "</td>";
-            score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-            score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
-        }
+    score = "<tr class='" + trClass + "'>";
+    //score += "<td>" + data.date + "</td>";
+    //score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
+    score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
 
+    //이름 검색 지원
+    if (typeof partyUserSearch == 'function') {
+        score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";
     } else {
-        //메인 리스트
-        score = "<tr>";
-        score += "<td>" + data.date + "</td>";
-        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-        score += "<td>" + playInfo.level + "</td>";
+        score += "<td>" + data.nickname + "</td>";
+    }
+
+    if (isMobile) {
         score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+    } else {
+        score += "<td>" + playInfo.level + "</td>";
+        score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"
+        score += "<td class='kda'>" + playInfo.killCount + "</td>";
+        score += "<td class='kda'>" + playInfo.deathCount + "</td>";
+        score += "<td class='kda'>" + playInfo.assistCount + "</td>";
         score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
-        //score += "<td class='kda'>" + playInfo.spendConsumablesCoin + "</td>";
-        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
-
     }
+
     score += "</tr>"
-
-    // 상세 정보 
-    if (!detail) {
-        score += "<tr>";
-        score += "<td class='hiddenRow' colspan='10'>";
-        score += "<div class='collapse m" + matchId + "'></div>";
-        score += "</td>";
-        score += "</tr>";
-    }
     return score;
 }
 
@@ -369,7 +368,7 @@ function drawRecently(div, rows, userDivId) {
         if (j < headCount) {
             titleText += winLoseKo(rows[j].playInfo.result);
         }
-        body.find("tbody").append(drawInGameDetailScore(rows[j]));
+        body.find("tbody").append(drawInGameList(rows[j]));
     }
     title.append(titleText);
     title.append("<a data-toggle='modal' data-target='#" + userDivId + "Modal'>[더보기]</a>");
