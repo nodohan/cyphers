@@ -263,11 +263,11 @@ function drawInGameDetailScore(data, detail = false, trClass) {
 
     if (detail) {
         score = "<tr class='" + trClass + "'>";
+        //score += "<td>" + data.date + "</td>";
+        //score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-
-        console.log(playInfo.characterId, playInfo.characterName);
 
         //이름 검색 지원
         if (typeof partyUserSearch == 'function') {
@@ -289,13 +289,18 @@ function drawInGameDetailScore(data, detail = false, trClass) {
         }
 
     } else {
+        //메인 리스트
         score = "<tr>";
+        score += "<td>" + data.date + "</td>";
+        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td>" + playInfo.level + "</td>";
         score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
         score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+        //score += "<td class='kda'>" + playInfo.spendConsumablesCoin + "</td>";
         score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
 
     }
@@ -304,12 +309,25 @@ function drawInGameDetailScore(data, detail = false, trClass) {
     // 상세 정보 
     if (!detail) {
         score += "<tr>";
-        score += "<td class='hiddenRow' colspan='7'>";
+        score += "<td class='hiddenRow' colspan='10'>";
         score += "<div class='collapse m" + matchId + "'></div>";
         score += "</td>";
         score += "</tr>";
     }
     return score;
+}
+
+function getPartyInfoText(partyInfo) {
+    let partySize = partyInfo.length;
+    if (partySize == 0) {
+        return "솔로";
+    }
+    let names = partyInfo.map(row => row.nickname).join(",");
+    if (partySize == 1) {
+        return `<span title="${names}"> 듀오</span>`;
+    } else if (partySize == 2) {
+        return `<span title="${names}"> 3인</span>`;
+    }
 }
 
 function getPositionIcon(type) {
