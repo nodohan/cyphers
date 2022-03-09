@@ -271,10 +271,11 @@ function drawInGameList(data) {
     score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
     score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
     score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+    score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
     score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
     score += "</tr>"
     score += "<tr>";
-    score += "<td class='hiddenRow' colspan='10'>";
+    score += "<td class='hiddenRow' colspan='12'>";
     score += "<div class='collapse m" + matchId + "'></div>";
     score += "</td>";
     score += "</tr>";
@@ -295,7 +296,8 @@ function drawInGameDetail(data, trClass) {
 
     //이름 검색 지원
     if (typeof partyUserSearch == 'function') {
-        score += "<td><a href='#' onClick='javascript:partyUserSearch(this);' >" + data.nickname + "</a></td>";
+        let partyCnt = playInfo.partyUserCount == 0 ? "" : "(" + playInfo.partyUserCount + "인)";
+        score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
     } else {
         score += "<td>" + data.nickname + "</td>";
     }
@@ -310,6 +312,9 @@ function drawInGameDetail(data, trClass) {
         score += "<td class='kda'>" + playInfo.assistCount + "</td>";
         score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+        score += "<td class='kda'>" + playInfo.getCoin.toLocaleString() + "</td>"; //먹은코인
+        score += "<td class='kda'>" + playInfo.spendConsumablesCoin.toLocaleString() + "</td>"; //소모품코인
+        score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
     }
 
     score += "</tr>"
