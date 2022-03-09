@@ -2,6 +2,7 @@ var tankerIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/gam
 var meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position2.jpg'>";
 var adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
 var suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
+var buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -291,8 +292,9 @@ function drawInGameDetail(data, trClass) {
     //score += "<td>" + data.date + "</td>";
     //score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
     score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
     score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+    score += "<td>" + getBuffIcon(data.position.attribute) + "</td>";
 
     //이름 검색 지원
     if (typeof partyUserSearch == 'function') {
@@ -313,12 +315,19 @@ function drawInGameDetail(data, trClass) {
         score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
         score += "<td class='kda'>" + playInfo.getCoin.toLocaleString() + "</td>"; //먹은코인
-        score += "<td class='kda'>" + playInfo.spendConsumablesCoin.toLocaleString() + "</td>"; //소모품코인
-        score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
+        let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
+        let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+        score += `<td class='kda'>${useCoin}(${usePer}%)</td>`; //소모품코인
     }
 
     score += "</tr>"
     return score;
+}
+
+function getBuffIcon(buffArr) {
+    return buffArr
+        .map(row => `<img class='drawIcon' title='${row.name}' src='${buffDefaultUrl}${row.id}' />`)
+        .join("&nbsp;");
 }
 
 function getPartyInfoText(partyInfo) {
