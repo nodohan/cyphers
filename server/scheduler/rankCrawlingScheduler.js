@@ -3,13 +3,13 @@ module.exports = (scheduler, maria) => {
 
     const axios = require("axios");
     const cheerio = require("cheerio");
+    const myConfig = require('../../config/config.js');
 
-    const isRun = false;
 
     var rankSchedulerTime = "00 13 * * *";
     //var rankSchedulerTime = "08 20 * * *";
     scheduler.scheduleJob(rankSchedulerTime, function() {
-        if (isRun) {
+        if (myConfig.schedulerRun) {
             logger.info("call rank scheduler");
             getRanks();
             logger.info("end rank scheduler");

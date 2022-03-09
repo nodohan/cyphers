@@ -1,19 +1,17 @@
 const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
+const myConfig = require('../../config/config.js');
 
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../../api');
-
-    const isRun = false;
-    const isDebug = true;
 
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
     var time = "00 01 * * *"; // 리얼용
     //var time = "10 18 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
-        if (isRun) {
+        if (myConfig.schedulerRun) {
             logger.info("call match scheduler");
             await insertMatches(null, new Date());
             logger.info("end match scheduler");

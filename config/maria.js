@@ -1,18 +1,12 @@
 const mariadb = require('promise-mysql');
+const myConfig = require('./config.js');
 
 class maria {
     constructor() {
         var POOL = null;
 
         this.createTcpPool = async(config) => {
-            return await mariadb.createPool({
-                host: '114.207.113.136',
-                //host: 'localhost',
-                port: 3306,
-                user: 'nodo',
-                password: 'P@ssw0rd',
-                database: 'cyphers'
-            });
+            return await mariadb.createPool(myConfig.db);
         };
 
         this.createPool = async() => {
