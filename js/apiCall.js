@@ -328,9 +328,9 @@ function getPartyInfoText(partyInfo) {
     }
     let names = partyInfo.map(row => row.nickname).join(",");
     if (partySize == 1) {
-        return `<span title="${names}"> 듀오</span>`;
+        return `<span title="${names}"> 듀오<i class="fa fa-info-circle"></i></span>`;
     } else if (partySize == 2) {
-        return `<span title="${names}"> 3인</span>`;
+        return `<span title="${names}"> 3인<i class="fa fa-info-circle"></i></span>`;
     }
 }
 
