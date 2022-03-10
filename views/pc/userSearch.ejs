@@ -4,6 +4,7 @@
 <head>
 
     <%- include  ("../layout/head") %>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 let nickname = '<%=searchNickname%>';
@@ -12,11 +13,24 @@
                     search('nickNames', 'con1_2');
                 }
 
+                getCookie();
                 $("#partyShow").on("change", checkVisibility);
                 $("#positionShow").on("change", checkVisibility);
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
             });
+
+            function getCookie() {
+                setCookieCheckbox('partyShow', Cookies.get('playParty'));
+                setCookieCheckbox('positionShow', Cookies.get('positionDiv'));
+                setCookieCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
+                setCookieCheckbox('recentShow', Cookies.get('recentlyDiv'));
+            }
+
+            function setCookieCheckbox(id, checked) {
+                checked = (checked == null || checked == 'true');
+                $("input:checkbox[id='" + id + "']").attr("checked", checked);
+            }
 
             function checkVisibility() {
                 setVisible("playParty", $("#partyShow").is(":checked"));
@@ -32,6 +46,9 @@
                 } else {
                     div.hide();
                 }
+                Cookies.set(classId, isShow, {
+                    expires: 7
+                });
             }
 
             function setUserInfo(gameType, divName, data) {
@@ -321,7 +338,7 @@
                         <input class="form-check-input" type="checkbox" id="recentShow" checked>
                         <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
                     </div>
-
+                    <span class="red">(새로고침 후에도 체크박스가 유지됩니다)</span>
                 </div>
             </div>
             <div id="con1" class="con">
@@ -347,9 +364,9 @@
             <div id="defaultDiv">
                 <div id="gameTypeDiv" class="red bold width100p"></div>
                 <div class="width100p">
-                    <div id="nickNameDiv" class=" bold"> </div>
-                    <div id="levelDiv" class=""></div>
-                    <div id="clanDiv" class=""></div>
+                    <div id="nickNameDiv" class="width25p bold"> </div>
+                    <div id="levelDiv" class="width25p"></div>
+                    <div id="clanDiv" class="width25p"></div>
                 </div>
                 <div class="width100p">
                     <div class="width45p">rp: <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span> <span id="maxRP"></span></div>
