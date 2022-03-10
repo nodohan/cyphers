@@ -262,24 +262,42 @@ function drawInGameList(data) {
     let playInfo = data.playInfo;
     let score = "";
 
-    score = "<tr>";
-    score += "<td>" + data.date + "</td>";
-    score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-    score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-    score += "<td>" + playInfo.level + "</td>";
-    score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-    score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-    score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
-    score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
-    score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
-    score += "</tr>"
-    score += "<tr>";
-    score += "<td class='hiddenRow' colspan='12'>";
-    score += "<div class='collapse m" + matchId + "'></div>";
-    score += "</td>";
-    score += "</tr>";
+    if (isMobile) {
+        score = "<tr>";
+        score += "<td>" + data.date + "</td>";
+        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
+        score += "</tr>"
+        score += "<tr>";
+        score += "<td class='hiddenRow' colspan='7'>";
+        score += "<div class='collapse m" + matchId + "'></div>";
+        score += "</td>";
+        score += "</tr>";
+    } else {
+        score = "<tr>";
+        score += "<td>" + data.date + "</td>";
+        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td>" + playInfo.level + "</td>";
+        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
+        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
+        score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
+        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
+        score += "</tr>"
+        score += "<tr>";
+        score += "<td class='hiddenRow' colspan='12'>";
+        score += "<div class='collapse m" + matchId + "'></div>";
+        score += "</td>";
+        score += "</tr>";
+    }
+
     return score;
 }
 
