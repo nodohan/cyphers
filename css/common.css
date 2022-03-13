@@ -124,12 +124,24 @@ table td {
     width: 100%;
 }
 
-.width33p {
-    width: 33%;
+.width20p {
+    width: 20%;
 }
 
 .width25p {
     width: 25%;
+}
+
+.width30p {
+    width: 30%;
+}
+
+.width33p {
+    width: 33%;
+}
+
+.width40p {
+    width: 40%;
 }
 
 .width45p {
