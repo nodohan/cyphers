@@ -21,13 +21,13 @@
             });
 
             function getCookie() {
-                setCookieCheckbox('partyShow', Cookies.get('playParty'));
-                setCookieCheckbox('positionShow', Cookies.get('positionDiv'));
-                setCookieCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
-                setCookieCheckbox('recentShow', Cookies.get('recentlyDiv'));
+                setCheckbox('partyShow', Cookies.get('playParty'));
+                setCheckbox('positionShow', Cookies.get('positionDiv'));
+                setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
+                setCheckbox('recentShow', Cookies.get('recentlyDiv'));
             }
 
-            function setCookieCheckbox(id, checked) {
+            function setCheckbox(id, checked) {
                 checked = (checked == null || checked == 'true');
                 $("input:checkbox[id='" + id + "']").attr("checked", checked);
             }

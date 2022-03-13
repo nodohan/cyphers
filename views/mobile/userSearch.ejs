@@ -4,13 +4,27 @@
 <head>
 
     <%- include  ("../layout/head_mobile") %>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
+                getCookie();
                 $("#partyShow").on("change", checkVisibility);
                 $("#positionShow").on("change", checkVisibility);
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
             });
+
+            function getCookie() {
+                setCheckbox('partyShow', Cookies.get('playParty'));
+                setCheckbox('positionShow', Cookies.get('positionDiv'));
+                setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
+                setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+            }
+
+            function setCheckbox(id, checked) {
+                checked = (checked == null || checked == 'true');
+                $("input:checkbox[id='" + id + "']").attr("checked", checked);
+            }
 
             function checkVisibility() {
                 setVisible("playParty", $("#partyShow").is(":checked"));
@@ -26,6 +40,9 @@
                 } else {
                     div.hide();
                 }
+                Cookies.set(classId, isShow, {
+                    expires: 7
+                });
             }
 
             function setUserInfo(gameType, divName, data) {
