@@ -16,6 +16,7 @@
 
                 const ctx = $("#myChart");
                 myChart = new Chart(ctx, config);
+                getChartDateLabel();
             });
 
             function userRankSearch() {
@@ -23,6 +24,24 @@
                 $("#nickNames").val("");
 
                 searchUserRank(nickName, drawRank);
+            }
+
+            function getChartDateLabel() {
+                $.ajax({
+                    async: false,
+                    url: "/rankChart/chartDate",
+                    success: function(data) {
+                        if (data.resultCode == -1) {
+                            return;
+                        }
+                        drawRank('랭킹축', data, false);
+                    },
+                    error: function(data) {
+                        return;
+                    }
+                }).done(function() {
+
+                });
             }
 
             function searchUserRank(nickName) {
@@ -50,9 +69,10 @@
                 return result;
             }
 
-            function drawRank(nickName, row) {
+            function drawRank(nickName, row, display = true) {
                 let dataset = {
                     label: nickName,
+                    hidden: false,
                     data: row,
                     fill: false,
                     borderColor: 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')',
@@ -79,7 +99,7 @@
                     scales: {
                         yAxis: {
                             reverse: true,
-                            min: 1,
+                            min: 0,
                             //  max: 10000
                         }
                     }

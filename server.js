@@ -126,12 +126,6 @@ app.get('/getNicknameHistory', async function(req, res) {
     }
 });
 
-app.get('/userChart', function(req, res) {
-    commonUtil.getIp(req);
-
-    res.render('./pc/userChart');
-});
-
 app.listen(port, () => {
     logger.info('Server START listening on port ' + port);
 })

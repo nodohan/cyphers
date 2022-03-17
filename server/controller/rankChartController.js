@@ -1,6 +1,25 @@
+const commonUtil = require('../util/commonUtil');
+
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
+
+    // URL: /rankChart/userChart
+    app.get('/userChart', function(req, res) {
+        commonUtil.getIp(req);
+
+        res.render('./pc/userChart');
+    });
+
+    app.get('/chartDate', async function(req, res) {
+        let chartDateList = await chartDate();
+        if (chartDateList == null) {
+            res.send({ resultCode: -1 });
+        }
+        res.send(chartDateList.map(row => {
+            return [row.rankDateStr, 0];
+        }));
+    });
 
     app.get('/userRank', async function(req, res) {
         let userName = req.query.nickname;
@@ -11,18 +30,43 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         let result = userRankList.map(row => {
-            return [row.rankDate, row.rankNumber]
+            return [row.rankDateStr, row.rankNumber]
         });
 
         res.send(result);
     });
 
+    async function chartDate() {
+        let query = " SELECT ";
+        query += " 	DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate ";
+        query += " FROM rank ";
+        query += " WHERE season = '2022H' ";
+        query += " AND rankNumber = 1 ";
+        query += " ORDER BY rankDate asc ";
+
+        let pool = await maria.getPool();
+
+        try {
+            let rows = await pool.query(query);
+            return rows;
+        } catch (err) {
+            logger.error(err);
+            if (res) {
+                return res
+                    .status(500)
+                    .send('오류 발생')
+                    .end();
+            }
+        }
+        return null;
+    }
+
     async function searchUserRank(userName) {
-        let query = "SELECT DATE_FORMAT(rankDate,'%m/%e') rankDate, rankNumber "
-        query += "FROM rank WHERE season = '2021U' "
+        let query = "SELECT DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate "
+        query += "FROM rank WHERE season = '2022H' "
         query += " and playerId = ( "
         query += "     SELECT playerId FROM nickNames WHERE nickname= '" + userName + "' ";
-        query += " ); ";
+        query += " ) order by rankDate asc ";
 
         let pool = await maria.getPool();
 
