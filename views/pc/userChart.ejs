@@ -34,7 +34,7 @@
                         if (data.resultCode == -1) {
                             return;
                         }
-                        drawRank('랭킹축', data, false);
+                        drawRank('날짜축', data, true);
                     },
                     error: function(data) {
                         return;
@@ -69,11 +69,11 @@
                 return result;
             }
 
-            function drawRank(nickName, row, display = true) {
+            function drawRank(nickName, row, hide = false) {
                 let dataset = {
                     label: nickName,
-                    hidden: false,
                     data: row,
+                    hidden: hide,
                     fill: false,
                     borderColor: 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')',
                     tension: 0.1
@@ -117,7 +117,7 @@
                 <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
                 <input type="button" value="검색" onClick="userRankSearch();">
                 <input type="button" value="초기화" onClick="clearDiv('con1_2');"></br>
-                10월 11일부터 집계된 랭킹 그래프를 제공합니다. 버그가 존재합니다. 추후 수정 예정
+                2건이상 검색시 차트가 망가지는 오류 수정 완료 (2022-03-17)
             </div>
             <div id="con1" class="con" style="width:98%">
                 <h3>랭킹추이</h3>
