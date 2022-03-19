@@ -12,7 +12,7 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/chartDate', async function(req, res) {
-        let chartDateList = await chartDate();
+        let chartDateList = await chartDate(req.query.season);
         if (chartDateList == null) {
             res.send({ resultCode: -1 });
         }
@@ -23,7 +23,9 @@ module.exports = (scheduler, maria, acclogger) => {
 
     app.get('/userRank', async function(req, res) {
         let userName = req.query.nickname;
-        let userRankList = await searchUserRank(userName);
+        let season = req.query.season;
+
+        let userRankList = await searchUserRank(userName, season);
 
         if (userRankList == null) {
             res.send({ resultCode: -1 });
@@ -36,11 +38,12 @@ module.exports = (scheduler, maria, acclogger) => {
         res.send(result);
     });
 
-    async function chartDate() {
+    async function chartDate(season = '2022H') {
+        // 랭킹차트 축이 안그리면 버그가 생기는 이슈가 있어서 1등(group by대신)을 조회하고 날짜만 수집하여 그림
         let query = " SELECT ";
         query += " 	DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate ";
         query += " FROM rank ";
-        query += " WHERE season = '2022H' ";
+        query += ` WHERE season = '${season}' `;
         query += " AND rankNumber = 1 ";
         query += " ORDER BY rankDate asc ";
 
@@ -61,11 +64,11 @@ module.exports = (scheduler, maria, acclogger) => {
         return null;
     }
 
-    async function searchUserRank(userName) {
+    async function searchUserRank(userName, season = '2022H') {
         let query = "SELECT DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate "
-        query += "FROM rank WHERE season = '2022H' "
+        query += ` FROM rank WHERE season = '${season}' `
         query += " and playerId = ( "
-        query += "     SELECT playerId FROM nickNames WHERE nickname= '" + userName + "' ";
+        query += `     SELECT playerId FROM nickNames WHERE nickname= '${userName}' `;
         query += " ) order by rankDate asc ";
 
         let pool = await maria.getPool();

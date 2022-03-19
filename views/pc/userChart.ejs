@@ -14,10 +14,20 @@
                 $("#mainMenu").removeClass("active");
                 $("#userChart").addClass("active");
 
-                const ctx = $("#myChart");
-                myChart = new Chart(ctx, config);
-                getChartDateLabel();
+                myChart = new Chart($("#myChart"), config);
+
+                $("input[name='season']").on("change", resetChart);
+                getChartDateLabel($("input[name='season']:checked").val());
             });
+
+            function resetChart() {
+                myChart.data.datasets = [];
+                myChart.data.labels = [];
+                myChart.update();
+
+                getChartDateLabel($("input[name='season']:checked").val());
+            }
+
 
             function userRankSearch() {
                 let nickName = $("#nickNames").val();
@@ -26,10 +36,13 @@
                 searchUserRank(nickName, drawRank);
             }
 
-            function getChartDateLabel() {
+            function getChartDateLabel(season) {
                 $.ajax({
                     async: false,
                     url: "/rankChart/chartDate",
+                    data: {
+                        "season": season
+                    },
                     success: function(data) {
                         if (data.resultCode == -1) {
                             return;
@@ -51,6 +64,7 @@
                     url: "/rankChart/userRank",
                     data: {
                         'nickname': nickName,
+                        'season': $("input[name='season']:checked").val()
                     },
                     success: function(data) {
                         if (data.resultCode == -1) {
@@ -114,10 +128,18 @@
 
         <div id="main">
             <div class="top">
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="season" id="season_2022H" value="2022H" checked/>
+                    <label class="form-check-label" for="season_2022H"> 2022H </label>&nbsp;&nbsp;&nbsp;
+                    <input type="radio" class="form-check-input" name="season" id="season_2021U" value="2021U" />
+                    <label class="form-check-label" for="season_2021U"> 2021U </label>
+                </div>
+                <br>
+
                 <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
                 <input type="button" value="검색" onClick="userRankSearch();">
-                <input type="button" value="초기화" onClick="clearDiv('con1_2');"></br>
-                2건이상 검색시 차트가 망가지는 오류 수정 완료 (2022-03-17)
+                <input type="button" value="초기화" onClick="resetChart();">
+
             </div>
             <div id="con1" class="con" style="width:98%">
                 <h3>랭킹추이</h3>
