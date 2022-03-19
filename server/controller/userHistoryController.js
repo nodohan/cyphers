@@ -17,7 +17,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let userName = req.query.nickname;
         let userNicknameList = await searchNickname(userName);
 
-        if (userNicknameList == null) {
+        if (userNicknameList == null || userNicknameList.length == 0) {
             res.send({ resultCode: -1 });
             return;
         }
