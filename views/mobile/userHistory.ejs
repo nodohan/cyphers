@@ -33,6 +33,11 @@
                             alert(nickName + "님의 정보가 없습니다.");
                             return;
                         }
+                        if (data.resultCode == -2) {
+                            alert("요청자에 의해 비공개 처리되었습니다.");
+                            return;
+                        }
+
                         drawHistory(nickName, data);
                     },
                     error: function(data) {

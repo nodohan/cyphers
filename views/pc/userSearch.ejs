@@ -114,14 +114,21 @@
             }
 
             function showNickHistory(data) {
+                if (data.resultCode == -2) {
+                    alert("요청자에 의해 비공개 처리되었습니다.");
+                    return;
+                }
+                if (data.length == 0 || data.resultCode == -1) {
+                    alert("수집된 닉변기록이 없습니다");
+                    return;
+                }
+
                 let info = "";
                 for (idx in data) {
                     let row = data[idx];
                     info += row.season + " " + row.nickname + " 체크일:" + row.checkingDate + "\n";
                 }
-                if (data.length == 0) {
-                    info = "수집된 닉변기록이 없습니다";
-                }
+
 
                 alert(info);
             }

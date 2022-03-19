@@ -21,25 +21,33 @@ module.exports = (scheduler, maria, acclogger) => {
             res.send({ resultCode: -1 });
             return;
         }
+        if (userNicknameList[0].privateYn == 'Y') {
+            res.send({ resultCode: -2 });
+            return;
+        }
 
         let result = userNicknameList.map(row => {
-            // 닉네임, 수집일
-            return [row.nickname, row.checkingDate]
+            return [row.nickname, row.checkingDate]; // 닉네임, 수집일
         });
 
         res.send(result);
     });
 
+    async function insertSearchNickname(username) {
+
+    }
+
     async function searchNickname(userName) {
-        let query = "SELECT season, nickname, DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate "
-        query += " FROM nickNames nick "
-        query += " LEFT JOIN player pl ON pl.playerId = nick.playerId  "
-        query += " WHERE nick.playerId = (  "
-        query += "     SELECT playerId FROM nickNames WHERE nickname = '" + userName + "' ";
-        query += " ) and ( pl.privateYn IS NULL OR pl.privateYn != 'Y' ) "
-        query += " ORDER BY checkingDate DESC; ";
+        let query = "SELECT nickname, IFNULL(pl.privateYn, 'N') privateYn ";
+        query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";
+        query += " FROM nickNames nick ";
+        query += " LEFT JOIN player pl ON pl.playerId = nick.playerId  ";
+        query += " WHERE nick.playerId = (  ";
+        query += `     SELECT playerId FROM nickNames WHERE nickname = '${userName}' `;
+        query += ") ORDER BY checkingDate DESC; ";
 
         logger.debug("닉변검색: " + userName);
+        //logger.debug("쿼리: %s", query);
 
         let pool = await maria.getPool();
 
