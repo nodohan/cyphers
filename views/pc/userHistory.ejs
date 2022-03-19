@@ -10,7 +10,6 @@
                 $("#userHistory").addClass("active");
             });
 
-
             function searchNicknameHistory() {
                 let val = $("#nickNames").val().trim();
                 if (val == "") {
@@ -79,8 +78,10 @@
     <%- include  ("../layout/menu") %>
 
         <div id="main">
-            <div class="top">
+            <div class="top" style="height:100px">
                 <b>공식전 기준으로 2021년 7월17일 기준으로 수집된 <span class="red">공식전</span> 데이터를 기반으로 제공됩니다.  </b>
+                <br>※ 닉변을 숨기고 싶으신분은 사유+닉네임을 메일로 주시면 숨김처리 해드립니다.
+                <br>※ 트롤러의 닉변 이력이 조회 거부 된 경우, 증거와 함께 요청주시면 해지해드리겠습니다.
             </div>
             <div id="con1" class="con">
                 <h3>조회결과</h3>
