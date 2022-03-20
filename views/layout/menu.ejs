@@ -1,4 +1,11 @@
 <script type="text/javascript">
+    $(document).ready(function() {
+        if (document.location.href.indexOf('robot') > 0) {
+            alert("로봇 사이트(얘 뭐징..?)라서 이동합니다. \n정식주소는 정식주소는 doseh.co.kr 입니다.");
+            location.href = "http://doseh.co.kr";
+        }
+    });
+
     function notOpper() {
         alert("이전시즌의 데이터로 당분간 제공하지 않습니다.");
     }
