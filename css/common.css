@@ -1,3 +1,8 @@
+img {
+    width: 42px;
+    height: 42px;
+}
+
 .top {
     margin-top: 10px;
     float: left;
@@ -202,6 +207,7 @@ table td {
 
 .card-body {
     min-width: 64px;
+    line-height: 1.2;
 }
 
 .card div {
