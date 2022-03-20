@@ -18,7 +18,17 @@
                 $("#positionShow").on("change", checkVisibility);
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
+
+                resetGameType();
+                $("input[name='gameType']").on("change", resetGameType);
             });
+
+            function resetGameType() {
+                let val = $("input[name='gameType']:checked").val();
+                clearDiv('con1_2');
+                clearDiv('con2_2');
+                $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
+            }
 
             function getCookie() {
                 setCheckbox('partyShow', Cookies.get('playParty'));
@@ -347,18 +357,17 @@
                         <input class="form-check-input" type="checkbox" id="recentShow" checked>
                         <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
                     </div>
-                    <span class="red">(새로고침 후에도 체크박스가 유지됩니다)</span>
                 </div>
             </div>
             <div id="con1" class="con">
-                <h3>우리팀</h3>
+                <h3>우리팀<span class="red gameTypeText"></span></h3>
                 <input type="text" class="longText" id="nickNames" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } " placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." />
                 <input type="button" value="검색" onClick="search('nickNames', 'con1_2');">
                 <input type="button" value="초기화" onClick="clearDiv('con1_2');"><br/>
                 <div id="con1_2" class="infoLayer"> </div>
             </div>
             <div id="con2" class="con">
-                <h3>적팀</h3>
+                <h3>적팀<span class="red gameTypeText"></span></h3>
                 <input type="text" class="longText" id="nickNames2" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } " placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." />
                 <input type="button" value="검색" onClick="search( 'nickNames2','con2_2');">
                 <input type="button" value="초기화" onClick="clearDiv('con2_2');"><br/>
