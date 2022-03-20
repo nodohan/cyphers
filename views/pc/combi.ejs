@@ -4,6 +4,7 @@
 <head>
 
     <%- include  ("../layout/head") %>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 callLoadingBar(false);
@@ -11,8 +12,74 @@
 
                 $("#mainMenu").removeClass("active");
                 $("#combi").addClass("active");
-                getCombiCount();
+                ajaxCall("/stats/statsList", drawStatsList);
             });
+
+            // ############## 금주의 BEST/WORST [시작] ##########################################
+
+            function drawStatsList(data) {
+                let wList = dataFilter(data.row, "W", "TANKER", "DESC");
+                setStatsWDueDate("W", wList[0]);
+                drawStatsListDiv("wBestTanker", wList);
+                drawStatsListDiv("wWorstTanker", dataFilter(data.row, "W", "TANKER", "ASC"));
+                drawStatsListDiv("wBestAttack", dataFilter(data.row, "W", "ATTACK", "DESC"));
+                drawStatsListDiv("wWorstAttack", dataFilter(data.row, "W", "ATTACK", "ASC"));
+            }
+
+            function dataFilter(row, statsType, combiType, order) {
+                let list = row.filter(item => item.statsType == statsType)
+                    .filter(item => item.combiType == combiType)
+                    .filter(item => item.order == order)
+                    .sort(order == "DESC" ? lateDesc : lateAsc);
+                return list;
+            }
+
+            function setStatsWDueDate(type, item) {
+                let span = (type == "W") ? $("#wDueSpan") : $("#mDueSpan");
+                span.empty();
+                span.append(item.statsFromDate + "~" + item.statsToDate);
+            }
+
+            function drawStatsListDiv(divId, data) {
+                var table = $("#matchInfoTemplate").clone();
+                table.removeAttr("id");
+                let tbody = table.find("tbody");
+
+                if (data.length == 0) {
+                    let tr = "<tr><td colspan='5'>데이터가 없습니다.</td></tr>";
+                    tbody.append(tr);
+                }
+
+                let idx = 0;
+                for (idx in data) {
+                    if (idx >= 5) {
+                        break;
+                    }
+                    let row = data[idx];
+                    let tr = "<tr>";
+                    tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
+                    tr += "<td>" + row.total + "</td>";
+                    tr += "<td>" + row.win + "</td>";
+                    tr += "<td>" + row.lose + "</td>";
+                    tr += "<td>" + row.late + "%</td>";
+                    tbody.append(tr);
+                }
+
+                $("#" + divId).append(table);
+            }
+
+            function getChars(arr) {
+                let images = "";
+                if (arr == "") {
+                    return "<spna style='font-size:32px;'>탱커 없음</span>";
+                }
+                for (idx in arr) {
+                    images += "&nbsp;&nbsp;&nbsp;<img data-item='" + arr[idx] + "' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
+                }
+                return images;
+            }
+
+            // ############## 금주의 BEST/WORST [종료] ##########################################
 
             function setDatePicker() {
                 var yesterday = new Date();
@@ -60,21 +127,6 @@
                 }
 
                 return true;
-            }
-
-            function getCombiCount() {
-                $.ajax({
-                    async: true,
-                    url: "/combi/combiTotalCount",
-                    success: function(result) {
-                        $("#totalCount").empty().append(numberWithCommas(result.totalCount) + '건');
-                    },
-                    error: function(data) {
-                        return;
-                    }
-                }).done(function() {
-
-                });
             }
 
             function onOffEvent(isOn = false) {
@@ -139,7 +191,7 @@
                         for (idx in data) {
                             let row = data[idx];
                             let tr = "<tr>";
-                            tr += "<td>" + row.combi + "</td>";
+                            tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
                             tr += "<td>" + row.total + "</td>";
                             tr += "<td>" + row.win + "</td>";
                             tr += "<td>" + row.lose + "</td>";
@@ -148,7 +200,6 @@
                         }
 
                         $("#con1_2").append(table);
-
                     },
                     error: function(data) {
                         callLoadingBar(false);
@@ -195,7 +246,7 @@
                         </div>
                         &nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="number" class="shortInput" name="count" id="count" value="10"> 판 이상
+                            <input type="number" class="shortInput" name="count" id="count" value="2"> 판 이상
                         </div>
                     </div>
                 </div>
@@ -204,7 +255,32 @@
 
                 </div>
             </div>
-            <div id="con1" class="con">
+
+
+            <div id="con2" class="con">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-link active" id="wTanker-tab" data-toggle="tab" href="#wTanker" role="tab" aria-controls="wTanker" aria-selected="true">금주의탱커</a>
+                        <a class="nav-link" id="wAttack-tab" data-toggle="tab" href="#wAttack" role="tab" aria-controls="wAttack" aria-selected="false">금주의딜러</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="wTanker" role="tabpanel" aria-labelledby="wTanker-tab">
+                        <h4>Best 5</h4>
+                        <div id="wBestTanker"></div>
+                        <h4>Worst 5</h4>
+                        <div id="wWorstTanker"></div>
+                    </div>
+                    <div class="tab-pane fade" id="wAttack" role="tabpanel" aria-labelledby="wAttack-tab">
+                        <h4>Best 5</h4>
+                        <div id="wBestAttack"></div>
+                        <h4>Worst 5</h4>
+                        <div id="wWorstAttack"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="con1" class="con" style="height:953px;">
                 <h3>특정 조합/캐릭검색 </h3>
                 <span>공란가능, 띄워쓰기로 구분</span>
                 <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
@@ -213,12 +289,13 @@
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Loading...
                   </button>
-                <div id="con1_2" class="infoLayer"> </div>
+                <div id="con1_2" class="infoLayer" style="height:813px"> </div>
             </div>
+
+
 
             <div id="bottom" class="bottom">
                 ※ 문의/요청 <br/> - dododosa@naver.com 또는 오픈카톡 "마을주민" 쪽지<br/> - IE는 지원 안합니다.
-
             </div>
         </div>
 
