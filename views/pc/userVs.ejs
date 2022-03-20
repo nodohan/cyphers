@@ -43,7 +43,9 @@
                     text += "<td><b>" + winLoseKo(row.result) + "</b></td>";
                     text += drawInGameScore(row.my);
                     text += drawInGameScore(row.you);
-                    text += "<td onClick='searchMatch(\"" + row.matchId + "\", drawMatchVs )'>[More]</td> "
+
+                    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                    text += `<td onClick='searchMatch("${row.matchId}", drawMatchVs )'>${moreIcon}</td> `
                     text += "</tr>"
                     body.append(text);
                 });
@@ -91,10 +93,10 @@
                 let loseTeam = getTeam(data.teams, "lose", data.players);
 
                 for (idx in winTeam) {
-                    tbody.append(drawInGameDetailScore(winTeam[idx], true, "table-primary"));
+                    tbody.append(drawInGameDetail(winTeam[idx], true, "table-primary"));
                 }
                 for (idx in loseTeam) {
-                    tbody.append(drawInGameDetailScore(loseTeam[idx], true, "table-danger"));
+                    tbody.append(drawInGameDetail(loseTeam[idx], true, "table-danger"));
                 }
 
                 //클릭이벤트 설정용
@@ -160,7 +162,7 @@
         <div id="modalDiv">
             <!-- 모달 영역 -->
             <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h6 class="modal-title" id="templateModalLabel"></h6>
@@ -173,16 +175,19 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col"></th>
-                                        <th scope="col">포지션</th>
-                                        <th scope="col">캐릭</th>
-                                        <th scope="col">닉</th>
-                                        <th scope="col">레벨</th>
+                                        <th scope="col">C</th>
+                                        <th scope="col">P</th>
+                                        <th scope="col">buff</th>
+                                        <th scope="col">닉네임</th>
+                                        <th scope="col">Lv</th>
                                         <th scope="col">KDA</th>
                                         <th scope="col">킬</th>
                                         <th scope="col">데스</th>
                                         <th scope="col">도움</th>
                                         <th scope="col">딜량</th>
                                         <th scope="col">피해량</th>
+                                        <th scope="col">코인</th>
+                                        <th scope="col">소모품(%)</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
