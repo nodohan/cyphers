@@ -61,7 +61,7 @@ app.get('/', function(req, res) {
     } else {
         res.render('./pc/stats');
     }
-}); 
+});
 
 app.get('/userSearch', function(req, res) {
     commonUtil.getIp(req);
