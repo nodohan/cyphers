@@ -402,8 +402,10 @@ function drawRecently(div, rows, userDivId) {
         }
         body.find("tbody").append(drawInGameList(rows[j]));
     }
+    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
+
     title.append(titleText);
-    title.append("<a data-toggle='modal' data-target='#" + userDivId + "Modal'>[더보기]</a>");
+    title.append(`<a data-toggle='modal' data-target='#${userDivId}Modal'>&nbsp;${moreIcon}</a>`);
 
     $("#modalDiv").append(body);
 }

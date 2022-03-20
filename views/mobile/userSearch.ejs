@@ -136,19 +136,21 @@
                     clone.append("<br>");
                 }
 
+                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+
                 if (partyJson.two.all != 0) {
                     clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
-                    clone.append("<a data-toggle='collapse' href='#two" + userDivId + "' role='button' aria-expanded='false' aria-controls='two" + userDivId + "'' >[상세]</a>,    ");
+                    clone.append(`<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `);
                 }
 
                 if (partyJson.three.all != 0) {
                     clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
-                    clone.append("<a data-toggle='collapse' href='#three" + userDivId + "' role='button' aria-expanded='false' aria-controls='three" + userDivId + "'' >[상세]</a>,    ");
+                    clone.append(`<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `);
                 }
 
                 if (partyJson.five.all != 0) {
                     clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
-                    clone.append("<a data-toggle='collapse' href='#five" + userDivId + "' role='button' aria-expanded='false' aria-controls='five" + userDivId + "'' >[상세]</a>,    ");
+                    clone.append(`<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `);
                 }
 
                 if (hasParty) {
