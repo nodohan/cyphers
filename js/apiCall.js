@@ -386,7 +386,7 @@ function drawRecently(div, rows, userDivId) {
 
     var title = $(div).find("#recentlyDivTitle");
     if (!isMobile) {
-        title.prepend("최근 " + headCount + "게임:");
+        title.prepend("최근 게임:");
     }
 
     var body = $("#templateModal").clone();
