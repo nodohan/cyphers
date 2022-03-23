@@ -416,6 +416,8 @@ function winLoseKo(result) {
 
 function drawOften(div, info, drawCharFunc) {
     let count = Math.min(isMobile ? 6 : 8, info.length);
+    let rowCount = isMobile ? 6 : 8;
+
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (var i = 0; i < count; i++) {
         if (typeof drawCharFunc == 'function') {
@@ -424,6 +426,26 @@ function drawOften(div, info, drawCharFunc) {
             drawChar(div.find("#mostCharDetailDiv"), info[i]);
         }
     }
+
+    let emptyDivCount = rowCount - count;
+    console.log("emptyDivCount", emptyDivCount);
+    if (emptyDivCount > 0) {
+        for (i = 0; i < emptyDivCount; i++) {
+            drawEmptyChar(div.find("#mostCharDetailDiv"));
+        }
+    }
+}
+
+function drawEmptyChar(div) {
+    let height = (pageName == "pcUserSearch") ? 45 : 102;
+    console.log(pageName, height);
+    var card = $(div).find("#cardTemp").clone();
+    card.attr("style", `height:${height}px;`);
+
+    card.removeAttr("id");
+    card.removeAttr("hidden");
+    card.empty();
+    div.append(card);
 }
 
 function drawChar(div, charInfo) {
