@@ -181,11 +181,11 @@ table td {
     width: 70%;
 }
 
-#mostCharDetailDiv {
+.mostCharDetailDiv {
     width: 100%;
 }
 
-#mostCharDetailDiv .card {
+.mostCharDetailDiv .card {
     width: 25%;
     background-color: white;
 }
