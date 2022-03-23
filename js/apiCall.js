@@ -3,6 +3,7 @@ var meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game
 var adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
 var suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
 var buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
+var pageName = "";
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -117,7 +118,12 @@ function searchUser(inputId, divName, nickName, callback) {
 
     $.ajax({
         url: "/getUserInfo",
-        data: { 'nickname': nickName, 'gameType': gameType, 'device': (isMobile ? 'mobile' : 'pc') },
+        data: {
+            'nickname': nickName,
+            'gameType': gameType,
+            'device': (isMobile ? 'mobile' : 'pc'),
+            'page': pageName
+        },
         success: function(data) {
             if (data.resultCode == -1) {
                 alert(nickName + "님의 정보가 없습니다.");
