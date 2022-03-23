@@ -15,10 +15,6 @@ img {
     border-radius: 7px;
 }
 
-.body {
-    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
-}
-
 table {
     background-color: white;
 }
@@ -327,14 +323,16 @@ table td {
     position: relative;
     width: 100%;
     min-height: 350px;
-    background-color: rgba(255, 255, 255, 0.8);
+    /* background-color: rgba(255, 255, 255, 0.8); */
     border-radius: 7px;
 }
 
+
+/**
 .infoLayerV2 {
     height: 375px;
     background-color: #35353526;
-}
+}*/
 
 .infoDivV2 {
     float: left;
@@ -343,7 +341,16 @@ table td {
     width: 19%;
     color: black;
     background-color: #d7ebff;
-    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.infoDivV3 {
+    float: left;
+    margin-right: 3px;
+    margin-left: 6px;
+    width: 19%;
+    color: black;
+    background-color: #ffe5e5;
     border-radius: 5px;
 }
 
@@ -370,4 +377,22 @@ table td {
     height: 90px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
+}
+
+body {
+    z-index: 1;
+}
+
+body:after {
+    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-size: 100%;
+    opacity: 0.5!important;
+    filter: alpha(opacity=50);
+    z-index: -1;
+    content: "";
+    width: 100%;
+    height: 100%;
 }
