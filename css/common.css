@@ -153,6 +153,14 @@ table td {
     width: 45%;
 }
 
+.width50p {
+    width: 50%;
+}
+
+.width85 {
+    width: 85%;
+}
+
 .parent {
     display: table;
     table-layout: fixed;
@@ -190,7 +198,7 @@ table td {
     background-color: white;
 }
 
-#positionDiv {
+.positionDiv {
     float: left;
     width: 100%;
 }
@@ -306,4 +314,60 @@ table td {
 .h3Span {
     font-weight: 500;
     font-size: 1.75rem;
+}
+
+#mainV2 {
+    width: 100%;
+    margin: 0px auto;
+}
+
+.conUserV2 {
+    margin-top: 10px;
+    float: left;
+    position: relative;
+    width: 100%;
+    min-height: 350px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+}
+
+.infoLayerV2 {
+    height: 375px;
+    background-color: #35353526;
+}
+
+.infoDivV2 {
+    float: left;
+    margin-right: 3px;
+    margin-left: 6px;
+    width: 19%;
+    color: black;
+    background-color: #d7ebff;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.floatLeft {
+    float: left
+}
+
+.mostCharDetailDivV2 {
+    width: 100%;
+}
+
+.mostCharDetailDivV2 .card {
+    width: 12.5%;
+    background-color: white;
+    float: left
+}
+
+.topV2 {
+    margin-top: 10px;
+    float: left;
+    padding: 15px;
+    position: relative;
+    width: 1000px;
+    height: 90px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
 }
