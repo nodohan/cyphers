@@ -72,6 +72,18 @@ app.get('/userSearch', function(req, res) {
     }
 });
 
+app.get('/userSearch_vertical', function(req, res) {
+    //모바일은 지원하지 않음
+    commonUtil.getIp(req);
+    if (commonUtil.isMobile(req)) {
+        //res.render('./mobile/userSearch_vertical', { 'searchNickname': req.query.nickname });
+    } else {
+        res.render('./pc/userSearch_vertical', { 'searchNickname': req.query.nickname });
+    }
+});
+
+
+
 app.get('/userDetail', function(req, res) {
     commonUtil.getIp(req);
 
