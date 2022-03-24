@@ -434,7 +434,6 @@ function drawOften(div, info, drawCharFunc) {
     }
 
     let emptyDivCount = rowCount - count;
-    console.log("emptyDivCount", emptyDivCount);
     if (emptyDivCount > 0) {
         for (i = 0; i < emptyDivCount; i++) {
             drawEmptyChar(div.find("#mostCharDetailDiv"));
@@ -444,7 +443,7 @@ function drawOften(div, info, drawCharFunc) {
 
 function drawEmptyChar(div) {
     let height = (pageName == "pcUserSearch") ? 45 : 102;
-    console.log(pageName, height);
+    //console.log(pageName, height);
     var card = $(div).find("#cardTemp").clone();
     card.attr("style", `height:${height}px;`);
 

@@ -10,8 +10,8 @@ img {
     padding: 15px;
     position: relative;
     width: 1120px;
-    height: 80px;
-    background-color: rgba(255, 255, 255, 0.8);
+    height: 52px;
+    background-color: white;
     border-radius: 7px;
 }
 
@@ -41,11 +41,9 @@ table td {
     margin-top: 10px;
     float: left;
     margin-left: 20px;
-    padding: 15px;
     position: relative;
     width: 550px;
     min-height: 750px;
-    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
 }
 
@@ -72,15 +70,19 @@ table td {
 
 .infoDiv {
     color: black;
-    background-color: #d7ebff;
+    background-color: #86b1ff80;
     margin-top: 10px;
-    border-radius: 5px;
+    border-radius: 3px;
+    border: groove;
 }
 
 .infoLayer {
-    overflow-y: scroll;
-    height: 630px;
-    background-color: #35353526;
+    overflow-y: auto;
+    height: 670px;
+    border: dashed;
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
 }
 
 .infoLayer div {
@@ -125,6 +127,10 @@ table td {
     width: 100%;
 }
 
+.width10p {
+    width: 10%;
+}
+
 .width20p {
     width: 20%;
 }
@@ -151,6 +157,10 @@ table td {
 
 .width50p {
     width: 50%;
+}
+
+.width80 {
+    width: 80%;
 }
 
 .width85 {
@@ -329,9 +339,12 @@ table td {
 
 .infoLayerV2 {
     display: flex;
-    align-items: center; /* 수직 정렬 */
-    flex-direction: row; /* default: row */
-    justify-content: center; /* flex direction에 대해서 정렬방식 선택 */
+    align-items: center;
+    /* 수직 정렬 */
+    flex-direction: row;
+    /* default: row */
+    justify-content: center;
+    /* flex direction에 대해서 정렬방식 선택 */
 }
 
 .infoDivV2 {
@@ -381,19 +394,5 @@ table td {
 }
 
 body {
-    z-index: 1;
-}
-
-body:after {
-    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
-    top: 0;
-    left: 0;
-    position: absolute;
-    background-size: 100%;
-    opacity: 0.3!important;
-    filter: alpha(opacity=50);
-    z-index: -1;
-    content: "";
-    width: 100%;
-    height: 100%;
+    background-color: rgba(0, 123, 255, 0.2);
 }
