@@ -327,12 +327,12 @@ table td {
     border-radius: 7px;
 }
 
-
-/**
 .infoLayerV2 {
-    height: 375px;
-    background-color: #35353526;
-}*/
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    flex-direction: row; /* default: row */
+    justify-content: center; /* flex direction에 대해서 정렬방식 선택 */
+}
 
 .infoDivV2 {
     float: left;
@@ -369,6 +369,7 @@ table td {
 }
 
 .topV2 {
+    margin-left: 450px;
     margin-top: 10px;
     float: left;
     padding: 15px;
