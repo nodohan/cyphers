@@ -42,6 +42,7 @@ app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/j
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
 app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
+app.use('/image', express.static(__dirname + '/image')); // redirect CSS bootstrap
 app.use('/rank', rankScheduler);
 app.use('/matches', matchScehduler);
 app.use('/rankChart', rankChart);
