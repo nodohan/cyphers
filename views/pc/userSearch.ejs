@@ -68,6 +68,11 @@
                 //기본 정보 
                 var clone = $("#template").clone();
                 clone.attr("id", userDivId);
+                if (divName == "con2_2") {
+                    clone.removeClass("infoDiv");
+                    clone.addClass("infoDivRed");
+                }
+
                 defaultInfo(gameType, clone, data);
 
                 var rows = data.matches.rows;

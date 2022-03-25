@@ -76,6 +76,14 @@ table td {
     border: groove;
 }
 
+.infoDivRed {
+    color: black;
+    background-color: #ffe5e5;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: groove;
+}
+
 .infoLayer {
     overflow-y: auto;
     height: 670px;
