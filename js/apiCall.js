@@ -270,7 +270,7 @@ function drawInGameList(data) {
 
     if (isMobile) {
         score = "<tr>";
-        score += "<td>" + data.date + "</td>";
+        score += "<td>" + data.date.substr(5) + "</td>";
         score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
@@ -307,30 +307,32 @@ function drawInGameList(data) {
     return score;
 }
 
+
 function drawInGameDetail(data, trClass) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
-    let score = "";
+    let partyCnt = playInfo.partyUserCount == 0 ? "" : playInfo.partyUserCount;
 
-    score = "<tr class='" + trClass + "'>";
-    //score += "<td>" + data.date + "</td>";
-    //score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-    score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-    score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-    score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-    score += "<td>" + getBuffIcon(data.position.attribute) + "</td>";
-
-    //이름 검색 지원
-    if (typeof partyUserSearch == 'function') {
-        let partyCnt = playInfo.partyUserCount == 0 ? "" : "(" + playInfo.partyUserCount + "인)";
-        score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
-    } else {
-        score += "<td>" + data.nickname + "</td>";
-    }
-
+    let score = "<tr class='" + trClass + "'>";
     if (isMobile) {
-        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
+        score += `<td colspan='3'><div>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;${getBuffIcon(data.position.attribute)} `;
+        score += `<br> ${data.nickname} (${partyCnt}인) </div> </td>`;
+        //score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
+        score += `</td>`;
     } else {
+        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
+        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
+        score += "<td>" + getBuffIcon(data.position.attribute) + "</td>";
+
+        if (typeof partyUserSearch == 'function') {
+            score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
+        } else {
+            score += `<td>${data.nickname} (${partyCnt}인)</td>`;
+        }
         score += "<td>" + playInfo.level + "</td>";
         score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"
         score += "<td class='kda'>" + playInfo.killCount + "</td>";
@@ -342,6 +344,7 @@ function drawInGameDetail(data, trClass) {
         let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
         let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
         score += `<td class='kda'>${useCoin}(${usePer}%)</td>`; //소모품코인
+
     }
 
     score += "</tr>"
@@ -443,9 +446,12 @@ function drawOften(div, info, drawCharFunc) {
 
 function drawEmptyChar(div) {
     let height = (pageName == "pcUserSearch") ? 45 : 102;
-    //console.log(pageName, height);
+    if (isMobile) {
+        height = 51;
+        width = 132.5;
+    }
     var card = $(div).find("#cardTemp").clone();
-    card.attr("style", `height:${height}px;`);
+    card.attr("style", isMobile ? `height:${height}px;width:${width}px` : `height:${height}px;`);
 
     card.removeAttr("id");
     card.removeAttr("hidden");
@@ -459,8 +465,8 @@ function drawChar(div, charInfo) {
     div.append(pov.toFixed(0) + "% (" + charInfo.win + "승 " + charInfo.lose + "패)");
 }
 
-function drawCharicter(charId) {
-    return " <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/" + charId + "' />";
+function drawCharicter(charId, isLarge = false) {
+    return ` <img class='drawIcon ${isLarge ? 'charImgLarge' : ''}' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
 function appendPlayTypeInfo(div, type, typeId) {

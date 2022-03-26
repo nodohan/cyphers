@@ -281,3 +281,16 @@ table td {
     width: 38px;
     height: 38px;
 }
+
+.charImgLarge {
+    width: 46px;
+    height: 46px;
+}
+
+.floatLeft {
+    float: left
+}
+
+.textLeft {
+    text-align: left;
+}
