@@ -1,3 +1,7 @@
+body {
+    background-color: rgba(0, 123, 255, 0.2);
+}
+
 .top {
     margin-top: 10px;
     float: left;
@@ -5,7 +9,6 @@
     padding: 14px;
     position: relative;
     width: 95%;
-    height: 100px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
 }
@@ -24,10 +27,6 @@
 
 #main {
     margin: 55px 0px 0px 0px;
-}
-
-.body {
-    background-image: url('http://static.cyphers.co.kr/media/wallpaper/Ninja/Cyphers_Ninja_1680_1050.jpg');
 }
 
 table {
@@ -49,14 +48,11 @@ table td {
 }
 
 .con {
-    margin-top: 10px;
     float: left;
-    margin-left: 10px;
     padding: 10px;
     position: relative;
-    width: 95%;
+    width: 100%;
     min-height: 650px;
-    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
 }
 
@@ -83,15 +79,17 @@ table td {
 
 .infoDiv {
     color: black;
-    background-color: #d7ebff;
+    background-color: white;
     margin-top: 10px;
     border-radius: 5px;
+    border: groove;
 }
 
 .infoLayer {
     overflow-y: scroll;
     height: 590px;
-    background-color: #35353526;
+    /* background-color: white;
+    border: dashed; */
 }
 
 .infoLayer div {
@@ -172,6 +170,10 @@ table td {
 
 #mostCharDetailDiv {
     width: 100%;
+}
+
+.card {
+    border: 1px solid rgba(0, 123, 255, 0.2) !important;
 }
 
 #mostCharDetailDiv .card {
