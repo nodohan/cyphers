@@ -311,15 +311,14 @@ function drawInGameList(data) {
 function drawInGameDetail(data, trClass) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
-    let partyCnt = playInfo.partyUserCount == 0 ? "" : playInfo.partyUserCount;
+    let partyCnt = playInfo.partyUserCount == 0 ? "" : `(${playInfo.partyUserCount}인)`;
 
     let score = "<tr class='" + trClass + "'>";
     if (isMobile) {
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
-        score += `<td colspan='3'><div>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;${getBuffIcon(data.position.attribute)} `;
-        score += `<br> ${data.nickname} (${partyCnt}인) </div> </td>`;
-        //score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+        score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;${getBuffIcon(data.position.attribute)} `;
+        score += `<br> ${data.nickname} ${partyCnt} </div> </td>`;
         score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
         score += `</td>`;
     } else {
@@ -331,7 +330,7 @@ function drawInGameDetail(data, trClass) {
         if (typeof partyUserSearch == 'function') {
             score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
         } else {
-            score += `<td>${data.nickname} (${partyCnt}인)</td>`;
+            score += `<td>${data.nickname} ${partyCnt}</td>`;
         }
         score += "<td>" + playInfo.level + "</td>";
         score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"

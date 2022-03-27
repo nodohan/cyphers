@@ -294,3 +294,7 @@ table td {
 .textLeft {
     text-align: left;
 }
+
+table {
+    font-size: small;
+}
