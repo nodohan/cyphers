@@ -448,10 +448,9 @@ function drawEmptyChar(div) {
     let height = (pageName == "pcUserSearch") ? 45 : 102;
     if (isMobile) {
         height = 51;
-        width = 132.5;
     }
     var card = $(div).find("#cardTemp").clone();
-    card.attr("style", isMobile ? `height:${height}px;width:${width}px` : `height:${height}px;`);
+    card.attr("style", `height:${height}px;`);
 
     card.removeAttr("id");
     card.removeAttr("hidden");
