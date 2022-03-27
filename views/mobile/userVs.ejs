@@ -33,11 +33,12 @@
 
                 var body = clone.find("tbody");
 
+                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
                 team.row.forEach(row => {
                     let text = "<tr><td>" + winLoseKo(row.result) + "</td>";
                     text += drawInGameScore(row.my);
                     text += drawInGameScore(row.you);
-                    text += "<td onClick='searchMatch(\"" + row.matchId + "\", drawMatchVs )'> 더보기 </td> "
+                    text += `<td onClick='searchMatch("${row.matchId}", drawMatchVs )'>${moreIcon}</td> `
                     text += "</tr>"
                     body.append(text);
                 });
@@ -91,10 +92,10 @@
                 let loseTeam = getTeam(data.teams, "lose", data.players);
 
                 for (idx in winTeam) {
-                    tbody.append(drawInGameDetailScore(winTeam[idx], true, "table-primary"));
+                    tbody.append(drawInGameDetail(winTeam[idx], true, "table-primary"));
                 }
                 for (idx in loseTeam) {
-                    tbody.append(drawInGameDetailScore(loseTeam[idx], true, "table-danger"));
+                    tbody.append(drawInGameDetail(loseTeam[idx], true, "table-danger"));
                 }
 
                 //클릭이벤트 설정용
@@ -112,7 +113,7 @@
     <%- include  ("../layout/menu_mobile") %>
 
         <div id="main">
-            <div class="top-long">
+            <div class="top">
                 <div>
                     <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
                     <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
@@ -122,8 +123,7 @@
                     <span>&nbsp;와 </span>
                     <input type="text" id="nickNames2" class="width33p" onKeyPress="if(event.keyCode == 13) { userVsSearch(); } " placeholder="상대" />
                     <spna>전적</spna>
-                    <input type="button" value="검색" onCdivck="userVsSearch();">
-                    <!-- <input type="button" value="초기화" onCdivck="clearDiv('con1_2');"></br> -->
+                    <input type="button" value="검색" onClick="userVsSearch();">
                 </div>
 
             </div>
@@ -141,7 +141,7 @@
                                 <th scope="col">나</th>
                                 <th scope="col">KDA</th>
                                 <th scope="col">딜</th>
-                                <th scope="col">이사람</th>
+                                <th scope="col">너</th>
                                 <th scope="col">KDA</th>
                                 <th scope="col">딜</th>
                                 <th scope="col"></th>
@@ -177,10 +177,9 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col"></th>
-                                        <th scope="col">포지션</th>
                                         <th scope="col">캐릭</th>
-                                        <th scope="col">닉</th>
-                                        <th scope="col">KDA</th>
+                                        <th scope="col" colspan='3'>포지션/버프/닉</th>
+                                        <th scope="col">KDA<br>딜/피해</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
