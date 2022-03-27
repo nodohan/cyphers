@@ -4,6 +4,7 @@
 <head>
 
     <%- include  ("../layout/head_mobile") %>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 callLoadingBar(false);
@@ -26,7 +27,8 @@
                     width: 170,
                     locale: 'kr-ko',
                     minDate: '2021-07-15',
-                    value: '2021-07-15',
+                    //value: '2021-07-15',
+                    value: '2022-02-17',
                     format: 'yyyy-mm-dd',
                     maxDate: yesterday
                 });
@@ -139,7 +141,7 @@
                         for (idx in data) {
                             let row = data[idx];
                             let tr = "<tr>";
-                            tr += "<td>" + row.combi + "</td>";
+                            tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
                             tr += "<td>" + row.total + "</td>";
                             tr += "<td>" + row.win + "</td>";
                             tr += "<td>" + row.lose + "</td>";
@@ -160,6 +162,17 @@
                     callLoadingBar(false);
                 });
             }
+
+            function getChars(arr) {
+                let images = "";
+                if (arr == "") {
+                    return "<spna style='font-size:32px;'>탱커 없음</span>";
+                }
+                for (idx in arr) {
+                    images += "&nbsp;&nbsp;&nbsp;<img data-item='" + arr[idx] + "' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
+                }
+                return images;
+            }
         </script>
 </head>
 
@@ -177,7 +190,7 @@
                     <input type="radio" name="order" id="order_count" value="count" checked /><label for="order_count"> 판수순 </label>
                     <input type="radio" name="order" id="order_victory" value="victory" /><label for="order_victory"> 승률순 </label>
 
-                    <input type="number" class="width25p" id="count" value="10">판 이상
+                    <input type="number" class="width25p" id="count" value="2">판 이상
                 </div>
                 <div>
                     <div class="datepickerDiv">
@@ -189,16 +202,17 @@
             <div id="con1" class="con">
                 <h3>특정 조합/캐릭검색 </h3>
                 <span>공란가능, 띄워쓰기로 구분</span>
-                <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
-                <input type="button" id="searchButton" value="검색" onClick="searchCombi();">
-                <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>                    
-                </button>
-                <div id="con1_2" class="infoLayer"> </div>
-            </div>
 
-            <div id="bottom" class="bottom">
-                ※ 문의/요청 <br/> - dododosa@naver.com 또는 마을주민1로 쪽지<br/> - IE는 지원 보류합니다. 기능부터 다 채우고 할 예정.. (크롬쓰세요 크롬) <br/> - 검색 일자는 이번 시즌부터 검색이 됩니다. <br/>
+                <div class="input-group">
+                    <input type="text" id="charName" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchCombi(); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="searchCombi();">검색</button>
+                    </div>
+                    <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>                    
+                    </button>
+                </div>
+                <div id="con1_2" class="infoLayer"> </div>
             </div>
         </div>
 
