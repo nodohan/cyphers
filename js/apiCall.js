@@ -311,14 +311,14 @@ function drawInGameList(data) {
 function drawInGameDetail(data, trClass) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
-    let partyCnt = playInfo.partyUserCount == 0 ? "" : `(${playInfo.partyUserCount}인)`;
+    let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = "<tr class='" + trClass + "'>";
     if (isMobile) {
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
-        score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;${getBuffIcon(data.position.attribute)} `;
-        score += `<br> ${data.nickname} ${partyCnt} </div> </td>`;
+        score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+        score += `${getBuffIcon(data.position.attribute)}<br> ${data.nickname} ${partyCnt} </div> </td>`;
         score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
         score += `</td>`;
     } else {
@@ -357,15 +357,16 @@ function getBuffIcon(buffArr) {
 }
 
 function getPartyInfoText(partyInfo) {
+    let icon = isMobile ? "" : `<i class="fa fa-info-circle"></i>`;
     let partySize = partyInfo.length;
     if (partySize == 0) {
         return "솔로";
     }
     let names = partyInfo.map(row => row.nickname).join(",");
     if (partySize == 1) {
-        return `<span title="${names}"> 듀오<i class="fa fa-info-circle"></i></span>`;
-    } else if (partySize == 2) {
-        return `<span title="${names}"> 3인<i class="fa fa-info-circle"></i></span>`;
+        return `<span title="${names}"> 듀오${icon}</span>`;
+    } else if (partySize >= 2) {
+        return `<span title="${names}"> ${partySize}인${icon}</span>`;
     }
 }
 
