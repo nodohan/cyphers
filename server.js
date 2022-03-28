@@ -115,11 +115,13 @@ app.get('/getMatchInfo', async function(req, res) {
 
 app.get('/getNicknameHistory', async function(req, res) {
     let playerId = req.query.playerId;
-    let query = "SELECT nick.*, IFNULL(pl.privateYn, 'N') privateYn  FROM nickNames nick ";
-    query += " LEFT JOIN player pl ON pl.playerId = nick.playerId ";
-    query += " WHERE nick.playerId = '" + playerId + "' ";
-    //query += " and ( pl.privateYn IS NULL OR pl.privateYn != 'Y' )  ";
-    query += " ORDER BY checkingDate desc";
+    let query =
+        ` SELECT ` +
+        `   season, checkingDate ` +
+        ` 	,IF(privateYn = 'N', nickname, '공개거부') nickname ` +
+        ` FROM nickNames ` +
+        ` WHERE playerId = '${playerId}' ` +
+        ` ORDER BY checkingDate DESC `;
 
     //logger.debug("%s", query);
 
@@ -131,11 +133,7 @@ app.get('/getNicknameHistory', async function(req, res) {
         if (rows == null) {
             res.send({ resultCode: -1 });
             return;
-        } else if (rows[0].privateYn == 'Y') {
-            res.send({ resultCode: -2 });
-            return;
         }
-
         res.send(rows); // rows 를 보내주자
     } catch (err) {
         // If something goes wrong, handle the error in this section. This might

@@ -38,12 +38,11 @@ module.exports = (scheduler, maria, acclogger) => {
     }
 
     async function searchNickname(userName) {
-        let query = "SELECT nickname, IFNULL(pl.privateYn, 'N') privateYn ";
+        let query = "SELECT IF(privateYn = 'N', nickname, '공개거부') nickname ";
         query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";
         query += " FROM nickNames nick ";
-        query += " LEFT JOIN player pl ON pl.playerId = nick.playerId  ";
         query += " WHERE nick.playerId = (  ";
-        query += `     SELECT playerId FROM nickNames WHERE nickname = '${userName}' `;
+        query += `     SELECT playerId FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' `;
         query += ") ORDER BY checkingDate DESC; ";
 
         logger.debug("닉변검색: " + userName);
