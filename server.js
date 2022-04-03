@@ -4,11 +4,9 @@ var app = express();
 var favicon = require('serve-favicon');
 var path = require('path');
 
-const api = require('./api');
 const commonUtil = require('./server/util/commonUtil');
 const scheduler = require('node-schedule');
 var maria = require('./config/maria');
-let pool;
 
 const loggerCatcher = require('./config/logger-catcher');
 const logger = require('./config/winston');
@@ -18,6 +16,9 @@ const matchScehduler = require('./server/scheduler/matchListScheduler')(schedule
 
 //스케쥴러2. 랭킹 크롤링
 const rankScheduler = require('./server/scheduler/rankCrawlingScheduler')(scheduler, maria, loggerCatcher);
+
+// 사용자 검색
+const userController = require('./server/controller/userSearchController')(scheduler, maria, loggerCatcher);
 
 //랭킹 차트
 const rankChart = require('./server/controller/rankChartController')(scheduler, maria, loggerCatcher);
@@ -43,6 +44,7 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
 app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
 app.use('/image', express.static(__dirname + '/image')); // redirect CSS bootstrap
+app.use('/user', userController);
 app.use('/rank', rankScheduler);
 app.use('/matches', matchScehduler);
 app.use('/rankChart', rankChart);
@@ -64,89 +66,6 @@ app.get('/', function(req, res) {
     }
 });
 
-app.get('/userSearch', function(req, res) {
-    commonUtil.getIp(req);
-    if (commonUtil.isMobile(req)) {
-        res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
-    } else {
-        res.render('./pc/userSearch', { 'searchNickname': req.query.nickname });
-    }
-});
-
-app.get('/userSearch_vertical', function(req, res) {
-    //모바일은 지원하지 않음
-    commonUtil.getIp(req);
-    if (commonUtil.isMobile(req)) {
-        //res.render('./mobile/userSearch_vertical', { 'searchNickname': req.query.nickname });
-    } else {
-        res.render('./pc/userSearch_vertical', { 'searchNickname': req.query.nickname });
-    }
-});
-
-
-
-app.get('/userDetail', function(req, res) {
-    commonUtil.getIp(req);
-
-    if (commonUtil.isMobile(req)) {
-        res.render('./mobile/userDetail', { 'searchNickname': req.query.nickname });
-    } else {
-        res.render('./pc/userDetail', { 'searchNickname': req.query.nickname });
-    }
-});
-
-app.get('/userVs', function(req, res) {
-    commonUtil.getIp(req);
-
-    if (commonUtil.isMobile(req)) {
-        res.render('./mobile/userVs');
-    } else {
-        res.render('./pc/userVs');
-    }
-});
-
-app.get('/getUserInfo', async function(req, res) {
-    res.send(await new api().searchUser(req.query.nickname, req.query.gameType));
-});
-
-app.get('/getMatchInfo', async function(req, res) {
-    res.send(await new api().searchMatchInfo(req.query.matchId));
-});
-
-app.get('/getNicknameHistory', async function(req, res) {
-    let playerId = req.query.playerId;
-    let query =
-        ` SELECT ` +
-        `   season, checkingDate ` +
-        ` 	,IF(privateYn = 'N', nickname, '공개거부') nickname ` +
-        ` FROM nickNames ` +
-        ` WHERE playerId = '${playerId}' ` +
-        ` ORDER BY checkingDate DESC `;
-
-    //logger.debug("%s", query);
-
-    pool = await maria.getPool();
-    // [START cloud_sql_mysql_mysql_connection]
-    try {
-        let rows = await pool.query(query);
-
-        if (rows == null) {
-            res.send({ resultCode: -1 });
-            return;
-        }
-        res.send(rows); // rows 를 보내주자
-    } catch (err) {
-        // If something goes wrong, handle the error in this section. This might
-        // involve retrying or adjusting parameters depending on the situation.
-        // [START_EXCLUDE]
-        logger.error(err);
-        return res
-            .status(500)
-            .send('오류 발생')
-            .end();
-        // [END_EXCLUDE]
-    }
-});
 
 app.listen(port, () => {
     logger.info('Server START listening on port ' + port);

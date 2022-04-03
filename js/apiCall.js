@@ -117,7 +117,7 @@ function searchUser(inputId, divName, nickName, callback) {
     }
 
     $.ajax({
-        url: "/getUserInfo",
+        url: "/user/getUserInfo",
         data: {
             'nickname': nickName,
             'gameType': gameType,
@@ -153,7 +153,7 @@ function asyncUserInfo(gameType, nickName) {
     var result;
     $.ajax({
         async: false,
-        url: "/getUserInfo",
+        url: "/user/getUserInfo",
         data: { 'nickname': nickName, 'gameType': gameType },
         success: function(data) {
             if (data.resultCode == -1) {
@@ -192,7 +192,7 @@ function isDuplicate(gameType, nickName) {
 }
 
 function openDetail(nickname) {
-    window.open("/userDetail?nickname=" + nickname, "사용자상세", "fullscreen=yes, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
+    window.open("/user/userDetail?nickname=" + nickname, "사용자상세", "fullscreen=yes, toolbar=no, menubar=no, scrollbars=no, resizable=yes");
 }
 
 function getUserDivId(gameType, nickname) {
@@ -213,7 +213,7 @@ function searchMatch(matchId, callback) {
     var result;
     $.ajax({
         async: false,
-        url: "/getMatchInfo",
+        url: "/user/getMatchInfo",
         data: { 'matchId': matchId },
         success: function(data) {
             if (typeof callback == 'function') {
@@ -500,7 +500,6 @@ function drawCharInfo(div, info, title) {
     }
 }
 
-
 function extractChar(rows, sort) {
     var result = [];
     var charNames = [];
@@ -596,12 +595,23 @@ function extractMap(data, mapId) {
     return data.filter(row => row.map.mapId == mapId);
 }
 
-
 function historyNickname(playerId, callback) {
-    var result;
     $.ajax({
         async: false,
-        url: "/getNicknameHistory",
+        url: "/user/getNicknameHistory",
+        data: { 'playerId': playerId },
+        success: function(data) {
+            callback(data);
+        }
+    }).done(function() {
+
+    });
+}
+
+function userSeasonRank(playerId, callback) {
+    $.ajax({
+        async: false,
+        url: "/user/getUserSeasonRank",
         data: { 'playerId': playerId },
         success: function(data) {
             callback(data);
