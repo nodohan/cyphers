@@ -99,7 +99,7 @@ module.exports = (scheduler, maria, acclogger) => {
             return;
         }
 
-        let query = ` SELECT * FROM rank WHERE rankDate = '2022-02-18' AND playerId = '${playerId}' `;
+        let query = ` SELECT * FROM rank WHERE rankDate = '2022-02-17' AND playerId = '${playerId}' `;
         pool = await maria.getPool();
         try {
             let rows = await pool.query(query);

@@ -86,9 +86,18 @@
                 if (data.ratingPoint != null) {
                     $(div).find("#currRP").text(data.ratingPoint);
                     $(div).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+                    $(div).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
                 }
 
                 $(div).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
+
+            function drawSeasonRank(data) {
+                if (data.length == 0) {
+                    alert("전시즌 언랭");
+                } else {
+                    alert(`전시즌(2021U) ${data[0].rankNumber}위`);
+                }
             }
 
             function getTierColerName(span, tierName) {
@@ -327,9 +336,6 @@
 
                 <div id="con1_2" class="infoLayer"> </div>
             </div>
-
-
-
         </div>
 
         <div id="template" class="infoDiv" style="display:none">
@@ -341,7 +347,12 @@
                     <div id="clanDiv" class="width40p"></div>
                 </div>
                 <div class="width100p">
-                    <div class="width100p">RP : <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span><span id="maxRP"></span></div>
+                    <div class="width100p">
+                            RP : <span id="tierName"></span>&nbsp;
+                            <span id="currRP" class="bold"></span>
+                            <span id="maxRP"></span>
+                            <span id="beforeSeason"></span>
+                    </div>
                     <!-- <div class="width25p">최고 rp : </div> -->
                     <div id="playGameDiv">
                         <!-- 승률 : 50% [100승 101패 2중단]-->

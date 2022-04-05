@@ -104,17 +104,26 @@
                 //$(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
                 //$(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(clone).find("#nickNameDiv").append(data.nickname);
-                $(clone).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
+                $(clone).find("#nickNameDiv").append(` <a href='javascript:nickHistory("${data.playerId}");' ><i class='red fas fas fa-heading'></i></a>`);
                 $(clone).find("#levelDiv").text(data.grade + "급 ");
                 $(clone).find("#clanDiv").text(data.clanName);
 
                 getTierColerName($(clone).find("#tierName"), data.tierName);
                 if (data.ratingPoint != null) {
                     $(clone).find("#currRP").text(data.ratingPoint);
-                    $(clone).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+                    $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
+                    $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
                 }
 
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
+
+            function drawSeasonRank(data) {
+                if (data.length == 0) {
+                    alert("전시즌 언랭");
+                } else {
+                    alert(`전시즌(2021U) ${data[0].rankNumber}위`);
+                }
             }
 
             function getTierColerName(span, tierName) {
@@ -394,8 +403,11 @@
                     <span id="clanDiv"></span>
                 </div>
                 <div class="width100p">
-                    <div class="width45p">
-                        <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span> <span id="maxRP"></span>
+                    <div class="width50p">
+                        <span id="tierName"></span>&nbsp;
+                        <span id="currRP" class="bold"></span>
+                        <span id="maxRP"></span>
+                        <span id="beforeSeason"></span>
                     </div>
                     <div id="playGameDiv"></div>
 
