@@ -104,7 +104,7 @@
                 //$(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
                 //$(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(clone).find("#nickNameDiv").append(data.nickname);
-                $(clone).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
+                $(clone).find("#nickNameDiv").append(` <a href='javascript:nickHistory("${data.playerId}");' ><i class='red fas fas fa-heading'></i></a>`);
                 $(clone).find("#levelDiv").text(data.grade + "급 ");
                 $(clone).find("#clanDiv").text(data.clanName);
 
