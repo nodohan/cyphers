@@ -30,6 +30,10 @@
                 clearDiv('con1_2');
                 clearDiv('con2_2');
                 $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
+
+                Cookies.set('gameType', val, {
+                    expires: 7
+                });
             }
 
             function getCookie() {
@@ -37,6 +41,12 @@
                 setCheckbox('positionShow', Cookies.get('positionDiv'));
                 setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
                 setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+
+                let gameType = Cookies.get('gameType');
+                if (gameType == null || gameType == '') {
+                    gameType = 'rating';
+                }
+                $(`input[name='gameType'][value='${gameType}']`).click();
             }
 
             function setCheckbox(id, checked) {
