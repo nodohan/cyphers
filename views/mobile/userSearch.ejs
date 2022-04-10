@@ -12,13 +12,28 @@
                 $("#positionShow").on("change", checkVisibility);
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
+
+                $("input[name='gameType']").on("change", setGameType);
             });
+
+            function setGameType() {
+                let val = $("input[name='gameType']:checked").val();
+                Cookies.set('gameType', val, {
+                    expires: 7
+                });
+            }
 
             function getCookie() {
                 setCheckbox('partyShow', Cookies.get('playParty'));
                 setCheckbox('positionShow', Cookies.get('positionDiv'));
                 setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
                 setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+
+                let gameType = Cookies.get('gameType');
+                if (gameType == null || gameType == '') {
+                    gameType = 'rating';
+                }
+                $(`input[name='gameType'][value='${gameType}']`).click();
             }
 
             function setCheckbox(id, checked) {
@@ -348,10 +363,10 @@
                 </div>
                 <div class="width100p">
                     <div class="width100p">
-                            RP : <span id="tierName"></span>&nbsp;
-                            <span id="currRP" class="bold"></span>
-                            <span id="maxRP"></span>
-                            <span id="beforeSeason"></span>
+                        RP : <span id="tierName"></span>&nbsp;
+                        <span id="currRP" class="bold"></span>
+                        <span id="maxRP"></span>
+                        <span id="beforeSeason"></span>
                     </div>
                     <!-- <div class="width25p">최고 rp : </div> -->
                     <div id="playGameDiv">
