@@ -366,7 +366,7 @@ function getPartyInfoText(partyInfo) {
     if (partySize == 1) {
         return `<span title="${names}"> 듀오${icon}</span>`;
     } else if (partySize >= 2) {
-        return `<span title="${names}"> ${partySize}인${icon}</span>`;
+        return `<span title="${names}"> ${partySize+1}인${icon}</span>`;
     }
 }
 
