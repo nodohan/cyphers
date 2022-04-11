@@ -61,7 +61,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let query =
             ` SELECT ` +
             `   season, checkingDate ` +
-            ` 	,IF(privateYn = 'N', nickname, '공개거부') nickname ` +
+            ` 	,IF(privateYn = 'N', nickname, '비공개') nickname ` +
             ` FROM nickNames ` +
             ` WHERE playerId = '${playerId}' ` +
             ` ORDER BY checkingDate DESC `;

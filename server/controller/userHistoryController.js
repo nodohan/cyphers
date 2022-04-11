@@ -38,7 +38,7 @@ module.exports = (scheduler, maria, acclogger) => {
     }
 
     async function searchNickname(userName) {
-        let query = "SELECT IF(privateYn = 'N', nickname, '공개거부') nickname ";
+        let query = "SELECT IF(privateYn = 'N', nickname, '비공개') nickname ";
         query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";
         query += " FROM nickNames nick ";
         query += " WHERE nick.playerId = (  ";
