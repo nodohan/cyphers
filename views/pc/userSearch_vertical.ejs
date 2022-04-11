@@ -118,8 +118,6 @@
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
                 var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
 
-                //$(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
-                //$(clone).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(clone).find("#nickNameDiv").append(data.nickname);
                 $(clone).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
                 $(clone).find("#levelDiv").text(data.grade + "급 ");
@@ -131,7 +129,8 @@
                     $(clone).find("#maxRP").text("( " + data.maxRatingPoint + " )");
                 }
 
-                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                let tot = rating.winCount + rating.loseCount + rating.stopCount;
+                $(clone).find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
             }
 
             function getTierColerName(span, tierName) {
