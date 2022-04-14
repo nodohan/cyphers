@@ -3,6 +3,8 @@ var meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game
 var adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
 var suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
 var buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
+var itemDefaultUrl = "https://img-api.neople.co.kr/cy/items/";
+
 var pageName = "";
 
 function getRandomInt(min, max) {
@@ -245,11 +247,11 @@ function drawMatch(matchId, result) {
     let loseTeam = getTeam(data.teams, "lose", data.players);
 
     for (idx in winTeam) {
-        tbody.append(drawInGameDetail(winTeam[idx], "table-primary"));
+        tbody.append(drawInGameDetail(matchId, winTeam[idx], "table-primary"));
     }
     //tbody.append("")
     for (idx in loseTeam) {
-        tbody.append(drawInGameDetail(loseTeam[idx], "table-danger"));
+        tbody.append(drawInGameDetail(matchId, loseTeam[idx], "table-danger"));
     }
 
     div.append(table);
@@ -308,8 +310,7 @@ function drawInGameList(data) {
 }
 
 
-function drawInGameDetail(data, trClass) {
-    let matchId = data.matchId;
+function drawInGameDetail(matchId, data, trClass) {
     let playInfo = data.playInfo;
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
@@ -318,14 +319,14 @@ function drawInGameDetail(data, trClass) {
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
         score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
-        score += `${getBuffIcon(data.position.attribute)}<br> ${data.nickname} ${partyCnt} </div> </td>`;
+        score += `${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> ${data.nickname} ${partyCnt} </div> </td>`;
         score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
         score += `</td>`;
     } else {
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + getBuffIcon(data.position.attribute) + "</td>";
+        score += "<td>" + getBuffIcon(data.position.attribute, buffDefaultUrl) + "</td>";
 
         if (typeof partyUserSearch == 'function') {
             score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
@@ -343,16 +344,35 @@ function drawInGameDetail(data, trClass) {
         let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
         let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
         score += `<td class='kda'>${useCoin}(${usePer}%)</td>`; //소모품코인
-
     }
 
+    let itemInfoId = `m${matchId}_${data.playerId}`;
+    if (!isMobile) {
+        score += `<td><i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".${itemInfoId}" aria-expanded="true"></i></td>`;
+    }
     score += "</tr>"
+
+    //아이템 착용
+    if (!isMobile) {
+        score += "<tr class='" + trClass + "'>";
+        score += `<td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>`;
+        score += `<div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>`;
+        score += "</td>";
+        score += "</tr>";
+    }
+
     return score;
 }
 
-function getBuffIcon(buffArr) {
+function getBuffIcon(buffArr, url) {
     return buffArr
-        .map(row => `<img class='drawIcon' title='${row.name}' src='${buffDefaultUrl}${row.id}' />`)
+        .map(row => `<img class='drawIcon' title='${row.name}' src='${url+row.id}' />`)
+        .join("&nbsp;");
+}
+
+function getItemIcon(buffArr, url) {
+    return buffArr
+        .map(row => `<img class='${isMobile ? 'drawIcon' : ''}' title='${row.itemName}' src='${url+row.itemId}' />`)
         .join("&nbsp;");
 }
 
