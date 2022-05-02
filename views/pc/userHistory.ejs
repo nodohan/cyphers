@@ -4,6 +4,11 @@
 <head>
 
     <%- include  ("../layout/head") %>
+        <style>
+            .infoLayer {
+                height: 650px;
+            }
+        </style>
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
@@ -80,7 +85,7 @@
         <div id="main">
             <div class="top" style="height:100px">
                 <b>공식전 21년 7월17일, 일반전 22년 4월3일 기준으로 수집된 데이터를 기반으로 제공됩니다.  </b>
-                <br>※ 닉네임 비공개를 원하시는분은 공지> 닉네임 비공개 공지를 참조해주세요.
+                <br>※ 닉네임 비공개 요청은, 공지 게시판의 양식에 맞춰서 신청해주시기 바랍니다.
                 <br>※ 트롤러의 닉변 이력이 조회 거부 된 경우, 증거와 함께 요청주시면 해지해드리겠습니다.
             </div>
             <div id="con1" class="con">
@@ -89,6 +94,18 @@
                 <input type="button" value="검색" onClick="searchNicknameHistory();">
                 <input type="button" value="초기화" onClick="clearDiv('con1_2');"><br/>
                 <div id="con1_2" class="infoLayer"> </div>
+            </div>
+
+            <div id="con2" class="con">
+                <h3>공지</h3>
+                <label>닉네임 비공개 신청을 하였으나, 특정 사유가 발생하여 해지된 사용자 리스트</label>
+
+                <div id="con1_2" class="infoLayer">
+                    <div>
+                        <!-- <label> <b>2022-04-30</b> </label>
+                        <label>특정 이슈 발생으로 당사자와 협의 중</label> -->
+                    </div>
+                </div>
             </div>
         </div>
 
