@@ -19,7 +19,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
         try {
             let query = " SELECT dates, COUNT(dates) cnt FROM ( ";
-            query += " 	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d') dates, matchId FROM matches ";
+            query += " 	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d (%W)') dates, matchId FROM matches ";
             query += " ) aa  ";
             query += " GROUP BY dates ";
             query += " ORDER BY dates DESC ";

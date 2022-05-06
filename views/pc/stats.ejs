@@ -28,7 +28,7 @@
                 let first = true;
                 for (idx in data.row) {
                     let item = data.row[idx];
-                    th += "<th>" + item.dates + "</th>";
+                    th += "<th>" + replaceEngToKo(item.dates) + "</th>";
                     td += "<td>" + item.cnt.toLocaleString() + "</td>";
                     if (trCount % 7 == 0) {
                         let newTable = table + tr + th + tbody + td + endTbody;
@@ -43,6 +43,17 @@
                     }
                     trCount++;
                 }
+            }
+
+            function replaceEngToKo(date) {
+                return date
+                        .replace("Monday", "월")
+                        .replace("Tuesday", "화")
+                        .replace("Wednesday", "수")
+                        .replace("Thursday", "목")
+                        .replace("Friday", "금")
+                        .replace("Saturday", "토")
+                        .replace("Sunday", "일");
             }
 
             function drawStatsList(data) {
