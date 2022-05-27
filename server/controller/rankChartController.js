@@ -41,10 +41,10 @@ module.exports = (scheduler, maria, acclogger) => {
     async function chartDate(season = '2022H') {
         // 랭킹차트 축이 안그리면 버그가 생기는 이슈가 있어서 1등(group by대신)을 조회하고 날짜만 수집하여 그림
         let query = " SELECT ";
-        query += " 	DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate ";
+        query += " rankDate, DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber ";
         query += " FROM rank ";
         query += ` WHERE season = '${season}' `;
-        query += " AND rankNumber = 1 ";
+        query += " GROUP BY rankDate ";
         query += " ORDER BY rankDate asc ";
 
         let pool = await maria.getPool();
