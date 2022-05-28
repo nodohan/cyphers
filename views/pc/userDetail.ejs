@@ -48,21 +48,12 @@
             }
 
             function drawLeftInfo(gameType, data) {
-                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+                var userDivId = getUserDivId(gameType, data.nickname);
 
                 //기본 정보
                 var clone = $("#template").clone();
-                clone.attr("id", getUserDivId(gameType, data.nickname));
-                $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
-                $(clone).find("#nickNameDiv").text(data.nickname);
-                $(clone).find("#levelDiv").text(data.grade + "급");
-                $(clone).find("#clanDiv").text(data.clanName);
-
-                $(clone).find("#currRP").text(data.ratingPoint);
-                $(clone).find("#maxRP").text(data.maxRatingPoint);
-                //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
-                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                clone.attr("id", userDivId);
+                defaultInfo(gameType, clone, data);
 
                 var rows = data.matches.rows;
 
@@ -80,6 +71,20 @@
                 $("#con1_2").prepend(clone);
             }
 
+            function defaultInfo(gameType, clone, data) {
+                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
+                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+
+                $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
+                $(clone).find("#nickNameDiv").text(data.nickname);
+                $(clone).find("#levelDiv").text(data.grade + "급");
+                $(clone).find("#clanDiv").text(data.clanName);
+
+                $(clone).find("#currRP").text(data.ratingPoint);
+                $(clone).find("#maxRP").text(data.maxRatingPoint);
+                //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+            }
             /***
              * 맵별 포지션 승률
              */
