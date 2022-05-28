@@ -466,7 +466,7 @@ function drawOften(div, info, drawCharFunc) {
 }
 
 function drawEmptyChar(div) {
-    let height = (pageName == "pcUserSearch") ? 45 : 102;
+    let height = (pageName == "pcUserSearch_vertical") ? 102 : 45;
     if (isMobile) {
         height = 51;
     }
