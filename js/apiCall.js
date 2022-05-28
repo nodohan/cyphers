@@ -139,6 +139,7 @@ function searchUser(inputId, divName, nickName, callback) {
 
             if (typeof callback == 'function') {
                 callback(data);
+                return;
             }
             setUserInfo(gameType, divName, data);
         },
