@@ -57,6 +57,9 @@
 
                 var rows = data.matches.rows;
 
+                //파티별
+                drawPartyType(userDivId, clone.find("#playParty"), rows);
+
                 //포지션 별 승률
                 drawPosition(clone, rows);
 
@@ -65,7 +68,8 @@
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
-                drawCharInfo(clone, userChar, "자주하는 TOP"); //"높은승률 TOP"
+                //drawCharInfo(clone, userChar, "자주하는 TOP"); //"높은승률 TOP"
+                drawOften(clone, userChar, drawCharCardVer);
 
                 clone.show();
                 $("#con1_2").prepend(clone);
@@ -85,6 +89,18 @@
                 //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
+
+
+            function drawCharCardVer(div, charInfo) {
+                var card = $(div).find("#cardTemp").clone();
+                card.removeAttr("id");
+                card.removeAttr("hidden");
+                card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
+                var pov = (charInfo.win * 100) / charInfo.count;
+                card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
+                div.append(card);
+            }
+
             /***
              * 맵별 포지션 승률
              */
@@ -140,10 +156,13 @@
                         <!-- 승률 : 50% [100승 101패 2중단]-->
                     </div>
                 </div>
+                <div id="playParty" class="playParty width100p">
+
+                </div>
             </div>
 
             <!-- 포지션별 승률 -->
-            <div id="positionDiv">
+            <div id="positionDiv" class="positionDiv">
                 <div id="positionTanker" class="card">
                     <div class="row no-gutters">
                         <div class="col-md-5">
@@ -198,9 +217,23 @@
             </div>
 
             <div id="mostCharDiv">
-                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
+                    <div id="cardTemp" class="card" hidden>
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="recentlyDiv" class="width100p">
@@ -214,7 +247,7 @@
             <div id="river" class="mapCard">
                 <div class="bold width100p">리버포드</div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv">
+                <div id="positionDiv" class="positionDiv">
                     <div id="positionTanker" class="card">
                         <div class="row no-gutters">
                             <div class="col-md-5">
@@ -277,7 +310,7 @@
             <div id="metro" class="mapCard">
                 <div class="bold width100p">메트로폴리스</div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv">
+                <div id="positionDiv" class="positionDiv">
                     <div id="positionTanker" class="card">
                         <div class="row no-gutters">
                             <div class="col-md-5">
@@ -340,7 +373,7 @@
             <div id="bristol" class="mapCard">
                 <div class="bold width100p">브리스톨</div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv">
+                <div id="positionDiv" class="positionDiv">
                     <div id="positionTanker" class="card">
                         <div class="row no-gutters">
                             <div class="col-md-5">
@@ -403,7 +436,7 @@
             <div id="spring" class="mapCard">
                 <div class="bold width100p">스프링필드</div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv">
+                <div id="positionDiv" class="positionDiv">
                     <div id="positionTanker" class="card">
                         <div class="row no-gutters">
                             <div class="col-md-5">
@@ -466,7 +499,7 @@
             <div id="asia" class="mapCard">
                 <div class="bold width100p">그랑플람 아시아지부</div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv">
+                <div id="positionDiv" class="positionDiv">
                     <div id="positionTanker" class="card">
                         <div class="row no-gutters">
                             <div class="col-md-5">

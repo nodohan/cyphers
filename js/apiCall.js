@@ -329,7 +329,7 @@ function drawInGameDetail(matchId, data, trClass) {
         score += "<td>" + getPositionIcon(data.position.name) + "</td>";
         score += "<td>" + getBuffIcon(data.position.attribute, buffDefaultUrl) + "</td>";
 
-        if (typeof partyUserSearch == 'function') {
+        if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
             score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
         } else {
             score += `<td>${data.nickname} ${partyCnt}</td>`;
@@ -553,6 +553,187 @@ function extractChar(rows, sort) {
             sorted.push(result[name]);
         }
     });
+    sorted.sort(sort);
+    return sorted;
+}
+
+//파티 관련 
+//파티별 승률 (솔로/파티)
+function drawPartyType(userDivId, clone, row) {
+    let partyJson = extractParty(row);
+
+    let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
+    let partyAllCnt = partyJson.all.win + partyJson.all.lose;
+
+    clone.append("솔플: " + soloAllCnt + "전 " + partyJson.solo.win + "승 " + partyJson.solo.lose + "패, ");
+    clone.append("파티: " + partyAllCnt + "전 " + partyJson.all.win + "승 " + partyJson.all.lose + "패 <br>    ");
+
+    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+    if (partyJson.two.all != 0) {
+        clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
+        clone.append(`<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `);
+    }
+
+    if (partyJson.three.all != 0) {
+        clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
+        clone.append(`<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `);
+    }
+
+    if (partyJson.five.all != 0) {
+        clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
+        clone.append(`<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `);
+    }
+
+    clone.append("<br><div class='row'>");
+    if (partyJson.two.all != 0) {
+        let partyResult = getEachPartyResult(partyJson.two.party);
+        clone.append("<div class='collapse multi-collapse' id='two" + userDivId + "'>" + partyResult + "</div>");
+    }
+    if (partyJson.three.all != 0) {
+        let partyResult = getEachPartyResult(partyJson.three.party);
+        clone.append("<div class='collapse multi-collapse' id='three" + userDivId + "'>" + partyResult + "</div>");
+    }
+    if (partyJson.five.all != 0) {
+        let partyResult = getEachPartyResult(partyJson.five.party);
+        clone.append("<div class='collapse multi-collapse' id='five" + userDivId + "'>" + partyResult + "</div>");
+    }
+
+    clone.append("</div>");
+}
+
+function getEachPartyResult(arr) {
+    let resultTable = "<table class='table'> ";
+    resultTable += "<thead class='thead-dark'><tr>";
+    resultTable += "<th scope='col'>파티원</th>";
+    resultTable += "<th scope='col'>겜수</th>";
+    resultTable += "<th scope='col'>승</th>";
+    resultTable += "<th scope='col'>패</th>";
+    resultTable += "<th scope='col'>승률</th>";
+    resultTable += "</tr></thead><tbody>";
+
+    for (idx in arr) {
+        let row = arr[idx];
+        let total = row.win + row.lose;
+        let rate = ((row.win * 100) / total).toFixed(0) + "%";
+
+        resultTable += "<tr>";
+        if (pageName != 'pcDetail') {
+            resultTable += `<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />${row.name}</a></th>`;
+        } else {
+            resultTable += `<th scope='row'>${row.name}</th>`;
+        }
+        resultTable += "<td>" + total + "</td>";
+        resultTable += "<td>" + row.win + "</td>";
+        resultTable += "<td>" + row.lose + "</td>";
+        resultTable += "<td>" + rate + "</td>";
+        resultTable += "</tr>";
+
+    }
+    resultTable += "</tbody></table>";
+
+    return resultTable;
+}
+
+function partyUserSearch(aTagObj) {
+    let aTag = $(aTagObj);
+    let partyUserNames = aTag.text().replace(",", " ");
+    let conId = aTag.closest(".infoLayer").attr("id");
+    conId = conId == null ? "con2_2" : conId;
+
+    let inputId = conId == "con1_2" ? 'nickNames' : 'nickNames2';
+    $("#" + inputId).val(partyUserNames);
+    search(inputId, conId);
+}
+
+function addPlayResult(subPartyResult, matchId, data, isParty) {
+    subPartyResult[data.result]++;
+    subPartyResult["count"]++;
+
+    if (isParty) {
+        let partyId = data.partyInfo.map(row => row.playerId).sort().join(",");
+        let partyName = data.partyInfo.map(row => row.nickname).sort().join(",");
+
+        if (subPartyResult.party[partyId] == null) {
+            subPartyResult.party[partyId] = {
+                matchId: [],
+                name: "",
+                count: 0,
+                win: 0,
+                lose: 0
+            };
+        }
+        subPartyResult.party[partyId].count++;
+        subPartyResult.party[partyId][data.result]++;
+        subPartyResult.party[partyId].name = partyName;
+        subPartyResult.party[partyId].matchId.push(matchId);
+    }
+}
+
+function extractParty(rows) {
+    let partyResult = {
+        solo: {
+            win: 0,
+            lose: 0
+        },
+        all: {
+            count: 0,
+            win: 0,
+            lose: 0
+        },
+        two: {
+            count: 0,
+            win: 0,
+            lose: 0,
+            party: {}
+        },
+        three: {
+            count: 0,
+            win: 0,
+            lose: 0,
+            party: {}
+        },
+        five: {
+            count: 0,
+            win: 0,
+            lose: 0,
+            party: {}
+        },
+    };
+
+    let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
+    partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
+    partyResult.solo.lose = (solo.length - partyResult.solo.win);
+
+    let party = rows.filter(row => row.playInfo.partyInfo.length != 0);
+    for (let i in party) {
+        let matchId = party[i].matchId;
+        let playInfo = party[i].playInfo;
+        let cnt = playInfo.partyUserCount;
+
+        addPlayResult(partyResult.all, matchId, playInfo, false);
+        if (cnt == 2) {
+            addPlayResult(partyResult.two, matchId, playInfo, true);
+        } else if (cnt == 3) {
+            addPlayResult(partyResult.three, matchId, playInfo, true);
+        } else if (cnt == 5) {
+            addPlayResult(partyResult.five, matchId, playInfo, true);
+        }
+    }
+
+    partyResult.two.party = partySort(partyResult.two.party, sortCase);
+    partyResult.three.party = partySort(partyResult.three.party, sortCase);
+    partyResult.five.party = partySort(partyResult.five.party, sortCase);
+
+    return partyResult;
+}
+
+function partySort(party, sort) {
+    let keys = Object.keys(party);
+    var sorted = [];
+    keys.forEach(key => {
+        sorted.push(party[key]);
+    });
+
     sorted.sort(sort);
     return sorted;
 }
