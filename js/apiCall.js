@@ -220,7 +220,7 @@ function searchMatch(matchId, callback) {
         data: { 'matchId': matchId },
         success: function(data) {
             if (typeof callback == 'function') {
-                callback(matchId, data);
+                return callback(matchId, data);
             }
             drawMatch(matchId, data);
         }
