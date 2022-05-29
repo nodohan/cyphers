@@ -69,8 +69,6 @@
                 let prefixMatchId = "m" + matchId;
 
                 var data;
-                //console.log(typeof result);
-                //console.log(data);
                 if (result == null) {
                     $("#" + prefixMatchId + "Btn").click();
                     return;
@@ -95,10 +93,10 @@
                 let loseTeam = getTeam(data.teams, "lose", data.players);
 
                 for (idx in winTeam) {
-                    tbody.append(drawInGameDetail(winTeam[idx], true, "table-primary"));
+                    tbody.append(drawInGameDetail(matchId, winTeam[idx], "table-primary"));
                 }
                 for (idx in loseTeam) {
-                    tbody.append(drawInGameDetail(loseTeam[idx], true, "table-danger"));
+                    tbody.append(drawInGameDetail(matchId, loseTeam[idx], "table-danger"));
                 }
 
                 //클릭이벤트 설정용
@@ -190,6 +188,7 @@
                                         <th scope="col">피해량</th>
                                         <th scope="col">코인</th>
                                         <th scope="col">소모품(%)</th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
