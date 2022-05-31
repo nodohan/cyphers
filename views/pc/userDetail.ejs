@@ -7,6 +7,7 @@
         <script type="text/javascript">
             pageName = "pcDetail";
 
+            var playRow = null;
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
                 $("#userDetailMenu").addClass("active");
@@ -56,6 +57,7 @@
                 defaultInfo(gameType, clone, data);
 
                 var rows = data.matches.rows;
+                playRow = rows;
 
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
@@ -63,13 +65,16 @@
                 //포지션 별 승률
                 drawPosition(clone, rows);
 
-                //최근 5경기 결과
+                //최근 10게임
                 drawRecently(clone, rows);
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
                 //drawCharInfo(clone, userChar, "자주하는 TOP"); //"높은승률 TOP"
                 drawOften(clone, userChar, drawCharCardVer);
+
+                // 플레이 리스트 
+                playGameList("all", clone);
 
                 clone.show();
                 $("#con1_2").prepend(clone);
@@ -90,16 +95,96 @@
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
 
-
             function drawCharCardVer(div, charInfo) {
+                var pov = (charInfo.win * 100) / charInfo.count;
+                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                let moreAlink = `<a href='#' onClick="javascript:playGameList('${charInfo.characterId}');">${moreIcon}</a>`;
+                let cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${charInfo.win}승 ${charInfo.lose}패</small>`;
+
                 var card = $(div).find("#cardTemp").clone();
                 card.removeAttr("id");
                 card.removeAttr("hidden");
                 card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                var pov = (charInfo.win * 100) / charInfo.count;
-                card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
+                card.find(".card-text").empty().append(cardText);
                 div.append(card);
             }
+
+            function playGameList(charId, div) {
+                let rows = playRow;
+                if (charId != 'all') {
+                    rows = rows.filter(row => row.playInfo.characterId == charId);
+                }
+
+                var clone = $("#templateTable").clone();
+                clone.removeAttr("id");
+
+                var body = clone.find("tbody");
+                rows.forEach(row => {
+                    let playInfo = row.playInfo;
+                    //date
+                    let text = "<tr>";
+                    text += `<td> ${row.date} </td>`;
+                    text += `<td><b>${winLoseKo(playInfo.result)}</b></td>`;
+                    text += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+                    text += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+                    text += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "k</td>";
+                    text += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "k</td>";
+
+                    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                    text += `<td onClick='searchMatch("${row.matchId}", drawMatchDetailPopup )'>${moreIcon}</td> `
+                    text += "</tr>"
+                    body.append(text);
+                });
+
+                if (div == null) {
+                    div = $("#con1_2");
+                }
+                div.find("#playGameList").empty().append(clone);
+            }
+
+            function drawMatchDetailPopup(matchId, result) {
+                let prefixMatchId = "m" + matchId;
+
+                var data;
+                if (result == null) {
+                    $("#" + prefixMatchId + "Btn").click();
+                    return;
+                }
+
+                if (typeof result == 'string') {
+                    data = JSON.parse(result);
+                } else {
+                    data = result;
+                }
+
+                var body = $("#templateDetailModal").clone();
+                body.attr("id", prefixMatchId + "Modal");
+                body.attr("aria-labelledby", prefixMatchId + "ModalLabel");
+                body.find("#templateDetailModalLabel")
+                    .attr("id", prefixMatchId + "ModalLabel")
+                    .text("매칭아이디: " + matchId);
+                body.find("#matchInfoTemplate").attr("id", prefixMatchId + "div");
+                var tbody = body.find("tbody");
+
+                let winTeam = getTeam(data.teams, "win", data.players);
+                let loseTeam = getTeam(data.teams, "lose", data.players);
+
+                for (idx in winTeam) {
+                    tbody.append(drawInGameDetail(matchId, winTeam[idx], "table-primary"));
+                }
+                for (idx in loseTeam) {
+                    tbody.append(drawInGameDetail(matchId, loseTeam[idx], "table-danger"));
+                }
+
+                //클릭이벤트 설정용
+                var btn = $(body).find("#matchBtn");
+                btn.attr("id", prefixMatchId + "Btn");
+                btn.attr("data-target", "#" + prefixMatchId + "Modal");
+                $("#modalDiv").append(body);
+
+                btn.click();
+            }
+
 
             /***
              * 맵별 포지션 승률
@@ -124,12 +209,23 @@
                 <label for="gameType_rating"> 공식 </label>
                 <input type="radio" name="gameType" id="gameType_normal" value="normal" />
                 <label for="gameType_normal"> 일반 </label>
-            </div>
-            <div id="con1" class="con">
-                <h3>상세</h3>
-                <input type="text" class="longText" id="nickNames" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " placeholder="한명만 검색하세요" />
+
+                <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " placeholder="한명만 검색하세요" />
                 <input type="button" value="검색" onClick="searchDetail();">
                 <input type="button" value="초기화" onClick="clearDiv('con1_2');clearDiv('con2_2');"></br>
+
+                <!-- <div clas="col-md-7 col-xl-2">
+                        <div class="input-group">
+                            <input type="text" id="nickNames" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchDetail(); } ">
+                            <div class="input-group-append" id="searchButton">
+                                <button class="btn btn-outline-secondary" type="button" onClick="searchDetail();">검색</button>
+                                <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');clearDiv('con2_2');">초기화</button>
+                            </div>
+                        </div>
+                    </div> -->
+            </div>
+
+            <div id="con1" class="con">
                 <div id="con1_2" class="infoLayer2">
 
                 </div>
@@ -241,6 +337,27 @@
                     <!--최근 10게임 -->
                 </div>
             </div>
+
+            <div id="playGameList" class="playGameList">
+
+            </div>
+        </div>
+
+        <div style="display:none">
+            <table id="templateTable" class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">날짜</th>
+                        <th scope="col">결과</th>
+                        <th scope="col">나</th>
+                        <th scope="col">KDA</th>
+                        <th scope="col">딜량</th>
+                        <th scope="col">피해량</th>
+                        <th scope="col">+</th>
+                    </tr>
+                </thead>
+                <tbody> </tbody>
+            </table>
         </div>
 
         <div id="template2" style="display:none">
@@ -595,6 +712,48 @@
                     </div>
                 </div>
             </div>
+
+            <div id="templateDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateDetailModalLabel">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="templateDetailModalLabel"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">C</th>
+                                        <th scope="col">P</th>
+                                        <th scope="col">buff</th>
+                                        <th scope="col">닉네임</th>
+                                        <th scope="col">Lv</th>
+                                        <th scope="col">KDA</th>
+                                        <th scope="col">킬</th>
+                                        <th scope="col">데스</th>
+                                        <th scope="col">도움</th>
+                                        <th scope="col">딜량</th>
+                                        <th scope="col">피해량</th>
+                                        <th scope="col">코인</th>
+                                        <th scope="col">소모품(%)</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div hide>
+                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                </div>
+            </div>
+
+
         </div>
 
         <div style="display:none">
@@ -615,11 +774,13 @@
                         <th scope="col">피해량</th>
                         <th scope="col">코인</th>
                         <th scope="col">소모품(%)</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
+
 
 </body>
 
