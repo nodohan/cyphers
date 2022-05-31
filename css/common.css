@@ -231,6 +231,11 @@ table td {
     background-color: white;
 }
 
+.infoDivRed .card {
+    width: 25%;
+    background-color: white;
+}
+
 .card-body {
     min-width: 64px;
     line-height: 1.2;
