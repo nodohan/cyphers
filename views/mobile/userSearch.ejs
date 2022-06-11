@@ -78,12 +78,12 @@
                 //포지션별 승률
                 drawPosition(clone, rows);
 
-                //최근 10경기 결과
-                drawRecently(clone, rows, userDivId);
-
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
                 drawOften(clone, userChar, drawCharCardVer);
+
+                //최근 10경기 결과
+                drawRecently(clone, rows, userDivId);
 
                 clone.show();
                 $("#" + divName).append(clone);
@@ -455,9 +455,6 @@
                 <div class="width100p bold" id="recentlyDivTitle">
                     <!--최근 10게임 -->
                 </div>
-                <!-- <div id="recentlyResultDiv">
-                    <a data-toggle="modal" data-target="#templateModal">[더보기]</a>
-                </div>  -->
             </div>
         </div>
 
@@ -501,6 +498,7 @@
                         <th scope="col">캐릭</th>
                         <th scope="col" colspan='3'>포지션/버프/닉</th>
                         <th scope="col">KDA<br>딜/피해</th>
+                        <!-- <th scope="col"></th> -->
                     </tr>
                 </thead>
                 <tbody></tbody>
