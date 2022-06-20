@@ -111,7 +111,7 @@
                 if (data.length == 0) {
                     alert("전시즌 언랭");
                 } else {
-                    alert(`전시즌(2021U) ${data[0].rankNumber}위`);
+                    alert(`전시즌(2021U) ${data[0].rankNumber == '몰?루?' ? '몰?루?' : data[0].rankNumber+'위' }`);
                 }
             }
 

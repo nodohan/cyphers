@@ -99,7 +99,13 @@ module.exports = (scheduler, maria, acclogger) => {
             return;
         }
 
-        let query = ` SELECT * FROM rank WHERE rankDate = '2022-02-17' AND playerId = '${playerId}' `;
+        let query = ` SELECT `
+        query += ` rank.rankDate, rank.nickname, rank.rp, rank.season `
+        query += ` , IF(pl.privateYn = 'Y', '몰?루?', rank.rankNumber) rankNumber `
+        query += ` FROM rank rank `
+        query += ` LEFT JOIN player pl ON pl.playerId = rank.playerId `
+        query += ` WHERE rankDate = '2022-02-17' AND pl.playerId = '${playerId}' `;
+
         pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
