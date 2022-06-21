@@ -39,11 +39,12 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'ico', 'favicon.ico')))
 app.use('/js', express.static(__dirname + "/js"));
-app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
-app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
-app.use('/css', express.static(__dirname + '/css')); // redirect CSS bootstrap
-app.use('/mobile', express.static(__dirname + '/mobile')); // redirect CSS bootstrap
-app.use('/image', express.static(__dirname + '/image')); // redirect CSS bootstrap
+app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect 
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect 
+app.use('/css', express.static(__dirname + '/css')); // redirect 
+app.use('/mobile', express.static(__dirname + '/mobile')); // redirect 
+app.use('/image', express.static(__dirname + '/image')); // redirect
+app.use('/sitemap', express.static(__dirname + '/sitemap')); // redirect sitemap
 app.use('/user', userController);
 app.use('/rank', rankScheduler);
 app.use('/matches', matchScehduler);
@@ -64,6 +65,11 @@ app.get('/', function(req, res) {
     } else {
         res.render('./pc/stats');
     }
+});
+
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send("User-agent: *\nAllow: /\nSitemap: http://doseh.co.kr/sitemap/sitemap.xml");
 });
 
 

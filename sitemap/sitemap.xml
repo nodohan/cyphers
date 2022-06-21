@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://doseh.co.kr/</loc>		
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/user/userSearch</loc>		
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/user/userSearch_vertical</loc>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/user/userDetail</loc>		
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/user/userVs</loc>		
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/combi/combi</loc>		
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/rankChart/userChart</loc>		
+	</url>
+	<url>
+		<loc>http://doseh.co.kr/history/nicknameHistory</loc>
+		<priority>0.7</priority>
+	</url>
+</urlset>
