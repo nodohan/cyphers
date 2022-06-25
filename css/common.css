@@ -127,7 +127,7 @@ table td {
 }
 
 #main {
-    width: 1140px;
+    width: 1300px;
     margin: 0px auto;
 }
 
@@ -299,7 +299,7 @@ table td {
 }
 
 #statsMain {
-    width: 1400px;
+    width: 1500px;
     margin: 0px auto;
 }
 
@@ -464,4 +464,11 @@ table td {
     width: 100%;
     height: 400px;
     overflow: auto;
+}
+
+.rightBanner {
+    width: 1px;
+    float: left;
+    margin-top: 100px;
+    margin-left: 20px;
 }
