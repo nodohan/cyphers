@@ -113,18 +113,17 @@
 <body class="body">
     <%- include  ("../layout/menu") %>
 
-        <div id="main" style="width:1500px">
-            <div class="top" style="width:1420px">
+        <div id="main" style="width:1530px">
+            <div class="top" style="width:1320px">
                 <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
                 <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
-                <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) {focusMove(); } " placeholder="나와" />
-                <span>&nbsp;이사람의</span>
-                <input type="text" class="shortText" id="nickNames2" onKeyPress="if(event.keyCode == 13) { userVsSearch(); } " placeholder="이사람의" />
-                <spna>전적</spna>
+                <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) {focusMove(); } " placeholder="나" />
+                <span>와&nbsp;</span>
+                <input type="text" class="shortText" id="nickNames2" onKeyPress="if(event.keyCode == 13) { userVsSearch(); } " placeholder="상대" />
                 <input type="button" value="검색" onClick="userVsSearch();">
                 <input type="button" value="초기화" onClick="clearDiv('con1_2');"></br>
             </div>
-            <div id="con1" class="con" style="width:700px">
+            <div id="con1" class="con" style="width:650px">
                 <h3>같은팀으로 만나서</h3>
                 <div id="con1_2" class="table-responsive">
 
@@ -149,7 +148,7 @@
                     </table>
                 </div>
             </div>
-            <div id="con2" class="con" style="width:700px">
+            <div id="con2" class="con" style="width:650px">
                 <h3>적으로 만나서</h3>
                 <div id="con2_2" class="table-responsive"> </div>
             </div>

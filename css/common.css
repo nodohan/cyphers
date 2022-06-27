@@ -308,7 +308,7 @@ table td {
     float: left;
     padding: 15px;
     position: relative;
-    width: 1400px;
+    width: 1300px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
 }
@@ -318,7 +318,7 @@ table td {
     float: left;
     padding: 15px;
     position: relative;
-    width: 700px;
+    width: 650px;
     min-height: 750px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
@@ -469,6 +469,6 @@ table td {
 .rightBanner {
     width: 1px;
     float: left;
-    margin-top: 100px;
+    margin-top: 0px;
     margin-left: 20px;
 }
