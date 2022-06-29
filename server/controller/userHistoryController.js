@@ -1,5 +1,6 @@
 const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
+const api = require('../../api');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
@@ -15,12 +16,21 @@ module.exports = (scheduler, maria, acclogger) => {
 
     app.get('/searchNicknameHistory', async function(req, res) {
         let userName = req.query.nickname;
-        let userNicknameList = await searchNickname(userName);
+
+        let playerId = await new api().getPlayerIdByName(req.query.nickname);
+        let userNicknameList;
+        logger.debug("playerId get %s", playerId);
+        if (playerId != null) {
+            userNicknameList = await searchNicknameByPlayerId(playerId);
+        } else {
+            userNicknameList = await searchNickname(userName);
+        }
 
         if (userNicknameList == null || userNicknameList.length == 0) {
             res.send({ resultCode: -1 });
             return;
         }
+
         if (userNicknameList[0].privateYn == 'Y') {
             res.send({ resultCode: -2 });
             return;
@@ -36,6 +46,24 @@ module.exports = (scheduler, maria, acclogger) => {
     async function insertSearchNickname(username) {
 
     }
+
+    async function searchNicknameByPlayerId(playerId) {
+        let query = `SELECT IF(privateYn = 'N', nickname, '비공개') nickname `;
+        query += `, DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate `;
+        query += ` FROM nickNames nick `;
+        query += ` WHERE nick.playerId = '${playerId}' ORDER BY checkingDate DESC; `;
+
+        //logger.debug("쿼리: %s", query);
+
+        pool = await maria.getPool();
+        try {
+            return await pool.query(query);
+        } catch (err) {
+            logger.error(err);
+        }
+        return null;
+    }
+
 
     async function searchNickname(userName) {
         let query = "SELECT IF(privateYn = 'N', nickname, '비공개') nickname ";
