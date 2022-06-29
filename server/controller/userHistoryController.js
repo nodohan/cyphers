@@ -42,7 +42,9 @@ module.exports = (scheduler, maria, acclogger) => {
         query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";
         query += " FROM nickNames nick ";
         query += " WHERE nick.playerId = (  ";
-        query += `     SELECT playerId FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' `;
+        query += `     SELECT distinct playerId `
+        query += `     FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' `;
+        query += `     order by checkingDate desc`
         query += ") ORDER BY checkingDate DESC; ";
 
         logger.debug("닉변검색: " + userName);
