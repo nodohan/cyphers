@@ -16,6 +16,16 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
+    app.get('/userTest', function(req, res) {
+        commonUtil.getIp(req);
+        if (commonUtil.isMobile(req)) {
+            res.render('./mobile/userTest', { 'searchNickname': req.query.nickname });
+        } else {
+            res.render('./pc/userTest', { 'searchNickname': req.query.nickname });
+        }
+    });
+
+
     //  url = "/user/userSearch_vertical"
     app.get('/userSearch_vertical', function(req, res) {
         //모바일은 지원하지 않음
