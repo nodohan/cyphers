@@ -472,3 +472,18 @@ table td {
     margin-top: 0px;
     margin-left: 20px;
 }
+
+
+.nicknameLayer {
+    padding-bottom : 4px !important;
+    border-bottom : 1px solid gray ;
+}
+
+.nickNameDiv {
+    min-width: 30%;
+    height:50px;
+    font-weight: bold;
+    font-size: x-large;
+    padding: 8px 15px 0px 0px !important;
+}
+
