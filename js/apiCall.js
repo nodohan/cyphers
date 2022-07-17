@@ -202,9 +202,10 @@ function getUserDivId(gameType, nickname) {
     return nickname + "_" + gameType;
 }
 
-function searchMatch(matchId, callback) {
-    var div = $(".m" + matchId);
-    var divVs = $("#m" + matchId + "Modal");
+function searchMatch(matchId, callback, prefix = "m") {
+    let divId = `${prefix}${matchId}`;
+    var div = $(`.${divId}`);
+    var divVs = $(`#${divId}Modal`);
 
     if (div.text().length != 0 || divVs.text().length != 0) {
         if (typeof callback == 'function') {
@@ -220,9 +221,9 @@ function searchMatch(matchId, callback) {
         data: { 'matchId': matchId },
         success: function(data) {
             if (typeof callback == 'function') {
-                return callback(matchId, data);
+                return callback(matchId, data, divId);
             }
-            drawMatch(matchId, data);
+            drawMatch(matchId, data, divId);
         }
     }).done(function() {
 
@@ -230,8 +231,8 @@ function searchMatch(matchId, callback) {
     return result;
 }
 
-function drawMatch(matchId, result) {
-    let prefixMatchId = "m" + matchId;
+function drawMatch(matchId, result, divId) {
+    let prefixMatchId = divId;
     var data;
     //console.log(data);
     if (typeof result == 'string') {
@@ -444,16 +445,16 @@ function winLoseKo(result) {
     return (result == "win") ? "<span class='red'>승</span> " : "<span class='blue'>패</span> ";
 }
 
-function drawOften(div, info, drawCharFunc) {
+function drawOften(div, info, drawCharFunc, nickname) {
     let count = Math.min(isMobile ? 6 : 8, info.length);
     let rowCount = isMobile ? 6 : 8;
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (var i = 0; i < count; i++) {
         if (typeof drawCharFunc == 'function') {
-            drawCharFunc(div.find("#mostCharDetailDiv"), info[i]);
+            drawCharFunc(div.find("#mostCharDetailDiv"), info[i], nickname);
         } else {
-            drawChar(div.find("#mostCharDetailDiv"), info[i]);
+            drawChar(div.find("#mostCharDetailDiv"), info[i], nickname);
         }
     }
 

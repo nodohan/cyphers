@@ -8,7 +8,10 @@
         <script type="text/javascript">
             pageName = "pcUserSearch";
 
+            var userData = {};
+
             $(document).ready(function() {
+
                 let nickname = '<%=searchNickname%>';
                 if (nickname != '') {
                     $("#nickNames").val(nickname);
@@ -74,7 +77,12 @@
             }
 
             function setUserInfo(gameType, divName, data) {
-                var userDivId = getUserDivId(gameType, data.nickname);
+                let nickname = data.nickname;
+                if(userData[nickname] == null ){
+                    userData[nickname] = data;
+                }
+
+                var userDivId = getUserDivId(gameType, nickname);
                 //기본 정보 
                 var clone = $("#template").clone();
                 clone.attr("id", userDivId);
@@ -99,7 +107,7 @@
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
-                drawOften(clone, userChar, drawCharCardVer);
+                drawOften(clone, userChar, drawCharCardVer, nickname);
 
                 clone.show();
                 $("#" + divName).prepend(clone);
@@ -163,15 +171,74 @@
                 alert(info);
             }
 
-            function drawCharCardVer(div, charInfo) {
+            function drawCharCardVer(div, charInfo, nickname) {
+                let modalId = `${nickname}_${charInfo.characterId}_modal`;
+                var pov = (charInfo.win * 100) / charInfo.count;
+                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${charInfo.characterId}', null, '${nickname}');">${moreIcon}</a>`;
+                let cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${charInfo.win}승 ${charInfo.lose}패</small>`;
+
                 var card = $(div).find("#cardTemp").clone();
                 card.removeAttr("id");
                 card.removeAttr("hidden");
                 card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                var pov = (charInfo.win * 100) / charInfo.count;
-                card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
+                card.find(".card-text").empty().append(cardText);
                 div.append(card);
             }
+
+            function playGameList(charId, div, nickname) {
+                let modalId = `${nickname}_${charId}_modal`;
+                if($("#"+modalId).length != 0){
+                    return;
+                }
+
+                let rows = userData[nickname].matches.rows;
+                if(rows == null){
+                    return;
+                }
+
+                if (charId != 'all') {
+                    rows = rows.filter(row => row.playInfo.characterId == charId);
+                }
+
+                var clone = $("#templateModal").clone();
+                let title = `${nickname}의 ${rows[0].playInfo.characterName} ${rows.length} 게임`;
+                clone.find("#templateModalLabel").empty().text(title);
+                clone.removeAttr("id");
+                clone.attr("id", modalId);
+
+                var body = clone.find("tbody");
+                rows.forEach(row => {
+                    let playInfo = row.playInfo;
+                    let matchId = row.matchId;
+                    
+                    let text = "<tr>";
+                    text += `<td> ${row.date} </td>`;
+                    text += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
+                    text += `<td><b>${winLoseKo(playInfo.result)}</b></td>`;
+                    text += "<td>" + getPositionIcon(row.position.name) + "</td>";
+                    text += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
+                    text += "<td>" + playInfo.level + "</td>";
+                    text += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
+                    text += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "k</td>";
+                    text += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "k</td>";
+                    text += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
+
+                    text += `<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' onClick='searchMatch("${matchId}", null, "char_")' ></td>`;
+                    text += "</tr>";
+                    text += "<tr>";
+                    text += "<td class='hiddenRow' colspan='12'>";
+                    text += `<div class='collapse char_${matchId}'></div>`;
+                    text += "</td>";
+                    text += "</tr>";
+
+                    body.append(text);
+                });
+                
+                $("#modalDiv").append(clone);
+                clone.show();
+            }
+
         </script>
 </head>
 
@@ -236,7 +303,7 @@
                 <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
                 <div class="nicknameLayer width100p">
                     <div id="nickNameDiv" class="nickNameDiv"> </div>
-                    <div class="width45p">
+                    <div class="width40p">
                         <span id="levelDiv"></span>&nbsp;&nbsp;
                         <span id="clanDiv"></span>
                     </div>
