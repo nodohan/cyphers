@@ -491,8 +491,10 @@ function drawCharicter(charId, isLarge = false) {
 }
 
 function appendPlayTypeInfo(div, type, typeId) {
-    var infoStr = (type == null) ? "0% <br><small class='text-muted'> 0승 0패</small>" : type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
-    //57% <br> <small class="text-muted">79승 60패 </small>
+    var infoStr =  "0% <br><small class='text-muted'> 0승 0패</small>";
+    if(type != null) {
+        infoStr =  type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
+    }
     $(div).find("#" + typeId + "Span").empty().append(infoStr);
 }
 
