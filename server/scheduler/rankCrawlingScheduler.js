@@ -16,7 +16,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    // "/rank/getHtml"    
+    // "/rank/getHtml"
     app.get('/getHtml', function(req, res) {
         let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
         const ip = req.headers['x-forwarded-for'] || req.ip;
@@ -48,29 +48,32 @@ module.exports = (scheduler, maria) => {
 
         logger.debug("today string %s", todayYYYYMMDD);
 
-        for (let i = 1; i <= 150; i++) {
+        for (let i = 1; i <= 140; i++) {
             if (run) {
                 let html = await getHtml(i);
                 let rankList = [];
                 const $ = cheerio.load(html.data);
-                const $bodyList = $(".total_rank tbody tr");
+                const $bodyList = $(".rank_cont tbody tr");
 
-                if ($bodyList.length != 50) {
+                if ($bodyList.length < 50) {
                     logger.debug("랭킹 크롤링 끝");
                     run = false;
                 }
 
                 $bodyList.each(function(i, row) {
-
-                    let rank = $($(row).find("td").get(0)).clone();
-                    rank.find(".chg_num").remove();
+                    let rank = $($(row).find("td").get(0));
+                    rank.find("p").remove();
 
                     rankList[i] = {
                         today: todayYYYYMMDD,
-                        rank: rank.text().replace(/\t/gi, "").replace("\n", ""),
+                        rank: $(rank).text().trim(),
                         name: $($(row).find("td").get(1)).find("a").text(),
+                        //name: $($(row).find("td").get(1)).text(),
                         rp: $($(row).find("td").get(3)).text()
                     };
+
+                    //let item = rankList[i];
+                    //logger.debug(`${item.rank} ${item.name} ${item.rp}`);
                 });
                 //logger.debug("랭킹 페이지 %s! insert 시작 ", i);
                 await insertRank(pool, rankList);
@@ -79,9 +82,8 @@ module.exports = (scheduler, maria) => {
     }
 
     const getHtml = async(page) => {
-        try {
-            //return await axios.get("http://cyphers.nexon.com/cyphers/article/ranking/total/19/" + page);
-            return await axios.get("http://cyphers.nexon.com/cyphers/article/ranking/total/20/" + page);
+        try { // https://cyphers.nexon.com/ranking/total
+            return await axios.get("http://cyphers.nexon.com/ranking/total?page=" + page);
         } catch (error) {
             logger.error(error);
         }
@@ -92,12 +94,9 @@ module.exports = (scheduler, maria) => {
 
         jsonList.forEach(async function(json) {
             try {
-                if (json.rp == '') {
-                    return;
-                }
-
                 let query = `INSERT INTO rank (rankDate, rankNumber, playerId, nickname, season, rp) `;
                 query += ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022H', ${json.rp} `;
+                //query += ` SELECT '2022-02-17', '${json.rank}', nick.playerId, '${json.name}' , '2021U', null `;
                 query += ` FROM nickNames nick`;
                 query += ` WHERE nick.nickname = '${json.name}' `;
 
