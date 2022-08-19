@@ -48,32 +48,30 @@ module.exports = (scheduler, maria) => {
 
         logger.debug("today string %s", todayYYYYMMDD);
 
+        //for (let i = 1; i <= 140; i++) {
         for (let i = 1; i <= 140; i++) {
             if (run) {
                 let html = await getHtml(i);
+                //console.log(html);
                 let rankList = [];
-                const $ = cheerio.load(html.data);
-                const $bodyList = $(".rank_cont tbody tr");
+                const $bodyList = html.data.rankingTopResponses;
 
+                //console.log($bodyList);
                 if ($bodyList.length < 50) {
                     logger.debug("랭킹 크롤링 끝");
                     run = false;
                 }
 
-                $bodyList.each(function(i, row) {
-                    let rank = $($(row).find("td").get(0));
-                    rank.find("p").remove();
+                $bodyList.forEach(function(row, i) {
+                    console.log(row);
 
                     rankList[i] = {
                         today: todayYYYYMMDD,
-                        rank: $(rank).text().trim(),
-                        name: $($(row).find("td").get(1)).find("a").text(),
+                        rank: row.ranking,
+                        name: row.mNickname,
                         //name: $($(row).find("td").get(1)).text(),
-                        rp: $($(row).find("td").get(3)).text()
+                        rp: row.ratingPoint
                     };
-
-                    //let item = rankList[i];
-                    //logger.debug(`${item.rank} ${item.name} ${item.rp}`);
                 });
                 //logger.debug("랭킹 페이지 %s! insert 시작 ", i);
                 await insertRank(pool, rankList);
@@ -83,7 +81,7 @@ module.exports = (scheduler, maria) => {
 
     const getHtml = async(page) => {
         try { // https://cyphers.nexon.com/ranking/total
-            return await axios.get("http://cyphers.nexon.com/ranking/total?page=" + page);
+            return await axios.get("http://cyphers.nexon.com/ranking/total/21?page=" + page);
         } catch (error) {
             logger.error(error);
         }
@@ -95,10 +93,10 @@ module.exports = (scheduler, maria) => {
         jsonList.forEach(async function(json) {
             try {
                 let query = `INSERT INTO rank (rankDate, rankNumber, playerId, nickname, season, rp) `;
-                query += ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022H', ${json.rp} `;
+                query += ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022U', ${json.rp} `;
                 //query += ` SELECT '2022-02-17', '${json.rank}', nick.playerId, '${json.name}' , '2021U', null `;
                 query += ` FROM nickNames nick`;
-                query += ` WHERE nick.nickname = '${json.name}' `;
+                query += ` WHERE nick.nickname = '${json.name}' ORDER BY checkingDate DESC LIMIT 1 `;
 
                 logger.debug(query);
 
