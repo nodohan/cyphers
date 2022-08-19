@@ -114,7 +114,7 @@ module.exports = (scheduler, maria, acclogger) => {
         query += ` , IF(pl.privateYn = 'Y', '몰?루?', rank.rankNumber) rankNumber `
         query += ` FROM rank rank `
         query += ` LEFT JOIN player pl ON pl.playerId = rank.playerId `
-        query += ` WHERE rankDate = '2022-02-17' AND pl.playerId = '${playerId}' `;
+        query += ` WHERE rankDate in ( '2022-02-17', '2022-08-18' ) AND pl.playerId = '${playerId}' `;
 
         pool = await maria.getPool();
         try {
