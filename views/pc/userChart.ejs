@@ -126,17 +126,21 @@
     <%- include  ("../layout/menu") %>
 
         <div id="main">
-            <div class="top">
+            <div class="top" style="height:90px">
                 <div class="form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="season" id="season_2022H" value="2022H" checked/>
+                    <input type="radio" class="form-check-input" name="season" id="season_2022U" value="2022U" checked/>
+                    <label class="form-check-label" for="season_2022U"> 2022U (현재) </label>&nbsp;&nbsp;&nbsp;
+                    <input type="radio" class="form-check-input" name="season" id="season_2022H" value="2022H" />
                     <label class="form-check-label" for="season_2022H"> 2022H </label>&nbsp;&nbsp;&nbsp;
                     <input type="radio" class="form-check-input" name="season" id="season_2021U" value="2021U" />
                     <label class="form-check-label" for="season_2021U"> 2021U </label>
                 </div>
+                <div style="margin-top: 10px;">
+                    <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
+                    <input type="button" value="검색" onClick="userRankSearch();">
+                    <input type="button" value="초기화" onClick="resetChart();">
+                </div>
 
-                <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
-                <input type="button" value="검색" onClick="userRankSearch();">
-                <input type="button" value="초기화" onClick="resetChart();">
 
             </div>
             <div id="con1" class="con" style="width:87%">
