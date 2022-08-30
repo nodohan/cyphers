@@ -318,10 +318,12 @@ function drawInGameDetail(matchId, data, trClass) {
 
     let score = "<tr class='" + trClass + "'>";
     if (isMobile) {
+        let nicknameLink = `<a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>`
+
         score += "<td>" + winLoseKo(playInfo.result) + "</td>";
         score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
         score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
-        score += `${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> ${data.nickname} ${partyCnt} </div> </td>`;
+        score += `${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> ${nicknameLink} ${partyCnt} </div> </td>`;
         score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
         score += `</td>`;
     } else {
@@ -637,13 +639,18 @@ function getEachPartyResult(arr) {
     return resultTable;
 }
 
-function partyUserSearch(aTagObj) {
+function partyUserSearch(aTagObj, isMobile = false) {
     let aTag = $(aTagObj);
     let partyUserNames = aTag.text().replace(",", " ");
     let conId = aTag.closest(".infoLayer").attr("id");
     conId = conId == null ? "con2_2" : conId;
 
-    let inputId = conId == "con1_2" ? 'nickNames' : 'nickNames2';
+    let inputId = (conId == "con1_2") ? 'nickNames' : 'nickNames2';
+    if (isMobile) {
+        inputId = "nickNames";
+        conId = "con1_2";
+    }
+
     $("#" + inputId).val(partyUserNames);
     search(inputId, conId);
 }
