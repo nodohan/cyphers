@@ -128,8 +128,8 @@
                 if (data.ratingPoint != null) {
                     $(clone).find("#currRP").text(data.ratingPoint);
                     $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
-                    $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
                 }
+                $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
 
                 let tot = rating.winCount + rating.loseCount + rating.stopCount;
                 $(clone).find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);

@@ -101,9 +101,8 @@
                 if (data.ratingPoint != null) {
                     $(div).find("#currRP").text(data.ratingPoint);
                     $(div).find("#maxRP").text("( " + data.maxRatingPoint + " )");
-                    $(div).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
                 }
-
+                $(div).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
                 $(div).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
 
@@ -130,16 +129,12 @@
             }
 
             function showNickHistory(data) {
-                if (data.resultCode == -2) {
-                    alert("요청자에 의해 비공개 처리되었습니다.");
-                    return;
-                }
-
                 let info = "";
                 for (idx in data) {
                     let row = data[idx];
                     info += row.season + " " + row.nickname + " 체크일(닉변일아님):" + row.checkingDate + "\n";
                 }
+
                 if (data.length == 0) {
                     info = "수집된 닉변기록이 없습니다";
                 }
