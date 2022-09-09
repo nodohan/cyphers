@@ -65,6 +65,47 @@ module.exports = (scheduler, maria, acclogger) => {
     }
 
 
+    // 사용자 닉변 검색 순위
+    app.get('/getUserSearchRank', async function(req, res) {
+        let day = new Date();
+        let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -8)), false);
+        let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);
+
+        let query = ` SELECT * FROM ( ` +
+            ` 	SELECT nickname, COUNT(nickname) cnt ` +
+            ` 	FROM nickNameSearch  ` +
+            ` 	WHERE searchDate BETWEEN '${startDate}' AND '${endDate}' ` +
+            ` 	GROUP BY nickname ` +
+            ` ) aa  ` +
+            ` ORDER BY cnt DESC  ` +
+            ` LIMIT 15  `;
+        //logger.debug(query);
+
+        pool = await maria.getPool();
+        try {
+            let rows = await pool.query(query);
+
+            if (rows == null) {
+                res.send({ resultCode: -1 });
+                return;
+            }
+
+            let result = {};
+            result.startDate = startDate;
+            result.endDate = endDate;
+            result.rows = rows;
+
+            res.send(result);
+        } catch (err) {
+            logger.error(err);
+            return res
+                .status(500)
+                .send('오류 발생')
+                .end();
+            // [END_EXCLUDE]
+        }
+
+    });
     async function searchNickname(userName) {
         let query = "SELECT IF(privateYn = 'N', nickname, '비공개') nickname ";
         query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";

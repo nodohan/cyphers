@@ -8,17 +8,46 @@
             .infoLayer {
                 height: 650px;
             }
+            
+            .infoLayerHalf {
+                height: 281px;
+                overflow-y: auto;
+                border: dashed;
+                margin-top: 10px;
+                background-color: white;
+                padding: 10px;
+            }
         </style>
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
                 $("#userHistory").addClass("active");
+
+                ajaxCall("/history/getUserSearchRank", drawRank);
             });
+
+            function drawRank(data) {
+                let tbody = $("#searchRankTable").find("tbody");
+                tbody.empty();
+                $("#dueSpan").text(`(${data.startDate} ~ ${data.endDate})`);
+
+                if (data.rows.length == 0) {
+                    return;
+                }
+
+                data.rows.forEach((row, index) => {
+                    tbody.append(`<tr><td>${index+1}</td><td>${row.nickname}</td><td>${row.cnt}</td></tr>`);
+                });
+
+            }
 
             function searchNicknameHistory() {
                 let val = $("#nickNames").val().trim();
                 if (val == "") {
                     alert("검색어를 입력해주세요.");
+                    return;
+                } else if (val.length >= 9) {
+                    alert("닉네임은 최대 8자리입니다.");
                     return;
                 }
                 ajaxNicknameHistory(val);
@@ -97,10 +126,30 @@
             </div>
 
             <div id="con2" class="con">
-                <h3>공지</h3>
+                <h3>닉변 검색 순위 </h3>
+                <label>최근 일주일 <span id="dueSpan"> </span>에 검색된 인기쟁이 순위</label>
+                <div id="con1_2" class="infoLayerHalf">
+                    <table id="searchRankTable" class="table table-striped table-condensed">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">닉네임</th>
+                                <th scope="col">검색횟수 </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">결과가 없습니다. </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>비공개 해지</h3>
                 <label>닉네임 비공개 신청을 하였으나, 특정 사유가 발생하여 해지된 사용자 리스트</label>
 
-                <div id="con1_2" class="infoLayer">
+                <div id="con1_2" class="infoLayerHalf">
                     <div>
                         <label> <b>2022-08-19</b> </label>
                         <label>낼루미 - 어뷰징으로 게임제제</label>
@@ -118,6 +167,7 @@
                         <label>후추퀸 - 트롤링 신고로 인한 비공개 해지</label>
                     </div>
                 </div>
+
             </div>
 
             <!-- 카카오 광고 -->
