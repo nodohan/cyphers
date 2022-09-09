@@ -26,6 +26,8 @@ module.exports = (scheduler, maria, acclogger) => {
             userNicknameList = await searchNickname(userName);
         }
 
+        insertSearchNickname(userName);
+
         if (userNicknameList == null || userNicknameList.length == 0) {
             res.send({ resultCode: -1 });
             return;
@@ -44,7 +46,15 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     async function insertSearchNickname(username) {
-
+        try {
+            pool = await maria.getPool();
+            let query = `insert into nickNameSearch ( searchDate, nickname ) values ( now(), '${username}' ) `;
+            logger.debug(query);
+            await pool.query(query);
+        } catch (err) {
+            logger.error(err);
+        }
+        return;
     }
 
     async function searchNicknameByPlayerId(playerId) {
