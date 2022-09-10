@@ -57,6 +57,7 @@ module.exports = (scheduler, maria, acclogger) => {
         return;
     }
 
+    // 사용자 닉변 이력 조회 (playerId 기준)
     async function searchNicknameByPlayerId(playerId) {
         let query = `SELECT IF(privateYn = 'N', nickname, '비공개') nickname `;
         query += `, DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate `;
@@ -116,6 +117,8 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
     });
+
+    // 사용자 닉변 이력 조회 (닉네임 기준)
     async function searchNickname(userName) {
         let query = "SELECT IF(privateYn = 'N', nickname, '비공개') nickname ";
         query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";

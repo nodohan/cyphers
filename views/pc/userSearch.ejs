@@ -78,7 +78,7 @@
 
             function setUserInfo(gameType, divName, data) {
                 let nickname = data.nickname;
-                if(userData[nickname] == null ){
+                if (userData[nickname] == null) {
                     userData[nickname] = data;
                 }
 
@@ -189,12 +189,12 @@
 
             function playGameList(charId, div, nickname) {
                 let modalId = `${nickname}_${charId}_modal`;
-                if($("#"+modalId).length != 0){
+                if ($("#" + modalId).length != 0) {
                     return;
                 }
 
                 let rows = userData[nickname].matches.rows;
-                if(rows == null){
+                if (rows == null) {
                     return;
                 }
 
