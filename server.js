@@ -17,6 +17,9 @@ const matchScehduler = require('./server/scheduler/matchListScheduler')(schedule
 //스케쥴러2. 랭킹 크롤링
 const rankScheduler = require('./server/scheduler/rankCrawlingScheduler')(scheduler, maria, loggerCatcher);
 
+// 시즌 오프 - 통계 구하기용
+const seasonOff = require('./server/scheduler/seasonOffScheduler')(scheduler, maria, loggerCatcher);
+
 // 사용자 검색
 const userController = require('./server/controller/userSearchController')(scheduler, maria, loggerCatcher);
 
@@ -53,6 +56,7 @@ app.use('/history', userHistory);
 app.use('/combi', combi);
 app.use('/statsSche', statsSche);
 app.use('/stats', stats);
+app.use('/seasonOff', seasonOff);
 
 app.use(loggerCatcher());
 
