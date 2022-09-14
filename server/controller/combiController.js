@@ -44,7 +44,7 @@ module.exports = (scheduler, maria, acclogger) => {
         query += "        inner join ( "
         query += "            select matchId, matchDate from matches where matchDate between '" + req.query.fromDt + "' and '" + req.query.toDt + "'  ";
         query += "        ) matches on matches.matchId = detail.matchId "
-        query += "        WHERE 1=1 and season = '2021U' ";
+        query += "        WHERE 1=1 ";
 
         if (req.query.charName) {
             let charNames = req.query.charName.split(" ");
