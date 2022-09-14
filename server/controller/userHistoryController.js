@@ -26,22 +26,26 @@ module.exports = (scheduler, maria, acclogger) => {
             userNicknameList = await searchNickname(userName);
         }
 
-        insertSearchNickname(userName);
-
         if (userNicknameList == null || userNicknameList.length == 0) {
             res.send({ resultCode: -1 });
             return;
+        }
+
+        /* 랭킹차트로 누른 검색은 이력으로 쌓지 않고
+          , 존재하지 않는 사용자는 수집하지 않도록 수정 */
+        if(req.query.byRank != 'Y') {
+            insertSearchNickname(userName);
         }
 
         if (userNicknameList[0].privateYn == 'Y') {
             res.send({ resultCode: -2 });
             return;
         }
-
+        
         let result = userNicknameList.map(row => {
             return [row.nickname, row.checkingDate]; // 닉네임, 수집일
         });
-
+        
         res.send(result);
     });
 
@@ -79,7 +83,7 @@ module.exports = (scheduler, maria, acclogger) => {
     // 사용자 닉변 검색 순위
     app.get('/getUserSearchRank', async function(req, res) {
         let day = new Date();
-        let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -8)), false);
+        let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -4)), false);
         let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);
 
         let query = ` SELECT * FROM ( ` +
