@@ -1,11 +1,4 @@
 <script type="text/javascript">
-    $(document).ready(function() {
-        if (document.location.href.indexOf('robot') > 0) {
-            alert("로봇 사이트(얘 뭐징..?)라서 이동합니다. \n정식주소는 정식주소는 doseh.co.kr 입니다.");
-            location.href = "http://doseh.co.kr";
-        }
-    });
-
     function notOpper() {
         alert("이전시즌의 데이터로 당분간 제공하지 않습니다.");
     }
@@ -48,7 +41,11 @@
                 <a class="nav-link" href="/history/nicknameHistory">닉변이력</a>
             </li>
 
-            <li id="userHistory" class="nav-item">
+            <li id="stats2022h" class="nav-item">
+                <a class="nav-link" href="/stats/stats2022h">2022H 결산(진행중)</a>
+            </li>
+
+            <li id="notice" class="nav-item">
                 <a class="nav-link" href="https://blog.naver.com/dododosa">공지</a>
             </li>
         </ul>
