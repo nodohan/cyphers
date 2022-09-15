@@ -11,18 +11,24 @@
                 $("#mainMenu").removeClass("active");
                 $("#stats2022h").addClass("active");
 
-                getStats("statsList", drawStatsList);
+                getStats("statsList", drawStatsList); // 조합통계 
+                getStats("charList", drawCharList); // 캐릭터 통계
             });
+
+            function drawCharList(data) {
+                drawStatsListDiv("charRate", data.row, '캐릭터', 75);
+                drawStatsListDiv("charTotal", data.row.sort(totalDesc), '캐릭터', 75);
+            }
 
             function drawStatsList(data) {
                 let mList = dataFilter(data.row, "A", "TANKER", "DESC");
                 setStatsWDueDate("M", mList[0]);
-                drawStatsListDiv("bestTanker", mList);
-                drawStatsListDiv("worstTanker", dataFilter(data.row, "A", "TANKER", "ASC"));
-                drawStatsListDiv("bestAttack", dataFilter(data.row, "A", "ATTACK", "DESC"));
-                drawStatsListDiv("worstAttack", dataFilter(data.row, "A", "ATTACK", "ASC"));
-                drawStatsListDiv("bestAll", dataFilter(data.row, "A", "ALL", "DESC"));
-                drawStatsListDiv("worstAll", dataFilter(data.row, "A", "ALL", "ASC"));
+                drawStatsListDiv("bestTanker", mList, '조합');
+                drawStatsListDiv("worstTanker", dataFilter(data.row, "A", "TANKER", "ASC"), '조합');
+                drawStatsListDiv("bestAttack", dataFilter(data.row, "A", "ATTACK", "DESC"), '조합');
+                drawStatsListDiv("worstAttack", dataFilter(data.row, "A", "ATTACK", "ASC"), '조합');
+                drawStatsListDiv("bestAll", dataFilter(data.row, "A", "ALL", "DESC"), '조합');
+                drawStatsListDiv("worstAll", dataFilter(data.row, "A", "ALL", "ASC"), '조합');
             }
 
             function dataFilter(row, statsType, combiType, order) {
@@ -39,9 +45,11 @@
                 span.append(item.statsFromDate + "~" + item.statsToDate);
             }
 
-            function drawStatsListDiv(divId, data) {
-                var table = $("#matchInfoTemplate").clone();
+            function drawStatsListDiv(divId, data, colname, index = 5) {
+                var table = $(`#matchInfoTemplate`).clone();
                 table.removeAttr("id");
+                table.find("th:eq(1)").text(colname);
+
                 let tbody = table.find("tbody");
 
                 if (data.length == 0) {
@@ -51,16 +59,21 @@
 
                 let idx = 0;
                 for (idx in data) {
-                    if (idx >= 5) {
+                    if (idx >= index) {
                         break;
                     }
                     let row = data[idx];
                     let tr = "<tr>";
-                    tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
-                    tr += "<td>" + row.total + "</td>";
-                    tr += "<td>" + row.win + "</td>";
-                    tr += "<td>" + row.lose + "</td>";
-                    tr += "<td>" + row.late + "%</td>";
+                    tr += `<td>${Number(idx)+1}</td>`;
+                    if (colname == '조합') {
+                        tr += `<td>${getChars(row.combi.split("|"))}</td>`;
+                    } else {
+                        tr += "<td>" + getChars([row.charName]) + "</td>";
+                    }
+                    tr += "<td>" + numberWithCommas(row.total) + "</td>";
+                    tr += "<td>" + numberWithCommas(row.win) + "</td>";
+                    tr += "<td>" + numberWithCommas(row.lose) + "</td>";
+                    tr += `<td>${colname == '조합' ? row.late : row.rate}%</td>`;
                     tbody.append(tr);
                 }
 
@@ -109,6 +122,7 @@
         <div id="statsMain">
 
             <div id="con1" class="conLayer">
+                <h4>조합통계</h4>
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="tanker" aria-selected="true">전체조합</a>
@@ -116,7 +130,7 @@
                         <a class="nav-link" id="attack-tab" data-toggle="tab" href="#attack" role="tab" aria-controls="attack" aria-selected="false">딜러조합</a>
                     </div>
                 </nav>
-                <div class="tab-content" id="nav-tabContent">
+                <div class="tab-content seasonTabDiv" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="tanker-tab">
                         <h4>Best 5</h4>
                         <div id="bestAll"></div>
@@ -137,13 +151,23 @@
                     </div>
                 </div>
             </div>
-            <div id="con2" style="height:947px;" class="conLayer">
-                <span class="h3Span"> 캐릭통계
-                <div class="conStats">
-                    <h4>작업중</h4>
-                    
+            <div id="con2" class="conLayer">
+                <h4>캐릭통계</h4>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-link active" id="rate-tab" data-toggle="tab" href="#charRateTab" role="tab" aria-controls="charRateTab" aria-selected="true">승률순</a>
+                        <a class="nav-link" id="total-tab" data-toggle="tab" href="#charTotalTab" role="tab" aria-controls="charTotalTab" aria-selected="true">판수순</a>
+                    </div>
+                </nav>
+                <div class="tab-content seasonTabDiv" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="charRateTab" role="tabpanel" aria-labelledby="tanker-tab">
+                        <div id="charRate"></div>
+                    </div>
+
+                    <div class="tab-pane fade show active" id="charTotalTab" role="tabpanel" aria-labelledby="tanker-tab">
+                        <div id="charTotal"></div>
+                    </div>
                 </div>
-                
             </div>
 
             <!-- 카카오 광고 -->
@@ -151,11 +175,11 @@
 
         </div>
 
-
         <div style="display:none">
             <table id="matchInfoTemplate" class="table table-striped table-condensed">
                 <thead class="thead-light">
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">조합</th>
                         <th scope="col">판수</th>
                         <th scope="col">승</th>

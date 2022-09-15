@@ -493,9 +493,9 @@ function drawCharicter(charId, isLarge = false) {
 }
 
 function appendPlayTypeInfo(div, type, typeId) {
-    var infoStr =  "0% <br><small class='text-muted'> 0승 0패</small>";
-    if(type != null) {
-        infoStr =  type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
+    var infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
+    if (type != null) {
+        infoStr = type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
     }
     $(div).find("#" + typeId + "Span").empty().append(infoStr);
 }
@@ -755,6 +755,16 @@ function highScore(a, b) {
         return 1;
     }
     if (aRate > bRate) {
+        return -1;
+    }
+    return 0;
+}
+
+function totalDesc(a, b) {
+    if (a.total < b.total) {
+        return 1;
+    }
+    if (a.total > b.total) {
         return -1;
     }
     return 0;

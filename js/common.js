@@ -16,3 +16,8 @@ function ajaxCall(url, callback) {
     });
     return result;
 }
+
+function numberWithCommas(x) {
+    // 걍 toLocaleString() 할까..
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
