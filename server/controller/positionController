@@ -1,0 +1,79 @@
+const logger = require('../../config/winston');
+const commonUtil = require('../util/commonUtil');
+
+module.exports = (scheduler, maria, acclogger) => {
+    const app = require('express').Router();
+    app.use(acclogger());
+
+    app.get('/stats', function(req, res) {
+        if (commonUtil.isMobile(req)) {
+            res.render('../mobile/stats');
+        } else {
+            res.render('../pc/stats');
+        }
+    });
+
+    app.get('/statsCountList', async function(req, res) {
+        let todayStr = commonUtil.getYYYYMMDD(new Date(), false);
+        pool = await maria.getPool();
+
+        try {
+            let query = ` SELECT aa.* FROM (  ` +
+                ` 	SELECT result.*  ` +
+                ` 	, CASE  ` +
+                ` 		WHEN @GRP = POSITION  ` +
+                ` 			THEN @ROWNUM:=@ROWNUM + 1  ` +
+                ` 			ELSE @ROWNUM :=1  ` +
+                ` 		END AS ROWNUM ` +
+                ` 		, (@GRP := POSITION) AS dummy ` +
+                ` 	FROM position_attr_result result, (SELECT @ROWNUM:=0, @GRP:='') R  ` +
+                ` 	WHERE checkDate = '${todayStr}'  ` +
+                ` 	AND checkType = 'W' ` +
+                ` 	ORDER BY POSITION, position_type, total DESC ` +
+                ` ) aa ` +
+                ` WHERE aa.rownum <= 5 `;
+
+
+            let row = await pool.query(query);
+            res.send({ 'row': row });
+        } catch (err) {
+            logger.error(err);
+            return res
+                .status(500)
+                .send('오류 발생')
+                .end();
+        }
+    });
+
+    app.get('/statsList', async function(req, res) {
+        let todayStr = '';
+
+        if (req.query.season != null) {
+            todayStr = req.query.season;
+        } else {
+            let today = new Date();
+            if (today.getHours() <= 2) {
+                today = commonUtil.addDays(today, -1);
+            }
+            todayStr = commonUtil.getYYYYMMDD(today, false);
+        }
+
+        pool = await maria.getPool();
+
+        try {
+            let query = " SELECT * FROM match_stats WHERE statsDate = '" + todayStr + "' ";
+            logger.debug(query);
+
+            let row = await pool.query(query);
+            res.send({ 'row': row });
+        } catch (err) {
+            logger.error(err);
+            return res
+                .status(500)
+                .send('오류 발생')
+                .end();
+        }
+    });
+
+    return app;
+}

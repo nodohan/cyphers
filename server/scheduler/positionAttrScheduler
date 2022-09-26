@@ -1,0 +1,223 @@
+const logger = require('../../config/winston');
+const commonUtil = require('../util/commonUtil');
+const myConfig = require('../../config/config.js');
+
+module.exports = (scheduler, maria) => {
+    const app = require('express').Router();
+    const api = require('../../api');
+
+    //스케쥴러 또는 웹 url call
+    //var time = "40 23 * * *";
+    //var time = "00 03 * * *"; // 리얼용
+    var time = "51 23 * * *"; // 테스트중
+    scheduler.scheduleJob(time, async function() {
+        //if (myConfig.schedulerRun) {
+        logger.info("call position attr collect scheduler");
+        await selectPositionAttr(null);
+        positionStats();
+        logger.info("end position attr collect scheduler");
+        //}
+    });
+
+    //test  ( "/position/insertPosition" )
+    app.get('/insertPosition', function(req, res) {
+        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
+        const ip = req.headers['x-forwarded-for'] || req.ip;
+
+        if (ip.indexOf(",") > 0) {
+            ip = ip.toString().split(",")[1].trim();
+        }
+
+        logger.debug("call insertPosition ip", ip);
+        if (!allowIps.includes(ip)) {
+            return res
+                .status(403)
+                .send('Not allow IP :' + ip + ' \n')
+                .end();
+        }
+
+        return selectPositionAttr(res);
+    });
+
+    //test  ( "/position/positionStats" )
+    app.get('/positionStats', function(req, res) {
+        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
+        const ip = req.headers['x-forwarded-for'] || req.ip;
+
+        if (ip.indexOf(",") > 0) {
+            ip = ip.toString().split(",")[1].trim();
+        }
+
+        logger.debug("call positionStats ip", ip);
+        if (!allowIps.includes(ip)) {
+            return res
+                .status(403)
+                .send('Not allow IP :' + ip + ' \n')
+                .end();
+        }
+
+        return positionStats(res);
+    });
+
+
+    // ------- 포지션 특성 사용 이력 저장 [START] ------------------------
+
+    async function selectPositionAttr(res, day = new Date()) {
+        let pageSize = 3000;
+        //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -2));
+        let searchDateStr = '2022-08-21';
+        let query = `SELECT matchId, jsonData, matchDate FROM matches where matchDate > '${searchDateStr}' AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
+        //query = `SELECT matchId, jsonData, matchDate FROM matches where jsonData IS NOT NULL `;
+        //console.log(query);
+
+        let pool = await maria.getPool();
+        try {
+            let rows = await pool.query(query);
+
+            //while (rows.length == pageSize) {
+            for (i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                await insertPositionAttr(pool, row.matchId, JSON.parse(row.jsonData));
+                logger.debug(`position collect end matchId = ${row.matchId}`);
+            }
+            // forEach 는 await 이 안먹을꺼같은 느낌이라..
+            //rows.forEach(row => insertPositionAttr(pool, row.matchId, JSON.parse(row.jsonData)));
+            //}
+
+        } catch (err) {
+            logger.error(err.message);
+            if (res) {
+                return res
+                    .status(500)
+                    .send('오류 발생')
+                    .end();
+            }
+        }
+
+        logger.info("position collect success");
+
+        if (res) {
+            return res
+                .status(200)
+                .send(true.toString() + new Date().toISOString())
+                .end();
+        }
+    }
+
+    async function insertPositionAttr(pool, matchId, row) {
+        console.log(row.date);
+        let matchDate = row.date.substring(0, 10);
+        let map = row.map.name;
+        let winTeam = row.teams[0].result == 'win' ? row.teams[0].players : row.teams[1].players;
+
+        try {
+            await row.players.forEach(async(player) => {
+                let charName = player.playInfo.characterName;
+                let matchResult = winTeam.includes(player.playerId) ? "win" : "lose";
+                let position = player.position.name;
+                let attr1 = player.position.attribute[0].name;
+                let attr2 = player.position.attribute[1].name;
+                let attr3 = player.position.attribute[2].name;
+                let attrs = attr1 + "/" + attr2 + "/" + attr3;
+
+                let insertQuery = `insert into position_attr ` +
+                    `(matchId, charName, matchDate, matchResult, ` +
+                    ` map, position, attrs, attr_lv1, attr_lv2, attr_lv3 ) ` +
+                    `values ( '${matchId}', '${charName}', '${matchDate}', '${matchResult}' ` +
+                    ` , '${map}', '${position}', '${attrs}', '${attr1}', '${attr2}', '${attr3}' ) `;
+                //logger.debug(insertQuery);
+
+                await pool.query(insertQuery);
+            });
+
+            let updateQuery = `update matches set positionCollect = 'Y' where matchId = '${matchId}' `;
+            pool.query(updateQuery);
+
+        } catch (err) {
+            logger.error(err.message);
+        }
+    }
+
+    // ------- 포지션 특성 사용 이력 저장 [end] ------------------------
+
+
+    // ------- 포지션 특성 통계 저장 [start] ------------------------
+
+    async function positionStats(res) {
+        let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
+        let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
+
+        logger.info("positionStats collect start");
+
+        let pool = await maria.getPool();
+        try {
+
+            //시즌 통계
+            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22');
+            await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', '2022-08-22');
+            await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', '2022-08-22');
+            await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', '2022-08-22');
+
+            //주간 통계
+            await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo);
+            await insertPositionAttrResult(pool, checkDate, 'W', 'lv1', aWeekAgo);
+            await insertPositionAttrResult(pool, checkDate, 'W', 'lv2', aWeekAgo);
+            await insertPositionAttrResult(pool, checkDate, 'W', 'lv3', aWeekAgo);
+
+        } catch (err) {
+            logger.error(err.message);
+            if (res) {
+                return res
+                    .status(500)
+                    .send('오류 발생')
+                    .end();
+            }
+        }
+
+        logger.info("positionStats collect end");
+        if (res) {
+            return res
+                .status(200)
+                .send(true.toString() + new Date().toISOString())
+                .end();
+        }
+    }
+
+    /**
+     * 
+     * @param checkDate 
+     * @param checkType : ALL-이번시즌 / W-최근일주 / D-일일 (일별은 하지말까..)
+     * @param lv 
+     * @param matchDate 
+     */
+    async function insertPositionAttrResult(pool, checkDate, checkType, lv, matchDate) {
+        let lvColumn = lv == 'all' ? 'attrs' : `attr_${lv}`;
+
+        let query = `INSERT INTO position_attr_result ` +
+            ` SELECT aa.*, ROUND( (aa.win / aa.total * 100), 2) rate FROM ( ` +
+            ` 	SELECT  ` +
+            ` 		'${checkDate}' ` +
+            ` 		, '${checkType}' ` +
+            ` 		, POSITION ` +
+            ` 		, '${lv}' TYPE ` +
+            ` 		, ${lvColumn} ` +
+            ` 		, COUNT(1) total ` +
+            ` 		, COUNT(IF(matchResult = 'win' , 1, NULL)) win  ` +
+            ` 		, COUNT(IF(matchResult = 'lose', 1, NULL)) lose 	 ` +
+            ` 	FROM position_attr  ` +
+            ` 	WHERE matchDate >= '${matchDate}' ` +
+            ` 	GROUP BY POSITION, ${lvColumn} ` +
+            ` ) aa  ` +
+            ` ORDER BY total DESC `;
+
+        await pool.query(query);
+    }
+
+    // ------- 포지션 특성 통계 저장 [end] ------------------------
+
+
+
+
+
+    return app;
+}
