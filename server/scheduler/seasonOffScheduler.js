@@ -25,7 +25,7 @@ module.exports = (scheduler, maria, acclogger) => {
                 .end();
         }
 
-        try {            
+        try {
             collectCharRate('2022-02-19', '2022-02-28');
             collectCharRate('2022-03-01', '2022-03-31');
             collectCharRate('2022-04-01', '2022-04-30');
@@ -69,7 +69,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     }
 
-    function getInsertQuery(rows){
+    function getInsertQuery(rows) {
         let insertQuery = `insert into matches_char ( matchId, matchDate, matchResult, charName ) values `;
         let charArr = [];
 
@@ -85,6 +85,3 @@ module.exports = (scheduler, maria, acclogger) => {
 
     return app;
 }
-
-
-

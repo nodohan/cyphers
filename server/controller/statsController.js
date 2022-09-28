@@ -89,10 +89,10 @@ module.exports = (scheduler, maria, acclogger) => {
                 .end();
         }
     });
-    
+
     app.get('/charList', async function(req, res) {
         let season = req.query.season;
-        if(season == null){
+        if (season == null) {
             season = '2022H';
         }
 
