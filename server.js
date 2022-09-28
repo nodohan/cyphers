@@ -35,8 +35,11 @@ const combi = require('./server/controller/combiController')(scheduler, maria, l
 //스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
 const statsSche = require('./server/scheduler/statsScheduler')(scheduler, maria, loggerCatcher);
 
-// 포지션 특성  
-const position = require('./server/scheduler/positionAttrScheduler')(scheduler, maria, loggerCatcher);
+// 포지션 특성 - 스케쥴러
+const positionSche = require('./server/scheduler/positionAttrScheduler')(scheduler, maria, loggerCatcher);
+// 포지션 특성 - 컨트롤러
+const position = require('./server/controller/positionController')(scheduler, maria, loggerCatcher);
+
 
 //스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
 const stats = require('./server/controller/statsController')(scheduler, maria, loggerCatcher);
@@ -61,7 +64,7 @@ app.use('/statsSche', statsSche);
 app.use('/stats', stats);
 app.use('/seasonOff', seasonOff);
 app.use('/position', position);
-
+app.use('/positionSche', positionSche);
 
 app.use(loggerCatcher());
 

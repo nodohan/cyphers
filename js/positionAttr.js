@@ -1,6 +1,6 @@
 var positionAttr = new Map();
 positionAttr.set('불굴의 의지', '7475ab8f9eb2823b748a90c44869ca7d');
-positionAttr.set('제압', '', 'e7c8ed31a56ec846eda07cc15e5e3221');
+positionAttr.set('제압', 'e7c8ed31a56ec846eda07cc15e5e3221');
 positionAttr.set('선봉장', '6d8fb905d69edf1c9f73495c3ee44d28');
 positionAttr.set('재생의 숨결', '1d49c4504c55a43f670d4d69575760d4');
 positionAttr.set('최후의 저항', '678bca255e575ae96aceefacaa7aee4e');
