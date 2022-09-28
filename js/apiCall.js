@@ -790,6 +790,29 @@ function lateAsc(a, b) {
     return 0;
 }
 
+function rateDesc(a, b) {
+    if (a.rate < b.rate) {
+        return 1;
+    }
+    if (a.rate > b.rate) {
+        return -1;
+    }
+    return 0;
+}
+
+function rateAsc(a, b) {
+    if (a.rate > b.rate) {
+        return 1;
+    }
+    if (a.rate < b.rate) {
+        return -1;
+    }
+    return 0;
+}
+
+
+
+
 
 function sortCase(a, b) {
     if (a.count < b.count) {
@@ -841,5 +864,4 @@ function userSeasonRank(playerId, callback) {
     }).done(function() {
 
     });
-
 }
