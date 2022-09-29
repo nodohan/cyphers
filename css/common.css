@@ -490,3 +490,11 @@ table td {
     height: 720px;
     overflow: auto;
 }
+
+.charImg {
+    width: 48px;
+    height: 48px;
+    margin-top: 7px;
+    margin-left: 7px;
+    border: 2px solid
+}
