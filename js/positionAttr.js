@@ -35,7 +35,7 @@ positionAttr.set('활성화 지원', '100b40cb5e22f5613492234dcba705c6');
 positionAttr.set('보호 방벽', 'bde4b55ab109f1f725ad0ae81be0a94a');
 positionAttr.set('두 번째 수호자', '2c6f04cc4bbac92c40c793b9a21fb354');
 positionAttr.set('코인 은행', 'df59f2eb5ed6bc0072f5416123654f32');
-positionAttr.set('낙법', '', '711f424bc5801dcdee09eee1863f5e0e');
+positionAttr.set('낙법', '711f424bc5801dcdee09eee1863f5e0e');
 positionAttr.set('근육 손상', '0686248a80efdb6275fd89c372cf9766');
 positionAttr.set('회피 사격', '8463eb228149f8d8a81bafc3a05e5e1c');
 positionAttr.set('단결된 힘', '13ed96b8d10b40b488059271f940a37e');
