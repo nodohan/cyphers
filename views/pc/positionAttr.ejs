@@ -12,13 +12,38 @@
 
                 $("#mainMenu").removeClass("active");
                 $("#positionAttr").addClass("active");
+                drawCharList();
                 ajaxCall("/position/positionAttrList", drawStatsList);
             });
 
-            // ############## 금주의 BEST/WORST [시작] ##########################################
+            // ## 캐릭터 통계?! ###
+
+            function drawCharList() {
+                let keys = Array.from(charMap.keys());
+                let imgBaseUrl = "https://img-api.neople.co.kr/cy/characters/";
+
+                let divs = '';
+                for (let charName of keys) {
+                    divs += `<img 
+                              id="char${charName}Img"
+                              src="${imgBaseUrl}/${charMap.get(charName)}" 
+                              onClick="javascript:charClick('${charName}')"
+                              class="rounded charImg border-primary" alt="${charName} 
+                              ">`;
+                }
+                let charDiv = $("#charList").append(divs);
+            }
+
+            function charClick(charName) {
+                //UI Event
+                $(".clickImg").removeClass("clickImg border-danger").addClass("border-primary");
+                $(`#char${charName}Img`).removeClass("border-primary").addClass("border-danger clickImg");
+
+                //data call
+                ajaxCall(`/position/positionAttrList?charName=${charName}`, drawStatsListChar);
+            }
 
             function drawStatsList(data) {
-                let tk = dataFilter(data.row, "all", "탱커", "DESC");
                 drawStatsListDiv("aTK", dataFilter(data.row, "all", "탱커", "DESC"));
                 drawStatsListDiv("aAT", dataFilter(data.row, "all", "근거리딜러", "DESC"));
                 drawStatsListDiv("aWD", dataFilter(data.row, "all", "원거리딜러", "DESC"));
@@ -28,8 +53,20 @@
                 drawStatsListDiv("wAT", dataFilter(data.row, "W", "근거리딜러", "DESC"));
                 drawStatsListDiv("wWD", dataFilter(data.row, "W", "원거리딜러", "DESC"));
                 drawStatsListDiv("wSP", dataFilter(data.row, "W", "서포터", "DESC"));
-
             }
+
+            function drawStatsListChar(data) {
+                drawStatsListDiv("caTK", dataFilter(data.row, "all", "탱커", "DESC"));
+                drawStatsListDiv("caAT", dataFilter(data.row, "all", "근거리딜러", "DESC"));
+                drawStatsListDiv("caWD", dataFilter(data.row, "all", "원거리딜러", "DESC"));
+                drawStatsListDiv("caSP", dataFilter(data.row, "all", "서포터", "DESC"));
+
+                drawStatsListDiv("cwTK", dataFilter(data.row, "W", "탱커", "DESC"));
+                drawStatsListDiv("cwAT", dataFilter(data.row, "W", "근거리딜러", "DESC"));
+                drawStatsListDiv("cwWD", dataFilter(data.row, "W", "원거리딜러", "DESC"));
+                drawStatsListDiv("cwSP", dataFilter(data.row, "W", "서포터", "DESC"));
+            }
+
 
             function dataFilter(row, checkType, position, order) {
                 let list = row
@@ -45,8 +82,7 @@
                 let tbody = table.find("tbody");
 
                 if (data.length == 0) {
-                    let tr = "<tr><td colspan='5'>데이터가 없습니다.</td></tr>";
-                    tbody.append(tr);
+                    tbody.append("<tr><td colspan='5'>데이터가 없습니다.</td></tr>");
                 }
 
                 let idx = 0;
@@ -62,24 +98,16 @@
                         </tr>`;
                     tbody.append(tr);
                 }
-                $("#" + divId).append(table);
+                $("#" + divId).empty().append(table);
             }
 
             function getPositionAttrImg(arr) {
                 let images = "";
-
                 for (idx in arr) {
                     images += `&nbsp;&nbsp;&nbsp;<img title='${arr[idx]}' data-item='${arr[idx]}' ` +
                         ` src='https://img-api.neople.co.kr/cy/position-attributes/${positionAttr.get(arr[idx])}'>`;
                 }
                 return images;
-            }
-
-            // ############## 금주의 BEST/WORST [종료] ##########################################
-
-            function numberWithCommas(x) {
-                // 걍 toLocaleString() 할까..
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
 
             function isValid() {
@@ -129,6 +157,112 @@
         <div id="main">
 
             <div id="con2" class="con">
+                캐릭터 별 포지션
+                <div id="charList" class="row">
+                    <!-- 캐릭터 리스트 -->
+                </div>
+                <br>
+                <div>
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-link active" id="cSeason-tab" data-toggle="tab" href="#cSeason" role="tab" aria-controls="cSeason" aria-selected="true">이번시즌</a>
+                            <a class="nav-link" id="cWeek-tab" data-toggle="tab" href="#cWeek" role="tab" aria-controls="cWeek" aria-selected="false">금주</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="cSeason" role="tabpanel" aria-labelledby="cSeason-tab">
+                            <h4>탱커</h4>
+                            <div id="caTK">
+                                <table class="table table-striped table-condensed">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">조합</th>
+                                            <th scope="col">판수</th>
+                                            <th scope="col">승</th>
+                                            <th scope="col">패</th>
+                                            <th scope="col">승률</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">데이터가 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h4>근거리 딜러</h4>
+                            <div id="caAT">
+                                <table class="table table-striped table-condensed">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">조합</th>
+                                            <th scope="col">판수</th>
+                                            <th scope="col">승</th>
+                                            <th scope="col">패</th>
+                                            <th scope="col">승률</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">데이터가 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h4>원거리 딜러</h4>
+                            <div id="caWD">
+                                <table class="table table-striped table-condensed">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">조합</th>
+                                            <th scope="col">판수</th>
+                                            <th scope="col">승</th>
+                                            <th scope="col">패</th>
+                                            <th scope="col">승률</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">데이터가 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h4>서포터</h4>
+                            <div id="caSP">
+                                <table class="table table-striped table-condensed">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">조합</th>
+                                            <th scope="col">판수</th>
+                                            <th scope="col">승</th>
+                                            <th scope="col">패</th>
+                                            <th scope="col">승률</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">데이터가 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="cWeek" role="tabpanel" aria-labelledby="cWeek-tab">
+                            <h4>탱커</h4>
+                            <div id="cwTK"></div>
+                            <h4>근거리 딜러</h4>
+                            <div id="cwAT"></div>
+                            <h4>원거리 딜러</h4>
+                            <div id="cwWD"></div>
+                            <h4>서포터</h4>
+                            <div id="cwSP"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="con1" class="con" style="height:953px;">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="wTanker-tab" data-toggle="tab" href="#wTanker" role="tab" aria-controls="wTanker" aria-selected="true">이번시즌</a>
@@ -150,25 +284,13 @@
                         <h4>탱커</h4>
                         <div id="wTK"></div>
                         <h4>근거리 딜러</h4>
-                        <div id="wA T"></div>
+                        <div id="wAT"></div>
                         <h4>원거리 딜러</h4>
                         <div id="wWD"></div>
                         <h4>서포터</h4>
                         <div id="wSP"></div>
                     </div>
                 </div>
-            </div>
-
-            <div id="con1" class="con" style="height:953px;">
-                <!-- <h3>특정 조합/캐릭검색 </h3>
-                <span>공란가능, 띄워쓰기로 구분</span>
-                <input type="text" class="longText" id="charName" onKeyPress="if(event.keyCode == 13) { searchCombi(); } " placeholder="검색 ex) 클레어 나이오비 " />
-                <input type="button" id="searchButton" value="검색" onClick="searchCombi();">
-                <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
-                  </button>
-                <div id="con1_2" class="infoLayer" style="height:813px"> </div> -->
             </div>
 
             <!-- 카카오 광고 -->
