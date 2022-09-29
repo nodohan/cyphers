@@ -60,7 +60,7 @@ module.exports = (scheduler, maria) => {
     });
 
 
-    // ------- 포지션 특성 사용 이력 저장 [START] ------------------------
+    // ------- 1. 포지션 특성 사용 이력 저장 [START] ------------------------
 
     async function selectPositionAttr(res, day = new Date()) {
         let pageSize = 3000;
@@ -130,10 +130,10 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    // ------- 포지션 특성 사용 이력 저장 [end] ------------------------
+    // ------- 1. 포지션 특성 사용 이력 저장 [end] ------------------------
 
 
-    // ------- 포지션 특성 통계 저장 [start] ------------------------
+    // ------- 2. 포지션 특성 통계 저장 [start] ------------------------
 
     async function positionStats(res) {
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
@@ -144,17 +144,25 @@ module.exports = (scheduler, maria) => {
         let pool = await maria.getPool();
         try {
 
-            //시즌 통계
-            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22');
-            await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', '2022-08-22');
-            await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', '2022-08-22');
-            await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', '2022-08-22');
+            //###### 데이터 집계 [START] ################
+            //시즌 - 집계
+            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22', false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', '2022-08-22', false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', '2022-08-22', false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', '2022-08-22', false);
 
-            //주간 통계
-            await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo);
-            await insertPositionAttrResult(pool, checkDate, 'W', 'lv1', aWeekAgo);
-            await insertPositionAttrResult(pool, checkDate, 'W', 'lv2', aWeekAgo);
-            await insertPositionAttrResult(pool, checkDate, 'W', 'lv3', aWeekAgo);
+            //주간 - 집계
+            await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo, false);
+            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv1', aWeekAgo, false);
+            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv2', aWeekAgo, false);
+            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv3', aWeekAgo, false);
+
+            //캐릭터 시즌 
+            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22', true);
+            //캐릭터 주간  
+            await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo, true);
+
+            //###### 데이터 집계 [END] ################
 
             // 시즌통계 top5 
             await insertPositionAttrStats(pool, checkDate, 'all', 5);
@@ -189,45 +197,50 @@ module.exports = (scheduler, maria) => {
      * @param lv 
      * @param matchDate 
      */
-    async function insertPositionAttrResult(pool, checkDate, checkType, lv, matchDate) {
+    async function insertPositionAttrResult(pool, checkDate, checkType, lv, matchDate, isChar) {
         let lvColumn = lv == 'all' ? 'attrs' : `attr_${lv}`;
+        let query = `INSERT INTO position_attr_result
+             SELECT aa.*, ROUND( (aa.win / aa.total * 100), 2) rate 
+             FROM (
+             	SELECT 
+             		'${checkDate}'
+             		, '${checkType}'
+                    , ${isChar ? 'charName' : "'all'" } as charName
+             		, POSITION
+             		, '${lv}' TYPE
+             		, ${lvColumn}
+             		, COUNT(1) total
+             		, COUNT(IF(matchResult = 'win' , 1, NULL)) win 
+             		, COUNT(IF(matchResult = 'lose', 1, NULL)) lose 	
+             	FROM position_attr 
+             	WHERE matchDate >= '${matchDate}'
+             	GROUP BY ${isChar ? 'charName,' : '' } POSITION, ${lvColumn}
+             ) aa 
+             ORDER BY charName, POSITION, total DESC `;
 
-        let query = `INSERT INTO position_attr_result ` +
-            ` SELECT aa.*, ROUND( (aa.win / aa.total * 100), 2) rate FROM ( ` +
-            ` 	SELECT  ` +
-            ` 		'${checkDate}' ` +
-            ` 		, '${checkType}' ` +
-            ` 		, POSITION ` +
-            ` 		, '${lv}' TYPE ` +
-            ` 		, ${lvColumn} ` +
-            ` 		, COUNT(1) total ` +
-            ` 		, COUNT(IF(matchResult = 'win' , 1, NULL)) win  ` +
-            ` 		, COUNT(IF(matchResult = 'lose', 1, NULL)) lose 	 ` +
-            ` 	FROM position_attr  ` +
-            ` 	WHERE matchDate >= '${matchDate}' ` +
-            ` 	GROUP BY POSITION, ${lvColumn} ` +
-            ` ) aa  ` +
-            ` ORDER BY total DESC `;
-
+        logger.debug('insertPositionAttrResult %s', query);
         await pool.query(query);
     }
 
     async function insertPositionAttrStats(pool, checkDate, checkType, rankNum) {
-        let query = ` INSERT INTO position_attr_stats ` +
-            ` SELECT checkDate, checktype, POSITION, position_type, attr, total, win, lose, rate  FROM (  ` +
-            ` 	SELECT result.*  ` +
-            ` 		, CASE  ` +
-            ` 		WHEN @GRP = POSITION  ` +
-            ` 			THEN @ROWNUM:=@ROWNUM + 1  ` +
-            ` 			ELSE @ROWNUM :=1  ` +
-            ` 		END AS ROWNUM ` +
-            ` 		, (@GRP := POSITION) AS dummy ` +
-            ` 	FROM position_attr_result result, (SELECT @ROWNUM:=0, @GRP:='') R  ` +
-            ` 	WHERE checkDate = '${checkDate}'  ` +
-            ` 	AND checkType = '${checkType}' ` +
-            ` 	ORDER BY POSITION, position_type, total DESC ` +
-            ` ) aa ` +
-            ` WHERE aa.rownum <= ${rankNum} `;
+        let query = ` INSERT INTO position_attr_stats 
+             SELECT checkDate, checktype, charName, POSITION, position_type, attr, total, win, lose, rate
+             FROM (  
+             	SELECT result.*  
+             		, CASE  
+             		WHEN @GRP = POSITION  
+             			THEN @ROWNUM:=@ROWNUM + 1  
+             			ELSE @ROWNUM :=1  
+             		END AS ROWNUM 
+             		, (@GRP := POSITION) AS dummy 
+             	FROM position_attr_result result, (SELECT @ROWNUM:=0, @GRP:='') R  
+             	WHERE checkDate = '${checkDate}'  
+             	AND checkType = '${checkType}' 
+             	ORDER BY charName, POSITION, position_type, total DESC 
+             ) aa 
+             WHERE aa.rownum <= ${rankNum} `;
+
+        logger.debug('insertPositionAttrStats %s', query);
 
         await pool.query(query);
     }
