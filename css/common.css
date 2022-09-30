@@ -498,3 +498,21 @@ table td {
     margin-left: 7px;
     border: 2px solid
 }
+
+.attrInfo {
+    width: 320px;
+    float: left;
+    margin-right: 10px;
+}
+
+#widthMain {
+    width: 1800px;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.widthTab {
+    margin-top: 10px;
+    width: 1350px;
+
+}
