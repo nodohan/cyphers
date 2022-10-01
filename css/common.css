@@ -525,10 +525,12 @@ table td {
     height: 60px;
 }
 
-
-
 .charList {
     width: 550px;
     height: 800px;
     overflow: auto;
+}
+
+.charImgActive {
+    background-color: #fb4f4f;
 }
