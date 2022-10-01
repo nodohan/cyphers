@@ -22,20 +22,21 @@
                 let keys = Array.from(charMap.keys());
                 let imgBaseUrl = "https://img-api.neople.co.kr/cy/characters/";
 
-                let divs = `<img id="charallImg" alt='전체포지션'
-                                class="rounded charImg border-primary"
-                                src="/image/all.PNG" onClick="javascript:charClick('all')"  />`;
+                let divs = makeCharImgDiv("all", "/image/all.PNG");
                 for (let charName of keys) {
-                    divs += `<img 
-                              id="char${charName}Img"
-                              src="${imgBaseUrl}/${charMap.get(charName)}" 
-                              onClick="javascript:charClick('${charName}')"
-                              class="rounded charImg border-primary" alt="${charName} 
-                              " />`;
+                    divs += makeCharImgDiv(charName, `${imgBaseUrl}/${charMap.get(charName)}`);
                 }
                 let charDiv = $("#charList").append(divs);
 
                 charClick('all');
+            }
+
+            function makeCharImgDiv(charName, url) {
+                return `<div class="charImgDiv rounded border-primary" onClick="javascript:charClick('${charName}')" >
+                            <img id="char${charName}Img" src="${url}" 
+                              class="rounded charImg" alt="${charName}" /> 
+                              <span class='charNameSpan'>${charName}</span>
+                        </div>`;
             }
 
             function charClick(charName) {
@@ -159,7 +160,7 @@
                 </div>
             </div> -->
 
-            <div id="con2" class="con" style="width:350px">
+            <div id="con2" class="con" style="width:550px">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="wTanker-tab" data-toggle="tab" href="#wTanker" role="tab"
@@ -168,41 +169,41 @@
                             aria-controls="wAttack" aria-selected="false">금주</a>
                     </div>
                 </nav>
-                <div id="charList" class="row" style="width:350px">
+                <div id="charList" class="row charList">
                     <!-- 캐릭터 리스트 -->
                 </div>
 
             </div>
 
-            <div id="con1" class="con" style="width:1300px;margin-left:0px">
+            <div id="con1" class="con" style="width:650px;margin-left:0px">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="widthTab tab-pane fade show active" id="wTanker" role="tabpanel"
                         aria-labelledby="wTanker-tab">
                         <div id="aTK" class="attrInfo">
-                            <h4>탱커</h4>
+                            <h5>탱커</h5>
                         </div>
                         <div id="aAT" class="attrInfo">
-                            <h4>근거리 딜러</h4>
+                            <h5>근거리 딜러</h5>
                         </div>
                         <div id="aWD" class="attrInfo">
-                            <h4>원거리 딜러</h4>
+                            <h5>원거리 딜러</h5>
                         </div>
                         <div id="aSP" class="attrInfo">
-                            <h4>서포터</h4>
+                            <h5>서포터</h5>
                         </div>
                     </div>
                     <div class="widthTab tab-pane fade" id="wAttack" role="tabpanel" aria-labelledby="wAttack-tab">
                         <div id="wTK" class="attrInfo">
-                            <h4>탱커</h4>
+                            <h5>탱커</h5>
                         </div>
                         <div id="wAT" class="attrInfo">
-                            <h4>근거리 딜러</h4>
+                            <h5>근거리 딜러</h5>
                         </div>
                         <div id="wWD" class="attrInfo">
-                            <h4>원거리 딜러</h4>
+                            <h5>원거리 딜러</h5>
                         </div>
                         <div id="wSP" class="attrInfo">
-                            <h4>서포터</h4>
+                            <h5>서포터</h5>
                         </div>
                     </div>
                 </div>
@@ -219,7 +220,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                            <h5 class="modal-title" id="templateModalLabel">최근 10게임</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
