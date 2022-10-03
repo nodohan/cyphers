@@ -513,7 +513,6 @@ table td {
 
 .widthTab {
     width: 700px;
-
 }
 
 .charImgDiv {
@@ -533,4 +532,8 @@ table td {
 
 .charImgActive {
     background-color: #fb4f4f;
+}
+
+.charNameSpan {
+    vertical-align: sub;
 }
