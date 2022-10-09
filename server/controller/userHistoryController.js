@@ -17,6 +17,7 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/searchNicknameHistory', async function(req, res) {
         let userName = req.query.nickname;
 
+        const ip = commonUtil.getIp(req);
         let playerId = await new api().getPlayerIdByName(req.query.nickname);
         let userNicknameList;
         logger.debug("playerId get %s", playerId);
@@ -33,26 +34,26 @@ module.exports = (scheduler, maria, acclogger) => {
 
         /* 랭킹차트로 누른 검색은 이력으로 쌓지 않고
           , 존재하지 않는 사용자는 수집하지 않도록 수정 */
-        if(req.query.byRank != 'Y') {
-            insertSearchNickname(userName);
+        if (req.query.byRank != 'Y') {
+            insertSearchNickname(userName, ip);
         }
 
         if (userNicknameList[0].privateYn == 'Y') {
             res.send({ resultCode: -2 });
             return;
         }
-        
+
         let result = userNicknameList.map(row => {
             return [row.nickname, row.checkingDate]; // 닉네임, 수집일
         });
-        
+
         res.send(result);
     });
 
-    async function insertSearchNickname(username) {
+    async function insertSearchNickname(username, ip) {
         try {
             pool = await maria.getPool();
-            let query = `insert into nickNameSearch ( searchDate, nickname ) values ( now(), '${username}' ) `;
+            let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', ${ip} ) `;
             logger.debug(query);
             await pool.query(query);
         } catch (err) {
