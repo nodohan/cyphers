@@ -8,7 +8,7 @@ module.exports = (scheduler, maria) => {
 
     var rankSchedulerTime = "00 13 * * *";
     //var rankSchedulerTime = "08 20 * * *";
-    scheduler.scheduleJob(rankSchedulerTime, function() {
+    scheduler.scheduleJob(rankSchedulerTime, function () {
         if (myConfig.schedulerRun) {
             logger.info("call rank scheduler");
             getRanks();
@@ -17,7 +17,7 @@ module.exports = (scheduler, maria) => {
     });
 
     // "/rank/getHtml"
-    app.get('/getHtml', function(req, res) {
+    app.get('/getHtml', function (req, res) {
         let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
         const ip = req.headers['x-forwarded-for'] || req.ip;
 
@@ -62,7 +62,7 @@ module.exports = (scheduler, maria) => {
                     run = false;
                 }
 
-                $bodyList.forEach(function(row, i) {
+                $bodyList.forEach(function (row, i) {
                     console.log(row);
 
                     rankList[i] = {
@@ -79,7 +79,7 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    const getHtml = async(page) => {
+    const getHtml = async (page) => {
         try { // https://cyphers.nexon.com/ranking/total
             return await axios.get("http://cyphers.nexon.com/ranking/total/21?page=" + page);
         } catch (error) {
@@ -90,7 +90,7 @@ module.exports = (scheduler, maria) => {
     async function insertRank(pool, jsonList) {
         let result = 0;
 
-        jsonList.forEach(async function(json) {
+        jsonList.forEach(async function (json) {
             try {
                 let query = `INSERT INTO rank (rankDate, rankNumber, playerId, nickname, season, rp) `;
                 query += ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022U', ${json.rp} `;

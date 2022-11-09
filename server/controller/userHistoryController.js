@@ -6,7 +6,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    app.get('/nicknameHistory', function(req, res) {
+    app.get('/nicknameHistory', function (req, res) {
         if (commonUtil.isMobile(req)) {
             res.render('./mobile/userHistory');
         } else {
@@ -14,7 +14,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/searchNicknameHistory', async function(req, res) {
+    app.get('/searchNicknameHistory', async function (req, res) {
         let userName = req.query.nickname;
 
         const ip = commonUtil.getIp(req);
@@ -84,7 +84,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
 
     // 사용자 닉변 검색 순위
-    app.get('/getUserSearchRank', async function(req, res) {
+    app.get('/getUserSearchRank', async function (req, res) {
         let day = new Date();
         let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -4)), false);
         let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);

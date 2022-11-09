@@ -5,7 +5,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    app.get('/stats', function(req, res) {
+    app.get('/stats', function (req, res) {
         if (commonUtil.isMobile(req)) {
             res.render('../mobile/stats');
         } else {
@@ -13,7 +13,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/statsCountList', async function(req, res) {
+    app.get('/statsCountList', async function (req, res) {
         let todayStr = commonUtil.getYYYYMMDD(new Date(), false);
         pool = await maria.getPool();
 
@@ -36,7 +36,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/statsList', async function(req, res) {
+    app.get('/statsList', async function (req, res) {
         let todayStr = '';
 
         if (req.query.season != null) {
@@ -66,11 +66,11 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/stats2022h', function(req, res) {
+    app.get('/stats2022h', function (req, res) {
         res.render('./pc/stats2022h');
     });
 
-    app.get('/statsSeasonList', async function(req, res) {
+    app.get('/statsSeasonList', async function (req, res) {
         let season = req.query.season
 
         pool = await maria.getPool();
@@ -90,7 +90,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/charList', async function(req, res) {
+    app.get('/charList', async function (req, res) {
         let season = req.query.season;
         if (season == null) {
             season = '2022H';

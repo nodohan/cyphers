@@ -7,7 +7,7 @@ module.exports = (scheduler, maria, acclogger) => {
     app.use(acclogger());
 
     //  url = "/user/userSearch"
-    app.get('/userSearch', function(req, res) {
+    app.get('/userSearch', function (req, res) {
         commonUtil.getIp(req);
         if (commonUtil.isMobile(req)) {
             res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
@@ -16,7 +16,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/userTest', function(req, res) {
+    app.get('/userTest', function (req, res) {
         commonUtil.getIp(req);
         if (commonUtil.isMobile(req)) {
             res.render('./mobile/userTest', { 'searchNickname': req.query.nickname });
@@ -27,14 +27,14 @@ module.exports = (scheduler, maria, acclogger) => {
 
 
     //  url = "/user/userSearch_vertical"
-    app.get('/userSearch_vertical', function(req, res) {
+    app.get('/userSearch_vertical', function (req, res) {
         //모바일은 지원하지 않음
         commonUtil.getIp(req);
         res.render('./pc/userSearch_vertical', { 'searchNickname': req.query.nickname });
     });
 
     //  url = "/user/userDetail"
-    app.get('/userDetail', function(req, res) {
+    app.get('/userDetail', function (req, res) {
         commonUtil.getIp(req);
 
         if (commonUtil.isMobile(req)) {
@@ -45,7 +45,7 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     //  url = "/user/userVs"
-    app.get('/userVs', function(req, res) {
+    app.get('/userVs', function (req, res) {
         commonUtil.getIp(req);
 
         if (commonUtil.isMobile(req)) {
@@ -56,17 +56,17 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     //  url = "/user/getUserInfo"    
-    app.get('/getUserInfo', async function(req, res) {
+    app.get('/getUserInfo', async function (req, res) {
         res.send(await new api().searchUser(req.query.nickname, req.query.gameType));
     });
 
     //  url = "/user/getMatchInfo"    
-    app.get('/getMatchInfo', async function(req, res) {
+    app.get('/getMatchInfo', async function (req, res) {
         res.send(await new api().searchMatchInfo(req.query.matchId));
     });
 
     //  url = "/user/getNicknameHistory"    
-    app.get('/getNicknameHistory', async function(req, res) {
+    app.get('/getNicknameHistory', async function (req, res) {
         let playerId = req.query.playerId;
         let query = `SELECT 
                         season, checkingDate 
@@ -88,9 +88,6 @@ module.exports = (scheduler, maria, acclogger) => {
             }
             res.send(rows); // rows 를 보내주자
         } catch (err) {
-            // If something goes wrong, handle the error in this section. This might
-            // involve retrying or adjusting parameters depending on the situation.
-            // [START_EXCLUDE]
             logger.error(err);
             return res
                 .status(500)
@@ -101,7 +98,7 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     //  url = "/user/getUserSeasonRank"    
-    app.get('/getUserSeasonRank', async function(req, res) {
+    app.get('/getUserSeasonRank', async function (req, res) {
         let playerId = req.query.playerId;
         if (playerId == null || playerId == '') {
             res.send({ resultCode: -1 });
@@ -114,6 +111,7 @@ module.exports = (scheduler, maria, acclogger) => {
 			FROM rank rank 
 			LEFT JOIN player pl ON pl.playerId = rank.playerId 
 			WHERE rankDate in ( '2022-02-17', '2022-08-18' ) AND pl.playerId = '${playerId}' `;
+
 
         pool = await maria.getPool();
         try {
