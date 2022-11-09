@@ -18,12 +18,12 @@ module.exports = (scheduler, maria, acclogger) => {
         pool = await maria.getPool();
 
         try {
-            let query = " SELECT dates, COUNT(dates) cnt FROM ( ";
-            query += " 	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d (%W)') dates, matchId FROM matches ";
-            query += " ) aa  ";
-            query += " GROUP BY dates ";
-            query += " ORDER BY dates DESC ";
-            query += " LIMIT 30 ";
+            let query = ` SELECT dates, COUNT(dates) cnt FROM ( 
+             	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d (%W)') dates, matchId FROM matches 
+             ) aa  
+             GROUP BY dates 
+             ORDER BY dates DESC 
+             LIMIT 30 `;
 
             let row = await pool.query(query);
             res.send({ 'row': row });
@@ -52,7 +52,7 @@ module.exports = (scheduler, maria, acclogger) => {
         pool = await maria.getPool();
 
         try {
-            let query = " SELECT * FROM match_stats WHERE statsDate = '" + todayStr + "' ";
+            let query = ` SELECT * FROM match_stats WHERE statsDate = '${todayStr}' `;
             logger.debug(query);
 
             let row = await pool.query(query);

@@ -36,30 +36,36 @@ module.exports = (scheduler, maria, acclogger) => {
             count = 10;
         }
 
-        let query = "SELECT *, CEILING( win / total * 100 ) AS late FROM ("
-        query += "       SELECT ";
-        query += "            " + type + " as combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win, COUNT(IF(matchResult = '패', 1, NULL)) lose ";
-        query += "            , GROUP_CONCAT(detail.matchId) matchIds  ";
-        query += "        FROM matchdetail detail ";
-        query += "        inner join ( "
-        query += "            select matchId, matchDate from matches where matchDate between '" + req.query.fromDt + "' and '" + req.query.toDt + "'  ";
-        query += "        ) matches on matches.matchId = detail.matchId "
-        query += "        WHERE 1=1 ";
+        let query = `SELECT *, CEILING( win / total * 100 ) AS late 
+			 FROM (
+				SELECT 
+					${type} as combi, COUNT(1) total
+					, COUNT(IF(matchResult = '승', 1, NULL)) win
+					, COUNT(IF(matchResult = '패', 1, NULL)) lose 
+					, GROUP_CONCAT(detail.matchId) matchIds 
+				FROM matchdetail detail 
+				inner join ( 
+					select 
+						matchId, matchDate 
+					from matches
+                    where matchDate between '${req.query.fromDt}' and '${req.query.toDt}'
+				) matches on matches.matchId = detail.matchId
+				WHERE 1=1 `;
 
         if (req.query.charName) {
             let charNames = req.query.charName.split(" ");
             for (idx in charNames) {
-                query += "        and " + type + " like '%" + charNames[idx] + "%'	 ";
+                query += ` and "${type}" like '%${charNames[idx]}%' `;
             }
 
             if (req.query.count == null && charNames.length >= 3) {
                 count = 1;
             }
         }
-        query += "        GROUP BY " + type + " ";
-        query += "    ) a  ";
-        query += "    WHERE total >= " + count + " ";
-        query += "    ORDER BY " + order + " DESC";
+        query += `    GROUP BY ${type}
+                  ) a 
+                  WHERE total >= ${count}
+                  ORDER BY ${order} DESC`;
 
         logger.debug(query);
 

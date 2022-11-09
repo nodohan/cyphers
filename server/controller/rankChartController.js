@@ -65,11 +65,13 @@ module.exports = (scheduler, maria, acclogger) => {
     }
 
     async function searchUserRank(userName, season = '2022H') {
-        let query = "SELECT DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate "
-        query += ` FROM rank WHERE season = '${season}' `
-        query += " and playerId = ( "
-        query += `     SELECT playerId FROM nickNames WHERE nickname= '${userName}' `;
-        query += " ) order by rankDate asc ";
+        let query = `SELECT 
+		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
+                    FROM rank 
+                    WHERE season = '${season}' 
+                    and playerId = ( 
+                        SELECT playerId FROM nickNames WHERE nickname= '${userName}' 
+                    ) order by rankDate asc `;
 
         let pool = await maria.getPool();
 

@@ -64,10 +64,12 @@ module.exports = (scheduler, maria, acclogger) => {
 
     // 사용자 닉변 이력 조회 (playerId 기준)
     async function searchNicknameByPlayerId(playerId) {
-        let query = `SELECT IF(privateYn = 'N', nickname, '비공개') nickname `;
-        query += `, DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate `;
-        query += ` FROM nickNames nick `;
-        query += ` WHERE nick.playerId = '${playerId}' ORDER BY checkingDate DESC; `;
+        let query = `SELECT 
+                        IF(privateYn = 'N', nickname, '비공개') nickname 
+                        , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
+                    FROM nickNames nick 
+                    WHERE nick.playerId = '${playerId}' 
+                    ORDER BY checkingDate DESC; `;
 
         //logger.debug("쿼리: %s", query);
 
@@ -87,14 +89,15 @@ module.exports = (scheduler, maria, acclogger) => {
         let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -4)), false);
         let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);
 
-        let query = ` SELECT * FROM ( ` +
-            ` 	SELECT nickname, COUNT(nickname) cnt ` +
-            ` 	FROM nickNameSearch  ` +
-            ` 	WHERE searchDate BETWEEN '${startDate}' AND '${endDate}' ` +
-            ` 	GROUP BY nickname ` +
-            ` ) aa  ` +
-            ` ORDER BY cnt DESC  ` +
-            ` LIMIT 15  `;
+        let query = ` SELECT * FROM (
+                        SELECT nickname, COUNT(nickname) cnt
+                        FROM nickNameSearch 
+                        WHERE searchDate BETWEEN '${startDate}' AND '${endDate}'
+                        GROUP BY nickname
+                    ) aa
+                    ORDER BY cnt DESC
+                    LIMIT 15 `;
+
         //logger.debug(query);
 
         pool = await maria.getPool();
@@ -125,14 +128,16 @@ module.exports = (scheduler, maria, acclogger) => {
 
     // 사용자 닉변 이력 조회 (닉네임 기준)
     async function searchNickname(userName) {
-        let query = "SELECT IF(privateYn = 'N', nickname, '비공개') nickname ";
-        query += ", DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate ";
-        query += " FROM nickNames nick ";
-        query += " WHERE nick.playerId = (  ";
-        query += `     SELECT distinct playerId `
-        query += `     FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' `;
-        query += `     order by checkingDate desc`
-        query += ") ORDER BY checkingDate DESC; ";
+        let query = `SELECT 
+                        IF(privateYn = 'N', nickname, '비공개') nickname 
+                        , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
+                    FROM nickNames nick 
+                    WHERE nick.playerId = (
+                        SELECT distinct playerId 
+                        FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
+                        order by checkingDate desc
+                    )
+                    ORDER BY checkingDate DESC; `
 
         logger.debug("닉변검색: " + userName);
         //logger.debug("쿼리: %s", query);

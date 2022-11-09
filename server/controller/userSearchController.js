@@ -68,13 +68,12 @@ module.exports = (scheduler, maria, acclogger) => {
     //  url = "/user/getNicknameHistory"    
     app.get('/getNicknameHistory', async function(req, res) {
         let playerId = req.query.playerId;
-        let query =
-            ` SELECT ` +
-            `   season, checkingDate ` +
-            ` 	,IF(privateYn = 'N', nickname, '비공개') nickname ` +
-            ` FROM nickNames ` +
-            ` WHERE playerId = '${playerId}' ` +
-            ` ORDER BY checkingDate DESC `;
+        let query = `SELECT 
+                        season, checkingDate 
+                        ,IF(privateYn = 'N', nickname, '비공개') nickname 
+                    FROM nickNames 
+                    WHERE playerId = '${playerId}' 
+                    ORDER BY checkingDate DESC `;
 
         //logger.debug("%s", query);
 
@@ -109,12 +108,12 @@ module.exports = (scheduler, maria, acclogger) => {
             return;
         }
 
-        let query = ` SELECT `
-        query += ` rank.rankDate, rank.nickname, rank.rp, rank.season `
-        query += ` , IF(pl.privateYn = 'Y', '몰?루?', rank.rankNumber) rankNumber `
-        query += ` FROM rank rank `
-        query += ` LEFT JOIN player pl ON pl.playerId = rank.playerId `
-        query += ` WHERE rankDate in ( '2022-02-17', '2022-08-18' ) AND pl.playerId = '${playerId}' `;
+        let query = `SELECT 
+				rank.rankDate, rank.nickname, rank.rp, rank.season 
+				, IF(pl.privateYn = 'Y', '몰?루?', rank.rankNumber) rankNumber 
+			FROM rank rank 
+			LEFT JOIN player pl ON pl.playerId = rank.playerId 
+			WHERE rankDate in ( '2022-02-17', '2022-08-18' ) AND pl.playerId = '${playerId}' `;
 
         pool = await maria.getPool();
         try {
