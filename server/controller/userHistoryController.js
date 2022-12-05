@@ -6,7 +6,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    app.get('/nicknameHistory', function (req, res) {
+    app.get('/nicknameHistory', function(req, res) {
         if (commonUtil.isMobile(req)) {
             res.render('./mobile/userHistory');
         } else {
@@ -14,10 +14,12 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/searchNicknameHistory', async function (req, res) {
+    app.get('/searchNicknameHistory', async function(req, res) {
         let userName = req.query.nickname;
 
         const ip = commonUtil.getIp(req);
+        console.log(ip);
+
         let playerId = await new api().getPlayerIdByName(req.query.nickname);
         let userNicknameList;
         logger.debug("playerId get %s", playerId);
@@ -67,9 +69,8 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = `SELECT 
                         IF(privateYn = 'N', nickname, '비공개') nickname 
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
-                    FROM nickNames nick 
-                    WHERE nick.playerId = '${playerId}' 
-                    ORDER BY checkingDate DESC; `;
+                     FROM nickNames nick 
+                     WHERE nick.playerId = '${playerId}' ORDER BY checkingDate DESC; `;
 
         //logger.debug("쿼리: %s", query);
 
@@ -84,20 +85,19 @@ module.exports = (scheduler, maria, acclogger) => {
 
 
     // 사용자 닉변 검색 순위
-    app.get('/getUserSearchRank', async function (req, res) {
+    app.get('/getUserSearchRank', async function(req, res) {
         let day = new Date();
         let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -4)), false);
         let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);
 
-        let query = ` SELECT * FROM (
-                        SELECT nickname, COUNT(nickname) cnt
-                        FROM nickNameSearch 
-                        WHERE searchDate BETWEEN '${startDate}' AND '${endDate}'
-                        GROUP BY nickname
-                    ) aa
-                    ORDER BY cnt DESC
-                    LIMIT 15 `;
-
+        let query = ` SELECT * FROM ( 
+                     	SELECT nickname, COUNT(nickname) cnt 
+                     	FROM nickNameSearch  
+                     	WHERE searchDate BETWEEN '${startDate}' AND '${endDate}' 
+                     	GROUP BY nickname 
+                     ) aa  
+                     ORDER BY cnt DESC  
+                     LIMIT 15  `;
         //logger.debug(query);
 
         pool = await maria.getPool();
@@ -131,13 +131,12 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = `SELECT 
                         IF(privateYn = 'N', nickname, '비공개') nickname 
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
-                    FROM nickNames nick 
-                    WHERE nick.playerId = (
-                        SELECT distinct playerId 
-                        FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
-                        order by checkingDate desc
-                    )
-                    ORDER BY checkingDate DESC; `
+                     FROM nickNames nick 
+                     WHERE nick.playerId = (  
+                         SELECT distinct playerId
+                         FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
+                         order by checkingDate des
+                    ) ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);
         //logger.debug("쿼리: %s", query);
