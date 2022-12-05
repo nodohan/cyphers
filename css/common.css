@@ -19,6 +19,18 @@ img {
     border-radius: 7px;
 }
 
+.topUserVs {
+    margin-top: 10px;
+    float: left;
+    margin-left: 20px;
+    padding: 9px;
+    position: relative;
+    width: 1120px;
+    height: 52px;
+    background-color: white;
+    border-radius: 7px;
+}
+
 table {
     background-color: white;
 }
