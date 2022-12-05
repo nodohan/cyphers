@@ -15,6 +15,15 @@
             })
 
             function userVsSearch() {
+                if ($("#nickNames").val().trim() === '') {
+                    alert("내 닉네임을 입력해주세요");
+                    return;
+                }
+
+                if ($("#nickNames2").val().trim() === '') {
+                    alert("상대방 닉네임을 입력해주세요");
+                    return;
+                }
                 let gameType = $("input[name='gameType']:checked").val();
                 var result = searchVsUser(gameType, $("#nickNames").val(), $("#nickNames2").val());
 
