@@ -53,7 +53,7 @@ module.exports = (scheduler, maria, acclogger) => {
     async function insertSearchNickname(username, ip) {
         try {
             pool = await maria.getPool();
-            let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', ${ip} ) `;
+            let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', '${ip}' ) `;
             logger.debug(query);
             await pool.query(query);
         } catch (err) {
