@@ -26,6 +26,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         try {
+            //데이터 많으니 분할처리
             collectCharRate('2022-02-19', '2022-02-28');
             collectCharRate('2022-03-01', '2022-03-31');
             collectCharRate('2022-04-01', '2022-04-30');
@@ -44,19 +45,19 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     async function collectCharRate(startDate, endDate) {
-        let query =` SELECT matchId, matchDate, matchResult, allJoin ` 
-        +` FROM matchdetail WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' `;
+        let query = ` SELECT matchId, matchDate, matchResult, allJoin 
+                      FROM matchdetail WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' `;
         //let query =` SELECT matchId, matchDate, matchResult, allJoin FROM matchdetail WHERE matchDate = '2022-02-18' `;
-        
+
         pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
 
-            if(rows != null && rows.length > 0){
+            if (rows != null && rows.length > 0) {
                 let insertQuery = '';
                 let groupLength = rows.length / 1000; // 천단위로 끊음
-                for(let j = 0; j < groupLength ; j ++ ) {   
-                    insertQuery = getInsertQuery(rows.slice(j * 1000, (j+1) *1000));
+                for (let j = 0; j < groupLength; j++) {
+                    insertQuery = getInsertQuery(rows.slice(j * 1000, (j + 1) * 1000));
                     logger.debug(insertQuery);
                     logger.debug("\n\n\n\n\n\n\n\n\n\n");
                     await pool.query(insertQuery);
