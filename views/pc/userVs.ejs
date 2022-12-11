@@ -39,33 +39,33 @@
             }
 
             function drawTeam(divId, team) {
-                $("#" + divId).append("<h4>승리: <span class='red'>" + team.win + "</span> 패배: <span class='blue'>" + team.lose + "<span></h4>");
+                $("#" + divId).append(
+                    `<h4>승리: <span class='red'>${team.win}</span> 
+                         패배: <span class='blue'>${team.lose}<span></h4>`);
 
                 var clone = $("#templateTable").clone();
                 clone.removeAttr("id");
 
                 var body = clone.find("tbody");
+                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
 
                 team.row.forEach(row => {
-                    //date
-                    let text = "<tr>";
-                    text += "<td>" + row.date + "</td>";
-                    text += "<td><b>" + winLoseKo(row.result) + "</b></td>";
-                    text += drawInGameScore(row.my);
-                    text += drawInGameScore(row.you);
-
-                    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-                    text += `<td onClick='searchMatch("${row.matchId}", drawMatchVs )'>${moreIcon}</td> `
-                    text += "</tr>"
-                    body.append(text);
+                    body.append(
+                        `<tr>
+                            <td>${row.date}</td>
+                            <td><b>${winLoseKo(row.result)}</b></td>
+                            ${drawInGameScore(row.my)}
+                            ${drawInGameScore(row.you)}
+                            <td onClick='searchMatch("${row.matchId}", drawMatchVs )'>${moreIcon}</td> 
+                        </tr>`);
                 });
                 $("#" + divId).append(clone);
             }
 
             function drawInGameScore(data) {
-                let score = "<td>" + drawCharicter(data.charId) + "</td>";
-                score += "<td class='kda'>" + data.kill + "/" + data.death + "/" + data.assist + "</td>"
-                score += "<td class='kda'>" + (data.attack / 1000).toFixed(0) + "k</td>";
+                let score = `<td>${drawCharicter(data.charId)}</td>
+                             <td class='kda'>${data.kill}/${data.death}/${data.assist}</td>
+                             <td class='kda'>${(data.attack / 1000).toFixed(0)}k</td>`;
                 return score;
             }
 

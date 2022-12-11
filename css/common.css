@@ -45,14 +45,6 @@ table td {
     padding: 0 !important;
 }
 
-.vsTable tbody td:nth-child(3n) {
-    border-left: 2px solid #bfb1b3;
-}
-
-.vsTable tbody td:nth-child(2) {
-    border-left: 2px solid #bfb1b3;
-}
-
 .con {
     margin-top: 10px;
     float: left;
@@ -548,4 +540,62 @@ table td {
 
 .charNameSpan {
     vertical-align: sub;
+}
+
+.vsTable {
+    display: block;
+    border-collapse: collapse;
+}
+
+.vsTable th:nth-of-type(1),
+.vsTable td:nth-of-type(1) {
+    width: 150px;
+}
+
+.vsTable th:nth-of-type(2),
+.vsTable td:nth-of-type(2) {
+    width: 57px;
+}
+
+.vsTable th:nth-of-type(3),
+.vsTable td:nth-of-type(3),
+.vsTable th:nth-of-type(6),
+.vsTable td:nth-of-type(6) {
+    width: 55px;
+}
+
+.vsTable th:nth-of-type(4),
+.vsTable td:nth-of-type(4),
+.vsTable th:nth-of-type(7),
+.vsTable td:nth-of-type(7) {
+    width: 78px;
+}
+
+.vsTable th:nth-of-type(5),
+.vsTable td:nth-of-type(5),
+.vsTable th:nth-of-type(8),
+.vsTable td:nth-of-type(8) {
+    width: 58px;
+}
+
+.vsTable th:last-child {
+    width: 60px;
+}
+
+.vsTable td:last-child {
+    width: calc( 40px - 19px);
+}
+
+.vsTable tbody {
+    display: block;
+    overflow-y: auto;
+    height: 600px;
+}
+
+.vsTable tbody td:nth-child(3n) {
+    border-left: 2px solid #bfb1b3;
+}
+
+.vsTable tbody td:nth-child(2) {
+    border-left: 2px solid #bfb1b3;
 }
