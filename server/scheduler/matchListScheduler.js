@@ -47,11 +47,11 @@ module.exports = (scheduler, maria) => {
         let query;
         if (matchType == 'rating') {
             let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
-            query = `SELECT playerId FROM rank where rankDate = '${searchDateStr}' `;
+            query = `SELECT playerId FROM userRank where rankDate = '${searchDateStr}' `;
         } else {
             query = `SELECT playerId FROM player`;
         }
-        console.log(query);
+        logger.debug(query);
 
         let pool = await maria.getPool();
         try {

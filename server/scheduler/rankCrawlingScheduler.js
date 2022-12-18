@@ -92,7 +92,7 @@ module.exports = (scheduler, maria) => {
 
         jsonList.forEach(async function (json) {
             try {
-                let query = ` INSERT INTO \`rank\` (rankDate, rankNumber, playerId, nickname, season, rp) ` +
+                let query = ` INSERT INTO userRank (rankDate, rankNumber, playerId, nickname, season, rp) ` +
                     ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022U', ${json.rp} ` +
                     ` FROM nickNames nick ` +
                     ` WHERE nick.nickname = '${json.name}' ORDER BY checkingDate DESC LIMIT 1 `;

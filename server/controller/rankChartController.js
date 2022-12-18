@@ -42,7 +42,7 @@ module.exports = (scheduler, maria, acclogger) => {
         // 랭킹차트 축이 안그리면 버그가 생기는 이슈가 있어서 1등(group by대신)을 조회하고 날짜만 수집하여 그림
         let query = " SELECT ";
         query += " rankDate, DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber ";
-        query += " FROM rank ";
+        query += " FROM userRank ";
         query += ` WHERE season = '${season}' `;
         query += " GROUP BY rankDate ";
         query += " ORDER BY rankDate asc ";
@@ -67,7 +67,7 @@ module.exports = (scheduler, maria, acclogger) => {
     async function searchUserRank(userName, season = '2022H') {
         let query = `SELECT 
 		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
-                    FROM rank 
+                    FROM userRank 
                     WHERE season = '${season}' 
                     and playerId = ( 
                         SELECT playerId FROM nickNames WHERE nickname= '${userName}' 
