@@ -81,6 +81,10 @@
             }
 
             function setStatsWDueDate(type, item) {
+                if (item == null) {
+                    return;
+                }
+
                 let span = (type == "W") ? $("#wDueSpan") : $("#mDueSpan");
                 span.empty();
                 span.append(item.statsFromDate + "~" + item.statsToDate);
