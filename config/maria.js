@@ -14,7 +14,11 @@ class maria {
         };
 
         this.ensureSchema = async(pool) => {
-            await pool.query(`SELECT 1;`);
+            try {
+                await pool.query(`SELECT 1;`);
+            } catch (err) {
+                logger.error(err);
+            }
         };
 
         this.createPoolAndEnsureSchema = async() =>
