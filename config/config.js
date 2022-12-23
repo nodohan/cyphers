@@ -3,7 +3,6 @@
 
 module.exports = {
     db: {
-        //host: '114.207.113.136',
         host: 'localhost',
         port: 3306,
         user: 'nodo',
