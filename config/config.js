@@ -10,7 +10,7 @@ module.exports = {
         database: 'cyphers'
         // [START cloud_sql_mysql_mysql_limit]
         // 'connectionLimit' is the maximum number of connections the pool is allowed to keep at once.
-        connectionLimit: 50,
+        connectionLimit: 10,
         // [END cloud_sql_mysql_mysql_limit]
         // [START cloud_sql_mysql_mysql_timeout]
         connectTimeout: 10000,
