@@ -25,7 +25,7 @@ module.exports = (scheduler, maria, acclogger) => {
              ORDER BY dates DESC 
              LIMIT 30 `;
 
-            let row = await pool.query(query);
+            let row = await pool.query({ bigNumberStrings: true, sql: query });
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
