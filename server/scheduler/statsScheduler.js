@@ -65,26 +65,29 @@ module.exports = (scheduler, maria, acclogger) => {
         let todayStr = commonUtil.getYYYYMMDD(statsDate, false);
         let startDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(statsDate, statsType == "W" ? -7 : -30), false);
         let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";
-        let totalCount = combiType == "ATTACK" ? 20 : 30;
+        let totalCount = combiType == "ATTACK" ? 15 : 30;
 
-        let query = ` INSERT INTO match_stats  \n`;
-        query += ` SELECT '${todayStr}', '${statsType}', '${combiType}' \n `;
-        query += ` , '${startDateStr}', '${todayStr}', '${order}' \n `;
-        query += `       , combi, total, win, lose, CEILING( win / total * 100 ) AS late \n`;
-        query += ` FROM ( \n`;
-        query += ` 	SELECT \n`;
-        query += ` 		${combiTarget} AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  \n`;
-        query += ` 		, COUNT(IF(matchResult = '패', 1, NULL)) lose \n`;
-        query += ` 		, GROUP_CONCAT(detail.matchId) matchIds \n`;
-        query += ` 	FROM matchdetail detail \n`;
-        query += ` 	INNER JOIN (   \n`;
-        query += ` 		SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDateStr}' AND '${todayStr}' \n`;
-        query += ` 	) matches ON matches.matchId = detail.matchId \n`;
-        query += ` 	GROUP BY ${combiTarget} \n`;
-        query += ` ) a   \n`;
-        query += ` WHERE total >= ${totalCount} \n`;
-        query += ` ORDER BY late ${order} \n`;
-        query += ` LIMIT 10 \n`;
+        let query = ` INSERT INTO match_stats  
+                        SELECT 
+                            '${todayStr}', '${statsType}', '${combiType}' 
+                            , '${startDateStr}', '${todayStr}', '${order}' 
+                            , combi, total, win, lose, CEILING( win / total * 100 ) AS late 
+                        FROM ( 
+                            SELECT 
+                                ${combiTarget} AS combi, COUNT(1) total
+                                , COUNT(IF(matchResult = '승', 1, NULL)) win  
+                                , COUNT(IF(matchResult = '패', 1, NULL)) lose 
+                                , GROUP_CONCAT(detail.matchId) matchIds 
+                            FROM matchdetail detail 
+                            INNER JOIN (   
+                                SELECT matchId FROM matches 
+                                WHERE matchDate BETWEEN '${startDateStr}' AND '${todayStr}' 
+                            ) matches ON matches.matchId = detail.matchId 
+                            GROUP BY ${combiTarget} 
+                        ) a   
+                        WHERE total >= ${totalCount} 
+                        ORDER BY late ${order} 
+                        LIMIT 10 `;
 
         logger.debug(query);
 
