@@ -42,16 +42,25 @@ module.exports = (scheduler, maria) => {
     });
 
     async function getRanks() {
-        var pool = await maria.getPool();
         let run = true;
         var todayYYYYMMDD = getYYYYMMDD();
 
         logger.debug("today string %s", todayYYYYMMDD);
 
-        //for (let i = 1; i <= 140; i++) {
         for (let i = 1; i <= 140; i++) {
+            //for (let i = 1; i <= 1; i++) {
             if (run) {
                 let html = await getHtml(i);
+
+                /*{
+                    curDate: '2022-12-16',
+                    ranking: 5306,
+                    beforeRank: 5256,
+                    ratingPoint: 1262,
+                    mGrade: 92,
+                    mNickname: '가나다라마바사',
+                    clanName: '어쩌고저쩌고'
+                  } */
                 //console.log(html);
                 let rankList = [];
                 const $bodyList = html.data.rankingTopResponses;
@@ -74,7 +83,7 @@ module.exports = (scheduler, maria) => {
                     };
                 });
                 //logger.debug("랭킹 페이지 %s! insert 시작 ", i);
-                await insertRank(pool, rankList);
+                await insertRank(rankList);
             }
         }
     }
@@ -87,24 +96,26 @@ module.exports = (scheduler, maria) => {
         }
     };
 
-    async function insertRank(pool, jsonList) {
+    async function insertRank(jsonList) {
+        var pool = await maria.getPool();
         let result = 0;
 
-        jsonList.forEach(async function (json) {
+        jsonList.forEach(async function(json) {
+            let query = ` INSERT INTO userRank (rankDate, rankNumber, playerId, nickname, season, rp) 
+                 SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022U', ${json.rp} 
+                 FROM nickNames nick 
+                 WHERE nick.nickname = '${json.name}' ORDER BY checkingDate DESC LIMIT 1 `;
+
+            logger.debug(query);
             try {
-                let query = ` INSERT INTO userRank (rankDate, rankNumber, playerId, nickname, season, rp) ` +
-                    ` SELECT '${json.today}', '${json.rank}', nick.playerId, '${json.name}' , '2022U', ${json.rp} ` +
-                    ` FROM nickNames nick ` +
-                    ` WHERE nick.nickname = '${json.name}' ORDER BY checkingDate DESC LIMIT 1 `;
-
-                logger.debug(query);
-
                 result += await pool.query(query);
             } catch (err) {
-                logger.error(err);
+                //logger.error(err);
+                console.log(err);
             }
-        })
+        });
 
+        pool.end();
         return result == jsonList.length;
     }
 
