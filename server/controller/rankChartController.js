@@ -5,13 +5,13 @@ module.exports = (scheduler, maria, acclogger) => {
     app.use(acclogger());
 
     // URL: /rankChart/userChart
-    app.get('/userChart', function (req, res) {
+    app.get('/userChart', function(req, res) {
         commonUtil.getIp(req);
 
         res.render('./pc/userChart');
     });
 
-    app.get('/chartDate', async function (req, res) {
+    app.get('/chartDate', async function(req, res) {
         let chartDateList = await chartDate(req.query.season);
         if (chartDateList == null) {
             res.send({ resultCode: -1 });
@@ -21,7 +21,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }));
     });
 
-    app.get('/userRank', async function (req, res) {
+    app.get('/userRank', async function(req, res) {
         let userName = req.query.nickname;
         let season = req.query.season;
 

@@ -80,6 +80,7 @@ module.exports = (scheduler, maria, acclogger) => {
         } catch (err) {
             logger.error(err);
         }
+
         return null;
     }
 

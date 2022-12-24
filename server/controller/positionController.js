@@ -5,7 +5,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    app.get('/positionAttr', function (req, res) {
+    app.get('/positionAttr', function(req, res) {
         // if (commonUtil.isMobile(req)) {
         //     res.render('../mobile/positionAttr');
         // } else {
@@ -14,7 +14,7 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/positionAttr');
     });
 
-    app.get('/positionAttrList', async function (req, res) {
+    app.get('/positionAttrList', async function(req, res) {
         let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
         let charName = req.query.charName;
 

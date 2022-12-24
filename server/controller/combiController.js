@@ -4,7 +4,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
 
-    app.get('/combi', function (req, res) {
+    app.get('/combi', function(req, res) {
         if (commonUtil.isMobile(req)) {
             res.render('./mobile/combi');
         } else {
@@ -12,7 +12,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/combiTotalCount', async function (req, res) {
+    app.get('/combiTotalCount', async function(req, res) {
         pool = await maria.getPool();
 
         try {
@@ -28,7 +28,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/combiSearch', async function (req, res) {
+    app.get('/combiSearch', async function(req, res) {
         let type = req.query.position;
         let count = req.query.count;
         let order = req.query.order == 'count' ? 'total' : 'late';
