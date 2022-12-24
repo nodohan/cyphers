@@ -9,7 +9,7 @@ module.exports = (scheduler, maria) => {
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
     //var time = "00 03 * * *"; // 리얼용
-    var time = "51 23 * * *"; // 테스트중
+    var time = "00 03 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
         //if (myConfig.schedulerRun) {
         logger.info("call position attr collect scheduler");
@@ -65,8 +65,11 @@ module.exports = (scheduler, maria) => {
     async function selectPositionAttr(res, day = new Date()) {
         let pageSize = 3000;
         let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -2));
-        //let searchDateStr = '2022-08-21';
-        let query = `SELECT matchId, jsonData, matchDate FROM matches where matchDate > '${searchDateStr}' AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
+        //let searchDateStr = '2022-12-06';
+        let query = `SELECT matchId, jsonData, matchDate 
+                     FROM matches where matchDate > '${searchDateStr}' 
+                     AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
+        logger.debug(query);
 
         let pool = await maria.getPool();
         try {
@@ -102,28 +105,36 @@ module.exports = (scheduler, maria) => {
         let map = row.map.name;
         let winTeam = row.teams[0].result == 'win' ? row.teams[0].players : row.teams[1].players;
 
+        let insertQuery = `insert into position_attr 
+                                (matchId, charName, matchDate, matchResult, map
+                                , position, attrs, attr_lv1, attr_lv2, attr_lv3 ) 
+                            values ( ?, ?, ?, ?, ?
+                                   , ?, ?, ?, ?, ? )`;
+
+        let arr = [];
+        row.players.forEach((player) => {
+            let charName = player.playInfo.characterName;
+            let matchResult = winTeam.includes(player.playerId) ? "win" : "lose";
+            let position = player.position.name;
+            let attr1 = player.position.attribute[0].name;
+            let attr2 = player.position.attribute[1].name;
+            let attr3 = player.position.attribute[2].name;
+            let attrs = attr1 + "/" + attr2 + "/" + attr3;
+
+            arr.push([matchId, charName, matchDate, matchResult, map, position, attrs, attr1, attr2, attr3]);
+        });
+
+        logger.debug(arr);
+
         try {
-            await row.players.forEach(async(player) => {
-                let charName = player.playInfo.characterName;
-                let matchResult = winTeam.includes(player.playerId) ? "win" : "lose";
-                let position = player.position.name;
-                let attr1 = player.position.attribute[0].name;
-                let attr2 = player.position.attribute[1].name;
-                let attr3 = player.position.attribute[2].name;
-                let attrs = attr1 + "/" + attr2 + "/" + attr3;
-
-                let insertQuery = `insert into position_attr ` +
-                    `(matchId, charName, matchDate, matchResult, ` +
-                    ` map, position, attrs, attr_lv1, attr_lv2, attr_lv3 ) ` +
-                    `values ( '${matchId}', '${charName}', '${matchDate}', '${matchResult}' ` +
-                    ` , '${map}', '${position}', '${attrs}', '${attr1}', '${attr2}', '${attr3}' ) `;
-                //logger.debug(insertQuery);
-
-                await pool.query(insertQuery);
+            await pool.batch(insertQuery, arr, function(err) {
+                console.log(err);
+                logger.error(err);
+                if (err) throw err;
             });
 
             let updateQuery = `update matches set positionCollect = 'Y' where matchId = '${matchId}' `;
-            pool.query(updateQuery);
+            await pool.query(updateQuery);
 
         } catch (err) {
             logger.error(err.message);
@@ -136,6 +147,7 @@ module.exports = (scheduler, maria) => {
     // ------- 2. 포지션 특성 통계 저장 [start] ------------------------
 
     async function positionStats(res) {
+        let seasonOpoenDay = '2022-08-22';
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
         let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
 
@@ -146,10 +158,10 @@ module.exports = (scheduler, maria) => {
 
             //###### 데이터 집계 [START] ################
             //시즌 - 집계
-            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22', false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', '2022-08-22', false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', '2022-08-22', false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', '2022-08-22', false);
+            await insertPositionAttrResult(pool, checkDate, 'all', 'all', seasonOpoenDay, false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', seasonOpoenDay, false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', seasonOpoenDay, false);
+            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', seasonOpoenDay, false);
 
             //주간 - 집계
             await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo, false);
@@ -158,7 +170,7 @@ module.exports = (scheduler, maria) => {
             //await insertPositionAttrResult(pool, checkDate, 'W', 'lv3', aWeekAgo, false);
 
             //캐릭터 시즌 
-            await insertPositionAttrResult(pool, checkDate, 'all', 'all', '2022-08-22', true);
+            await insertPositionAttrResult(pool, checkDate, 'all', 'all', seasonOpoenDay, true);
             //캐릭터 주간  
             await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo, true);
 
@@ -177,6 +189,8 @@ module.exports = (scheduler, maria) => {
                     .end();
             }
         }
+
+        pool.end();
 
         logger.info("positionStats collect end");
         if (res) {
