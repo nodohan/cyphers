@@ -25,7 +25,7 @@ module.exports = (scheduler, maria) => {
             ip = ip.toString().split(",")[1].trim();
         }
 
-        logger.debug("call insertMatches ip", ip);
+        logger.debug("call getHtml ip", ip);
         if (!allowIps.includes(ip)) {
             return res
                 .status(403)
