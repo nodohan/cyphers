@@ -56,7 +56,7 @@ module.exports = (scheduler, maria) => {
         let pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
-            let result = mergeMatchIds(matchType, rows, day);
+            let result = await mergeMatchIds(matchType, rows, day);
             if (res) {
                 res.send(result > 0); // rows 를 보내주자
             }
@@ -110,35 +110,32 @@ module.exports = (scheduler, maria) => {
     }
 
     async function insertMatchId(matchType, rows) {
-        let result = 0;
         let pool = await maria.getPool();
         let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
-        //logger.debug(rows);
+        logger.debug(rows);
 
-        //batch를 promise에서 제공안하는것 같아, 
-        //다중 insert를 하려고 하였으나, 오류났을때 데이터가 보존되지 않아 일차 포기
-        rows.forEach(async function(matchId) {
-            try {
-                let query = `INSERT INTO ${tableName} (matchId, season) VALUES ( '${matchId}', '2022H' ); `;
-                logger.debug(query);
-                result += await pool.query(query);
-            } catch (err) {
-                logger.error(err);
-            }
+        await pool.query("DELETE FROM matchId_temp");
+        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2022H' ) `;
+        logger.debug(query);
+        await pool.batch(query, rows.map(id => [id]), function(err) {
+            console.log(err);
+            logger.error(err);
+            if (err) throw err;
         });
 
-        //다중 insert
-        // let query = `INSERT INTO ${tableName} (matchId, season) VALUES ? `;
-        // result = await pool.query(query, [rows], (err, res, meta) => {
-        //     if (err) {
-        //         logger.debug("Error loading data, reverting changes: ", err);
-        //         return 0;
-        //     } else {
-        //         logger.debug(res);
-        //         logger.debug(meta);
-        //         return res.affectedRows;
-        //     }
-        // });
+        let mergeQuery = `insert into ${tableName} (matchId, season) 
+                          select matchId, season  
+                          from matchId_temp 
+                          where matchId not in ( 
+                            select matchId from ${tableName} 
+                          )`;
+
+        logger.debug(mergeQuery);
+        let result = await pool.query(mergeQuery);
+
+        logger.debug("insert MatchId End ");
+
+        pool.end();
 
         return result;
     }
