@@ -10,7 +10,7 @@ class maria {
     constructor() {
         var POOL = null;
 
-        this.createTcpPool = async(config) => {
+        this.createTcpPool = async() => {
             return await mariadb.createPool(myConfig.db);
         };
 
@@ -42,6 +42,7 @@ class maria {
         this.getPool = () => {
             return POOL || this.createPoolAndEnsureSchema();
         };
+
     }
 }
 
