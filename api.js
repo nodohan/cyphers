@@ -1,4 +1,5 @@
 const request = require('request-promise-native');
+const myConfig = require('./config/config.js');
 
 class api {
     constructor() {
@@ -6,7 +7,7 @@ class api {
         var newSeasonStartDay = "2022-02-17 11:00";
         var seasonStartDay = "2021-07-15 12:00"; //이번시즌 시작일 
         //var seasonStartDay = '2021-08-05 10:00'; // 인틈 삭제일
-        const apiKey = 'G7eAqiszXGrpFFKWpKNxb6xZlmUyr8Rp';
+        const apiKey = myConfig.apiKey;
 
         var nickOpt = {
             uri: "https://api.neople.co.kr/cy/players",
