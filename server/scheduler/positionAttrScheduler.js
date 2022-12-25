@@ -89,7 +89,6 @@ module.exports = (scheduler, maria) => {
                     .end();
             }
         }
-
         logger.info("position collect success");
 
         if (res) {
@@ -189,9 +188,6 @@ module.exports = (scheduler, maria) => {
                     .end();
             }
         }
-
-        pool.end();
-
         logger.info("positionStats collect end");
         if (res) {
             return res

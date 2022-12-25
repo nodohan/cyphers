@@ -117,6 +117,7 @@ module.exports = (scheduler, maria) => {
         await pool.query("DELETE FROM matchId_temp");
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2022H' ) `;
         logger.debug(query);
+
         await pool.batch(query, rows.map(id => [id]), function(err) {
             console.log(err);
             logger.error(err);
@@ -134,8 +135,6 @@ module.exports = (scheduler, maria) => {
         let result = await pool.query(mergeQuery);
 
         logger.debug("insert MatchId End ");
-
-        pool.end();
 
         return result;
     }
