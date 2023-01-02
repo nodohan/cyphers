@@ -61,7 +61,7 @@ module.exports = (scheduler, maria) => {
                 .end();
         }
 
-        var todayYYYYMMDD = commonUtil.getYYYYMMDD();
+        //var todayYYYYMMDD = commonUtil.getYYYYMMDD();
         //insertRankSync(rankSampleJson.map(row => [todayYYYYMMDD, row.ranking, row.beforeRank, row.mNickname, row.ratingPoint]));
 
         return res
@@ -78,17 +78,17 @@ module.exports = (scheduler, maria) => {
          *   조건1) rank 테이블에 insert select 하는데 beforerank가 0이 아닌 항목만 join해서 playerId를 받아와서처리 
          *   조건2) beforerank가 0인경우 nickname 테이블에서 가져와서 처리
          */
-
         var todayStr = commonUtil.getYYYYMMDD(new Date(), false);
         var yesterdayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
 
         logger.debug("today string %s", todayStr);
 
         try {
-            let rankList = getRankList(); // 1.
+            let rankList = await getRankList(); // 1.
             await insertRankSync(rankList); // 2. 
             await insertRankBySync(todayStr, yesterdayStr); // 3.
         } catch (err) {
+            console.log(err);
             logger.error("insert rank fail");
             logger.error(err.message);
         }
@@ -109,15 +109,20 @@ module.exports = (scheduler, maria) => {
 
         let emtpyBefore = `
             INSERT INTO userRank
-            SELECT                 
-               STRAIGHT_JOIN '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2022H', sy.rp 
+            SELECT
+               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2022H', sy.rp 
             FROM (
                SELECT nm.playerId, nm.nickname FROM nickNames nm
                INNER JOIN ( 
                    SELECT playerId, MAX(checkingDate) checkingDate FROM nickNames GROUP BY playerId  
                ) lastNickname ON lastNickname.playerId = nm.playerId AND lastNickname.checkingDate = nm.checkingDate
             ) ln
-            INNER JOIN ( SELECT * FROM rank_sync WHERE ranknumberbefore = 0 ) sy  ON sy.nickname = ln.nickname`
+            INNER JOIN ( 
+                SELECT * FROM rank_sync 
+                WHERE nickname NOT IN (
+                    SELECT nickname FROM userRank WHERE rankDate = '${today}'
+                )
+            ) sy  ON sy.nickname = ln.nickname`
         logger.debug(emtpyBefore);
 
         let pool = await maria.getPool();
@@ -135,22 +140,31 @@ module.exports = (scheduler, maria) => {
     }
 
     async function getRankList() {
-        let run = true;
-        let rankList = [];
-        for (let i = 1; i <= 120; i++) {
-            //for (let i = 1; i <= 2; i++) {
-            if (run) {
-                let html = await getHtml(i);
-                html.data.rankingTopResponses.forEach(row => rankList.push([todayYYYYMMDD, row.ranking, row.beforeRank, row.mNickname, row.ratingPoint]));
-                if (rankList.length < 50) {
-                    logger.debug("랭킹 크롤링 끝");
-                    run = false;
-                }
-            }
-        }
+        let i = 1;
+        let html = await getHtml(i++);
+        const last = html.data.pagination.totalPage;
 
+        let rankList = makeArr(html);
         console.log(rankList);
+
+        while (++i <= last) {
+            html = await getHtml(i);
+            let arr = makeArr(html);
+            console.log(arr);
+            rankList.push(...arr);
+        }
         return rankList;
+    }
+
+    function makeArr(html) {
+        if (!html.data) {
+            return [];
+        }
+        let arr = [];
+        html.data.rankingTopResponses.forEach(row => {
+            arr.push([row.mNickname, row.ranking, row.beforeRank, row.ratingPoint])
+        });
+        return arr;
     }
 
     /***
@@ -177,18 +191,28 @@ module.exports = (scheduler, maria) => {
         logger.debug("insert ranking length = " + arrList.length);
 
         let pool = await maria.getPool();
-        pool.query("DELETE FROM rank_sync ");
+        let conn = await pool.getConnection();
 
-        let query = ` INSERT INTO rank_sync 
-                          (rankDate, rankNumber, rankNumberBefore, nickname, rp) 
-                      VALUES
-                          ( ?, ?, ?, ?, ? ) `;
+        try {
+            await conn.beginTransaction();
+            try {
+                conn.query("DELETE FROM rank_sync ");
 
-        pool.batch(query, arrList, function(err) {
-            console.log(err);
-            logger.error(err.message);
-        });
+                let query = ` INSERT INTO rank_sync 
+                                  (nickname, rankNumber, rankNumberBefore, rp) 
+                              VALUES
+                                  ( ?, ?, ?, ? ) `;
 
+                await conn.batch(query, arrList);
+                await conn.commit();
+            } catch (err) {
+                console.log(err);
+                logger.error(err.message);
+                await conn.rollback();
+            }
+        } catch (err2) {
+            logger.error(err2.message);
+        }
         logger.debug("insert ranking end");
 
     }
