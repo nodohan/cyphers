@@ -3,7 +3,7 @@ const myConfig = require('./config.js');
 
 // mariadb에서 bigNumberStrings가 정상적으로 안먹는것 같음. query option으로 줬는데도 안됨. 
 BigInt.prototype.toJSON = function() {
-    return this.toString()
+    return this.toLocaleString();
 }
 
 class maria {
