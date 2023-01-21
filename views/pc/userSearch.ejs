@@ -55,8 +55,10 @@
             }
 
             function setCheckbox(id, checked) {
-                checked = (checked == null || checked == 'true');
-                $("input:checkbox[id='" + id + "']").attr("checked", checked);
+                checked = (checked == null || checked == 'true' || checked == true);
+                const chkbox = $("input:checkbox[id='" + id + "']");
+                chkbox.attr("checked", checked);
+                chkbox.prop('checked', checked);
             }
 
             function checkVisibility(id) {
