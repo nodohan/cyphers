@@ -19,10 +19,12 @@
                 }
 
                 getCookie();
-                $("#partyShow").on("change", checkVisibility);
-                $("#positionShow").on("change", checkVisibility);
-                $("#mostCharShow").on("change", checkVisibility);
-                $("#recentShow").on("change", checkVisibility);
+                $("#partyShow").on("change", () => checkVisibility("partyShow"));
+                $("#positionShow").on("change", () => checkVisibility("positionShow"));
+                $("#mostCharShow").on("change", () => checkVisibility("mostCharShow"));
+                $("#recentShow").on("change", () => checkVisibility("recentShow"));
+                $("#tackShow").on("change", () => tackUse());
+                tackUse();
 
                 resetGameType();
                 $("input[name='gameType']").on("change", resetGameType);
@@ -57,23 +59,23 @@
                 $("input:checkbox[id='" + id + "']").attr("checked", checked);
             }
 
-            function checkVisibility() {
-                setVisible("playParty", $("#partyShow").is(":checked"));
-                setVisible("positionDiv", $("#positionShow").is(":checked"));
-                setVisible("mostCharDiv", $("#mostCharShow").is(":checked"));
-                setVisible("recentlyDiv", $("#recentShow").is(":checked"));
+            function checkVisibility(id) {
+                console.log(id);
+                const isShow = $("#" + id).is(":checked");
+                setVisible(id, isShow);
+                Cookies.set(id, isShow, {
+                    expires: 7
+                });
+            }
+
+                } else {
+                }
+                });
             }
 
             function setVisible(classId, isShow) {
                 let div = $("." + classId);
-                if (isShow) {
-                    div.show();
-                } else {
-                    div.hide();
-                }
-                Cookies.set(classId, isShow, {
-                    expires: 7
-                });
+                isShow ? div.show() : div.hide();
             }
 
             function setUserInfo(gameType, divName, data) {
