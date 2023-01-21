@@ -11,7 +11,6 @@
             var userData = {};
 
             $(document).ready(function() {
-
                 let nickname = '<%=searchNickname%>';
                 if (nickname != '') {
                     $("#nickNames").val(nickname);
@@ -46,6 +45,7 @@
                 setCheckbox('positionShow', Cookies.get('positionDiv'));
                 setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
                 setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+                setCheckbox('tackShow', Cookies.get('tackShow'));
 
                 let gameType = Cookies.get('gameType');
                 if (gameType == null || gameType == '') {
@@ -70,9 +70,101 @@
                 });
             }
 
+            const visibleTackDiv = () => {
+                if ($("#tackShow").is(":checked")) {
+                    $("#mainUserSearch").css("width", "1850px");
+                    $(".top").css("width", "1300px");
+                    $("#con3").show();
                 } else {
+                    $("#mainUserSearch").css("width", "1500px");
+                    $(".top").css("width", "1120px");
+                    $("#con3").hide();
                 }
+            }
+
+            const tackUse = () => {
+                const checked = $("#tackShow").is(":checked");
+                Cookies.set("tackShow", checked, {
+                    expires: 30
                 });
+
+                visibleTackDiv();
+
+                //1. 고정을 사용하는 경우
+                if (checked) {
+                    let userList = [];
+                    if (Cookies.get('tackUserList')) {
+                        userList = Cookies.get('tackUserList').split(",");
+                    }
+                    userList.forEach(divId => {
+                        const divItem = $("#" + divId);
+                        if (!moveToTack(divId)) {
+                            // 이미 존재하는 div인경우 가져와보고
+                            // 존재하지 않는 경우 검색
+                            let userNm = divId.split("_")[0];
+                            $("#nickNames3").val(userNm);
+                            search('nickNames3', 'con3_2');
+                        }
+                    });
+                } else {
+                    //2. 고정을 사용하지 않는 경우
+                    Cookies.set("tackUserList", '', {
+                        expires: 30
+                    });
+                    $("#con3_2").find(".infoDiv").each((index, item) => {
+                        $(item).find(".tackRemove").hide();
+                        $(item).find(".tack").show();
+                        $("#con1_2").prepend(item);
+                    });
+                }
+            };
+
+            const addTackUser = (divId) => {
+                updateTackCookie(divId, "add");
+                visibleTackDiv();
+                moveToTack(divId);
+            }
+
+            const removeTackUser = (divId) => {
+                updateTackCookie(divId, "remove");
+                $("#" + divId).remove();
+            }
+
+            const updateTackCookie = (divId, action) => {
+                let userList = [];
+                if (Cookies.get('tackUserList')) {
+                    userList = Cookies.get('tackUserList').split(",");
+                }
+
+                const isShow = action == "add";
+                const index = userList.indexOf(divId);
+                if (action == "add") {
+                    if (index < 0) {
+                        userList.push(divId);
+                    }
+                } else if (action == "remove") {
+                    if (index >= 0) {
+                        userList.splice(index, 1);
+                    }
+                }
+
+                setCheckbox("tackShow", isShow);
+                Cookies.set("tackShow", isShow, {
+                    expires: 30
+                });
+                Cookies.set("tackUserList", userList.join(","), {
+                    expires: 30
+                });
+            }
+
+            const moveToTack = (divId) => {
+                const divItem = $("#" + divId);
+                if (divItem.length != 0) {
+                    divItem.find(".tackRemove").show();
+                    divItem.find(".tack").hide();
+                    $("#con3").find("#con3_2").prepend(divItem);
+                }
+                return divItem.length != 0;
             }
 
             function setVisible(classId, isShow) {
@@ -87,6 +179,10 @@
                 }
 
                 var userDivId = getUserDivId(gameType, nickname);
+                if ($("#" + userDivId).length != 0) {
+                    return;
+                }
+
                 //기본 정보 
                 var clone = $("#template").clone();
                 clone.attr("id", userDivId);
@@ -95,7 +191,7 @@
                     clone.addClass("infoDivRed");
                 }
 
-                defaultInfo(gameType, clone, data);
+                defaultInfo(userDivId, gameType, clone, data, divName != "con3_2");
 
                 var rows = data.matches.rows;
                 //printChar(rows);
@@ -115,11 +211,9 @@
 
                 clone.show();
                 $("#" + divName).prepend(clone);
-                checkVisibility();
             }
 
-            function defaultInfo(gameType, clone, data) {
-                //console.log("data", data);
+            function defaultInfo(divId, gameType, clone, data, tackShow) {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
                 var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
                 let item = $(clone);
@@ -138,6 +232,16 @@
 
                 let tot = rating.winCount + rating.loseCount + rating.stopCount;
                 item.find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
+                item.find("#tack").on("click", () => addTackUser(divId));
+                item.find(".tackRemove").on("click", () => removeTackUser(divId));
+                if (tackShow) {
+                    item.find(".tack").show();
+                    item.find(".tackRemove").hide();
+                } else {
+                    item.find(".tack").hide();
+                    item.find(".tackRemove").show();
+                }
+
             }
 
             function drawSeasonRank(data) {
@@ -243,11 +347,10 @@
 
                     body.append(text);
                 });
-                
+
                 $("#modalDiv").append(clone);
                 clone.show();
             }
-
         </script>
 </head>
 
@@ -280,6 +383,10 @@
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="recentShow" checked>
                             <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="tackShow" checked>
+                            <label class="form-check-label" for="tackShow">고정탭 노출</label>
                         </div>
                     </div>
                 </div>
@@ -335,9 +442,16 @@
                         <span id="maxRP"></span>
                         <span id="beforeSeason"></span>
                     </div>
+                    <div class="tack">
+                        <i id="tack" style="margin-right: 2px;font-size: 18px;" class="fas"></i>
+                    </div>
+                    <div class="tackRemove" style="display:none">
+                        <i class='fas fa-window-close' style='font-size:18px;color:red'></i>
+                    </div>
+
                 </div>
                 <div class="width100p">
-                    
+
                     <div id="playGameDiv"></div>
 
                 </div>
