@@ -212,26 +212,29 @@
                 rows.forEach(row => {
                     let playInfo = row.playInfo;
                     let matchId = row.matchId;
-                    
-                    let text = "<tr>";
-                    text += `<td> ${row.date} </td>`;
-                    text += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-                    text += `<td><b>${winLoseKo(playInfo.result)}</b></td>`;
-                    text += "<td>" + getPositionIcon(row.position.name) + "</td>";
-                    text += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-                    text += "<td>" + playInfo.level + "</td>";
-                    text += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-                    text += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "k</td>";
-                    text += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "k</td>";
-                    text += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
 
-                    text += `<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' onClick='searchMatch("${matchId}", null, "char_")' ></td>`;
-                    text += "</tr>";
-                    text += "<tr>";
-                    text += "<td class='hiddenRow' colspan='12'>";
-                    text += `<div class='collapse char_${matchId}'></div>`;
-                    text += "</td>";
-                    text += "</tr>";
+                    let text =
+                        `<tr>
+                            <td> ${row.date} </td>
+                            <td>${getPartyInfoText(playInfo.partyInfo)}</td>
+                            <td><b>${winLoseKo(playInfo.result)}</b></td>
+                            <td>${getPositionIcon(row.position.name)}</td>
+                            <td>${drawCharicter(playInfo.characterId)}</td>
+                            <td>${playInfo.level}</td>
+                            <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
+                            <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}k</td>
+                            <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}k</td>
+                            <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
+                            <td>
+                                <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
+                                    onClick='searchMatch("${matchId}", null, "char_")' >
+                            </td>
+                            </tr>
+                            <tr>
+                            <td class='hiddenRow' colspan='12'>
+                            <div class='collapse char_${matchId}'></div>
+                            </td>
+                        </tr>`;
 
                     body.append(text);
                 });
