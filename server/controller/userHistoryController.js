@@ -1,6 +1,6 @@
 const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
-const api = require('../../api');
+const api = require('../util/api');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();

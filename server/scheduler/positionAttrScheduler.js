@@ -4,7 +4,7 @@ const myConfig = require('../../config/config.js');
 
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
-    const api = require('../../api');
+    const api = require('../util/api');
 
     //스케쥴러 또는 웹 url call
     //var time = "40 23 * * *";
