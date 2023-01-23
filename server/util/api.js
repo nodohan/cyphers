@@ -1,5 +1,5 @@
 const request = require('request-promise-native');
-const myConfig = require('./config/config.js');
+const myConfig = require('../../config/config.js');
 
 class api {
     constructor() {
