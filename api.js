@@ -3,108 +3,107 @@ const myConfig = require('./config/config.js');
 
 class api {
     constructor() {
+        this.newSeasonStartDay = "2022-02-17 11:00";
+        this.newSeasonDay = new Date(this.newSeasonStartDay);
 
-        var newSeasonStartDay = "2022-02-17 11:00";
-        var seasonStartDay = "2021-07-15 12:00"; //이번시즌 시작일 
-        //var seasonStartDay = '2021-08-05 10:00'; // 인틈 삭제일
-        const apiKey = myConfig.apiKey;
+        this.seasonStartDay = "2021-07-15 12:00"; //이번시즌 시작일 
+        //this.seasonStartDay = '2021-08-05 10:00'; // 인틈 삭제일
+        this.apiKey = myConfig.apiKey;
 
-        var nickOpt = {
+        this.nickOpt = {
             uri: "https://api.neople.co.kr/cy/players",
-            qs: { nickname: '', wordType: 'match', limit: 3, apikey: apiKey }
+            qs: { nickname: '', wordType: 'match', limit: 3, apikey: this.apiKey }
         };
 
-        var matchOpt = {
+        this.matchOpt = {
             uri: "https://api.neople.co.kr/cy/matches/",
-            qs: { apikey: apiKey }
-        };
-
-        this.call = async function(opt) {
-            return await request(opt);
-        };
-
-        this.getUserInfoCall = async function(userId, gameType, startDate, endDate) {
-            var matchInfo = {
-                url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
-                qs: { apikey: apiKey, gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
-            };
-            matchInfo.url = matchInfo.url.replace("#playerId#", userId);
-            return await this.getMatchInfo(matchInfo, null);
-        };
-
-        this.getMatchInfo = async function(matchInfo, mergeData) {
-            try {
-                var result = await this.call(matchInfo);
-                //logger.debug("뭐받음", result);
-                var resultJson = JSON.parse(result);
-                mergeData = mergeJson(mergeData, resultJson);
-                let next = resultJson.matches.next;
-                if (next != null) {
-                    //logger.debug("NEXT가 있어요 ", next);
-                    matchInfo.qs.next = next;
-                    await this.getMatchInfo(matchInfo, mergeData);
-                }
-
-                return mergeData;
-            } catch (err) {
-                return null;
-            }
-        };
-
-        this.getPlayerIdByName = async function(nickname) {
-            nickOpt.qs.nickname = nickname;
-            return await this.call(nickOpt).then(async(result) => {
-                let json = JSON.parse(result);
-                if (json.rows == null || json.rows.length == 0) {
-                    return null;
-                }
-                return json.rows[0].playerId;
-            });
-        }
-
-
-        let newSeasonDay = new Date(newSeasonStartDay);
-        this.searchUser = async function(nickname, gameType) {
-            nickOpt.qs.nickname = nickname;
-
-            let today = new Date();
-            if (today >= newSeasonDay) {
-                seasonStartDay = newSeasonStartDay;
-            }
-
-            return await this.call(nickOpt).then(async(result) => {
-                logger.debug("사용자 %s", result);
-                let json = JSON.parse(result);
-
-                if (json.rows == null || json.rows.length == 0) {
-                    return { 'resultCode': -1 };
-                }
-
-                let userId = json.rows[0].playerId;
-
-                var result = null;
-                let diffDay = dateDiff(seasonStartDay, new Date());
-                let startDate = seasonStartDay;
-                let endDate = getMinDay(addDays(startDate, 90), new Date());
-
-                while (diffDay >= 0) {
-                    result = mergeJson(result, await this.getUserInfoCall(userId, gameType, startDate, endDate));
-                    startDate = endDate;
-                    endDate = getMinDay(addDays(startDate, 90), new Date());
-                    diffDay = diffDay - 90;
-                }
-                return result;
-            });
-        };
-
-        this.searchMatchInfo = async function(matchId) {
-            matchOpt.uri += matchId;
-
-            return await this.call(matchOpt).then(async(result) => {
-                return JSON.parse(result);
-            });
+            qs: { apikey: this.apiKey }
         };
     }
+
+    async call(opt) {
+        return await request(opt);
+    };
+
+    async getUserInfoCall(userId, gameType, startDate, endDate) {
+        var matchInfo = {
+            url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
+            qs: { apikey: this.apiKey, gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
+        };
+        matchInfo.url = matchInfo.url.replace("#playerId#", userId);
+        return await this.getMatchInfo(matchInfo, null);
+    };
+
+    async getMatchInfo(matchInfo, mergeData) {
+        try {
+            var result = await this.call(matchInfo);
+            //logger.debug("뭐받음", result);
+            var resultJson = JSON.parse(result);
+            mergeData = mergeJson(mergeData, resultJson);
+            let next = resultJson.matches.next;
+            if (next != null) {
+                //logger.debug("NEXT가 있어요 ", next);
+                matchInfo.qs.next = next;
+                await this.getMatchInfo(matchInfo, mergeData);
+            }
+
+            return mergeData;
+        } catch (err) {
+            return null;
+        }
+    };
+
+    async getPlayerIdByName(nickname) {
+        nickOpt.qs.nickname = nickname;
+        return await this.call(nickOpt).then(async(result) => {
+            let json = JSON.parse(result);
+            if (json.rows == null || json.rows.length == 0) {
+                return null;
+            }
+            return json.rows[0].playerId;
+        });
+    }
+
+    async searchUser(nickname, gameType) {
+        this.nickOpt.qs.nickname = nickname;
+
+        let today = new Date();
+        if (today >= this.newSeasonDay) {
+            this.seasonStartDay = this.newSeasonStartDay;
+        }
+
+        return await this.call(this.nickOpt).then(async(result) => {
+            logger.debug("사용자 %s", result);
+            let json = JSON.parse(result);
+
+            if (json.rows == null || json.rows.length == 0) {
+                return { 'resultCode': -1 };
+            }
+
+            let userId = json.rows[0].playerId;
+
+            var result = null;
+            let diffDay = dateDiff(this.seasonStartDay, new Date());
+            let startDate = this.seasonStartDay;
+            let endDate = getMinDay(addDays(startDate, 90), new Date());
+
+            while (diffDay >= 0) {
+                result = mergeJson(result, await this.getUserInfoCall(userId, gameType, startDate, endDate));
+                startDate = endDate;
+                endDate = getMinDay(addDays(startDate, 90), new Date());
+                diffDay = diffDay - 90;
+            }
+            return result;
+        });
+    };
+
+    async searchMatchInfo(matchId) {
+        this.matchOpt.uri += matchId;
+
+        return await this.call(this.matchOpt).then(async(result) => {
+            return JSON.parse(result);
+        });
+    };
 }
 
 function mergeJson(mergeData, resultJson) {
