@@ -50,7 +50,7 @@ table td {
     float: left;
     margin-left: 20px;
     position: relative;
-    width: 550px;
+    width: 540px;
     min-height: 750px;
     border-radius: 7px;
 }
@@ -132,6 +132,16 @@ table td {
 
 #main {
     width: 1300px;
+    margin: 0px auto;
+}
+
+#mainV2 {
+    width: 100%;
+    margin: 0px auto;
+}
+
+#mainUserSearch {
+    width: 1850px;
     margin: 0px auto;
 }
 
@@ -343,11 +353,6 @@ table td {
     font-size: 1.75rem;
 }
 
-#mainV2 {
-    width: 100%;
-    margin: 0px auto;
-}
-
 .conUserV2 {
     margin-top: 10px;
     float: left;
@@ -477,6 +482,12 @@ table td {
     margin-left: 20px;
 }
 
+.leftBanner {
+    width: 160px;
+    float: left;
+    margin-top: 75px;
+}
+
 .nicknameLayer {
     padding-bottom: 4px !important;
     border-bottom: 1px solid gray;
@@ -598,4 +609,20 @@ table td {
 
 .vsTable tbody td:nth-child(2) {
     border-left: 2px solid #bfb1b3;
+}
+
+.tack {
+    float: right !important;
+    margin-right: 12px;
+    text-align: right;
+    vertical-align: middle;
+    margin-top: -22px;
+}
+
+.tackRemove {
+    float: right !important;
+    margin-right: 12px;
+    text-align: right;
+    vertical-align: middle;
+    margin-top: -22px;
 }
