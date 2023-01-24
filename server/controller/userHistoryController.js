@@ -136,7 +136,7 @@ module.exports = (scheduler, maria, acclogger) => {
                      WHERE nick.playerId = (  
                          SELECT distinct playerId
                          FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
-                         order by checkingDate des
+                         order by checkingDate desc
                     ) ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);
