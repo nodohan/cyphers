@@ -506,7 +506,7 @@ function clearDiv(divId) {
 
 function extractPlayType(rows, type) {
     var item = {};
-    var result = rows.filter(row => row.position.name == type);
+    var result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
     if (result.length == 0) {
         return null;
     }
@@ -712,7 +712,7 @@ function extractParty(rows) {
 
     let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
     partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
-    partyResult.solo.lose = (solo.length - partyResult.solo.win);
+    partyResult.solo.lose = solo.filter(row => row.playInfo.result == 'lose' && row.playInfo.playTypeName == '정상').length;
 
     let party = rows.filter(row => row.playInfo.partyInfo.length != 0);
     for (let i in party) {
