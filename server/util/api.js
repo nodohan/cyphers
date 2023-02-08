@@ -23,9 +23,8 @@ class api {
 
     async call(opt) {
         return await request(opt, function(error, response, body) {
-            //console.log('statusCode:', response && response.statusCode);
-            if (response.statusCode == 404) {
-                console.log("404 error : " + opt);
+            if (response.statusCode != 200) {
+                logger.debug("%d error : %s", response.statusCode, JSON.stringify(opt));
             }
             return body;
         });
