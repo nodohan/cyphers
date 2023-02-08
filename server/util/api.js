@@ -89,11 +89,11 @@ class api {
 
             var result = null;
             let diffDay = dateDiff(this.seasonStartDay, new Date());
-            let startDate = this.seasonStartDay;
+            let startDate = new Date(this.seasonStartDay);
             let endDate = getMinDay(addDays(startDate, 90), new Date());
 
             while (diffDay >= 0) {
-                result = mergeJson(result, await this.getUserInfoCall(userId, gameType, startDate, endDate));
+                result = mergeJson(result, await this.getUserInfoCall(userId, gameType, commonUtil.timestamp(startDate), commonUtil.timestamp(endDate)));
                 startDate = endDate;
                 endDate = getMinDay(addDays(startDate, 90), new Date());
                 diffDay = diffDay - 90;
@@ -136,7 +136,7 @@ function dateDiff(_date1, _date2) {
 }
 
 function addDays(date, days) {
-    var result = new Date(date);
+    var result = new Date(date.getTime());
     result.setDate(result.getDate() + days);
     return result;
 }
