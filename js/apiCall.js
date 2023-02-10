@@ -14,13 +14,12 @@ function getRandomInt(min, max) {
 }
 
 function search(inputId, divName, callback) {
-    var names = $("#" + inputId).val().split(" ");
+    let names = $("#" + inputId).val().split(" ");
     names.forEach(name => searchUser(inputId, divName, name, callback));
 }
 
 function searchWait(inputId, divName, callback) {
-    var names = $("#" + inputId).val().split(" ");
-
+    let names = $("#" + inputId).val().split(" ");
     for (idx in names) {
         let userName = names[idx];
         let time = idx * 50;
@@ -38,12 +37,12 @@ function searchVsUser(gameType, myName, partnerName) {
 }
 
 function analyzeGame(matches, myRow, pRow) {
-    var myArr = myRow.filter(row => matches.indexOf(row.matchId) > -1);
+    let myArr = myRow.filter(row => matches.indexOf(row.matchId) > -1);
 
-    var team = { win: 0, lose: 0, row: [] };
-    var enemy = { win: 0, lose: 0, row: [] };
+    let team = { win: 0, lose: 0, row: [] };
+    let enemy = { win: 0, lose: 0, row: [] };
 
-    for (var i in myArr) {
+    for (let i in myArr) {
         let myGame = myArr[i];
         let you = pRow.filter(row => row.matchId == myGame.matchId)[0];
 
@@ -85,15 +84,15 @@ function getPlayInfo(info) {
 }
 
 function getMatchGames(my, partner) {
-    var myMatches = getMatches(my.matches.rows);
-    var pMatches = getMatches(partner.matches.rows);
+    let myMatches = getMatches(my.matches.rows);
+    let pMatches = getMatches(partner.matches.rows);
 
     return withGames(myMatches, pMatches);
 }
 
 function withGames(match1, match2) {
-    var ret = [];
-    for (var i in match1) {
+    let ret = [];
+    for (let i in match1) {
         if (match2.indexOf(match1[i]) > -1) {
             ret.push(match1[i]);
         }
@@ -113,7 +112,7 @@ function searchUser(inputId, divName, nickName, callback) {
 
     let gameType = $("input[name='gameType']:checked").val();
     if (isDuplicate(gameType, nickName)) {
-        var input = $("#" + inputId);
+        let input = $("#" + inputId);
         input.val(input.val().replace(nickName, ''));
         return;
     }
@@ -153,7 +152,7 @@ function searchUser(inputId, divName, nickName, callback) {
 }
 
 function asyncUserInfo(gameType, nickName) {
-    var result;
+    let result;
     $.ajax({
         async: false,
         url: "/user/getUserInfo",
@@ -176,10 +175,10 @@ function asyncUserInfo(gameType, nickName) {
 }
 
 function drawPosition(div, rows) {
-    var tanker = extractPlayType(rows, "탱커");
-    var ad = extractPlayType(rows, "원거리딜러");
-    var melee = extractPlayType(rows, "근거리딜러");
-    var supp = extractPlayType(rows, "서포터");
+    let tanker = extractPlayType(rows, "탱커");
+    let ad = extractPlayType(rows, "원거리딜러");
+    let melee = extractPlayType(rows, "근거리딜러");
+    let supp = extractPlayType(rows, "서포터");
 
     //포지션별 승률
     appendPlayTypeInfo(div, tanker, "tanker"); //탱커
@@ -187,8 +186,6 @@ function drawPosition(div, rows) {
     appendPlayTypeInfo(div, ad, "ad");
     appendPlayTypeInfo(div, supp, "supp");
 }
-
-
 
 function isDuplicate(gameType, nickName) {
     return $("#" + getUserDivId(gameType, nickName)).length != 0;
@@ -204,8 +201,8 @@ function getUserDivId(gameType, nickname) {
 
 function searchMatch(matchId, callback, prefix = "m") {
     let divId = `${prefix}${matchId}`;
-    var div = $(`.${divId}`);
-    var divVs = $(`#${divId}Modal`);
+    let div = $(`.${divId}`);
+    let divVs = $(`#${divId}Modal`);
 
     if (div.text().length != 0 || divVs.text().length != 0) {
         if (typeof callback == 'function') {
@@ -214,7 +211,7 @@ function searchMatch(matchId, callback, prefix = "m") {
         return;
     }
 
-    var result;
+    let result;
     $.ajax({
         async: false,
         url: "/user/getMatchInfo",
@@ -233,17 +230,17 @@ function searchMatch(matchId, callback, prefix = "m") {
 
 function drawMatch(matchId, result, divId) {
     let prefixMatchId = divId;
-    var data;
+    let data;
     //console.log(data);
     if (typeof result == 'string') {
         data = JSON.parse(result);
     } else {
         data = result;
     }
-    var div = $("." + prefixMatchId);
+    let div = $("." + prefixMatchId);
     let table = $("#matchInfoTemplate").clone();
     table.attr("id", prefixMatchId + "div");
-    var tbody = table.find("tbody");
+    let tbody = table.find("tbody");
 
     let winTeam = getTeam(data.teams, "win", data.players);
     let loseTeam = getTeam(data.teams, "lose", data.players);
@@ -261,7 +258,7 @@ function drawMatch(matchId, result, divId) {
 
 function getTeam(team, result, players) {
     let findTeam = team[0].result == result ? team[0].players : team[1].players;
-    var resultTeam = players.filter(player => findTeam.includes(player.playerId));
+    let resultTeam = players.filter(player => findTeam.includes(player.playerId));
     resultTeam.forEach(item => item.playInfo.result = result);
 
     return resultTeam;
@@ -270,99 +267,111 @@ function getTeam(team, result, players) {
 function drawInGameList(data) {
     let matchId = data.matchId;
     let playInfo = data.playInfo;
-    let score = "";
-
+    let score =
+        `<tr>
+             <td>${isMobile ? data.date.substr(5) : data.date}</td>
+             <td>${getPartyInfoText(playInfo.partyInfo)}</td>
+             <td>${winLoseKo(playInfo.result)}</td>
+             <td>${getPositionIcon(data.position.name)}</td>
+             <td>${drawCharicter(playInfo.characterId)}</td>`;
     if (isMobile) {
-        score = "<tr>";
-        score += "<td>" + data.date.substr(5) + "</td>";
-        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
-        score += "</tr>"
-        score += "<tr>";
-        score += "<td class='hiddenRow' colspan='7'>";
-        score += "<div class='collapse m" + matchId + "'></div>";
-        score += "</td>";
-        score += "</tr>";
+        score +=
+            `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
+             <td>
+                <i class='fas fa-angle-double-down' data-toggle='collapse' 
+                    data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+             </td>
+        </tr>`;
     } else {
-        score = "<tr>";
-        score += "<td>" + data.date + "</td>";
-        score += "<td>" + getPartyInfoText(playInfo.partyInfo) + "</td>";
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-        score += "<td>" + playInfo.level + "</td>";
-        score += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
-        score += "<td class='kda'>" + ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0) + "%</td>";
-        score += "<td><i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.m" + matchId + "' onClick='searchMatch(\"" + matchId + "\")' ></td>";
-        score += "</tr>"
-        score += "<tr>";
-        score += "<td class='hiddenRow' colspan='12'>";
-        score += "<div class='collapse m" + matchId + "'></div>";
-        score += "</td>";
-        score += "</tr>";
+        score +=
+            `<td>${playInfo.level}</td>
+             <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
+             <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
+             <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+             <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
+             <td>
+                <i class='fas fa-angle-double-down' data-toggle='collapse' 
+                    data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+             </td>
+        </tr>`;
     }
+    score +=
+        `<tr>
+            <td class='hiddenRow' colspan='${isMobile ? 7 : 12}'>
+                <div class='collapse m${matchId}'></div>
+            </td>
+        </tr>`;
 
     return score;
 }
-
 
 function drawInGameDetail(matchId, data, trClass) {
     let playInfo = data.playInfo;
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
-    let score = "<tr class='" + trClass + "'>";
+    let score = `<tr class='${trClass}'>`;
     if (isMobile) {
-        let nicknameLink = `<a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>`
-
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += `<td> ${drawCharicter(playInfo.characterId, true)} </td> `;
-        score += `<td colspan='3'><div class='fontSmall'>&nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
-        score += `${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> ${nicknameLink} ${partyCnt} </div> </td>`;
-        score += `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}<br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K`;
-        score += `</td>`;
+        score +=
+            `<td>${winLoseKo(playInfo.result)}</td>
+             <td> ${drawCharicter(playInfo.characterId, true)} </td>
+             <td colspan='3'>
+                <div class='fontSmall'>
+                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
+                    <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
+                    ${partyCnt}
+                </div>
+             </td>
+             <td class='kda'>
+                ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
+                <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
+             </td>`;
     } else {
-        score += "<td>" + winLoseKo(playInfo.result) + "</td>";
-        score += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-        score += "<td>" + getPositionIcon(data.position.name) + "</td>";
-        score += "<td>" + getBuffIcon(data.position.attribute, buffDefaultUrl) + "</td>";
+        let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
+        let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
 
+        score += `<td>${winLoseKo(playInfo.result)}</td>";
+                  <td>${drawCharicter(playInfo.characterId)}</td>";
+                  <td>${getPositionIcon(data.position.name)}</td>";
+                  <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
         if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
-            score += `<td><a href='#' onClick='javascript:partyUserSearch(this);' >${data.nickname}</a>&nbsp;${partyCnt}</td>`;
+            score +=
+                ` <td>
+                     <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
+                     &nbsp;${partyCnt}
+                  </td>`;
         } else {
             score += `<td>${data.nickname} ${partyCnt}</td>`;
         }
-        score += "<td>" + playInfo.level + "</td>";
-        score += "<td class='kda'>" + (playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0) + "</td>"
-        score += "<td class='kda'>" + playInfo.killCount + "</td>";
-        score += "<td class='kda'>" + playInfo.deathCount + "</td>";
-        score += "<td class='kda'>" + playInfo.assistCount + "</td>";
-        score += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "K</td>";
-        score += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "K</td>";
-        score += "<td class='kda'>" + playInfo.getCoin.toLocaleString() + "</td>"; //먹은코인
-        let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
-        let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
-        score += `<td class='kda'>${useCoin}(${usePer}%)</td>`; //소모품코인
+        score +=
+            `<td>${playInfo.level}</td>
+             <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
+             <td class='kda'>${playInfo.killCount}</td>
+             <td class='kda'>${playInfo.deathCount}</td>
+             <td class='kda'>${playInfo.assistCount}</td>
+             <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
+             <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+             <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
+             <td class='kda'>${useCoin}(${usePer}%)</td>`;
     }
 
     let itemInfoId = `m${matchId}_${data.playerId}`;
     if (!isMobile) {
-        score += `<td><i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".${itemInfoId}" aria-expanded="true"></i></td>`;
+        score += `<td>
+                    <i class="fas fa-angle-double-down" data-toggle="collapse" 
+                        data-target=".${itemInfoId}" aria-expanded="true">
+                    </i>
+                </td>`;
     }
     score += "</tr>"
 
     //아이템 착용
     if (!isMobile) {
-        score += "<tr class='" + trClass + "'>";
-        score += `<td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>`;
-        score += `<div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>`;
-        score += "</td>";
-        score += "</tr>";
+        `<tr class='" + trClass + "'>
+            <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
+                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
+            </td>
+        </tr>`;
     }
 
     return score;
@@ -414,29 +423,31 @@ function getPositionIcon(type) {
 }
 
 function drawRecently(div, rows, userDivId) {
-    var headCount = Math.min(10, rows.length);
-    var bodyCount = Math.min(20, rows.length);
+    let headCount = Math.min(10, rows.length);
+    let bodyCount = Math.min(20, rows.length);
 
-    var title = $(div).find("#recentlyDivTitle");
+    let title = $(div).find("#recentlyDivTitle");
     if (!isMobile) {
         title.prepend("최근 게임:");
     }
 
-    var body = $("#templateModal").clone();
+    let body = $("#templateModal").clone();
     body.attr("id", userDivId + "Modal");
     body.attr("aria-labelledby", userDivId + "ModalLabel");
-    body.find("#templateModalLabel").attr("id", userDivId + "ModalLabel").empty().append("최근 " + bodyCount + "게임");
+    body.find("#templateModalLabel")
+        .attr("id", userDivId + "ModalLabel")
+        .empty()
+        .append("최근 " + bodyCount + "게임");
 
     rows.sort(sortDate);
-    var titleText = "";
-    for (var j = 0; j < bodyCount; j++) {
+    let titleText = "";
+    for (let j = 0; j < bodyCount; j++) {
         if (j < headCount) {
             titleText += winLoseKo(rows[j].playInfo.result);
         }
         body.find("tbody").append(drawInGameList(rows[j]));
     }
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
-
     title.append(titleText);
     title.append(`<a data-toggle='modal' data-target='#${userDivId}Modal'>&nbsp;${moreIcon}</a>`);
 
@@ -452,14 +463,13 @@ function drawOften(div, info, drawCharFunc, nickname) {
     let rowCount = isMobile ? 6 : 8;
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
         if (typeof drawCharFunc == 'function') {
             drawCharFunc(div.find("#mostCharDetailDiv"), info[i], nickname);
         } else {
             drawChar(div.find("#mostCharDetailDiv"), info[i], nickname);
         }
     }
-
     let emptyDivCount = rowCount - count;
     if (emptyDivCount > 0) {
         for (i = 0; i < emptyDivCount; i++) {
@@ -473,7 +483,7 @@ function drawEmptyChar(div) {
     if (isMobile) {
         height = 51;
     }
-    var card = $(div).find("#cardTemp").clone();
+    let card = $(div).find("#cardTemp").clone();
     card.attr("style", `height:${height}px;`);
 
     card.removeAttr("id");
@@ -483,9 +493,9 @@ function drawEmptyChar(div) {
 }
 
 function drawChar(div, charInfo) {
-    div.append(" <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' /> ");
-    var pov = (charInfo.win * 100) / charInfo.count;
-    div.append(pov.toFixed(0) + "% (" + charInfo.win + "승 " + charInfo.lose + "패)");
+    div.append(` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charInfo.characterId}' /> `);
+    let pov = (charInfo.win * 100) / charInfo.count;
+    div.append(`${pov.toFixed(0)}% (${charInfo.win}승 ${charInfo.lose}패)`);
 }
 
 function drawCharicter(charId, isLarge = false) {
@@ -493,9 +503,9 @@ function drawCharicter(charId, isLarge = false) {
 }
 
 function appendPlayTypeInfo(div, type, typeId) {
-    var infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
+    let infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
     if (type != null) {
-        infoStr = type.rate.toFixed(0) + "% <br><small class='text-muted'>" + type.rateInfo + "</small>";
+        infoStr = `${type.rate.toFixed(0)}% <br><small class='text-muted'>${type.rateInfo}</small>`;
     }
     $(div).find("#" + typeId + "Span").empty().append(infoStr);
 }
@@ -505,12 +515,12 @@ function clearDiv(divId) {
 }
 
 function extractPlayType(rows, type) {
-    var item = {};
-    var result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
+    let item = {};
+    let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
     if (result.length == 0) {
         return null;
     }
-    var win = result.filter(row => row.playInfo.result == "win");
+    let win = result.filter(row => row.playInfo.result == "win");
     item["rate"] = (win.length * 100 / result.length);
     item["rateInfo"] = win.length + "승 " + (result.length - win.length) + "패";
 
@@ -521,16 +531,16 @@ function drawCharInfo(div, info, title) {
     let gt = 1;
     let count = Math.min(gt, info.length);
     $(div).find("#mostCharTitleDiv").text(title + count + "(" + gt + "판 이상)");
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
         drawChar(div.find("#mostCharDetailDiv"), info[i]);
     }
 }
 
 function extractChar(rows, sort) {
-    var result = [];
-    var charNames = [];
+    let result = [];
+    let charNames = [];
     rows.forEach(row => {
-        var info = row.playInfo;
+        let info = row.playInfo;
 
         if (result[info.characterName] == null) {
             charNames.push(info.characterName);
@@ -551,7 +561,7 @@ function extractChar(rows, sort) {
     });
 
     // arr[name]으로 하니 index가 안잡혀서 sort가 안먹어 ㅠㅠ
-    var sorted = [];
+    let sorted = [];
     let charGtCnt = 2;
     charNames.forEach(name => {
         if (result[name].count >= charGtCnt) {
@@ -569,73 +579,80 @@ function drawPartyType(userDivId, clone, row) {
 
     let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
     let partyAllCnt = partyJson.all.win + partyJson.all.lose;
+    let appendHtml = "";
 
-    clone.append("솔플: " + soloAllCnt + "전 " + partyJson.solo.win + "승 " + partyJson.solo.lose + "패, ");
-    clone.append("파티: " + partyAllCnt + "전 " + partyJson.all.win + "승 " + partyJson.all.lose + "패 <br>    ");
+    appendHtml += `솔플: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
+                   파티: ${partyAllCnt}전 ${partyJson.all.win}승 ${partyJson.all.lose}패 <br>`;
 
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
     if (partyJson.two.all != 0) {
-        clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
-        clone.append(`<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `);
+        appendHtml +=
+            `2인: ${partyJson.two.win}승 ${partyJson.two.lose}패 
+            <a data-toggle='collapse' href='#two${userDivId}' role='button' 
+                aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `;
     }
-
     if (partyJson.three.all != 0) {
-        clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
-        clone.append(`<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `);
+        appendHtml +=
+            `3인: ${partyJson.three.win}승 ${partyJson.three.lose}패 
+            <a data-toggle='collapse' href='#three${userDivId}' role='button' 
+                aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `;
     }
-
     if (partyJson.five.all != 0) {
-        clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
-        clone.append(`<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `);
+        appendHtml +=
+            `5인: ${partyJson.five.win}승 ${partyJson.five.lose}패 
+            <a data-toggle='collapse' href='#five${userDivId}' role='button' 
+	            aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `;
     }
+    appendHtml += "<br><div class='row'>";
 
-    clone.append("<br><div class='row'>");
     if (partyJson.two.all != 0) {
         let partyResult = getEachPartyResult(partyJson.two.party);
-        clone.append("<div class='collapse multi-collapse' id='two" + userDivId + "'>" + partyResult + "</div>");
+        appendHtml += `<div class='collapse multi-collapse' id='two${userDivId}'>${partyResult}</div>`;
     }
     if (partyJson.three.all != 0) {
         let partyResult = getEachPartyResult(partyJson.three.party);
-        clone.append("<div class='collapse multi-collapse' id='three" + userDivId + "'>" + partyResult + "</div>");
+        appendHtml += `<div class='collapse multi-collapse' id='three${userDivId}'>${partyResult}</div>`;
     }
     if (partyJson.five.all != 0) {
         let partyResult = getEachPartyResult(partyJson.five.party);
-        clone.append("<div class='collapse multi-collapse' id='five" + userDivId + "'>" + partyResult + "</div>");
+        appendHtml += `<div class='collapse multi-collapse' id='five${userDivId}'>${partyResult}</div>`;
     }
-
-    clone.append("</div>");
+    appendHtml += "</div>";
+    clone.append(appendHtml);
 }
 
 function getEachPartyResult(arr) {
-    let resultTable = "<table class='table'> ";
-    resultTable += "<thead class='thead-dark'><tr>";
-    resultTable += "<th scope='col'>파티원</th>";
-    resultTable += "<th scope='col'>겜수</th>";
-    resultTable += "<th scope='col'>승</th>";
-    resultTable += "<th scope='col'>패</th>";
-    resultTable += "<th scope='col'>승률</th>";
-    resultTable += "</tr></thead><tbody>";
+    let resultTable =
+        `<table class='table'> 
+            <thead class='thead-dark'>
+            <tr>
+                <th scope='col'>파티원</th>
+                <th scope='col'>겜수</th>
+                <th scope='col'>승</th>
+                <th scope='col'>패</th>
+                <th scope='col'>승률</th>
+            </tr>
+            </thead>
+            <tbody>`;
 
     for (idx in arr) {
         let row = arr[idx];
         let total = row.win + row.lose;
         let rate = ((row.win * 100) / total).toFixed(0) + "%";
 
-        resultTable += "<tr>";
+        resultTable += `<tr>`;
         if (pageName != 'pcDetail') {
             resultTable += `<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />${row.name}</a></th>`;
         } else {
             resultTable += `<th scope='row'>${row.name}</th>`;
         }
-        resultTable += "<td>" + total + "</td>";
-        resultTable += "<td>" + row.win + "</td>";
-        resultTable += "<td>" + row.lose + "</td>";
-        resultTable += "<td>" + rate + "</td>";
-        resultTable += "</tr>";
-
+        resultTable += `<td>${total}</td>
+                        <td>${row.win}</td>
+                        <td>${row.lose}</td>
+                        <td>${rate}</td>
+                    </tr>`
     }
     resultTable += "</tbody></table>";
-
     return resultTable;
 }
 
@@ -739,7 +756,7 @@ function extractParty(rows) {
 
 function partySort(party, sort) {
     let keys = Object.keys(party);
-    var sorted = [];
+    let sorted = [];
     keys.forEach(key => {
         sorted.push(party[key]);
     });
@@ -809,10 +826,6 @@ function rateAsc(a, b) {
     }
     return 0;
 }
-
-
-
-
 
 function sortCase(a, b) {
     if (a.count < b.count) {
