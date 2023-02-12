@@ -53,8 +53,9 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     async function insertSearchNickname(username, ip) {
+        let pool = await maria.getPool();
+
         try {
-            pool = await maria.getPool();
             let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', '${ip}' ) `;
             logger.debug(query);
             await pool.query(query);
@@ -74,7 +75,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
         //logger.debug("쿼리: %s", query);
 
-        pool = await maria.getPool();
+        let pool = await maria.getPool();
         try {
             return await pool.query(query);
         } catch (err) {
@@ -124,7 +125,6 @@ module.exports = (scheduler, maria, acclogger) => {
                 .end();
             // [END_EXCLUDE]
         }
-
     });
 
     // 사용자 닉변 이력 조회 (닉네임 기준)
