@@ -59,8 +59,8 @@ class api {
     };
 
     async getPlayerIdByName(nickname) {
-        nickOpt.qs.nickname = nickname;
-        return await this.call(nickOpt).then(async(result) => {
+        this.nickOpt.qs.nickname = nickname;
+        return await this.call(this.nickOpt).then(async(result) => {
             let json = JSON.parse(result);
             if (json.rows == null || json.rows.length == 0) {
                 return null;
