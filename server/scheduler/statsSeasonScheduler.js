@@ -49,12 +49,12 @@ module.exports = (scheduler, maria, acclogger) => {
 
     function callInsertStats() {
         //SEASON
-        insertStats('2022-02-21', '2022-08-18', "2022H", "ATTACK", "DESC");
-        insertStats('2022-02-21', '2022-08-18', "2022H", "ATTACK", "ASC");
-        insertStats('2022-02-21', '2022-08-18', "2022H", "TANKER", "DESC");
-        insertStats('2022-02-21', '2022-08-18', "2022H", "TANKER", "ASC");
-        insertStats('2022-02-21', '2022-08-18', "2022H", "ALL", "DESC");
-        insertStats('2022-02-21', '2022-08-18', "2022H", "ALL", "ASC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "ATTACK", "DESC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "ATTACK", "ASC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "TANKER", "DESC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "TANKER", "ASC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "ALL", "DESC");
+        insertStats('2022-08-19', '2023-02-22', "2022U", "ALL", "ASC");
     }
 
     async function insertStats(startDate, endDate, statsType, combiType, order) {
@@ -73,7 +73,8 @@ module.exports = (scheduler, maria, acclogger) => {
                     , combi, total, win, lose, CEILING( win / total * 100 ) AS late 
                 FROM ( 
                     SELECT 
-                        ${combiTarget} AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  
+                        ${combiTarget} AS combi, COUNT(1) total
+                        , COUNT(IF(matchResult = '승', 1, NULL)) win  
                         , COUNT(IF(matchResult = '패', 1, NULL)) lose 
                         , GROUP_CONCAT(detail.matchId) matchIds 
                     FROM matchdetail detail 
@@ -97,6 +98,24 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     }
 
+    async function insertCountSeasonChar() {
+        let query = `
+            INSERT INTO 
+            SELECT 
+                '2022U' season, charName
+                , total, win, lose
+                , CEILING( win / total * 100 ) AS rate 
+            FROM ( 
+                SELECT 
+                    charName
+                    , COUNT(1) total
+                    , COUNT(IF(matchResult = '승', 1, NULL)) win
+                    , COUNT(IF(matchResult = '패', 1, NULL)) lose
+                FROM matches_char 
+                WHERE matchDate BETWEEN '2022-08-19' AND '2023-02-22'
+                GROUP BY charName
+            ) aa `;
+    }
 
     return app;
 }

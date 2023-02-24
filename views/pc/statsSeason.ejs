@@ -6,10 +6,15 @@
         <script src="/js/charImage.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
             var myChart;
+            var season = '<%=season%>';
 
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
-                $("#stats2022h").addClass("active");
+                if (season == '2022H') {
+                    $("#stats2022h").addClass("active");
+                } else {
+                    $("#stats2022u").addClass("active");
+                }
 
                 getStats("statsList", drawStatsList); // 조합통계 
                 getStats("charList", drawCharList); // 캐릭터 통계
@@ -97,7 +102,7 @@
                     async: true,
                     url: "/stats/" + url,
                     data: {
-                        'season': '2022H'
+                        'season': season
                     },
                     success: function(data) {
                         if (data.resultCode == -1) {

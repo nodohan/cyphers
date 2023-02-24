@@ -68,7 +68,11 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/stats2022h', function(req, res) {
-        res.render('./pc/stats2022h');
+        res.render('./pc/statsSeason', { 'season': '2022H' });
+    });
+
+    app.get('/stats2022u', function(req, res) {
+        res.render('./pc/statsSeason', { 'season': '2022U' });
     });
 
     app.get('/statsSeasonList', async function(req, res) {

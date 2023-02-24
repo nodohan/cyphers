@@ -9,7 +9,7 @@ module.exports = (scheduler, maria, acclogger) => {
     //스케쥴링은 사용하지 않음?
 
     //test  ( "/seasonOff/charCollect" )
-    app.get('/charCollect', function(req, res) {
+    app.get('/charCollect', async function(req, res) {
         let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
         const ip = req.headers['x-forwarded-for'] || req.ip;
 
@@ -27,13 +27,13 @@ module.exports = (scheduler, maria, acclogger) => {
 
         try {
             //데이터 많으니 분할처리
-            collectCharRate('2022-02-19', '2022-02-28');
-            collectCharRate('2022-03-01', '2022-03-31');
-            collectCharRate('2022-04-01', '2022-04-30');
-            collectCharRate('2022-05-01', '2022-05-31');
-            collectCharRate('2022-06-01', '2022-06-30');
-            collectCharRate('2022-07-01', '2022-07-31');
-            collectCharRate('2022-08-01', '2022-08-18');
+            await collectCharRate('2022-08-19', '2022-08-31');
+            await collectCharRate('2022-09-01', '2022-09-30');
+            await collectCharRate('2022-10-01', '2022-10-31');
+            await collectCharRate('2022-11-01', '2022-11-30');
+            await collectCharRate('2022-12-01', '2022-12-31');
+            await collectCharRate('2023-01-01', '2023-01-31');
+            await collectCharRate('2023-02-01', '2023-02-22');
         } catch (err) {
             res.send(err);
         }
@@ -52,15 +52,20 @@ module.exports = (scheduler, maria, acclogger) => {
         pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
+            const splitSize = 1;
 
             if (rows != null && rows.length > 0) {
                 let insertQuery = '';
-                let groupLength = rows.length / 1000; // 천단위로 끊음
+                let groupLength = rows.length / splitSize; // 천단위로 끊음
                 for (let j = 0; j < groupLength; j++) {
-                    insertQuery = getInsertQuery(rows.slice(j * 1000, (j + 1) * 1000));
-                    logger.debug(insertQuery);
-                    logger.debug("\n\n\n\n\n\n\n\n\n\n");
-                    await pool.query(insertQuery);
+                    try {
+                        insertQuery = getInsertQuery(rows.slice(j * splitSize, (j + 1) * splitSize));
+                        logger.debug(insertQuery);
+                        logger.debug("\n\n\n\n\n\n\n\n\n\n");
+                        await pool.query(insertQuery);
+                    } catch (err) {
+                        console.log(err);
+                    }
                 }
             }
 
@@ -68,6 +73,7 @@ module.exports = (scheduler, maria, acclogger) => {
             logger.error(err);
             throw err;
         }
+        return;
     }
 
     function getInsertQuery(rows) {
