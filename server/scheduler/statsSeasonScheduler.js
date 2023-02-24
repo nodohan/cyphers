@@ -65,24 +65,26 @@ module.exports = (scheduler, maria, acclogger) => {
             totalCount = 7;
         }
 
-        let query = ` INSERT INTO match_stats  \n`;
-        query += ` SELECT '${statsType}', 'A', '${combiType}' \n `;
-        query += ` , '${startDate}', '${endDate}', '${order}' \n `;
-        query += `       , combi, total, win, lose, CEILING( win / total * 100 ) AS late \n`;
-        query += ` FROM ( \n`;
-        query += ` 	SELECT \n`;
-        query += ` 		${combiTarget} AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  \n`;
-        query += ` 		, COUNT(IF(matchResult = '패', 1, NULL)) lose \n`;
-        query += ` 		, GROUP_CONCAT(detail.matchId) matchIds \n`;
-        query += ` 	FROM matchdetail detail \n`;
-        query += ` 	INNER JOIN (   \n`;
-        query += ` 		SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' \n`;
-        query += ` 	) matches ON matches.matchId = detail.matchId \n`;
-        query += ` 	GROUP BY ${combiTarget} \n`;
-        query += ` ) a   \n`;
-        query += ` WHERE total >= ${totalCount} \n`;
-        query += ` ORDER BY late ${order} \n`;
-        query += ` LIMIT 20 \n`;
+        let query =
+            `   INSERT INTO match_stats  
+                SELECT 
+                    '${statsType}', 'A', '${combiType}' 
+                    , '${startDate}', '${endDate}', '${order}' 
+                    , combi, total, win, lose, CEILING( win / total * 100 ) AS late 
+                FROM ( 
+                    SELECT 
+                        ${combiTarget} AS combi, COUNT(1) total, COUNT(IF(matchResult = '승', 1, NULL)) win  
+                        , COUNT(IF(matchResult = '패', 1, NULL)) lose 
+                        , GROUP_CONCAT(detail.matchId) matchIds 
+                    FROM matchdetail detail 
+                    INNER JOIN (   
+                        SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' 
+                    ) matches ON matches.matchId = detail.matchId 
+                    GROUP BY ${combiTarget} 
+                ) a   
+                WHERE total >= ${totalCount} 
+                ORDER BY late ${order} 
+                LIMIT 20 `;
 
         logger.debug(query);
 
