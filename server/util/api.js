@@ -33,7 +33,8 @@ class api {
     async getUserInfoCall(userId, gameType, startDate, endDate) {
         var matchInfo = {
             url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
-            qs: { apikey: this.apiKey, gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate }
+            qs: { apikey: this.apiKey, gameTypeId: gameType, limit: 100, startDate: startDate, endDate: endDate },
+            playerId: userId
         };
         matchInfo.url = matchInfo.url.replace("#playerId#", userId);
         return await this.getMatchInfo(matchInfo, null);
