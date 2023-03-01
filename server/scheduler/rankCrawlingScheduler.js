@@ -181,7 +181,7 @@ module.exports = (scheduler, maria) => {
     */
     const getHtml = async(page) => {
         try {
-            return await axios.get("http://cyphers.nexon.com/ranking/total/21?page=" + page);
+            return await axios.get("http://cyphers.nexon.com/ranking/total/22?page=" + page);
         } catch (error) {
             logger.error(error);
         }
