@@ -7,6 +7,18 @@
 
         <script type="text/javascript">
             var myChart;
+            const config = {
+                type: 'line',
+                options: {
+                    scales: {
+                        y: {
+                            reverse: true,
+                            min: 0,
+                            max: 100,
+                        },
+                    }
+                }
+            };
 
             $(document).ready(function() {
                 $("input[type='text']").css("width", "15%");
@@ -83,13 +95,13 @@
             }
 
             function drawRank(nickName, row, hide = false) {
+
                 let dataset = {
                     label: nickName,
                     data: row,
                     hidden: hide,
                     fill: false,
                     borderColor: 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')',
-                    tension: 0.1
                 }
                 addData(dataset);
             }
@@ -101,24 +113,15 @@
             }
 
             function addData(data) {
+                const max = config.options.scales.y.max;
+                let rowMax = Math.max(...data.data.map(arr => arr[1]));
+                if (max < rowMax) {
+                    config.options.scales.y.max = rowMax;
+                }
+
                 myChart.data.datasets.push(data);
                 myChart.update();
             }
-
-            const config = {
-                type: 'line',
-                //data: data,
-                options: {
-                    scales: {
-                        yAxis: {
-                            reverse: true,
-                            min: 0,
-                            //  max: 10000
-                        }
-                    }
-
-                }
-            };
         </script>
 </head>
 
