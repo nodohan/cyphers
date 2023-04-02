@@ -77,7 +77,6 @@ module.exports = (scheduler, maria, acclogger) => {
                                 ${combiTarget} AS combi, COUNT(1) total
                                 , COUNT(IF(matchResult = '승', 1, NULL)) win  
                                 , COUNT(IF(matchResult = '패', 1, NULL)) lose 
-                                , GROUP_CONCAT(detail.matchId) matchIds 
                             FROM matchdetail detail 
                             INNER JOIN (   
                                 SELECT matchId FROM matches 
