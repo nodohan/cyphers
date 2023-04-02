@@ -1,5 +1,6 @@
 const request = require('request-promise-native');
 const myConfig = require('../../config/config.js');
+const logger = require('../../config/winston.js');
 
 class api {
     constructor() {
@@ -23,9 +24,14 @@ class api {
 
     async call(opt) {
         return await request(opt, function(error, response, body) {
-            if (response.statusCode != 200) {
-                logger.debug("%d error : %s", response.statusCode, JSON.stringify(opt));
+            try {
+                if (response.statusCode != 200) {
+                    logger.debug("%d error : %s", response.statusCode, JSON.stringify(opt));
+                }
+            } catch (err) {
+                logger.error(err);
             }
+
             return body;
         });
     };
