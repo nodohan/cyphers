@@ -112,10 +112,12 @@ module.exports = (scheduler, maria) => {
             SELECT
                '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2023H', sy.rp 
             FROM (
-               SELECT nm.playerId, nm.nickname FROM nickNames nm
-               INNER JOIN ( 
+                SELECT distinct nm.nickname, nm.playerId FROM nickNames nm
+                INNER JOIN ( 
                    SELECT playerId, MAX(checkingDate) checkingDate FROM nickNames GROUP BY playerId  
-               ) lastNickname ON lastNickname.playerId = nm.playerId AND lastNickname.checkingDate = nm.checkingDate
+                ) lastNickname ON lastNickname.playerId = nm.playerId AND lastNickname.checkingDate = nm.checkingDate
+                GROUP BY nm.nickname 
+                ORDER BY MAX(lastNickname.checkingDate)
             ) ln
             INNER JOIN ( 
                 SELECT * FROM rank_sync 
