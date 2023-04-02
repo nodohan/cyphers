@@ -22,7 +22,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches" )
+    //test  ( "/matches/insertMatches?matchType=rating" )
     app.get('/insertMatches', function(req, res) {
         let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
         const ip = req.headers['x-forwarded-for'] || req.ip;
@@ -56,7 +56,8 @@ module.exports = (scheduler, maria) => {
         let pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
-            let result = await mergeMatchIds(matchType, rows, day);
+            let uniqMatchList = await getMatchListByAPI(matchType, rows, day);
+            let result = await insertMatchId(matchType, uniqMatchList);
             if (res) {
                 res.send(result > 0); // rows 를 보내주자
             }
@@ -71,7 +72,7 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    async function mergeMatchIds(matchType, rows, day = new Date()) {
+    async function getMatchListByAPI(matchType, rows, day = new Date()) {
         let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
         let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(day, -1)));
 
@@ -91,18 +92,20 @@ module.exports = (scheduler, maria) => {
         }
 
         //검색 결과 Merge 후 matchId insert 
-        Promise.all(promiseItems).then(resultItems => {
-            let matches = [];
-            for (idx in resultItems) {
-                if (resultItems[idx] != null) {
-                    var rows = resultItems[idx].matches.rows.map(row => row.matchId);
-                    Array.prototype.push.apply(matches, rows);
-                }
+        let resultItems = await Promise.all(promiseItems);
+        let matches = [];
+        for (idx in resultItems) {
+            if (resultItems[idx] != null) {
+                var rows = resultItems[idx].matches.rows.map(row => row.matchId);
+                Array.prototype.push.apply(matches, rows);
             }
-            const setMatch = new Set(matches);
-            const uniqMatch = [...setMatch];
-            return insertMatchId(matchType, uniqMatch);
-        });
+        }
+
+        const uniqMatchList = [...new Set(matches)];
+        for (idx in uniqMatchList) {
+            logger.debug(uniqMatchList[idx]);
+        }
+        return uniqMatchList;
     }
 
     async function searchUserInfoCall(playerId, yesterday, today, matchType) {
@@ -112,7 +115,6 @@ module.exports = (scheduler, maria) => {
     async function insertMatchId(matchType, rows) {
         let pool = await maria.getPool();
         let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
-        logger.debug(rows);
 
         await pool.query("DELETE FROM matchId_temp");
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2023H' ) `;
