@@ -8,6 +8,15 @@ class commonUtil {
         return ip;
     }
 
+    isMe(req){
+        const allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
+        const ip = this.getIp(req);
+        if (ip.indexOf(",") > 0) {
+            ip = ip.toString().split(",")[1].trim();
+        }
+        return allowIps.includes(ip);
+    }
+
     isMobile(req) {
         var ua = req.headers['user-agent'];
         if (ua == null) {
