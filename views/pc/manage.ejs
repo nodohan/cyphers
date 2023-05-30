@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <%- include  ("../layout/head") %>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                callLoadingBar(false);
+
+                $("#mainMenu").removeClass("active");
+                //$("#combi").addClass("active");
+            });
+
+            function callLoadingBar(show) {
+                if (show) {
+                    $("#loadingbutton").show();
+                    $("#searchButton").hide();
+                } else {
+                    $("#loadingbutton").hide();
+                    $("#searchButton").show();
+                }
+            }
+
+            function searchUser() {
+                callLoadingBar(true);
+
+                $.ajax({
+                    async: true,
+                    url: "/nodo/userNickname",
+                    data: {
+                        'nickname': $("#nickname").val(),
+                    },
+                    success: function(data) {
+                        callLoadingBar(false);
+                        $("#con1_2").empty();
+
+                        if (data.resultCode != 200) {
+                            alert(data.resultMsg);
+                            return;
+                        }
+                        drawNicknames(data.row);
+                    },
+                    error: function(data) {
+                        callLoadingBar(false);
+                        alert("해당 정보가 없습니다.");
+                        return;
+                    }
+                }).done(function() {
+                    callLoadingBar(false);
+                });
+            }
+
+            const drawNicknames = (list) => {
+                let divs = `<div><ul class="list-group">`;
+                list.forEach(row => {
+                    divs += `<li class="list-group-item"> 
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="check_${row.nickname}" checked>
+                                    <label class="form-check-label" for="check_${row.nickname}">
+                                        ${row.nickname}&nbsp;&nbsp;&nbsp;
+                                        /${row.checkingDate}&nbsp;&nbsp;&nbsp;
+                                        /${row.privateYn}
+                                    </label>
+                                </div>
+                            </li>
+                        `;
+                });
+                divs += '</li></div>';
+
+                $("#con1_2").empty().append(divs);
+            }
+
+        </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu") %>
+
+        <div id="main">
+
+            <div id="con1" class="con" >
+                <h3>사용자명 </h3>
+                <input type="text" class="longText" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); } "  />
+                <input type="button" id="searchButton" value="검색" onClick="searchUser();">
+                <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
+                <div id="con1_2" class="infoLayer" style="height:813px"> </div>
+            </div>
+        </div>
+
+</body>
+
+</html>

@@ -40,9 +40,12 @@ const positionSche = require('./server/scheduler/positionAttrScheduler')(schedul
 // 포지션 특성 - 컨트롤러
 const position = require('./server/controller/positionController')(scheduler, maria, loggerCatcher);
 
-
 //스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
 const stats = require('./server/controller/statsController')(scheduler, maria, loggerCatcher);
+
+// 비공개 처리용
+const nodo = require('./server/controller/nodoController')(null, maria, loggerCatcher);
+
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -65,6 +68,7 @@ app.use('/stats', stats);
 app.use('/seasonOff', seasonOff);
 app.use('/position', position);
 app.use('/positionSche', positionSche);
+app.use('/nodo', nodo);
 
 app.use(loggerCatcher());
 
