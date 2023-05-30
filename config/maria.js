@@ -43,6 +43,17 @@ class maria {
             return POOL || this.createPoolAndEnsureSchema();
         };
 
+        this.doQuery =  async(query) => {
+            let pool = await this.getPool();
+            let result = null;
+            try {
+                result = await pool.query(query);
+            } catch (err) {
+                result = -1;
+                logger.error(err.message);
+            }
+            return result;
+        }
     }
 }
 
