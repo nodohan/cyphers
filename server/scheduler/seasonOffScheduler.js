@@ -52,7 +52,7 @@ module.exports = (scheduler, maria, acclogger) => {
         pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
-            const splitSize = 1;
+            const splitSize = 1000;
 
             if (rows != null && rows.length > 0) {
                 let insertQuery = '';
