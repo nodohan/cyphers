@@ -1,11 +1,16 @@
-function ajaxCall(url, callback) {
+function ajaxCall(url, data, callback) {
     var result;
     $.ajax({
         async: true,
         url: url,
+        data: data,
         success: function(data) {
             if (typeof callback == 'function') {
-                callback(data);
+                if (data.resultCode == 200) {
+                    callback(data);
+                } else {
+                    alert(data.resultMsg);
+                }
             }
         },
         error: function(data) {
