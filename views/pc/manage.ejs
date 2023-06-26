@@ -51,6 +51,49 @@
                 });
             }
 
+            function searchUser() {
+                callLoadingBar(true);
+
+                $.ajax({
+                    async: true,
+                    url: "/nodo/userNickname",
+                    data: {
+                        'nickname': $("#nickname").val(),
+                    },
+                    success: function(data) {
+                        callLoadingBar(false);
+                        $("#con1_2").empty();
+
+                        if (data.resultCode != 200) {
+                            alert(data.resultMsg);
+                            return;
+                        }
+                        drawNicknames(data.row);
+                    },
+                    error: function(data) {
+                        callLoadingBar(false);
+                        alert("해당 정보가 없습니다.");
+                        return;
+                    }
+                }).done(function() {
+                    callLoadingBar(false);
+                });
+            }
+
+            function hideNickname() {
+                callLoadingBar(true);
+
+                const data = {
+                    "playerId": $("#playerId").val(),
+                    "reason": $("#reason").val(),
+                    "addNickname": $("#addNickname").val()
+                };
+
+                ajaxCall("/nodo/hiddenNickName", data, (result) => {
+                    $("#resultNicknames").empty().text(result.resultMsg);
+                });
+            }
+
             const drawNicknames = (list) => {
                 let divs = `<div><ul class="list-group">`;
                 list.forEach(row => {
@@ -70,7 +113,6 @@
 
                 $("#con1_2").empty().append(divs);
             }
-
         </script>
 </head>
 
@@ -79,10 +121,12 @@
 
         <div id="main">
 
-            <div id="con1" class="con" >
+            <div id="con1" class="con">
                 <h3>사용자명 </h3>
-                <input type="text" class="longText" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); } "  />
+                <input type="text" class="longText" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); } " />
                 <input type="button" id="searchButton" value="검색" onClick="searchUser();">
+                <input type="hidden" id="playerId">
+                <label id="resultNicknames"> </label>
                 <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Loading...
