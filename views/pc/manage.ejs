@@ -90,11 +90,14 @@
                 };
 
                 ajaxCall("/nodo/hiddenNickName", data, (result) => {
-                    $("#resultNicknames").empty().text(result.resultMsg);
+                    callLoadingBar(false);
+                    $("#resultNicknames").empty().text(result.resultMsg[0].nicks);
                 });
             }
 
             const drawNicknames = (list) => {
+                $("#playerId").val(list[0].playerId);
+
                 let divs = `<div><ul class="list-group">`;
                 list.forEach(row => {
                     divs += `<li class="list-group-item"> 
@@ -123,14 +126,45 @@
 
             <div id="con1" class="con">
                 <h3>사용자명 </h3>
-                <input type="text" class="longText" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); } " />
-                <input type="button" id="searchButton" value="검색" onClick="searchUser();">
-                <input type="hidden" id="playerId">
+                <div class="input-group mb-3">
+                    <input type="text" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); }" class="form-control" placeholder="닉네임" aria-label="닉네임" aria-describedby="searchButton">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="searchButton" onClick="searchUser();">검색</button>
+                    </div>
+                </div>
+
+                <div class="input-group input-group-default mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">playerId</span>
+                    </div>
+                    <input type="text" id="playerId" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <div class="input-group input-group-default mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">추가될닉네임</span>
+                    </div>
+                    <input type="text" id="addNickname" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <div class="input-group input-group-default mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">사유</span>
+                    </div>
+                    <input type="text" id="reason" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="registButton" onClick="hideNickname();">등록</button>
+                    </div>
+                </div>
+
                 <label id="resultNicknames"> </label>
                 <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="spinner-border spinner-border-default" role="status" aria-hidden="true"></span>
                     Loading...
-                  </button>
+                </button>
                 <div id="con1_2" class="infoLayer" style="height:813px"> </div>
             </div>
         </div>
