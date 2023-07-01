@@ -1,0 +1,51 @@
+class nodoRepository {
+    constructor(maria) {
+        this.maria = maria;
+    }
+
+    selectTodayHiddenNicknames = async(playerId) => {
+        const query = `        
+            SELECT 
+                GROUP_CONCAT(nickname ORDER BY checkingDate DESC ) nicks
+            FROM nickNames 
+            WHERE privateYn = 'Y'
+            AND privateDate = DATE_FORMAT(NOW(), '%y-%m-%d')
+            AND playerId = '${playerId}' `;
+        return await this.maria.doQuery(query);
+    }
+
+    updateNickNameHiddenFunc = async(playerId, todayYYYYMMDD) => {
+        const updateNickNameQuery = ` 
+            update nickNames
+            set
+                privateYn = 'Y'
+                , privateDate = '${todayYYYYMMDD}' 
+            where playerId = '${playerId}'
+            and privateYn = 'N' `;
+
+        return await this.maria.doQuery(updateNickNameQuery);
+    }
+
+    addNickNameFunc = async(playerId, addNickname, todayYYYYMMDD) => {
+        const addNickNameQuery = ` 
+            insert into nickNames 
+                (playerId, nickname , checkingDate, season, privateYn, privateDate)
+            values 
+                ('${playerId}', '${addNickname}', '${todayYYYYMMDD}', '2023H', 'Y', now()) `;
+
+        return await this.maria.doQuery(addNickNameQuery);
+    }
+
+    updatePlayerFunc = async(playerId, reason) => {
+        const updatePlayerQuery = ` 
+            update player
+            set
+                privateYn = 'Y'
+                , comment = '${reason}' 
+            where playerId = '${playerId}' `;
+
+        return await this.maria.doQuery(updatePlayerQuery);
+    }
+}
+
+module.exports = nodoRepository;

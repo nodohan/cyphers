@@ -1,9 +1,12 @@
 const commonUtil = require('../util/commonUtil');
 const api = require('../util/api');
+const repository = require('../repository/nodoRepository');
 
 // nodo
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
+    const nodoRepository = new repository(maria);
+
     app.use(acclogger());
 
     app.get('/manage', function(req, res) {
@@ -30,7 +33,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         // 1. 닉네임기준으로 유저 api조회 
-        // 2. 조회된 유저id를 기준으로 nickname db 조회
+        // 2. 저장된 닉네임 리스트 조회 by playerId
         let playerId;
 
         try {
@@ -54,8 +57,6 @@ module.exports = (scheduler, maria, acclogger) => {
         //logger.debug(query);
         res.send({ "resultCode": 200, "resultMsg": "성공", "row": result });
     });
-
-
 
     /**
      * @swagger
@@ -99,7 +100,7 @@ module.exports = (scheduler, maria, acclogger) => {
         const todayYYYYMMDD = commonUtil.getYYYYMMDD(new Date(), true);
 
         // 1. 닉네임 비공개 처리
-        let updateNickNameResult = await updateNickNameHiddenFunc(playerId, todayYYYYMMDD);
+        let updateNickNameResult = await nodoRepository.updateNickNameHiddenFunc(playerId, todayYYYYMMDD);
         if (updateNickNameResult == -1) {
             res.send({ "resultMsg": "처리실패", "resultCode": 500 });
             return;
@@ -107,7 +108,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
         // 2. 금일 또는 조만간 비공개할 닉네임
         if (addNickName != null) {
-            let addNicknameResult = await addNickNameFunc(playerId, addNickName, todayYYYYMMDD);
+            let addNicknameResult = await nodoRepository.addNickNameFunc(playerId, addNickName, todayYYYYMMDD);
             if (addNicknameResult == -1) {
                 snedResult(res, 500, "오류발생");
                 return;
@@ -115,61 +116,17 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         // 3. player 테이블 업데이트 
-        let updatePlayerResult = await updatePlayerFunc(playerId, reason);
+        let updatePlayerResult = await nodoRepository.updatePlayerFunc(playerId, reason);
         if (updatePlayerResult == -1) {
             snedResult(res, 500, "오류발생");
             return;
         }
 
-        let todayHiddenNickNames = await selectTodayHiddenNicknames(playerId, todayYYYYMMDD);
+        let todayHiddenNickNames = await nodoRepository.selectTodayHiddenNicknames(playerId, todayYYYYMMDD);
 
         res.send({ "resultCode": resultCode, "resultMsg": todayHiddenNickNames });
     });
 
-
-    selectTodayHiddenNicknames = async(playerId) => {
-        const query = `        
-            SELECT 
-                GROUP_CONCAT(nickname ORDER BY checkingDate DESC ) nicks
-            FROM nickNames 
-            WHERE privateYn = 'Y'
-            AND privateDate = DATE_FORMAT(NOW(), '%y-%m-%d')
-            AND playerId = '${playerId}' `;
-        return await maria.doQuery(query);
-    }
-
-    updateNickNameHiddenFunc = async(playerId, todayYYYYMMDD) => {
-        const updateNickNameQuery = ` 
-            update nickNames
-            set
-                privateYn = 'Y'
-                privateDate = '${todayYYYYMMDD}' 
-            where playerId = '${playerId}'
-            and privateYn = 'N' `;
-
-        return await maria.doQuery(updateNickNameQuery);
-    }
-
-    addNickNameFunc = async(playerId, addNickname, todayYYYYMMDD) => {
-        const addNickNameQuery = ` 
-            insert into nickNames 
-                (playerId, nickname , checkingDate, season, privateYn, privateDate)
-            values 
-                ('${playerId}', '${addNickname}', '${todayYYYYMMDD}', '2023H', 'Y', now()) `;
-
-        return await maria.doQuery(addNickNameQuery);
-    }
-
-    updatePlayerFunc = async(playerId, reason) => {
-        const updatePlayerQuery = ` 
-            update nickNames
-            set
-                privateYn = 'Y'
-                comment = '${reason}' 
-            where playerId = '${playerId}' `;
-
-        return await maria.doQuery(updatePlayerQuery);
-    }
 
     snedResult = (res, resultCode, resultMsg) => {
         res.send({ "resultCode": resultCode, "resultMsg": resultMsg });
