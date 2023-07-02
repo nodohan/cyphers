@@ -53,30 +53,14 @@
 
             function searchUser() {
                 callLoadingBar(true);
+                const data = {
+                    'nickname': $("#nickname").val()
+                };
 
-                $.ajax({
-                    async: true,
-                    url: "/nodo/userNickname",
-                    data: {
-                        'nickname': $("#nickname").val(),
-                    },
-                    success: function(data) {
-                        callLoadingBar(false);
-                        $("#con1_2").empty();
-
-                        if (data.resultCode != 200) {
-                            alert(data.resultMsg);
-                            return;
-                        }
-                        drawNicknames(data.row);
-                    },
-                    error: function(data) {
-                        callLoadingBar(false);
-                        alert("해당 정보가 없습니다.");
-                        return;
-                    }
-                }).done(function() {
+                ajaxCall("/nodo/userNickname", data, (result) => {
                     callLoadingBar(false);
+                    $("#con1_2").empty();
+                    drawNicknames(result.row);
                 });
             }
 
