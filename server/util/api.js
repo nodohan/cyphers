@@ -1,6 +1,8 @@
 const request = require('request-promise-native');
 const myConfig = require('../../config/config.js');
 const logger = require('../../config/winston.js');
+const commonUtil = require('../util/commonUtil');
+
 
 class api {
     constructor() {
