@@ -71,7 +71,9 @@ module.exports = (scheduler, maria, acclogger) => {
                         IF(privateYn = 'N', nickname, '비공개') nickname 
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
                      FROM nickNames nick 
-                     WHERE nick.playerId = '${playerId}' ORDER BY checkingDate DESC; `;
+                     WHERE nick.playerId = '${playerId}' 
+                     and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                     ORDER BY checkingDate DESC; `;
 
         //logger.debug("쿼리: %s", query);
 
@@ -137,7 +139,9 @@ module.exports = (scheduler, maria, acclogger) => {
                          SELECT distinct playerId
                          FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
                          order by checkingDate desc
-                    ) ORDER BY checkingDate DESC; `;
+                    ) 
+                    WHERE checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);
         //logger.debug("쿼리: %s", query);
