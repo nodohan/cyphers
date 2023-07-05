@@ -107,7 +107,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         // 2. 금일 또는 조만간 비공개할 닉네임
-        if (addNickName != null) {
+        if (addNickName != null && addNickName != '') {
             let addNicknameResult = await nodoRepository.addNickNameFunc(playerId, addNickName, todayYYYYMMDD);
             if (addNicknameResult == -1) {
                 snedResult(res, 500, "오류발생");
