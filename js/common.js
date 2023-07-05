@@ -24,7 +24,7 @@ function ajaxCall(url, data, callback) {
             return;
         }
     }).done(function() {
-        callLoadingBar(false);
+        //callLoadingBar(false);
     });
     return result;
 }
