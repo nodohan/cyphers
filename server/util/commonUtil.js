@@ -8,8 +8,9 @@ class commonUtil {
         return ip;
     }
 
-    isMe(req){
-        const allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
+    isMe(req) {
+        // 114.207.252.112  - 집 
+        const allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116", "114.207.252.112", "182.208.22.74"];
         const ip = this.getIp(req);
         if (ip.indexOf(",") > 0) {
             ip = ip.toString().split(",")[1].trim();
