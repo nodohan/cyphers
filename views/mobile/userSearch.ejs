@@ -3,10 +3,11 @@
 
 <head>
 
-    <%- include  ("../layout/head_mobile") %>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
+    <%- include ("../layout/head_mobile") %>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(document).ready(function () {
                 getCookie();
                 $("#partyShow").on("change", checkVisibility);
                 $("#positionShow").on("change", checkVisibility);
@@ -307,12 +308,14 @@
 </head>
 
 <body class="body">
-    <%- include  ("../layout/menu_mobile") %>
+    <%- include ("../layout/menu_mobile") %>
 
         <div id="main">
             <div class="top">
-                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
-                <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
+                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label
+                    for="gameType_rating"> 공식 </label>
+                <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal">
+                    일반 </label>
                 <!-- <b>닉변은 공식전 기준으로 2021년 7월17일 기준으로 수집된 <span class="red">공식전</span> 데이터를 기반으로 제공됩니다.  </b>-->
 
                 <div>
@@ -337,10 +340,15 @@
             </div>
             <div id="con1" class="con">
                 <div class="input-group">
-                    <input type="text" id="nickNames" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
+                    <input type="text" id="nickNames" class="form-control"
+                        placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..."
+                        aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
+                        onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
                     <div class="input-group-append" id="searchButton">
-                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
-                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');">초기화</button>
+                        <button class="btn btn-outline-secondary" type="button"
+                            onClick="search('nickNames', 'con1_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button"
+                            onClick="clearDiv('con1_2');">초기화</button>
                     </div>
                 </div>
 
@@ -381,7 +389,8 @@
                         </div>
                         <div>
                             <div class="card-body">
-                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -394,7 +403,8 @@
                         </div>
                         <div>
                             <div class="card-body">
-                                <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                                <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -462,8 +472,8 @@
                         <div class="modal-header">
                             <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+                                <span aria-hidden="true">×</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <table id="templateTable" class="table table-striped table-condensed">
