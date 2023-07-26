@@ -215,7 +215,7 @@
 
             function defaultInfo(divId, gameType, clone, data, tackShow) {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+                var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
                 let item = $(clone);
 
                 item.find("#nickNameDiv").append(data.nickname);
@@ -283,7 +283,7 @@
 
             function drawCharCardVer(div, charInfo, nickname) {
                 let modalId = `${nickname}_${charInfo.characterId}_modal`;
-                var pov = (charInfo.win * 100) / charInfo.count;
+                var pov = ((charInfo.win * 100) / charInfo.count) || 0;
                 let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
                 let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${charInfo.characterId}', null, '${nickname}');">${moreIcon}</a>`;
                 let cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${charInfo.win}승 ${charInfo.lose}패</small>`;

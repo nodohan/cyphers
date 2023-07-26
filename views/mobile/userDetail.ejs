@@ -36,7 +36,7 @@
 
             function drawLeftInfo(gameType, data) {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+                var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
 
                 //기본 정보
                 var clone = $("#template").clone();
@@ -74,7 +74,7 @@
                 card.removeAttr("id");
                 card.removeAttr("hidden");
                 card.find(".charImg").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                var pov = (charInfo.win * 100) / charInfo.count;
+                var pov = ((charInfo.win * 100) / charInfo.count);
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
                 div.append(card);
             }

@@ -92,7 +92,8 @@
 
             //기본정보
             function drawDefault(div, data, rating) {
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+                var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
+
                 $(div).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(div).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
                 $(div).find("#levelDiv").text(data.grade + "급");
@@ -300,7 +301,7 @@
                 card.removeAttr("id");
                 card.removeAttr("hidden");
                 card.find(".charImg").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                var pov = (charInfo.win * 100) / charInfo.count;
+                var pov = ((charInfo.win * 100) / charInfo.count) || 0;
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
                 div.append(card);
             }

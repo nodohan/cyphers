@@ -494,7 +494,7 @@ function drawEmptyChar(div) {
 
 function drawChar(div, charInfo) {
     div.append(` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charInfo.characterId}' /> `);
-    let pov = (charInfo.win * 100) / charInfo.count;
+    let pov = ((charInfo.win * 100) / charInfo.count) || 0;
     div.append(`${pov.toFixed(0)}% (${charInfo.win}승 ${charInfo.lose}패)`);
 }
 

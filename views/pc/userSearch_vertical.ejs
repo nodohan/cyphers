@@ -116,7 +116,7 @@
             function defaultInfo(gameType, clone, data) {
                 //console.log("data", data);
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
-                var pov = (rating.winCount * 100) / (rating.winCount + rating.loseCount);
+                var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
 
                 $(clone).find("#nickNameDiv").append(data.nickname);
                 $(clone).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
@@ -349,7 +349,7 @@
                 card.removeAttr("id");
                 card.removeAttr("hidden");
                 card.find("img").attr('src', `https://img-api.neople.co.kr/cy/characters/${charInfo.characterId}`);
-                var pov = (charInfo.win * 100) / charInfo.count;
+                var pov = ((charInfo.win * 100) / charInfo.count) || 0;
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승<br> " + charInfo.lose + "패</small>");
                 div.append(card);
             }
