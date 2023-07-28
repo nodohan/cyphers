@@ -12,7 +12,7 @@ function ajaxCall(url, data, callback) {
             }
 
             if (typeof callback == 'function') {
-                if (data.resultCode == 200) {
+                if (data.resultCode == 200 || data.rows) {
                     callback(data);
                 } else {
                     alert(data.resultMsg);
@@ -20,11 +20,15 @@ function ajaxCall(url, data, callback) {
             }
         },
         error: function(data) {
-            callLoadingBar(false);
+            if (typeof callLoadingBar == 'function') {
+                callLoadingBar(false);
+            }
             return;
         }
     }).done(function() {
-        //callLoadingBar(false);
+        if (typeof callLoadingBar == 'function') {
+            callLoadingBar(false);
+        }
     });
     return result;
 }

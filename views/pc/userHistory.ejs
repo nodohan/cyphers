@@ -23,7 +23,7 @@
                 $("#mainMenu").removeClass("active");
                 $("#userHistory").addClass("active");
 
-                ajaxCall("/history/getUserSearchRank", drawRank);
+                ajaxCall("/history/getUserSearchRank", null,drawRank);
             });
 
             function drawRank(data) {

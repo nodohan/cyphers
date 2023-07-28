@@ -13,7 +13,6 @@
                 $("#mainMenu").removeClass("active");
                 $("#positionAttr").addClass("active");
                 drawCharList();
-                //ajaxCall("/position/positionAttrList", drawStatsList);
             });
 
             // ## 캐릭터 통계?! ###
@@ -48,8 +47,7 @@
                 $(`#char${charNameId}Img`).removeClass("border-primary").addClass("border-danger clickImg");
                 $(`#char${charNameId}Img`).parent().addClass("charImgActive");
 
-                //data call
-                ajaxCall(`/position/positionAttrList?charName=${charName}`, drawStatsListChar);
+                ajaxCall(`/position/positionAttrList?charName=${charName}`, null, drawStatsListChar);
             }
 
             function drawStatsListChar(data) {

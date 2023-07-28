@@ -12,7 +12,7 @@
 
                 $("#mainMenu").removeClass("active");
                 $("#combi").addClass("active");
-                ajaxCall("/stats/statsList", drawStatsList);
+                ajaxCall("/stats/statsList", null, drawStatsList);
             });
 
             // ############## 금주의 BEST/WORST [시작] ##########################################
