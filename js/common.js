@@ -12,7 +12,7 @@ function ajaxCall(url, data, callback) {
             }
 
             if (typeof callback == 'function') {
-                if (data.resultCode == 200 || data.rows) {
+                if (data.resultCode == 200 || data.rows || data.row) {
                     callback(data);
                 } else {
                     alert(data.resultMsg);
