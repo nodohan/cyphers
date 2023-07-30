@@ -1,3 +1,4 @@
+// $(".drawIcon").each((idx, data) => { if(data.title){ console.log(data.title+ '+' + data.src) }});
 var positionAttr = new Map();
 positionAttr.set('불굴의 의지', '7475ab8f9eb2823b748a90c44869ca7d');
 positionAttr.set('제압', 'e7c8ed31a56ec846eda07cc15e5e3221');
@@ -39,3 +40,10 @@ positionAttr.set('낙법', '711f424bc5801dcdee09eee1863f5e0e');
 positionAttr.set('근육 손상', '0686248a80efdb6275fd89c372cf9766');
 positionAttr.set('회피 사격', '8463eb228149f8d8a81bafc3a05e5e1c');
 positionAttr.set('단결된 힘', '13ed96b8d10b40b488059271f940a37e');
+positionAttr.set('수플렉스', '745942f7f2c5030a057d3c9cc3a0ce04');
+positionAttr.set('마운트', '58cbc9f18d436570e76534c2f0d8dc12');
+positionAttr.set('전력 질주', '36a745722c42d46240a6a1f6fd08c026');
+positionAttr.set('각성', '185b317c000c2264421d41fa0f9e22fe');
+positionAttr.set('분노', '0bb123a270fedfafeac8f1c4a08ba4c3');
+positionAttr.set('사격술', '4f666ed126fdf3bdf7e62ac9f368faca');
+positionAttr.set('만반의 대비', '564819ce0fec822072b098ce9884fb9b');
