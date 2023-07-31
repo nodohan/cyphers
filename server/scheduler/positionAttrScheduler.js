@@ -176,8 +176,8 @@ module.exports = (scheduler, maria) => {
             //###### 데이터 집계 [END] ################
 
             // 시즌통계 top5 
-            await insertPositionAttrStats(pool, checkDate, 'all', 5);
-            await insertPositionAttrStats(pool, checkDate, 'W', 5);
+            await insertPositionAttrStats(pool, checkDate, 'all', 10);
+            await insertPositionAttrStats(pool, checkDate, 'W', 10);
 
         } catch (err) {
             logger.error(err.message);
@@ -236,14 +236,10 @@ module.exports = (scheduler, maria) => {
         let query = ` INSERT INTO position_attr_stats 
              SELECT checkDate, checktype, charName, POSITION, position_type, attr, total, win, lose, rate
              FROM (  
-             	SELECT result.*  
-             		, CASE  
-             		WHEN @GRP = POSITION  
-             			THEN @ROWNUM:=@ROWNUM + 1  
-             			ELSE @ROWNUM :=1  
-             		END AS ROWNUM 
-             		, (@GRP := POSITION) AS dummy 
-             	FROM position_attr_result result, (SELECT @ROWNUM:=0, @GRP:='') R  
+                SELECT 
+                    result.*
+                    , ROW_NUMBER() OVER(PARTITION BY charName, POSITION, position_type ORDER BY total DESC) AS total_rank
+                FROM position_attr_result result
              	WHERE checkDate = '${checkDate}'  
              	AND checkType = '${checkType}' 
              	ORDER BY charName, POSITION, position_type, total DESC 
