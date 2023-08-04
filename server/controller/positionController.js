@@ -15,7 +15,7 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/positionAttrList', async function(req, res) {
-        let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), 0), false);
+        let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
         let charName = req.query.charName;
 
         //let todayStr = '2022-09-29';
