@@ -58,35 +58,6 @@ module.exports = (scheduler, maria, acclogger) => {
         res.send({ "resultCode": 200, "resultMsg": "성공", "row": result });
     });
 
-    /**
-     * @swagger
-     * /nodo/hiddenNickName:
-     *   post:
-     *    summary: "특정 닉네임 숨김처리"
-     *    description: "요청 경로에 값을 담아 서버에 보낸다."
-     *    tags: [Users]
-     *    parameters:
-     *      - in: query
-     *        name: user_id
-     *        required: true
-     *        description: 유저 아이디
-     *        schema:
-     *          type: string
-     *    responses:
-     *      "200":
-     *        description: 오늘 비공개 처리에 성공한 사용자 닉네임 목록을 콤마(,)로 구분해서 리턴함
-     *        content:
-     *          application/json:
-     *            schema:
-     *              type: object
-     *              properties:
-     *                resultCode:
-     *                  type: int
-     *                  example: 200
-     *                resultMsg:
-     *                  type: object
-     *                  example : "마을주민1, 상아"
-     */
     app.get('/hiddenNickName', async function(req, res) {
         // 나님 체크 
         if (!commonUtil.isMe(req)) {
