@@ -20,7 +20,7 @@ module.exports = (scheduler, maria, acclogger) => {
         const ip = commonUtil.getIp(req);
         console.log(ip);
 
-        let playerId = await new api().getPlayerIdByName(req.query.nickname);
+        let playerId = await new api().getPlayerIdByName(userName);
         let userNicknameList;
         logger.debug("playerId get %s", playerId);
         if (playerId != null) {
@@ -75,11 +75,21 @@ module.exports = (scheduler, maria, acclogger) => {
                      and checkingDate >= (NOW() - INTERVAL 1 YEAR)
                      ORDER BY checkingDate DESC; `;
 
-        //logger.debug("쿼리: %s", query);
+        let query2 = `SELECT 
+                        IF(privateYn = 'N', nickname, '비공개') nickname 
+                        , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
+                    FROM nickNames nick 
+                    WHERE nick.playerId = '${playerId}' 
+                    ORDER BY checkingDate DESC 
+                    limit 1; `;
 
         let pool = await maria.getPool();
         try {
-            return await pool.query(query);
+            let result = await pool.query(query);
+            if(result.length != 0) {
+                return result;
+            } 
+            return await pool.query(query2);
         } catch (err) {
             logger.error(err);
         }
@@ -135,11 +145,11 @@ module.exports = (scheduler, maria, acclogger) => {
                         IF(privateYn = 'N', nickname, '비공개') nickname 
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
                      FROM nickNames nick 
-                     WHERE nick.playerId = (  
+                     WHERE nick.playerId = (
                          SELECT distinct playerId
                          FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
                          order by checkingDate desc
-                    ) 
+                    )
                     WHERE checkingDate >= (NOW() - INTERVAL 1 YEAR)
                     ORDER BY checkingDate DESC; `;
 
