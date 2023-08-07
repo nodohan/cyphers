@@ -150,7 +150,7 @@ module.exports = (scheduler, maria, acclogger) => {
                          FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
                          order by checkingDate desc
                     )
-                    WHERE checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    and checkingDate >= (NOW() - INTERVAL 1 YEAR)
                     ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);
