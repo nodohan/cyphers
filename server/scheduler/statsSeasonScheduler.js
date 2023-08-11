@@ -1,4 +1,3 @@
-const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
 const myConfig = require('../../config/config.js');
 

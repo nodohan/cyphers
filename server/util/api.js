@@ -2,7 +2,6 @@
 const axios = require("axios");
 const querystring = require("querystring");
 const myConfig = require("../../config/config.js");
-const logger = require("../../config/winston.js");
 const commonUtil = require("./commonUtil");
 
 class api {

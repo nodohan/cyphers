@@ -1,4 +1,3 @@
-const logger = require('../../config/winston');
 const commonUtil = require('../util/commonUtil');
 
 module.exports = (scheduler, maria, acclogger) => {

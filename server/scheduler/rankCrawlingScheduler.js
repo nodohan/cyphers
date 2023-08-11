@@ -1,4 +1,3 @@
-const logger = require('../../config/winston.js');
 const commonUtil = require('../util/commonUtil');
 //const rankSampleJson = require('../../sample/rankSample.js');
 

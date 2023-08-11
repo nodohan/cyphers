@@ -9,7 +9,6 @@ const scheduler = require('node-schedule');
 var maria = require('./config/maria');
 
 const loggerCatcher = require('./config/logger-catcher');
-const logger = require('./config/winston');
 
 //스케쥴러1. 매치리스트 
 const matchScehduler = require('./server/scheduler/matchListScheduler')(scheduler, maria, loggerCatcher);
