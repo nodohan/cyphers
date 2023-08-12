@@ -46,15 +46,7 @@ module.exports = (scheduler, maria, acclogger) => {
             console.log(err);
         }
 
-        const query =
-            ` SELECT 
-                playerId, nickname, checkingDate, season, privateYn, privateDate 
-              FROM nickNames 
-              where playerId = '${playerId}' 
-              order by checkingDate desc `;
-
-        const result = await maria.doQuery(query);
-        //logger.debug(query);
+        const result = await nodoRepository.selectUserHistory(playerId);
         res.send({ "resultCode": 200, "resultMsg": "성공", "row": result });
     });
 
