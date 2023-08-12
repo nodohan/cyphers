@@ -2,7 +2,7 @@ class nodoRepository {
     constructor(maria) {
         this.maria = maria;
     }
-
+    
     selectTodayHiddenNicknames = async(playerId) => {
         const query = `        
             SELECT 
@@ -10,8 +10,8 @@ class nodoRepository {
             FROM nickNames 
             WHERE privateYn = 'Y'
             AND privateDate = DATE_FORMAT(NOW(), '%y-%m-%d')
-            AND playerId = '${playerId}' `;
-        return await this.maria.doQuery(query);
+            AND playerId = ? `;
+        return await this.maria.doQuery(query, playerId);
     }
 
     selectUserHistory = async(playerId) => {
@@ -30,11 +30,11 @@ class nodoRepository {
             update nickNames
             set
                 privateYn = 'Y'
-                , privateDate = '${todayYYYYMMDD}' 
-            where playerId = '${playerId}'
+                , privateDate = ?
+            where playerId = ?
             and privateYn = 'N' `;
 
-        return await this.maria.doQuery(updateNickNameQuery);
+        return await this.maria.doQuery(updateNickNameQuery, [todayYYYYMMDD, playerId]);
     }
 
     addNickNameFunc = async(playerId, addNickname, todayYYYYMMDD) => {
@@ -42,9 +42,9 @@ class nodoRepository {
             insert into nickNames 
                 (playerId, nickname , checkingDate, season, privateYn, privateDate)
             values 
-                ('${playerId}', '${addNickname}', '${todayYYYYMMDD}', '2023H', 'Y', now()) `;
+                ( ? , ? , ?, '2023H', 'Y', now()) `;
 
-        return await this.maria.doQuery(addNickNameQuery);
+        return await this.maria.doQuery(addNickNameQuery, [ playerId, addNickname, todayYYYYMMDD]);
     }
 
     updatePlayerFunc = async(playerId, reason) => {
@@ -52,10 +52,10 @@ class nodoRepository {
             update player
             set
                 privateYn = 'Y'
-                , comment = '${reason}' 
-            where playerId = '${playerId}' `;
+                , comment = ? 
+            where playerId = ? `;
 
-        return await this.maria.doQuery(updatePlayerQuery);
+        return await this.maria.doQuery(updatePlayerQuery, [ reason, playerId ]);
     }
 }
 
