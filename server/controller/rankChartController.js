@@ -22,10 +22,9 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/userRank', async function(req, res) {
-        let userName = req.query.nickname;
-        let season = req.query.season;
+        const { nickname, season } = req.query;
 
-        let userRankList = await searchUserRank(userName, season);
+        let userRankList = await searchUserRank(nickname, season);
 
         if (userRankList == null) {
             res.send({ resultCode: -1 });

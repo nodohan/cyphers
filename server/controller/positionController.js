@@ -15,7 +15,6 @@ module.exports = (scheduler, maria, acclogger) => {
 
     app.get('/positionAttrList', async function(req, res) {
         let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
-        let charName = req.query.charName;
 
         //let todayStr = '2022-09-29';
         pool = await maria.getPool();
@@ -36,6 +35,7 @@ module.exports = (scheduler, maria, acclogger) => {
                 .send('오류 발생')
                 .end();
         }
+        const { charName = 'all' } = req.query;
     });
 
     return app;

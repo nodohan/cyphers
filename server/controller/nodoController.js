@@ -57,9 +57,7 @@ module.exports = (scheduler, maria, acclogger) => {
             return;
         }
         let resultCode = 200;
-        const playerId = req.query.playerId;
-        const reason = req.query.reason;
-        const addNickName = req.query.addNickname;
+        const {playerId, reason, addNickName  } = req.query;
         const todayYYYYMMDD = commonUtil.getYYYYMMDD(new Date(), true);
 
         // 1. 닉네임 비공개 처리
