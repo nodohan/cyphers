@@ -145,7 +145,7 @@ module.exports = (scheduler, maria) => {
     // ------- 2. 포지션 특성 통계 저장 [start] ------------------------
 
     async function positionStats(res) {
-        let seasonOpoenDay = '2022-08-22';
+        let seasonOpoenDay = '2023-02-23';
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
         let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
 
