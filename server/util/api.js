@@ -74,12 +74,12 @@ class api {
 
   async getPlayerIdByName(nickname) {
     this.nickOpt.qs.nickname = nickname;
-    return await this.call(this.nickOpt).then(async (json) => {
-      if (json.rows == null || json.rows.length == 0) {
-        return null;
-      }
-      return json.rows[0].playerId;
-    });
+    const json = await this.call(this.nickOpt);
+    console.log(json);
+    if (json == null || json.rows == null || json.rows.length == 0) {
+      return null;
+    }
+    return json.rows[0].playerId;
   }
 
   async searchUser(nickname, gameType) {
@@ -90,36 +90,36 @@ class api {
       this.seasonStartDay = this.newSeasonStartDay;
     }
 
-    return await this.call(this.nickOpt).then(async (json) => {
-      logger.debug("사용자 %s", json);
+    let json = await this.call(this.nickOpt);
+  
+    logger.debug("사용자 %s", json);
 
-      if (json.rows == null || json.rows.length == 0) {
-        return { resultCode: -1 };
-      }
+    if (json == null || json.rows == null || json.rows.length == 0) {
+      return { resultCode: -1 };
+    }
 
-      let userId = json.rows[0].playerId;
+    let userId = json.rows[0].playerId;
 
-      var result = null;
-      let diffDay = dateDiff(this.seasonStartDay, new Date());
-      let startDate = new Date(this.seasonStartDay);
-      let endDate = getMinDay(addDays(startDate, 90), new Date());
+    var result = null;
+    let diffDay = dateDiff(this.seasonStartDay, new Date());
+    let startDate = new Date(this.seasonStartDay);
+    let endDate = getMinDay(addDays(startDate, 90), new Date());
 
-      while (diffDay >= 0) {
-        result = mergeJson(
-          result,
-          await this.getUserInfoCall(
-            userId,
-            gameType,
-            commonUtil.timestamp(startDate),
-            commonUtil.timestamp(endDate)
-          )
-        );
-        startDate = endDate;
-        endDate = getMinDay(addDays(startDate, 90), new Date());
-        diffDay = diffDay - 90;
-      }
-      return result;
-    });
+    while (diffDay >= 0) {
+      result = mergeJson(
+        result,
+        await this.getUserInfoCall(
+          userId,
+          gameType,
+          commonUtil.timestamp(startDate),
+          commonUtil.timestamp(endDate)
+        )
+      );
+      startDate = endDate;
+      endDate = getMinDay(addDays(startDate, 90), new Date());
+      diffDay = diffDay - 90;
+    }
+    return result;
   }
 
   async searchMatchInfo(matchId) {
