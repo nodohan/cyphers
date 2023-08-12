@@ -1,8 +1,11 @@
 const commonUtil = require('../util/commonUtil');
+const repository = require('../repository/positionRepository');
 
+//특성 통계 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
+    const positionRepository = new repository(maria);
 
     app.get('/positionAttr', function(req, res) {
         // if (commonUtil.isMobile(req)) {
@@ -15,27 +18,9 @@ module.exports = (scheduler, maria, acclogger) => {
 
     app.get('/positionAttrList', async function(req, res) {
         let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
-
-        //let todayStr = '2022-09-29';
-        pool = await maria.getPool();
-
-        try {
-            let query = `select * 
-                        from position_attr_stats
-                        where checkDate = '${todayStr}'
-                        and charName = '${charName == null ? 'all' : charName}' `;
-            logger.debug(query);
-
-            let row = await pool.query(query);
-            res.send({ 'row': row });
-        } catch (err) {
-            logger.error(err);
-            return res
-                .status(500)
-                .send('오류 발생')
-                .end();
-        }
         const { charName = 'all' } = req.query;
+        const result = await positionRepository.selectPositionAttrList(todayStr, charName);
+        res.send({ 'rows': result });
     });
 
     return app;
