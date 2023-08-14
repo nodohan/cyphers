@@ -1,5 +1,6 @@
 body {
-    background-color: rgba(0, 123, 255, 0.2);
+    /* background-color: rgba(0, 123, 255, 0.2); */
+    background-color: #c7b299;
 }
 
 .mainIcon {
@@ -20,7 +21,8 @@ img {
     position: relative;
     width: 1120px;
     height: 52px;
-    background-color: white;
+    /* background-color: white; */
+    background-color: #fff4e7;    
     border-radius: 7px;
 }
 
@@ -53,11 +55,11 @@ table td {
 .con {
     margin-top: 10px;
     float: left;
-    margin-left: 20px;
+    margin-left: 15px;
     position: relative;
-    width: 540px;
+    /* width: 29%; */
+    width: 36%;
     min-height: 750px;
-    border-radius: 7px;
 }
 
 .bottom {
@@ -83,8 +85,8 @@ table td {
 
 .infoDiv {
     color: black;
-    background-color: #86b1ff80;
-    margin-top: 10px;
+    background-color: #d6e5ff;
+    margin-bottom: 10px;
     border-radius: 3px;
     border: groove;
 }
@@ -92,7 +94,7 @@ table td {
 .infoDivRed {
     color: black;
     background-color: #ffe5e5;
-    margin-top: 10px;
+    margin-bottom: 10px;
     border-radius: 3px;
     border: groove;
 }
@@ -100,10 +102,10 @@ table td {
 .infoLayer {
     overflow-y: auto;
     height: 670px;
-    border: dashed;
     margin-top: 10px;
-    background-color: white;
-    padding: 10px;
+    /* background-color: white; */
+    background-color: #fff4e7;
+    
 }
 
 .infoLayer div {
