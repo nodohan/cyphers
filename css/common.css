@@ -2,6 +2,11 @@ body {
     background-color: rgba(0, 123, 255, 0.2);
 }
 
+.mainIcon {
+    width: 115px;
+    height: 53px;   
+}
+
 img {
     width: 42px;
     height: 42px;
