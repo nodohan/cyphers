@@ -367,7 +367,7 @@ function drawInGameDetail(matchId, data, trClass) {
 
     //아이템 착용
     if (!isMobile) {
-        `<tr class='" + trClass + "'>
+        score += `<tr class='${trClass}'>
             <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
