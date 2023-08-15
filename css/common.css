@@ -62,6 +62,22 @@ table td {
     min-height: 750px;
 }
 
+
+/* 1920px 화면 해상도에 대한 스타일 */
+@media (min-width: 1600px) and (max-width: 1920px) {
+    .con {
+        height: 750px;
+    }
+  }
+  
+/* 2560px 화면 해상도에 대한 스타일 */
+@media (min-width: 1921px) and (max-width: 2560px) {
+    .con {
+        height: 1135px;
+    }
+}
+
+
 .bottom {
     margin-top: 20px;
     float: left;
@@ -101,7 +117,7 @@ table td {
 
 .infoLayer {
     overflow-y: auto;
-    height: 670px;
+    height: 88%;
     margin-top: 10px;
     /* background-color: white; */
     background-color: #fff4e7;
