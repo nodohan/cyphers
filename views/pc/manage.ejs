@@ -70,7 +70,7 @@
                 const data = {
                     "playerId": $("#playerId").val(),
                     "reason": $("#reason").val(),
-                    "addNickname": $("#addNickname").val()
+                    "addNickName": $("#addNickName").val()
                 };
 
                 ajaxCall("/nodo/hiddenNickName", data, (result) => {
@@ -128,7 +128,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">추가될닉네임</span>
                     </div>
-                    <input type="text" id="addNickname" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    <input type="text" id="addNickName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
 
                 <div class="input-group input-group-default mb-3">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
 
-                <label id="resultNicknames"> </label>
+                <label id="resultNicknames" style="background-color: white;"> </label>
                 <button id="loadingbutton" class="btn btn-primary" type="button" disabled>
                     <span class="spinner-border spinner-border-default" role="status" aria-hidden="true"></span>
                     Loading...
