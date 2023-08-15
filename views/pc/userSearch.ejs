@@ -363,10 +363,16 @@
             <!-- 카카오 광고 -->
             <%- include  ("../layout/leftBanner") %>
 
-                <div class="top" style="width:1300px">
-                    <div class="floatLeft width10p">
-                        <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
-                        <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
+                <div class="top" >
+                    <div class="floatLeft width15p">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
+                            <label class="custom-control-label" for="gameType_rating">공식</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
+                          <label class="custom-control-label" for="gameType_normal">일반</label>
+                        </div>
                     </div>
                     <div class="width85">
                         <div class="form-check form-check-inline">
