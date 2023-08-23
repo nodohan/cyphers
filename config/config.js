@@ -3,11 +3,11 @@
 
 module.exports = {
     db: {
-        host: 'localhost',
+        host: '114.207.113.136',
         port: 3306,
-        user: 'nodo',
-        password: 'P@ssw0rd',
-        database: 'cyphers'
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: 'cyphers',
         // [START cloud_sql_mysql_mysql_limit]
         // 'connectionLimit' is the maximum number of connections the pool is allowed to keep at once.
         connectionLimit: 10,
@@ -21,8 +21,7 @@ module.exports = {
         queueLimit: 0, // Default: 0
         // [END cloud_sql_mysql_mysql_timeout]
     },
-    schedulerRun: false
     schedulerRun: false,
-    apiKey: '어쩌고저쩌고'
+    apiKey:  process.env.API_KEY 
 
 }
