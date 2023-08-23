@@ -51,15 +51,15 @@
             }
 
             function drawStatsListChar(data) {
-                drawStatsListDiv("aTK", dataFilter(data.row, "all", "탱커", "DESC"));
-                drawStatsListDiv("aAT", dataFilter(data.row, "all", "근거리딜러", "DESC"));
-                drawStatsListDiv("aWD", dataFilter(data.row, "all", "원거리딜러", "DESC"));
-                drawStatsListDiv("aSP", dataFilter(data.row, "all", "서포터", "DESC"));
+                drawStatsListDiv("aTK", dataFilter(data.rows, "all", "탱커", "DESC"));
+                drawStatsListDiv("aAT", dataFilter(data.rows, "all", "근거리딜러", "DESC"));
+                drawStatsListDiv("aWD", dataFilter(data.rows, "all", "원거리딜러", "DESC"));
+                drawStatsListDiv("aSP", dataFilter(data.rows, "all", "서포터", "DESC"));
 
-                drawStatsListDiv("wTK", dataFilter(data.row, "W", "탱커", "DESC"));
-                drawStatsListDiv("wAT", dataFilter(data.row, "W", "근거리딜러", "DESC"));
-                drawStatsListDiv("wWD", dataFilter(data.row, "W", "원거리딜러", "DESC"));
-                drawStatsListDiv("wSP", dataFilter(data.row, "W", "서포터", "DESC"));
+                drawStatsListDiv("wTK", dataFilter(data.rows, "W", "탱커", "DESC"));
+                drawStatsListDiv("wAT", dataFilter(data.rows, "W", "근거리딜러", "DESC"));
+                drawStatsListDiv("wWD", dataFilter(data.rows, "W", "원거리딜러", "DESC"));
+                drawStatsListDiv("wSP", dataFilter(data.rows, "W", "서포터", "DESC"));
             }
 
 
