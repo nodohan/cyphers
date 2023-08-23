@@ -243,7 +243,7 @@ module.exports = (scheduler, maria) => {
              	AND checkType = '${checkType}' 
              	ORDER BY charName, POSITION, position_type, total DESC 
              ) aa 
-             WHERE aa.rownum <= ${rankNum} `;
+             WHERE aa.total_rank <= ${rankNum} `;
 
         logger.debug('insertPositionAttrStats %s', query);
 
