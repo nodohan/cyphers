@@ -538,10 +538,14 @@ table td {
 }
 
 .attrInfo {
-    width: 320px;
-    height: 433px;
+    width: 47%;
+    height: 770px;
     float: left;
     margin-right: 10px;
+}
+
+.charInput {
+    margin-left: 25px;
 }
 
 #widthMain {
@@ -563,8 +567,7 @@ table td {
 }
 
 .charList {
-    width: 550px;
-    height: 800px;
+    width: 550px;    
     overflow: auto;
 }
 

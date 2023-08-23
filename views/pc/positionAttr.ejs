@@ -31,7 +31,7 @@
             }
 
             function makeCharImgDiv(charName, url) {
-                return `<div class="charImgDiv rounded border-primary" onClick="javascript:charClick('${charName}')" >
+                return `<div class="charImgDiv rounded border-primary" data-charName='${charName}' onClick="javascript:charClick('${charName}')" >
                             <img id="char${charName.replace(/\s/g, '')}Img" src="${url}" 
                               class="rounded charImg" alt="${charName}" /> 
                               <span class='charNameSpan'>${charName}</span>
@@ -143,6 +143,16 @@
                     $("#searchButton").show();
                 }
             }
+
+            function findChar(event, input) {
+                const charNameText = input.value;
+                //charName                
+                 $("#charList").find(".charImgDiv").each((index, item) => {
+                    item.style.display = item.dataset.charname.includes(charNameText) ? 'block' : 'none';
+                    // item.style.visibility = item.dataset.charname.includes(charNameText) ? 'visible' : 'hidden';
+                 });
+            }
+
         </script>
 </head>
 
@@ -169,6 +179,10 @@
                             aria-controls="wTanker" aria-selected="true">이번시즌</a>
                         <a class="nav-link" id="wAttack-tab" data-toggle="tab" href="#wAttack" role="tab"
                             aria-controls="wAttack" aria-selected="false">금주</a>
+                        <div>
+                            <input type="text" class="charInput form-control" placeholder="캐릭터명" aria-label="캐릭터명" 
+                                aria-describedby="searchButton" onkeyup="findChar(event, this);">
+                        </div>
                     </div>
                 </nav>
                 <div id="charList" class="row charList">
