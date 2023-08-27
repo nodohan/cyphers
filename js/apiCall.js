@@ -581,39 +581,39 @@ function drawPartyType(userDivId, clone, row) {
     let partyAllCnt = partyJson.all.win + partyJson.all.lose;
     let appendHtml = "";
 
-    appendHtml += `솔플: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
-                   파티: ${partyAllCnt}전 ${partyJson.all.win}승 ${partyJson.all.lose}패 <br>`;
+    appendHtml += `<b class="red">솔플</b>: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
+                   <b class="red">파티</b>: ${partyAllCnt}전 ${partyJson.all.win}승 ${partyJson.all.lose}패 <br>`;
 
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-    if (partyJson.two.all != 0) {
+    if (partyJson.two.count != 0) {
         appendHtml +=
-            `2인: ${partyJson.two.win}승 ${partyJson.two.lose}패 
+            `&nbsp;[ <span class='blue'>2인</span>: ${partyJson.two.win}승 ${partyJson.two.lose}패 
             <a data-toggle='collapse' href='#two${userDivId}' role='button' 
-                aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `;
+                aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
     }
-    if (partyJson.three.all != 0) {
+    if (partyJson.three.count != 0) {
         appendHtml +=
-            `3인: ${partyJson.three.win}승 ${partyJson.three.lose}패 
+            `&nbsp;[ <span class='blue'>3인</span>: ${partyJson.three.win}승 ${partyJson.three.lose}패 
             <a data-toggle='collapse' href='#three${userDivId}' role='button' 
-                aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `;
+                aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
     }
-    if (partyJson.five.all != 0) {
+    if (partyJson.five.count != 0) {
         appendHtml +=
-            `5인: ${partyJson.five.win}승 ${partyJson.five.lose}패 
+            `&nbsp;[ <span class='blue'>5인</span>: ${partyJson.five.win}승 ${partyJson.five.lose}패 
             <a data-toggle='collapse' href='#five${userDivId}' role='button' 
-	            aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `;
+	            aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  ]`;
     }
     appendHtml += "<br><div class='row'>";
 
-    if (partyJson.two.all != 0) {
+    if (partyJson.two.count != 0) {
         let partyResult = getEachPartyResult(partyJson.two.party);
         appendHtml += `<div class='collapse multi-collapse' id='two${userDivId}'>${partyResult}</div>`;
     }
-    if (partyJson.three.all != 0) {
+    if (partyJson.three.count != 0) {
         let partyResult = getEachPartyResult(partyJson.three.party);
         appendHtml += `<div class='collapse multi-collapse' id='three${userDivId}'>${partyResult}</div>`;
     }
-    if (partyJson.five.all != 0) {
+    if (partyJson.five.count != 0) {
         let partyResult = getEachPartyResult(partyJson.five.party);
         appendHtml += `<div class='collapse multi-collapse' id='five${userDivId}'>${partyResult}</div>`;
     }
