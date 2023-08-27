@@ -174,17 +174,17 @@ function asyncUserInfo(gameType, nickName) {
     return result;
 }
 
-function drawPosition(div, rows) {
+function drawPosition(div, rows, nickname) {
     let tanker = extractPlayType(rows, "탱커");
     let ad = extractPlayType(rows, "원거리딜러");
     let melee = extractPlayType(rows, "근거리딜러");
     let supp = extractPlayType(rows, "서포터");
 
     //포지션별 승률
-    appendPlayTypeInfo(div, tanker, "tanker"); //탱커
-    appendPlayTypeInfo(div, melee, "melee");
-    appendPlayTypeInfo(div, ad, "ad");
-    appendPlayTypeInfo(div, supp, "supp");
+    appendPlayTypeInfo(div, tanker, "tanker", "탱커", nickname); //탱커
+    appendPlayTypeInfo(div, melee, "melee", "근거리딜러", nickname);
+    appendPlayTypeInfo(div, ad, "ad", "원거리딜러", nickname);
+    appendPlayTypeInfo(div, supp, "supp", "서포터", nickname);
 }
 
 function isDuplicate(gameType, nickName) {
@@ -502,10 +502,18 @@ function drawCharicter(charId, isLarge = false) {
     return ` <img class='drawIcon ${isLarge ? 'charImgLarge' : ''}' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
-function appendPlayTypeInfo(div, type, typeId) {
+function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
     let infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
+
     if (type != null) {
-        infoStr = `${type.rate.toFixed(0)}% <br><small class='text-muted'>${type.rateInfo}</small>`;
+        const gameType = $("input[name='gameType']:checked").val();
+        const modalId = `${nickname}_${gameType}_${typeId}_modal`;
+        const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+        const moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+
+        infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br>
+                  <small class='text-muted'>${type.rateInfo}</small>`;
+
     }
     $(div).find("#" + typeId + "Span").empty().append(infoStr);
 }
