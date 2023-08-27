@@ -232,7 +232,7 @@
                 item.find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
 
                 let tot = rating.winCount + rating.loseCount + rating.stopCount;
-                item.find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
+                item.find("#playGameDiv").append(`<b class="red">승률</b> : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
                 item.find("#tack").on("click", () => addTackUser(divId));
                 item.find(".tackRemove").on("click", () => removeTackUser(divId));
                 if (tackShow) {
