@@ -765,6 +765,73 @@ function partySort(party, sort) {
     return sorted;
 }
 
+function playGameList(findId, div, nickname, showType, modalId) {
+    modalId =  modalId || `${nickname}_${findId}_modal`;
+    if ($("#" + modalId).length != 0) {
+        return;
+    }
+
+    let rows = userData[nickname].matches.rows;
+    if (rows == null) {
+        return;
+    }
+
+    if(showType == 'position') {
+        rows = rows.filter(row => row.position.name == findId);
+    } else if (findId != 'all') {
+        rows = rows.filter(row => row.playInfo.characterId == findId);
+    }
+
+    let clone = $("#templateModal").clone();
+    const kindNmae = showType == 'position' ? findId : rows[0].playInfo.characterName;
+    let title = `${nickname}의 ${kindNmae} ${rows.length} 게임`;
+    clone.find("#templateModalLabel").empty().text(title);
+    clone.removeAttr("id");
+    clone.attr("id", modalId);
+
+    var body = clone.find("tbody");
+    rows.forEach(row => {
+        const { partyInfo, result, characterId, level
+                , killCount, deathCount, assistCount, attackPoint
+                , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
+        
+        let matchId = row.matchId;
+
+        let text =
+            `<tr>
+                <td> ${row.date} </td>
+                <td>${getPartyInfoText(partyInfo)}</td>
+                <td><b>${winLoseKo(result)}</b></td>
+                <td>${getPositionIcon(row.position.name)}</td>
+                <td>${drawCharicter(characterId)}</td>
+                <td>${level}</td>
+                <td class='kda'>${killCount}/${deathCount}/${assistCount}</td>
+                <td class='kda'>${(attackPoint / 1000).toFixed(0)}k</td>
+                <td class='kda'>${(damagePoint / 1000).toFixed(0)}k</td>
+                <td class='kda'>${((spendConsumablesCoin / getCoin) * 100).toFixed(0)}%</td>
+                <td>
+                    <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
+                        onClick='searchMatch("${matchId}", null, "char_")' >
+                </td>
+                </tr>
+                <tr>
+                <td class='hiddenRow' colspan='12'>
+                <div class='collapse char_${matchId}'></div>
+                </td>
+            </tr>`;
+
+        body.append(text);
+    });
+
+    if(div == null) {
+        div = $("#modalDiv");
+    }
+
+    div.append(clone);
+    clone.show();
+}
+
+
 function highScore(a, b) {
     let aRate = (a.win * 100) / (a.win + a.lose);
     let bRate = (b.win * 100) / (b.win + b.lose);
