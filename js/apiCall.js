@@ -314,9 +314,9 @@ function drawInGameDetail(matchId, data, trClass) {
         score +=
             `<td>${winLoseKo(playInfo.result)}</td>
              <td> ${drawCharicter(playInfo.characterId, true)} </td>
-             <td colspan='3'>
+             <td colspan='4'>
                 <div class='fontSmall'>
-                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
                     ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
                     <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
                     ${partyCnt}
