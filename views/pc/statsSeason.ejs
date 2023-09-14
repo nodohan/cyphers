@@ -7,13 +7,20 @@
         <script type="text/javascript">
             var myChart;
             var season = '<%=season%>';
+            var charCount = 75;
 
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
                 if (season == '2022H') {
                     $("#stats2022h").addClass("active");
-                } else {
+                } else if (season == '2022U') {
                     $("#stats2022u").addClass("active");
+                } else {
+                    $("#stats2023h").addClass("active");
+                }
+
+                if(season == '2023H'){
+                    charCount = 78;
                 }
 
                 getStats("statsList", drawStatsList); // 조합통계 
@@ -21,8 +28,8 @@
             });
 
             function drawCharList(data) {
-                drawStatsListDiv("charRate", data.row, '캐릭터', 75);
-                drawStatsListDiv("charTotal", data.row.sort(totalDesc), '캐릭터', 75);
+                drawStatsListDiv("charRate", data.row, '캐릭터', charCount);
+                drawStatsListDiv("charTotal", data.row.sort(totalDesc), '캐릭터', charCount);
             }
 
             function drawStatsList(data) {
@@ -169,7 +176,7 @@
                         <div id="charRate"></div>
                     </div>
 
-                    <div class="tab-pane fade show active" id="charTotalTab" role="tabpanel" aria-labelledby="tanker-tab">
+                    <div class="tab-pane fade show" id="charTotalTab" role="tabpanel" aria-labelledby="tanker-tab">
                         <div id="charTotal"></div>
                     </div>
                 </div>

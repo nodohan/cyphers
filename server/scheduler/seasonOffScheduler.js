@@ -26,13 +26,13 @@ module.exports = (scheduler, maria, acclogger) => {
 
         try {
             //데이터 많으니 분할처리
-            await collectCharRate('2022-08-19', '2022-08-31');
-            await collectCharRate('2022-09-01', '2022-09-30');
-            await collectCharRate('2022-10-01', '2022-10-31');
-            await collectCharRate('2022-11-01', '2022-11-30');
-            await collectCharRate('2022-12-01', '2022-12-31');
-            await collectCharRate('2023-01-01', '2023-01-31');
-            await collectCharRate('2023-02-01', '2023-02-22');
+            await collectCharRate('2023-02-23', '2023-03-22');
+            await collectCharRate('2023-03-23', '2023-04-22');
+            await collectCharRate('2023-04-23', '2023-05-22');
+            await collectCharRate('2023-05-23', '2023-06-22');
+            await collectCharRate('2023-06-23', '2023-07-22');
+            await collectCharRate('2023-07-23', '2023-08-22');
+            await collectCharRate('2023-08-23', '2023-09-13');
         } catch (err) {
             res.send(err);
         }
@@ -46,7 +46,6 @@ module.exports = (scheduler, maria, acclogger) => {
     async function collectCharRate(startDate, endDate) {
         let query = ` SELECT matchId, matchDate, matchResult, allJoin 
                       FROM matchdetail WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' `;
-        //let query =` SELECT matchId, matchDate, matchResult, allJoin FROM matchdetail WHERE matchDate = '2022-02-18' `;
 
         pool = await maria.getPool();
         try {

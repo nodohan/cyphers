@@ -9,13 +9,13 @@ module.exports = (scheduler, maria, acclogger) => {
     //스케쥴러 또는 웹 url call
     var time = "00 02 * * *"; // 리얼용
     //var time = "10 18 * * *"; // 테스트중
-    scheduler.scheduleJob(time, async function() {
-        if (myConfig.schedulerRun) {
-            logger.info("call match stats");
-            await callInsertStats();
-            logger.info("end match stats");
-        }
-    });
+    // scheduler.scheduleJob(time, async function() {
+    //     if (myConfig.schedulerRun) {
+    //         logger.info("call match stats");
+    //         await callInsertStats();
+    //         logger.info("end match stats");
+    //     }
+    // });
 
     //test  ( "/statsSeasonSche/insertStats" )
     app.get('/insertStats', function(req, res) {
@@ -46,22 +46,20 @@ module.exports = (scheduler, maria, acclogger) => {
             .end();
     });
 
-    function callInsertStats() {
+    async function callInsertStats() {
         //SEASON
-        insertStats('2022-08-19', '2023-02-22', "2022U", "ATTACK", "DESC");
-        insertStats('2022-08-19', '2023-02-22', "2022U", "ATTACK", "ASC");
-        insertStats('2022-08-19', '2023-02-22', "2022U", "TANKER", "DESC");
-        insertStats('2022-08-19', '2023-02-22', "2022U", "TANKER", "ASC");
-        insertStats('2022-08-19', '2023-02-22', "2022U", "ALL", "DESC");
-        insertStats('2022-08-19', '2023-02-22', "2022U", "ALL", "ASC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "ATTACK", "DESC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "ATTACK", "ASC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "TANKER", "DESC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "TANKER", "ASC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "ALL", "DESC");
+        await insertStats('2023-02-23', '2023-09-13', "2023H", "ALL", "ASC");
     }
 
     async function insertStats(startDate, endDate, statsType, combiType, order) {
-        let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";
-        let totalCount = combiType == "ATTACK" ? 150 : 300;
+        let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";        
         if (combiType == 'ALL') {
-            combiTarget = 'allJoin';
-            totalCount = 7;
+            combiTarget = 'allJoin';            
         }
 
         let query =
@@ -75,16 +73,16 @@ module.exports = (scheduler, maria, acclogger) => {
                         ${combiTarget} AS combi, COUNT(1) total
                         , COUNT(IF(matchResult = '승', 1, NULL)) win  
                         , COUNT(IF(matchResult = '패', 1, NULL)) lose 
-                        , GROUP_CONCAT(detail.matchId) matchIds 
+                        , ROW_NUMBER() OVER(ORDER BY total DESC) AS total_rank
                     FROM matchdetail detail 
                     INNER JOIN (   
                         SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' 
                     ) matches ON matches.matchId = detail.matchId 
                     GROUP BY ${combiTarget} 
                 ) a   
-                WHERE total >= ${totalCount} 
+                WHERE total_rank < 100
                 ORDER BY late ${order} 
-                LIMIT 20 `;
+                limit 20`;
 
         logger.debug(query);
 
@@ -93,15 +91,15 @@ module.exports = (scheduler, maria, acclogger) => {
             await pool.query(query);
         } catch (err) {
             logger.error(err);
-            throw err;
+            //throw err;
         }
     }
 
     async function insertCountSeasonChar() {
         let query = `
-            INSERT INTO 
+            INSERT INTO char_stats
             SELECT 
-                '2022U' season, charName
+                '2023H' season, charName
                 , total, win, lose
                 , CEILING( win / total * 100 ) AS rate 
             FROM ( 
@@ -111,7 +109,7 @@ module.exports = (scheduler, maria, acclogger) => {
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose
                 FROM matches_char 
-                WHERE matchDate BETWEEN '2022-08-19' AND '2023-02-22'
+                WHERE matchDate BETWEEN '2023-02-23' AND '2023-09-13'
                 GROUP BY charName
             ) aa `;
     }

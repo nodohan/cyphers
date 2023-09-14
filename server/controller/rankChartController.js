@@ -64,7 +64,7 @@ module.exports = (scheduler, maria, acclogger) => {
         return null;
     }
 
-    async function searchUserRank(userName, season = '2023H') {
+    async function searchUserRank(userName, season = '2023U') {
         let query = `SELECT 
 		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
                     FROM userRank 
