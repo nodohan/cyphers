@@ -60,6 +60,8 @@
                 ajaxCall("/nodo/userNickname", data, (result) => {
                     callLoadingBar(false);
                     $("#con1_2").empty();
+
+                    drawPlayer(result.player);
                     drawNicknames(result.row);
                 });
             }
@@ -79,6 +81,16 @@
                 });
             }
 
+            const drawPlayer = (player) => {
+                $("#playerDiv").empty().append(`
+                    <table>
+                        <tr> 
+                            <td>${player[0].privateYn} </td>
+                            <td>${player[0].comment} </td>
+                        </tr>
+                    </table>`);                
+            }
+
             const drawNicknames = (list) => {
                 $("#playerId").val(list[0].playerId);
 
@@ -90,7 +102,8 @@
                                     <label class="form-check-label" for="check_${row.nickname}">
                                         ${row.nickname}&nbsp;&nbsp;&nbsp;
                                         /${row.checkingDate}&nbsp;&nbsp;&nbsp;
-                                        /${row.privateYn}
+                                        /${row.privateYn}&nbsp;&nbsp;&nbsp;
+                                        /${row.privateDate}
                                     </label>
                                 </div>
                             </li>
@@ -108,7 +121,7 @@
 
         <div id="main">
 
-            <div id="con1" class="con">
+            <div id="con1" class="width45p">
                 <h3>사용자명 </h3>
                 <div class="input-group mb-3">
                     <input type="text" id="nickname" onKeyPress="if(event.keyCode == 13) { searchUser(); }" class="form-control" placeholder="닉네임" aria-label="닉네임" aria-describedby="searchButton">
@@ -122,6 +135,10 @@
                         <span class="input-group-text" id="inputGroup-sizing-default">playerId</span>
                     </div>
                     <input type="text" id="playerId" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <div id="playerDiv" class="input-group input-group-default mb-3">
+                    
                 </div>
 
                 <div class="input-group input-group-default mb-3">

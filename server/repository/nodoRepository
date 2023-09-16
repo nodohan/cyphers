@@ -14,6 +14,16 @@ class nodoRepository {
         return await this.maria.doQuery(query, playerId);
     }
 
+    selectUser = async(playerId) => {
+        const query =
+            ` SELECT 
+                playerId, privateYn, comment
+              FROM player 
+              where playerId = ? `;
+              
+        return await this.maria.doQuery(query, playerId);
+    }
+
     selectUserHistory = async(playerId) => {
         const query =
             ` SELECT 

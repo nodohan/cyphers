@@ -47,7 +47,8 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         const result = await nodoRepository.selectUserHistory(playerId);
-        res.send({ "resultCode": 200, "resultMsg": "성공", "row": result });
+        const palyerResult = await nodoRepository.selectUser(playerId);
+        res.send({ "resultCode": 200, "resultMsg": "성공", "row": result, "player" : palyerResult });
     });
 
     app.get('/hiddenNickName', async function(req, res) {
@@ -77,7 +78,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         // 3. player 테이블 업데이트 
-        let updatePlayerResult = await nodoRepository.updatePlayerFunc(playerId, reason);
+        let updatePlayerResult = await nodoRepository.updatePlayerFunc(playerId, todayYYYYMMDD + "/ "+ reason);
         if (updatePlayerResult == -1) {
             snedResult(res, 500, "오류발생");
             return;
