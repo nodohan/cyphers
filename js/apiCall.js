@@ -953,3 +953,22 @@ function userSeasonRank(playerId, callback) {
 
     });
 }
+
+
+function drawCharCardVer(div, charInfo, nickname) {
+    const {characterId, win, lose, count } = charInfo;
+
+    let modalId = `${nickname}_${characterId}_modal`;
+    var pov = ((win * 100) / count) || 0;
+    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+    let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;
+    let cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;
+
+    var card = $(div).find("#cardTemp").clone();
+    card.removeAttr("id");
+    card.removeAttr("hidden");
+    card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + characterId + "' />");
+    card.find(".card-text").empty().append(cardText);
+    div.append(card);
+}
+
