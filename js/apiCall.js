@@ -536,6 +536,10 @@ function extractPlayType(rows, type) {
 }
 
 function drawCharInfo(div, info, title) {
+    if(info.length == 0) {
+        return ;
+    }
+    
     let gt = 1;
     let count = Math.max(gt, info.length);
     $(div).find("#mostCharTitleDiv").text(title + count + "(" + gt + "판 이상)");
@@ -570,7 +574,7 @@ function extractChar(rows, sort) {
 
     // arr[name]으로 하니 index가 안잡혀서 sort가 안먹어 ㅠㅠ
     let sorted = [];
-    let charGtCnt = 2;
+    let charGtCnt = 1;
     charNames.forEach(name => {
         if (result[name].count >= charGtCnt) {
             sorted.push(result[name]);
