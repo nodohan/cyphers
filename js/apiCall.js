@@ -537,7 +537,7 @@ function extractPlayType(rows, type) {
 
 function drawCharInfo(div, info, title) {
     let gt = 1;
-    let count = Math.min(gt, info.length);
+    let count = Math.max(gt, info.length);
     $(div).find("#mostCharTitleDiv").text(title + count + "(" + gt + "판 이상)");
     for (let i = 0; i < count; i++) {
         drawChar(div.find("#mostCharDetailDiv"), info[i]);

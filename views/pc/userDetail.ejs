@@ -37,11 +37,11 @@
                 var div = $("#template2").clone();
 
                 var rows = data.matches.rows;
-                drawMapInfo(rows, div, 101, "#river"); //리버포트
-                drawMapInfo(rows, div, 102, "#metro"); //메트로폴리스
-                drawMapInfo(rows, div, 103, "#bristol"); //브리스톨
-                drawMapInfo(rows, div, 104, "#spring"); //스프링필드
-                drawMapInfo(rows, div, 105, "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
+                drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
+                drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
+                drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
+                drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
 
                 div.show();
 
@@ -49,7 +49,8 @@
             }
 
             function drawLeftInfo(gameType, data) {
-                var userDivId = getUserDivId(gameType, data.nickname);
+                const nickname = data.nickname;
+                var userDivId = getUserDivId(gameType, nickname);
 
                 //기본 정보
                 var clone = $("#template").clone();
@@ -63,15 +64,14 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션 별 승률
-                drawPosition(clone, rows, data.nickname);
+                drawPosition(clone, rows, nickname);
 
                 //최근 10게임
                 drawRecently(clone, rows);
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
-                //drawCharInfo(clone, userChar, "자주하는 TOP"); //"높은승률 TOP"
-                drawOften(clone, userChar, drawCharCardVer);
+                drawOften(clone, userChar, drawCharCardVer, nickname);
 
                 // 플레이 리스트 
                 playGameList("all", clone);
@@ -94,21 +94,7 @@
                 //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
-
-            function drawCharCardVer(div, charInfo) {
-                var pov = ((charInfo.win * 100) / charInfo.count) || 0;
-                let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-                let moreAlink = `<a href='#' onClick="javascript:playGameList('${charInfo.characterId}');">${moreIcon}</a>`;
-                let cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${charInfo.win}승 ${charInfo.lose}패</small>`;
-
-                var card = $(div).find("#cardTemp").clone();
-                card.removeAttr("id");
-                card.removeAttr("hidden");
-                card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                card.find(".card-text").empty().append(cardText);
-                div.append(card);
-            }
-
+            
             function playGameList(charId, div) {
                 let rows = playRow;
                 if (charId != 'all') {
@@ -189,13 +175,13 @@
             /***
              * 맵별 포지션 승률
              */
-            function drawMapInfo(rows, div, mapId, mapName) {
+            function drawMapInfo(rows, div, mapId, mapName, divId) {
                 //포지션별 승률
-                var mapRow = extractMap(rows, mapId);
-                drawPosition(div.find(mapName), mapRow);
+                var mapRow = extractMap(rows, mapName);
+                drawPosition(div.find(divId), mapRow);
 
                 var userMapChar = extractChar(mapRow, highScore);
-                drawCharInfo(div.find(mapName).find("#often"), userMapChar, "높은승률 TOP");
+                drawCharInfo(div.find(divId).find("#often"), userMapChar, "높은승률 TOP");
             }
         </script>
 </head>
