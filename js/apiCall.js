@@ -924,8 +924,8 @@ function sortDate(a, b) {
 }
 
 // 맵관련 
-function extractMap(data, mapId) {
-    return data.filter(row => row.map.mapId == mapId);
+function extractMap(data, mapName) {
+    return data.filter(row => row.map.name == mapName);
 }
 
 function historyNickname(playerId, callback) {
