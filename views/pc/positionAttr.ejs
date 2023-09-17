@@ -149,7 +149,6 @@
                 //charName                
                  $("#charList").find(".charImgDiv").each((index, item) => {
                     item.style.display = item.dataset.charname.includes(charNameText) ? 'block' : 'none';
-                    // item.style.visibility = item.dataset.charname.includes(charNameText) ? 'visible' : 'hidden';
                  });
             }
 
@@ -159,19 +158,7 @@
 <body class="body">
     <%- include ("../layout/menu") %>
 
-        <div id="widthMain">
-
-            <!-- <div class="">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="options" id="option1" checked> 전체 포지션별
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="option2"> 캐릭별
-                    </label>
-                </div>
-            </div> -->
-
+        <div id="widthMain" style="width:1550px">
             <div id="con2" class="con" style="width:550px">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -191,10 +178,9 @@
 
             </div>
 
-            <div id="con1" class="con" style="width:650px;margin-left:0px">
+            <div id="con1" class="con" style="width:850px;margin-left:0px">
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="widthTab tab-pane fade show active" id="wTanker" role="tabpanel"
-                        aria-labelledby="wTanker-tab">
+                    <div class="widthTab tab-pane fade show active" style="width:100%" id="wTanker" role="tabpanel" aria-labelledby="wTanker-tab">
                         <div id="aTK" class="attrInfo">
                             <h5>탱커</h5>
                         </div>
@@ -208,7 +194,7 @@
                             <h5>서포터</h5>
                         </div>
                     </div>
-                    <div class="widthTab tab-pane fade" id="wAttack" role="tabpanel" aria-labelledby="wAttack-tab">
+                    <div class="widthTab tab-pane fade" id="wAttack" style="width:100%" role="tabpanel" aria-labelledby="wAttack-tab">
                         <div id="wTK" class="attrInfo">
                             <h5>탱커</h5>
                         </div>
