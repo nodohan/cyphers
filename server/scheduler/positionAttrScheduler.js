@@ -105,21 +105,32 @@ module.exports = (scheduler, maria) => {
 
         let insertQuery = `insert into position_attr 
                                 (matchId, charName, matchDate, matchResult, map
-                                , position, attrs, attr_lv1, attr_lv2, attr_lv3 ) 
+                                , position, attrs, attr_lv1, attr_lv2, attr_lv3, attr_lv4 ) 
                             values ( ?, ?, ?, ?, ?
-                                   , ?, ?, ?, ?, ? )`;
+                                   , ?, ?, ?, ?, ?
+                                   , ? )`;
 
         let arr = [];
+        var tmpAttr = null;
         row.players.forEach((player) => {
-            let charName = player.playInfo.characterName;
-            let matchResult = winTeam.includes(player.playerId) ? "win" : "lose";
-            let position = player.position.name;
-            let attr1 = player.position.attribute[0].name;
+            //특성이 4개로 확장됨에 따른 수정진행하는데, 2,3특은 같은거라 ㅡㅡ;;
+            const charName = player.playInfo.characterName;
+            const matchResult = winTeam.includes(player.playerId) ? "win" : "lose";
+            const position = player.position.name;                        
+            const attr1 = player.position.attribute[0].name;
             let attr2 = player.position.attribute[1].name;
             let attr3 = player.position.attribute[2].name;
-            let attrs = attr1 + "/" + attr2 + "/" + attr3;
+            const attr4 = player.position.attribute[3].name;
 
-            arr.push([matchId, charName, matchDate, matchResult, map, position, attrs, attr1, attr2, attr3]);
+            //어쨋거나 한방향으로 소팅
+            if(attr2 < attr3) {
+                tmpAttr = attr2;
+                attr2 = attr3;
+                attr3 = tmpAttr;
+            }
+
+            const attrs = attr1 + "/" + attr2 + "/" + attr3 + "/" + attr4;
+            arr.push([matchId, charName, matchDate, matchResult, map, position, attrs, attr1, attr2, attr3, attr4]);
         });
 
         logger.debug(arr);
@@ -139,15 +150,19 @@ module.exports = (scheduler, maria) => {
         }
     }
 
+    
+
+
     // ------- 1. 포지션 특성 사용 이력 저장 [end] ------------------------
 
 
     // ------- 2. 포지션 특성 통계 저장 [start] ------------------------
 
     async function positionStats(res) {
-        let seasonOpoenDay = '2023-02-23';
+        let seasonOpoenDay = '2023-09-14';
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
-        let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
+        //let checkDate = '2023-09-17'
+        let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -4), false);
 
         logger.info("positionStats collect start");
 
