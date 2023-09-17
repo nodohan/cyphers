@@ -76,3 +76,4 @@ charMap.set('클레어', '5f4c4d6d332766ca219af12dfc41f124');
 charMap.set('숙희', '659845488dc117f43d41a64837ae9990');
 charMap.set('그레타', 'b605a378d8cfe96f133034db0810014c');
 charMap.set('바스티안', '3dab248071530f76ea748d54c188b48b');
+charMap.set('재뉴어리', '9a5046067b471e154d7f0d5dfb75a523');
