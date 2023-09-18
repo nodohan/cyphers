@@ -106,15 +106,15 @@
 
                 var body = clone.find("tbody");
                 rows.forEach(row => {
-                    let playInfo = row.playInfo;
+                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint} = row.playInfo;
                     //date
                     let text = "<tr>";
                     text += `<td> ${row.date} </td>`;
-                    text += `<td><b>${winLoseKo(playInfo.result)}</b></td>`;
-                    text += "<td>" + drawCharicter(playInfo.characterId) + "</td>";
-                    text += "<td class='kda'>" + playInfo.killCount + "/" + playInfo.deathCount + "/" + playInfo.assistCount + "</td>"
-                    text += "<td class='kda'>" + (playInfo.attackPoint / 1000).toFixed(0) + "k</td>";
-                    text += "<td class='kda'>" + (playInfo.damagePoint / 1000).toFixed(0) + "k</td>";
+                    text += `<td><b>${winLoseKo(result)}</b></td>`;
+                    text += "<td>" + drawCharicter(characterId) + "</td>";
+                    text += "<td class='kda'>" + killCount + "/" + deathCount + "/" + assistCount + "</td>"
+                    text += "<td class='kda'>" + (attackPoint / 1000).toFixed(0) + "k</td>";
+                    text += "<td class='kda'>" + (damagePoint / 1000).toFixed(0) + "k</td>";
 
                     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
                     text += `<td onClick='searchMatch("${row.matchId}", drawMatchDetailPopup )'>${moreIcon}</td> `
