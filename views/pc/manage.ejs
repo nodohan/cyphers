@@ -61,7 +61,9 @@
                     callLoadingBar(false);
                     $("#con1_2").empty();
 
-                    drawPlayer(result.player);
+                    if(result.player.length != 0) {
+                        drawPlayer(result.player);
+                    }
                     drawNicknames(result.row);
                 });
             }
