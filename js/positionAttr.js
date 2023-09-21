@@ -51,3 +51,4 @@ positionAttr.set('협동 공격', 'd934a4115b67e67b4cbcbc892e172c1b');
 positionAttr.set('호위','28bcd65c129d0c93789c321e0a183bd8');
 positionAttr.set('활성화 지원', '100b40cb5e22f5613492234dcba705c6');
 positionAttr.set('회피 사격', '8463eb228149f8d8a81bafc3a05e5e1c');
+positionAttr.set('임기응변', '3db41122c3584a1e385f1a83d8d062c0');
