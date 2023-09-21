@@ -133,9 +133,7 @@ module.exports = (scheduler, maria) => {
             logger.error(err.message);
         }
     }
-
-    
-
+   
 
     // ------- 1. 포지션 특성 사용 이력 저장 [end] ------------------------
 
@@ -156,15 +154,8 @@ module.exports = (scheduler, maria) => {
             //###### 데이터 집계 [START] ################
             //시즌 - 집계
             await insertPositionAttrResult(pool, checkDate, 'all', 'all', seasonOpoenDay, false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv1', seasonOpoenDay, false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv2', seasonOpoenDay, false);
-            //await insertPositionAttrResult(pool, checkDate, 'all', 'lv3', seasonOpoenDay, false);
-
             //주간 - 집계
             await insertPositionAttrResult(pool, checkDate, 'W', 'all', aWeekAgo, false);
-            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv1', aWeekAgo, false);
-            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv2', aWeekAgo, false);
-            //await insertPositionAttrResult(pool, checkDate, 'W', 'lv3', aWeekAgo, false);
 
             //캐릭터 시즌 
             await insertPositionAttrResult(pool, checkDate, 'all', 'all', seasonOpoenDay, true);
@@ -249,12 +240,7 @@ module.exports = (scheduler, maria) => {
         await pool.query(query);
     }
 
-
     // ------- 포지션 특성 통계 저장 [end] ------------------------
-
-
-
-
 
     return app;
 }
