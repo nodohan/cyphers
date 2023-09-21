@@ -10,15 +10,15 @@ module.exports = (scheduler, maria) => {
     //var time = "00 03 * * *"; // 리얼용
     var time = "00 03 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
-        //if (myConfig.schedulerRun) {
-        logger.info("call position attr collect scheduler");
-        await selectPositionAttr(null);
-        positionStats();
-        logger.info("end position attr collect scheduler");
-        //}
+        if (myConfig.schedulerRun) {
+            logger.info("call position attr collect scheduler");
+            await selectPositionAttr(null);
+            positionStats();
+            logger.info("end position attr collect scheduler");
+        }
     });
 
-    //test  ( "/positionSche/insertPosition" )
+    //test  ( "/positionSche/insertPosition" )  // 1번 이거먼저 그다음 2번 시행
     app.get('/insertPosition', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res
@@ -30,7 +30,7 @@ module.exports = (scheduler, maria) => {
         return selectPositionAttr(res);
     });
 
-    //test  ( "/positionSche/positionStats" )
+    //test  ( "/positionSche/positionStats" ) // 2번
     app.get('/positionStats', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res
