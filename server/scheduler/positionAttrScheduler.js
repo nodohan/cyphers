@@ -143,8 +143,12 @@ module.exports = (scheduler, maria) => {
     async function positionStats(res) {
         let seasonOpoenDay = '2023-09-14';
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
-        //let checkDate = '2023-09-17'
-        let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -4), false);
+        let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
+
+        //이번시즌부터 계산처리
+        if(seasonOpoenDay > aWeekAgo) {
+            aWeekAgo = seasonOpoenDay;
+        }
 
         logger.info("positionStats collect start");
 
