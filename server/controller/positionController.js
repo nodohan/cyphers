@@ -17,7 +17,9 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/positionAttrList', async function(req, res) {
-        let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
+        let today = new Date();
+        let addDays = today.getHours() > 4 ? 0 : -1;
+        let todayStr = commonUtil.getYYYYMMDD(commonUtil.addDays(today, addDays), false);
         const { charName = 'all' } = req.query;
         const result = await positionRepository.selectPositionAttrList(todayStr, charName);
         res.send({ 'rows': result });
