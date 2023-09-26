@@ -52,7 +52,7 @@ module.exports = (scheduler, maria) => {
         let query = `SELECT matchId, jsonData, matchDate 
                      FROM matches where matchDate > '${searchDateStr}' 
                      AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
-        logger.debug(query);
+        //logger.debug(query);
 
         let pool = await maria.getPool();
         try {
@@ -60,7 +60,7 @@ module.exports = (scheduler, maria) => {
             for (i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 await insertPositionAttr(pool, row.matchId, JSON.parse(row.jsonData));
-                logger.debug(`position collect end matchId = ${row.matchId}`);
+                //logger.debug(`position collect end matchId = ${row.matchId}`);
             }
 
         } catch (err) {
@@ -117,7 +117,7 @@ module.exports = (scheduler, maria) => {
             arr.push([matchId, charName, matchDate, matchResult, map, position, attrs, attr1, attr2, attr3, attr4]);
         });
 
-        logger.debug(arr);
+        //logger.debug(arr);
 
         try {
             await pool.batch(insertQuery, arr, function(err) {
@@ -221,7 +221,7 @@ module.exports = (scheduler, maria) => {
              ) aa 
              ORDER BY charName, POSITION, total DESC `;
 
-        logger.debug('insertPositionAttrResult %s', query);
+        //logger.debug('insertPositionAttrResult %s', query);
         await pool.query(query);
     }
 
@@ -239,7 +239,7 @@ module.exports = (scheduler, maria) => {
              ) aa 
              WHERE aa.total_rank <= ${rankNum} `;
 
-        logger.debug('insertPositionAttrStats %s', query);
+        //logger.debug('insertPositionAttrStats %s', query);
 
         await pool.query(query);
     }
