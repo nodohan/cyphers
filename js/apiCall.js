@@ -549,39 +549,28 @@ function drawCharInfo(div, info, title) {
 }
 
 function extractChar(rows, sort) {
-    let result = [];
-    let charNames = [];
-    rows.forEach(row => {
-        let info = row.playInfo;
+    const resultsMap = new Map();
 
-        if (result[info.characterName] == null) {
-            charNames.push(info.characterName);
-            result[info.characterName] = {
-                'name': info.characterName,
-                'characterId': info.characterId,
-                'count': 0,
-                'win': 0,
-                'lose': 0
-            };
+    rows.forEach(({ playInfo }) => {
+        const { characterName, characterId, result } = playInfo;
+
+        if (!resultsMap.has(characterName)) {
+            resultsMap.set(characterName, {
+                name: characterName,
+                characterId,
+                count: 0,
+                win: 0,
+                lose: 0
+            });
         }
-        result[info.characterName].count++;
-        if (info.result == 'win') {
-            result[info.characterName].win++;
-        } else {
-            result[info.characterName].lose++;
-        }
+
+        const characterResult = resultsMap.get(characterName);
+        characterResult.count++;
+        result === 'win' ? characterResult.win++ : characterResult.lose++;
     });
 
-    // arr[name]으로 하니 index가 안잡혀서 sort가 안먹어 ㅠㅠ
-    let sorted = [];
-    let charGtCnt = 1;
-    charNames.forEach(name => {
-        if (result[name].count >= charGtCnt) {
-            sorted.push(result[name]);
-        }
-    });
-    sorted.sort(sort);
-    return sorted;
+    const results = Array.from(resultsMap.values());
+    return results.sort(sort);
 }
 
 //파티 관련 
