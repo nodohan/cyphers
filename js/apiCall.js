@@ -431,11 +431,14 @@ function drawRecently(div, rows, userDivId) {
         title.prepend("최근 게임:");
     }
 
+    const modalId = `pop${userDivId}Modal`;
+    const labelId = `pop${userDivId}ModalLabel`;
+
     let body = $("#templateModal").clone();
-    body.attr("id", userDivId + "Modal");
-    body.attr("aria-labelledby", userDivId + "ModalLabel");
+    body.attr("id", modalId);
+    body.attr("aria-labelledby", labelId);
     body.find("#templateModalLabel")
-        .attr("id", userDivId + "ModalLabel")
+        .attr("id", labelId)
         .empty()
         .append("최근 " + bodyCount + "게임");
 
@@ -449,7 +452,7 @@ function drawRecently(div, rows, userDivId) {
     }
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
     title.append(titleText);
-    title.append(`<a data-toggle='modal' data-target='#${userDivId}Modal'>&nbsp;${moreIcon}</a>`);
+    title.append(`<a data-toggle='modal' data-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
 
     $("#modalDiv").append(body);
 }
@@ -507,7 +510,7 @@ function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
 
     if (type != null) {
         const gameType = $("input[name='gameType']:checked").val();
-        const modalId = `${nickname}_${gameType}_${typeId}_modal`;
+        const modalId = `pop${nickname}_${gameType}_${typeId}_modal`;
         const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         const moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
 
@@ -767,7 +770,7 @@ function partySort(party, sort) {
 }
 
 function playGameList(findId, div, nickname, showType, modalId) {
-    modalId =  modalId || `${nickname}_${findId}_modal`;
+    modalId =  modalId || `pop${nickname}_${findId}_modal`;
     if ($("#" + modalId).length != 0) {
         return;
     }
@@ -951,7 +954,7 @@ function userSeasonRank(playerId, callback) {
 function drawCharCardVer(div, charInfo, nickname) {
     const {characterId, win, lose, count } = charInfo;
 
-    let modalId = `${nickname}_${characterId}_modal`;
+    let modalId = `pop${nickname}_${characterId}_modal`;
     var pov = ((win * 100) / count) || 0;
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
     let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;

@@ -35,6 +35,10 @@
                 clearDiv('con2_2');
                 $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
 
+                // modalDiv의 자식 div 중 id가 templateModal이 아닌 것을 찾아 삭제
+                $('#modalDiv > div:not(#templateModal)').remove();
+                userData = {};
+
                 Cookies.set('gameType', val, {
                     expires: 7
                 });
