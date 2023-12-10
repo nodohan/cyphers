@@ -63,6 +63,17 @@ table td {
 }
 
 
+.conDetail {
+    margin-top: 10px;
+    float: left;
+    margin-left: 15px;
+    position: relative;
+    width: 45%;
+    min-height: 750px;
+}
+
+
+
 /* 1920px 화면 해상도에 대한 스타일 */
 @media (min-width: 1600px) and (max-width: 1920px) {
     .con {
@@ -649,4 +660,13 @@ table td {
     text-align: right;
     vertical-align: middle;
     margin-top: -22px;
+}
+
+
+#mostCharDetailDiv {
+    width:100%;
+}
+
+.mapRate {
+    font-weight: normal; 
 }
