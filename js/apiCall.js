@@ -835,17 +835,8 @@ function playGameList(findId, div, nickname, showType, modalId) {
     clone.show();
 }
 
-
 function highScore(a, b) {
-    let aRate = (a.win * 100) / (a.win + a.lose);
-    let bRate = (b.win * 100) / (b.win + b.lose);
-    if (aRate < bRate) {
-        return 1;
-    }
-    if (aRate > bRate) {
-        return -1;
-    }
-    return 0;
+    return b.count - a.count;
 }
 
 function totalDesc(a, b) {
