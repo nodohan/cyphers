@@ -70,7 +70,7 @@
                     userData[nickname] = data;
                 }
 
-                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
+                var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
                 var userDivId = getUserDivId(gameType, data.nickname);
                 //기본 정보 
                 var clone = $("#template").clone();

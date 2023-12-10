@@ -35,7 +35,7 @@
             }
 
             function drawLeftInfo(gameType, data) {
-                var rating = data.records.filter(game => game.gameTypeId == gameType)[0];
+                var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
                 var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
 
                 //기본 정보
