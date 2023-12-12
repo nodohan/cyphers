@@ -47,6 +47,9 @@ const stats = require('./server/controller/statsController')(scheduler, maria, l
 // 비공개 처리용
 const nodo = require('./server/controller/nodoController')(null, maria, loggerCatcher);
 
+// 스케쥴러4. 사용자 상세 통계
+const userDetail = require('./server/scheduler/userDetailScheduler')(scheduler, maria, loggerCatcher);
+
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -70,6 +73,8 @@ app.use('/seasonOff', seasonOff);
 app.use('/position', position);
 app.use('/positionSche', positionSche);
 app.use('/nodo', nodo);
+app.use('/userDetail', userDetail);
+
 
 app.use(loggerCatcher());
 
