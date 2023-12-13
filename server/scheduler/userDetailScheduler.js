@@ -18,10 +18,16 @@ module.exports = (scheduler, maria, acclogger) => {
   const doDayWork = async (yyyymmdd) => {
     const result = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd); 
     const arr = result.map(data => JSON.parse(data.jsonData));
-    console.log(arr);
+    //console.log(arr);
+
+    // const userList = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd); 
+
+    // 날짜 | 내 아이디 | 상대방 아이디 | 같은팀으로 | 같은팀으로 패 | 적팀으로 내가이김 | 적팀으로 내가 짐
+    mergeMatchUser2(arr, '1826e7c7f0becbc1e65ee644c28f0072');
+
 
   }
-      
+  
   const mergeMatchUser = (jsonArr, userId) => {
     const playerCount = new Map();
 
@@ -48,6 +54,36 @@ module.exports = (scheduler, maria, acclogger) => {
     console.log(Object.fromEntries(playerCount));
     return Object.fromEntries(playerCount);
   };
+
+  const mergeMatchUser2 = (jsonArr, userId) => {
+    const myTeam = new Map();
+    const enemyTeam = new Map();
+
+    jsonArr.forEach(row => {
+        const isWin = row.teams[0].players.includes(userId);
+        const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
+        
+        row.players.forEach(player => {
+            const youWin = winningTeam.includes(player.playerId);
+            const isMyTeam = !(youWin !== isWin);
+
+            if(isMyTeam) {
+                setMap(myTeam, isWin, player.playerId);
+            } else {
+                setMap(enemyTeam, isWin, player.playerId);
+            }
+        });
+    });
+
+    const result =  {
+        myTeam : Object.fromEntries(myTeam), 
+        enemyTeam : Object.fromEntries(enemyTeam)
+    }
+
+    console.log(result);
+    return result;
+  };
+
 
   const mergeMatchChar = (jsonArr, userId) => {
     const myTeam = new Map();
@@ -78,16 +114,16 @@ module.exports = (scheduler, maria, acclogger) => {
     return result;
   };
 
-  const setMap = (map, isWin, characterName) => {
+  const setMap = (map, isWin, key) => {
     if(isWin) {
-        map.set(characterName, {
-            win: (map.get(characterName)?.win || 0) + 1,
-            lose: map.get(characterName)?.lose || 0,
+        map.set(key, {
+            win: (map.get(key)?.win || 0) + 1,
+            lose: map.get(key)?.lose || 0,
         });
     }else {
-        map.set(characterName, {
-            win: map.get(characterName)?.win || 0,
-            lose: (map.get(characterName)?.lose || 0 ) + 1,
+        map.set(key, {
+            win: map.get(key)?.win || 0,
+            lose: (map.get(key)?.lose || 0 ) + 1,
         });
     }
   }
