@@ -16,17 +16,13 @@ module.exports = (scheduler, maria, acclogger) => {
   });
 
   const doDayWork = async (yyyymmdd) => {
-    const result = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd); 
+    //const result = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd);  // 그냥 오늘 기준
+    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
+    //console.log(result);
+
     const arr = result.map(data => JSON.parse(data.jsonData));
-    //console.log(arr);
-
-    // const userList = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd); 
-
-    // 날짜 | 내 아이디 | 상대방 아이디 | 같은팀으로 | 같은팀으로 패 | 적팀으로 내가이김 | 적팀으로 내가 짐
-    //mergeMatchUser(arr, '1826e7c7f0becbc1e65ee644c28f0072');
-    mergeMatchUser(arr, '18d5b7064acd4d0a667cac264026cfa3');
-
-
+    mergeMatchUser(arr, '1826e7c7f0becbc1e65ee644c28f0072');
+    mergeMatchChar(arr, '1826e7c7f0becbc1e65ee644c28f0072');
   }
   
   const mergeMatchUser = (jsonArr, playerId) => {
@@ -42,6 +38,10 @@ module.exports = (scheduler, maria, acclogger) => {
         const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
         
         row.players.forEach(player => {
+            if(playerId == player.playerId) {
+              return ;
+            }
+
             const youWin = winningTeam.includes(player.playerId);
             const isMyTeam = !(youWin !== isWin);
 
@@ -58,7 +58,7 @@ module.exports = (scheduler, maria, acclogger) => {
         enemyTeam : Object.fromEntries(enemyTeam)
     }
 
-    console.log(result);
+    logger.debug(JSON.stringify(result));
     return result;
   };
 
@@ -72,6 +72,9 @@ module.exports = (scheduler, maria, acclogger) => {
         const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
         
         row.players.forEach(player => {
+            if(userId == player.playerId) {
+              return ;
+            }
             const youWin = winningTeam.includes(player.playerId);
             const isMyTeam = !(youWin !== isWin);
 
@@ -88,7 +91,7 @@ module.exports = (scheduler, maria, acclogger) => {
         enemyTeam : Object.fromEntries(enemyTeam)
     }
 
-    console.log(result);
+    logger.debug(JSON.stringify(result));
     return result;
   };
 

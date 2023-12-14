@@ -13,6 +13,17 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query,[dateStr, dateStr]);
     }
 
+    selectMatchDetailByPlayerId = async(playerId, limit) => {
+        const query = `
+            SELECT
+                jsonData
+            FROM matches
+            WHERE matchDate >= '2023-09-13'
+            AND jsonData LIKE '%${playerId}%' limit ?`;
+        return await this.maria.doQuery(query, [ limit ]);
+    }
+
+
 }
 
 module.exports = matchDetailCharRepository;
