@@ -4,7 +4,8 @@
 <head>
     <%- include  ("../layout/head") %>
     <script src="/js/sample.js" crossorigin="anonymous"></script>
-    <script src="/js/matchDetailSample.js" crossorigin="anonymous"></script>
+    <!-- <script src="/js/matchDetailSample.js" crossorigin="anonymous"></script> -->
+    <script src="/js/matchResult.js" crossorigin="anonymous"></script>
 
         <script type="text/javascript   ">
             pageName = "pcDetail";
@@ -23,7 +24,17 @@
                 }
 
                 //setUserDetailInfo(sampleData);
+                test();
             });
+
+            const test = () => {
+                const item = matchResultData;
+                Object.entries(item.myTeam).forEach(row => row[1].total = row[1].win + row[1].lose);
+                Object.entries(item.myTeam)
+                    .filter(row => row[1].total >= 5 && row[1].win < row[1].lose)
+                    .forEach(row => console.log(row[0], row[1]));
+                //console.log(with5);
+            }
 
             function searchDetail() {
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
