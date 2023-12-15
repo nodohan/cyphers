@@ -12,20 +12,32 @@ module.exports = (scheduler, maria, acclogger) => {
   
   // URL: http://localhost:8080/userDetail/insertUserDetail
   app.get('/insertUserDetail', function(req, res) {
-    doDayWork('2023-12-11');
+    doDayWork('2023-12-14');
   });
 
+
   const doDayWork = async (yyyymmdd) => {
-    //const result = await matchDetailCharRepository.selectMatchDetailByMatchDate(yyyymmdd);  // 그냥 오늘 기준
-    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
+    const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);  // 그냥 오늘 기준
+    //const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
     //console.log(result);
 
     const arr = result.map(data => JSON.parse(data.jsonData));
-    mergeMatchUser(arr, '1826e7c7f0becbc1e65ee644c28f0072');
+
+    const playerList = await matchDetailCharRepository.selectLastNickNames();
+    const playerMap = new Map();
+
+    // Populating the Map
+    playerList.forEach(item => {
+        playerMap.set(item.playerId, item.nickname);
+    });
+
+    //console.log(playerMap);
+
+    mergeMatchUser(arr, playerMap, '1826e7c7f0becbc1e65ee644c28f0072');
     mergeMatchChar(arr, '1826e7c7f0becbc1e65ee644c28f0072');
   }
   
-  const mergeMatchUser = (jsonArr, playerId) => {
+  const mergeMatchUser = (jsonArr, playerInfos, playerId) => {
     const myTeam = new Map();
     const enemyTeam = new Map();
 
@@ -52,6 +64,9 @@ module.exports = (scheduler, maria, acclogger) => {
             }
         });
     });
+
+    mappingNickname(playerInfos, myTeam);
+    mappingNickname(playerInfos, enemyTeam);
 
     const result =  {
         myTeam : Object.fromEntries(myTeam), 
@@ -107,6 +122,13 @@ module.exports = (scheduler, maria, acclogger) => {
             lose: (map.get(key)?.lose || 0 ) + 1,
         });
     }
+  }
+
+  const mappingNickname = (playerInfos, team) => {
+    team.forEach((row, key) => {
+      console.log(key, row);
+      row.nickname = playerInfos.get(key);
+    });
   }
 
   return app;
