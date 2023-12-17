@@ -11,15 +11,35 @@ module.exports = (scheduler, maria, acclogger) => {
   app.use(acclogger());
   
   // URL: http://localhost:8080/userDetail/insertUserDetail
-  app.get('/insertUserDetail', function(req, res) {
-    doDayWork('2023-12-14');
+  app.get('/insertUserDetail', async function(req, res) {
+
+    const state = await reserve(req.query.nickname);
+
+    let resultMsg = "접수하였습니다.";
+    switch(state) {
+      case "reserve" : resultMsg = "접수하였습니다.";
+    }
+    
+    if(isRun){
+      await doDayWork('2023-12-14');
+    }
+
+    res.send({ "resultMsg": resultMsg, "resultCode": 200 });
   });
 
 
-  const doDayWork = async (yyyymmdd) => {
-    const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);  // 그냥 오늘 기준
-    //const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
-    //console.log(result);
+  // URL: http://localhost:8080/userDetail/selectUserDetail
+  app.get('/selectUserDetail', async function(req, res) {
+    res.send(await selectDetail(req.query.nickname));
+  });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  
+
+
+ 
+  const doDayWork = async (playerId) => {
+    //const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);  // 그냥 오늘 기준
+    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
 
     const arr = result.map(data => JSON.parse(data.jsonData));
 
@@ -31,10 +51,13 @@ module.exports = (scheduler, maria, acclogger) => {
         playerMap.set(item.playerId, item.nickname);
     });
 
-    //console.log(playerMap);
+    const vsUser = mergeMatchUser(arr, playerMap, '1826e7c7f0becbc1e65ee644c28f0072');
+    const vsChar = mergeMatchChar(arr, '1826e7c7f0becbc1e65ee644c28f0072');
 
-    mergeMatchUser(arr, playerMap, '1826e7c7f0becbc1e65ee644c28f0072');
-    mergeMatchChar(arr, '1826e7c7f0becbc1e65ee644c28f0072');
+
+    await matchDetailCharRepository.insertUserDetail(vsUser, vsChar);
+
+    return { vsUser, vsChar} ;
   }
   
   const mergeMatchUser = (jsonArr, playerInfos, playerId) => {
@@ -42,63 +65,52 @@ module.exports = (scheduler, maria, acclogger) => {
     const enemyTeam = new Map();
 
     jsonArr.forEach(row => {
-        if(!(row.teams[0].players.includes(playerId) || row.teams[1].players.includes(playerId))) {
-          return ;
-        }
-
-        const isWin = row.teams[0].players.includes(playerId);
-        const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
-        
-        row.players.forEach(player => {
-            if(playerId == player.playerId) {
-              return ;
-            }
-
-            const youWin = winningTeam.includes(player.playerId);
-            const isMyTeam = !(youWin !== isWin);
-
-            if(isMyTeam) {
-                setMap(myTeam, isWin, player.playerId);
-            } else {
-                setMap(enemyTeam, isWin, player.playerId);
-            }
-        });
+      //이겜에 내가 참석했는지 
+      if(!(row.teams[0].players.includes(playerId) || row.teams[1].players.includes(playerId))) {
+        return ;
+      }
+      const isWin = row.teams[0].result == "win" &&  row.teams[0].players.includes(playerId) || row.teams[1].result == "win" && row.teams[1].players.includes(playerId);
+      const myTeamList = row.teams[0].players.includes(playerId) ? row.teams[0].players : row.teams[1].players;
+      
+      row.players.forEach(player => {
+          const youId = player.playerId;
+          if(playerId == youId) {
+            return ;
+          }
+          setMap(myTeamList.includes(youId) ? myTeam : enemyTeam, isWin, youId);          
+      });
     });
 
     mappingNickname(playerInfos, myTeam);
     mappingNickname(playerInfos, enemyTeam);
 
     const result =  {
-        myTeam : Object.fromEntries(myTeam), 
-        enemyTeam : Object.fromEntries(enemyTeam)
-    }
+      myTeam : Array.from(myTeam.values()) , 
+      enemyTeam : Array.from(enemyTeam.values()) 
+  }
 
     logger.debug(JSON.stringify(result));
     return result;
   };
 
-
-  const mergeMatchChar = (jsonArr, userId) => {
+  const mergeMatchChar = (jsonArr, playerId) => {
     const myTeam = new Map();
     const enemyTeam = new Map();
 
     jsonArr.forEach(row => {
-        const isWin = row.teams[0].players.includes(userId);
-        const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
-        
-        row.players.forEach(player => {
-            if(userId == player.playerId) {
-              return ;
-            }
-            const youWin = winningTeam.includes(player.playerId);
-            const isMyTeam = !(youWin !== isWin);
-
-            if(isMyTeam) {
-                setMap(myTeam, isWin, player.playInfo.characterName);
-            } else {
-                setMap(enemyTeam, isWin, player.playInfo.characterName);
-            }
-        });
+      if(!(row.teams[0].players.includes(playerId) || row.teams[1].players.includes(playerId))) {
+        return ;
+      }
+      const isWin = row.teams[0].result == "win" &&  row.teams[0].players.includes(playerId) || row.teams[1].result == "win" && row.teams[1].players.includes(playerId);
+      const myTeamList = row.teams[0].players.includes(playerId) ? row.teams[0].players : row.teams[1].players;
+      
+      row.players.forEach(player => {
+          const youId = player.playerId;
+          if(playerId == youId) {
+            return ;
+          }
+          setMap(myTeamList.includes(youId) ? myTeam : enemyTeam, isWin, player.playInfo.characterName);          
+      });
     });
 
     const result =  {
@@ -126,7 +138,6 @@ module.exports = (scheduler, maria, acclogger) => {
 
   const mappingNickname = (playerInfos, team) => {
     team.forEach((row, key) => {
-      console.log(key, row);
       row.nickname = playerInfos.get(key);
     });
   }
