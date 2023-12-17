@@ -90,6 +90,9 @@
                 //최근 10게임
                 drawRecently(clone, rows);
 
+                // 일별 승률
+                drawDailyResult(clone, calcDaily(rows));
+
                 drawMatchUser(clone, rows);
 
                 // 플레이 리스트 
@@ -99,14 +102,33 @@
                 $("#con1_2").prepend(clone);
             }
 
-            const drawMatchUser = (div, row) => {
-
-
-                
+            const calcDaily = (rows) => {
+                const dailyMap = new Map();
+                rows.forEach(row => setMap(dailyMap, row.playInfo.result == 'win', getDay(row.date)));
+                return dailyMap;
             }
 
+            const setMap = (map, isWin, key) => {
+                if(isWin) {
+                    map.set(key, {
+                        win: (map.get(key)?.win || 0) + 1,
+                        lose: map.get(key)?.lose || 0,
+                    });
+                }else {
+                    map.set(key, {
+                        win: map.get(key)?.win || 0,
+                        lose: (map.get(key)?.lose || 0 ) + 1,
+                    });
+                }
+            }
 
+            const drawMatchUser = (div, row) => {
+            }
 
+            const getDay = (yyymmddStr) => {                
+                var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
+                return dateParts[0]; 
+            }
 
             function defaultInfo(gameType, clone, data) {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
@@ -217,6 +239,36 @@
                 const totalCount = mapRow.length;
                 const winCount = mapRow.filter(row => row.playInfo.result == 'win').length;
                 div.empty().append(`(승률: ${((winCount/totalCount) * 100).toFixed(0)}% / ${totalCount}전 ${winCount}승 ${totalCount - winCount} 패 )`);
+            }
+
+
+            const drawDailyResult = (div, dailyMap) => {
+                let table = "<table class='table table-bordered table-striped'>";
+                let tr = "<thead><tr>"; 
+                let tbody = "<tbody><tr>";
+                let endTbody = "</tr></tbody></table>";
+
+                let th = "";
+                let td = "";
+                let trCount = 1;
+                let first = true;
+
+                dailyMap.forEach(function(item, key) {
+                    th += `<th>${key}</th>`;
+                    td += `<td>${item.win}승 ${item.lose}패 </td>`;
+                    if (trCount % 7 == 0) {
+                        let newTable = table + tr + th + tbody + td + endTbody;
+                        th = "";
+                        td = "";
+                        if (first) {
+                            div.find("#dailyResult").empty().append(newTable);
+                            first = false;
+                        } else {
+                            div.find("#moreDailyResult").append(newTable);
+                        }
+                    }
+                    trCount++;
+                });
             }
 
         </script>
@@ -361,9 +413,18 @@
                 </div>
             </div>
 
-            <div id="matchUsers" class="matchUsers">
+            <label><b>일별 승패</b>
+                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
+            </label>
+
+            <div id="dailyResult" class="dailyResult">
                 
             </div>
+
+            <div id="moreDailyResult" class="collapse">
+
+            </div>
+
 
             <div id="playGameList" class="playGameList">
 
