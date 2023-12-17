@@ -1,49 +1,4 @@
 
-
-const mergeMatchChar = (jsonArr, userId) => {
-    const myTeam = new Map();
-    const enemyTeam = new Map();
-
-    jsonArr.forEach(row => {
-        const isWin = row.teams[0].players.includes(userId);
-        const winningTeam = isWin ? row.teams[0].players : row.teams[1].players;        
-        
-        row.players.forEach(player => {
-            const youWin = winningTeam.includes(player.playerId);
-            const isMyTeam = !(youWin !== isWin);
-
-            if(isMyTeam) {
-                setMap(myTeam, isWin, player.playInfo.characterName);
-            } else {
-                setMap(enemyTeam, isWin, player.playInfo.characterName);
-            }
-        });
-    });
-
-    const result =  {
-        myTeam : Object.fromEntries(myTeam), 
-        enemyTeam : Object.fromEntries(enemyTeam)
-    }
-
-    console.log(result);
-    return result;
-};
-
-
-const setMap = (map, isWin, characterName) => {
-    if(isWin) {
-        map.set(characterName, {
-            win: (map.get(characterName)?.win || 0) + 1,
-            lose: map.get(characterName)?.lose || 0,
-        });
-    }else {
-        map.set(characterName, {
-            win: map.get(characterName)?.win || 0,
-            lose: (map.get(characterName)?.lose || 0 ) + 1,
-        });
-    }
-}
-
 const matchDetailSample = [{
     "date": "2023-11-27 01:32",
     "gameTypeId": "rating",

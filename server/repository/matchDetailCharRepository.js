@@ -18,7 +18,7 @@ class matchDetailCharRepository {
         const query = `        
             SELECT jsonData
             FROM matches 
-            WHERE matchDate >= CURRENT_DATE() -1 
+            WHERE matchDate >= CURRENT_DATE() -2 
             AND jsonData LIKE '%1826e7c7f0becbc1e65ee644c28f0072%' `;
         return await this.maria.doQuery(query,[dateStr, dateStr]);
     }
