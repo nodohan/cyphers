@@ -179,6 +179,11 @@ table td {
     margin: 0px auto;
 }
 
+#mainUserDetail {
+    width: 1490px;
+    margin: 0px auto;
+}
+
 .bold {
     font-weight: bold;
 }

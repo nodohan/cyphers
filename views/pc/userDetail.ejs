@@ -124,7 +124,7 @@
 
             const getDay = (yyymmddStr) => {                
                 var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
-                return dateParts[0]; 
+                return dateParts[0].slice(2);
             }
 
             function defaultInfo(gameType, clone, data) {
@@ -274,7 +274,7 @@
 <body class="body">
     <%- include  ("../layout/menu") %>
 
-        <div id="main">
+        <div id="mainUserDetail">
             <div class="top" >
                 <div class="floatLeft width15p">
                     <div class="custom-control custom-radio custom-control-inline">
