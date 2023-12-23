@@ -48,6 +48,35 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query);
     }
 
+    countRunningDetail = async() => {
+        const query = ` SELECT COUNT(1) FROM userDetail WHERE state = 'running' `;
+        return await this.maria.doQuery(query);
+    }
+
+    getReserveUserFristOne = async() => {
+        const query = ` SELECT playerId FROM userDetail WHERE state = 'reserve' order by checkDate asc limit 1 `;
+        return await this.maria.doQuery(query);
+    }
+
+    udpateUserDetailState = async(state, playerId) => {
+        const query = `
+        UPDATE userDetail 
+        SET 
+            state = ?
+        WHERE playerId = ? `;
+        return await this.maria.doQuery(query, [ state, playerId ]);
+    }
+
+    udpateUserDetail = async(state, playerId, result) => {
+        const query = `
+        UPDATE userDetail 
+        SET 
+            state = ?
+            , playerDetail = ? 
+            , charDetail = ?
+        WHERE playerId = ? `;
+        return await this.maria.doQuery(query, [ state, playerId, result.vsUser, result.vsChar ]);
+    }
 
 }
 

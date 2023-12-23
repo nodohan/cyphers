@@ -9,6 +9,21 @@ module.exports = (scheduler, maria, acclogger) => {
   const matchDetailCharRepository = new repository(maria);
 
   app.use(acclogger());
+
+  var time = "* * * * *"; // 리얼용
+  scheduler.scheduleJob(time, async function() {
+      if (myConfig.schedulerRun) {
+
+        const runCount = matchDetailCharRepository.countRunningDetail();
+        if(runCount == 0){
+          //const playerId = matchDetailCharRepository.getReserveUserFristOne();
+          const playerId = '1826e7c7f0becbc1e65ee644c28f0072';
+          await matchDetailCharRepository.udpateUserDetailState('running', playerId);
+          let data = await doDayWork(playerId);
+          await matchDetailCharRepository.udpateUserDetail('complate', playerId, data);
+        }
+      }
+  });
   
   // URL: http://localhost:8080/userDetail/insertUserDetail
   app.get('/insertUserDetail', async function(req, res) {
@@ -17,29 +32,27 @@ module.exports = (scheduler, maria, acclogger) => {
 
     let resultMsg = "접수하였습니다.";
     switch(state) {
-      case "reserve" : resultMsg = "접수하였습니다.";
+      case "insert" : resultMsg = "접수하였습니다.";
+      case "reserve" : resultMsg = "대기중입니다.";
+      case "running" : resultMsg = "분석중입니다.";
+      case "complate" : resultMsg = "완료상태.";
     }
     
-    if(isRun){
-      await doDayWork('2023-12-14');
-    }
-
     res.send({ "resultMsg": resultMsg, "resultCode": 200 });
   });
-
 
   // URL: http://localhost:8080/userDetail/selectUserDetail
   app.get('/selectUserDetail', async function(req, res) {
     res.send(await selectDetail(req.query.nickname));
   });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-  
 
+  const reserve = async (nickname) =>  {
 
- 
+  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
   const doDayWork = async (playerId) => {
     //const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);  // 그냥 오늘 기준
-    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId('1826e7c7f0becbc1e65ee644c28f0072', 1000);  // 이번시즌 총전적
+    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId(playerId, 1000);  // 이번시즌 총전적
 
     const arr = result.map(data => JSON.parse(data.jsonData));
 
@@ -51,9 +64,8 @@ module.exports = (scheduler, maria, acclogger) => {
         playerMap.set(item.playerId, item.nickname);
     });
 
-    const vsUser = mergeMatchUser(arr, playerMap, '1826e7c7f0becbc1e65ee644c28f0072');
-    const vsChar = mergeMatchChar(arr, '1826e7c7f0becbc1e65ee644c28f0072');
-
+    const vsUser = mergeMatchUser(arr, playerMap, playerId);
+    const vsChar = mergeMatchChar(arr, playerId);
 
     await matchDetailCharRepository.insertUserDetail(vsUser, vsChar);
 
