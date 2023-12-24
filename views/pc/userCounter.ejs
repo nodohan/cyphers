@@ -79,7 +79,7 @@
                 clone.removeAttr("id");
                 clone.find("th:first").text("닉네임");
                 var body = clone.find("tbody");
-                rows.sort((a, b) => (b.win + b.lose) - (a.win + a.lose)); //내림차순 정렬
+                rows.sort(counterTotalDesc); //내림차순 정렬
                 rows.forEach(row => {
                     body.append(
                         `<tr>
@@ -90,7 +90,7 @@
                         </tr>`);
                 });
                 div.append(clone);
-            }
+            }            
 
             const drawCharCounter = (div, rows) => {
                 var clone = $("#templateTable").clone();
@@ -108,7 +108,7 @@
                     };
                 });
                 
-                transArr.sort((a, b) => (b.win + b.lose) - (a.win + a.lose)); //내림차순 정렬
+                transArr.sort(counterRateDesc); //내림차순 정렬
                 
                 let imgBaseUrl = "https://img-api.neople.co.kr/cy/characters/";
                 transArr.forEach(row => {
@@ -132,6 +132,9 @@
                               <span class='charNameSpan'>${charName}</span>
                         </div>`;
             }
+
+            const counterTotalDesc = (a, b) => (b.win + b.lose) - (a.win + a.lose);
+            const counterRateDesc = (a, b) => ((b.win * 100)/ (b.win + b.lose)) - ((a.win * 100)/ (a.win + a.lose));
 
         </script>
 </head>
