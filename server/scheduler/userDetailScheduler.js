@@ -1,6 +1,7 @@
 const commonUtil = require('../util/commonUtil');
 const myConfig = require('../../config/config.js');
 const repository = require('../repository/matchDetailCharRepository');
+const api = require('../util/api');
 
 module.exports = (scheduler, maria, acclogger) => {
   const app = require('express').Router();
@@ -14,45 +15,97 @@ module.exports = (scheduler, maria, acclogger) => {
   scheduler.scheduleJob(time, async function() {
       if (myConfig.schedulerRun) {
 
-        const runCount = matchDetailCharRepository.countRunningDetail();
-        if(runCount == 0){
-          //const playerId = matchDetailCharRepository.getReserveUserFristOne();
-          const playerId = '1826e7c7f0becbc1e65ee644c28f0072';
-          await matchDetailCharRepository.udpateUserDetailState('running', playerId);
-          let data = await doDayWork(playerId);
-          await matchDetailCharRepository.udpateUserDetail('complate', playerId, data);
+        logger.info("call userDetail scheduler");
+        //현재 동작하는 detail 수집이 없으면
+        const runCount = await matchDetailCharRepository.countRunningDetail();
+        if(runCount[0].cnt == 0){
+          const detail = await matchDetailCharRepository.getReserveUserFristOne();
+          console.log(detail);
+          if(detail.length == 0) {
+            logger.info("no reserve user end scheduler");
+            return ;
+          }
+          const playerId = detail[0].playerId;
+
+          logger.info("dowork userDetail scheduler %s", playerId);
+          await matchDetailCharRepository.udpateUserDetailState('running', playerId); //활성화 후 
+          let data = await doDayWork(playerId); // 시작
+          await matchDetailCharRepository.udpateUserDetail('complate', playerId, data); // 종료되면 업데이트
         }
       }
+  });
+
+  //  url = "/userDetail/userCounter"
+  app.get('/userCounter', function(req, res) {
+    commonUtil.getIp(req);
+    if (commonUtil.isMobile(req)) {
+        res.render('./mobile/userCounter');
+    } else {
+        res.render('./pc/userCounter');
+    }
   });
   
   // URL: http://localhost:8080/userDetail/insertUserDetail
   app.get('/insertUserDetail', async function(req, res) {
 
-    const state = await reserve(req.query.nickname);
+    const playerId = await getPlayerIdByName(req.query.nickname);
+    if(playerId == null) {
+      res.send({ "resultMsg": "그런인간없음", "resultCode": 400 });
+      return ;
+    }
 
+    const state = await reserve(playerId);
     let resultMsg = "접수하였습니다.";
     switch(state) {
       case "insert" : resultMsg = "접수하였습니다.";
       case "reserve" : resultMsg = "대기중입니다.";
       case "running" : resultMsg = "분석중입니다.";
       case "complate" : resultMsg = "완료상태.";
-    }
+    }  
     
     res.send({ "resultMsg": resultMsg, "resultCode": 200 });
   });
 
   // URL: http://localhost:8080/userDetail/selectUserDetail
   app.get('/selectUserDetail', async function(req, res) {
-    res.send(await selectDetail(req.query.nickname));
+    const playerId = await getPlayerIdByName(req.query.nickname);
+    if(playerId == null) {
+      res.send({ "resultMsg": "그런인간없음", "resultCode": 400 });
+      return ;
+    }
+    
+    const result = await matchDetailCharRepository.selectDetail(playerId);
+    res.send({ "resultMsg": "조회함2", "resultCode": 200, "rows" : result });
   });
 
-  const reserve = async (nickname) =>  {
-
+  const reserve = async (playerId) =>  {
+    const detail = await matchDetailCharRepository.selectDetail(playerId);
+    if(detail == null) {
+      await matchDetailCharRepository.insertUserDetail(playerId);
+      return "insert";
+    } 
+    // 오늘이랑 checkDate를 비교해서 다르면 날짜를 update처리하고 
+    return 
   }
+
+  const getPlayerIdByName = async (nickname) => {
+    // 1. 닉네임기준으로 유저 api조회 
+    // 2. 저장된 닉네임 리스트 조회 by playerId
+    let playerId;
+    try {
+        playerId = await new api().getPlayerIdByName(nickname);
+        if (playerId == null) {
+            return null;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+    return playerId;
+  } 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
   const doDayWork = async (playerId) => {
     //const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);  // 그냥 오늘 기준
-    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId(playerId, 1000);  // 이번시즌 총전적
+    const result = await matchDetailCharRepository.selectMatchDetailByPlayerId(playerId, 2000);  // 이번시즌 총전적
 
     const arr = result.map(data => JSON.parse(data.jsonData));
 
@@ -66,8 +119,6 @@ module.exports = (scheduler, maria, acclogger) => {
 
     const vsUser = mergeMatchUser(arr, playerMap, playerId);
     const vsChar = mergeMatchChar(arr, playerId);
-
-    await matchDetailCharRepository.insertUserDetail(vsUser, vsChar);
 
     return { vsUser, vsChar} ;
   }

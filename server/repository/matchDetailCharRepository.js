@@ -49,12 +49,12 @@ class matchDetailCharRepository {
     }
 
     countRunningDetail = async() => {
-        const query = ` SELECT COUNT(1) FROM userDetail WHERE state = 'running' `;
+        const query = ` SELECT COUNT(1) cnt FROM userDetail WHERE state = 'running' `;
         return await this.maria.doQuery(query);
     }
 
     getReserveUserFristOne = async() => {
-        const query = ` SELECT playerId FROM userDetail WHERE state = 'reserve' order by checkDate asc limit 1 `;
+        const query = ` SELECT playerId FROM userDetail WHERE state = 'reserve' order by reqDate asc limit 1 `;
         return await this.maria.doQuery(query);
     }
 
@@ -67,6 +67,15 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query, [ state, playerId ]);
     }
 
+    insertUserDetail = async(state, playerId, result) => {
+        const query = ` 
+            insert into userDetail 
+                (playerId, state, reqDate, regDate) 
+            values 
+                (? , 'reserve', now(), now()) `;
+        return await this.maria.doQuery(query, [ playerId ]);
+    }
+
     udpateUserDetail = async(state, playerId, result) => {
         const query = `
         UPDATE userDetail 
@@ -74,8 +83,14 @@ class matchDetailCharRepository {
             state = ?
             , playerDetail = ? 
             , charDetail = ?
+            , complateDate = now()
         WHERE playerId = ? `;
-        return await this.maria.doQuery(query, [ state, playerId, result.vsUser, result.vsChar ]);
+        return await this.maria.doQuery(query, [ state, JSON.stringify(result.vsUser), JSON.stringify(result.vsChar), playerId ]);
+    }
+
+    selectDetail = async(playerId) =>  {
+        const query = ` SELECT state, playerDetail, charDetail from userDetail where playerId = ? `;
+        return await this.maria.doQuery(query, [ playerId ]);
     }
 
 }
