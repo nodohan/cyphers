@@ -7,7 +7,7 @@
     <!-- <script src="/js/matchDetailSample.js" crossorigin="anonymous"></script> -->
     <!-- <script src="/js/matchResult.js" crossorigin="anonymous"></script>-->
 
-        <script type="text/javascript   ">
+        <script type="text/javascript">
             pageName = "pcDetail";
 
             var playRow = null;
@@ -22,16 +22,7 @@
                     $("#nickNames").val(nickname);
                     searchDetail();
                 }
-
-                //setUserDetailInfo(sampleData);
-                //test();
             });
-
-            const test = () => {
-                const item = matchResultData;
-                Object.entries(item.myTeam).forEach(row => row[1].total = row[1].win + row[1].lose);
-                Object.entries(item.myTeam).forEach(row => console.log(row[0], row[1]));
-            }
 
             function searchDetail() {
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);

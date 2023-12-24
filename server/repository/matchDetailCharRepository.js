@@ -67,7 +67,7 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query, [ state, playerId ]);
     }
 
-    insertUserDetail = async(state, playerId, result) => {
+    insertUserDetail = async(playerId) => {
         const query = ` 
             insert into userDetail 
                 (playerId, state, reqDate, regDate) 
@@ -89,10 +89,9 @@ class matchDetailCharRepository {
     }
 
     selectDetail = async(playerId) =>  {
-        const query = ` SELECT state, playerDetail, charDetail from userDetail where playerId = ? `;
+        const query = ` SELECT state, playerDetail, charDetail, complateDate from userDetail where playerId = ? `;
         return await this.maria.doQuery(query, [ playerId ]);
     }
-
 }
 
 module.exports = matchDetailCharRepository;

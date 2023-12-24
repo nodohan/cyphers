@@ -80,12 +80,12 @@ module.exports = (scheduler, maria, acclogger) => {
 
   const reserve = async (playerId) =>  {
     const detail = await matchDetailCharRepository.selectDetail(playerId);
-    if(detail == null) {
+    if(detail.length == 0) {
       await matchDetailCharRepository.insertUserDetail(playerId);
       return "insert";
     } 
     // 오늘이랑 checkDate를 비교해서 다르면 날짜를 update처리하고 
-    return 
+    return ;
   }
 
   const getPlayerIdByName = async (nickname) => {

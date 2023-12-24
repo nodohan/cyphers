@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include  ("../layout/head") %>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            pageName = "pcCounter";
+
+            $(document).ready(function() {
+                $("input[type='text']").css("width", "15%");
+
+                $("#mainMenu").removeClass("active");
+                $("#userCounterMenu").addClass("active");
+            })
+
+            function userCounter() {
+                if ($("#nickName").val().trim() === '') {
+                    alert("닉네임을 입력해주세요");
+                    return;
+                }
+                var result = getUserCounter($("#nickName").val());
+            }
+
+            const getUserCounter = (nickname) => {
+                const data = {
+                    'nickname': nickname
+                };
+                ajaxCall("/userDetail/selectUserDetail", data, callCounter);
+            }
+
+            const callCounter = (result)  => {
+                const userDetail = result.rows[0];
+                console.log("callCounter", userDetail);
+                const data = {
+                    'nickname': $("#nickName").val()
+                };
+
+                if(userDetail == null) {
+                    ajaxCall("/userDetail/insertUserDetail", data, alterInfo);
+                    return ;
+                }
+                
+                let resultMsg = "접수하였습니다.";
+                switch(userDetail.state) {
+                    case "insert" : resultMsg = "접수하였습니다."; break;
+                    case "reserve" : resultMsg = "대기중입니다."; break;
+                    case "running" : resultMsg = "분석중입니다."; break;
+                    case "complate" :  {
+                        drawCounterItems(userDetail);
+                        return ;
+                    }
+                }
+                alert(resultMsg);
+            }
+
+            const drawCounterItems = (data) => {
+                $(".userCountSpan").empty().append(`<h3>유저 상성  <수집일 : ${data.complateDate.substring(0,10)}>`)
+                $("#con1_1").empty().append(`<h4>같은 팀으로 </h4>`);
+                $("#con1_2").empty().append("<h4>적팀(win:내가 승 /lose:내가 패)</h4>");
+                $("#con2_1").empty().append("<h4>같은 팀으로</h4>");
+                $("#con2_2").empty().append("<h4>적팀(win:내가 승 /lose:내가 패)</h4>");
+
+                const user = JSON.parse(data.playerDetail);
+                const char = JSON.parse(data.charDetail);
+
+                drawUserCounter($("#con1_1"), user.myTeam);
+                drawUserCounter($("#con1_2"), user.enemyTeam);
+                drawCharCounter($("#con2_1"), char.myTeam);
+                drawCharCounter($("#con2_2"), char.enemyTeam);
+            }
+
+            const alterInfo = (data) => {
+                alert("해당 기능은 데이터 수집에 시간이 소요됩니다.\n 추후(최소2분 최대 1시간 예상) 이후 다시 확인해 주세요");
+            }
+            
+            const drawUserCounter = (div, rows) => {
+                var clone = $("#templateTable").clone();
+                clone.removeAttr("id");
+                clone.find("th:first").text("닉네임");
+                var body = clone.find("tbody");
+                rows.sort((a, b) => (b.win + b.lose) - (a.win + a.lose)); //내림차순 정렬
+                rows.forEach(row => {
+                    body.append(
+                        `<tr>
+                            <td><b>${row.nickname}</b></td>
+                            <td>${row.win} 승</td>
+                            <td>${row.lose} 패</td>
+                            <td>${((row.win * 100)/ (row.win + row.lose)).toFixed(0)}% </td>
+                        </tr>`);
+                });
+                div.append(clone);
+            }
+
+            const drawCharCounter = (div, rows) => {
+                var clone = $("#templateTable").clone();
+                clone.find("th:first").text("캐릭터");
+                clone.removeAttr("id");
+                var body = clone.find("tbody");
+
+                let transArr = Object.entries(rows).map(item => {
+                    let charName = item[0];
+                    let charData = item[1];
+                    return { 
+                        win: charData.win, 
+                        lose: charData.lose, 
+                        charName: charName 
+                    };
+                });
+                
+                transArr.sort((a, b) => (b.win + b.lose) - (a.win + a.lose)); //내림차순 정렬
+                
+                let imgBaseUrl = "https://img-api.neople.co.kr/cy/characters/";
+                transArr.forEach(row => {
+                    const charImg =  makeCharImgDiv(row.charName, imgBaseUrl + "/" + charMap.get(row.charName));
+                    body.append(
+                        `<tr>
+                            <td><b>${row.charName}</b></td>
+                            <!-- <td>${charImg}</td>-->
+                            <td>${row.win} 승</td>
+                            <td>${row.lose} 패</td>
+                            <td>${((row.win * 100)/ (row.win + row.lose)).toFixed(0)}% </td>
+                        </tr>`);
+                });
+                div.append(clone);
+            }       
+
+            const makeCharImgDiv = (charName, url)  => {
+                return `<div class="charImgDiv rounded border-primary" data-charName='${charName}' onClick="javascript:charClick('${charName}')" >
+                            <img id="char${charName.replace(/\s/g, '')}Img" src="${url}" 
+                              class="rounded charImg" alt="${charName}" /> 
+                              <span class='charNameSpan'>${charName}</span>
+                        </div>`;
+            }
+
+        </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu") %>
+        <div id="main" style="width:85%">
+            <div class="top" style="width:85%; height:140px">
+                <div>
+                ※ 공식 유저의 인간/캐릭터 상성을 분석한 페이지입니다. <br>
+                ※ 아이디 검색시 자동으로 분석 등록이 됩니다. <br>
+                ※ 베타 버전이며, 분석하는데 시간이 걸립니다. (개선예정)
+                </div>
+                <div class="width50p floatLeft input-group">
+                    <input type="text" id="nickName" class="shortText form-control" 
+                        placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton" 
+                        onKeyPress="if(event.keyCode == 13) { userCounter(); }">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="userCounter();">검색</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="con1" class="con" style="width:700px">
+                <span class="userCountSpan"><h3>유저 상성</h3></span>
+                <div id="con1_1" class="table-responsive width50p floatLeft">
+                    <h4>같은팀으로</h4>
+                </div>
+                <div id="con1_2" class="table-responsive width50p">
+                    <h4>적팀으로</h4>
+                </div>
+
+                <div style="display:none">
+                    <table id="templateTable" class="counterTable table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">승리</th>
+                                <th scope="col">패배</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                        </thead>
+                        <tbody> </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="con2" class="con" style="width:700px">
+                <h3>캐릭 상성</h3>
+                <div id="con2_1" class="table-responsive width50p floatLeft">
+                    <h4>같은팀으로</h4>
+                </div>
+                <div id="con2_2" class="table-responsive width50p">
+                    <h4>적팀으로</h4>
+                </div>
+            </div>
+
+            <!-- 카카오 광고 -->
+            <%- include  ("../layout/rightBanner") %>
+        </div>
+
+        <div id="template" class="infoDiv" style="display:none">
+
+        </div>
+
+</body>
+
+</html>

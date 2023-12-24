@@ -675,3 +675,16 @@ table td {
 .mapRate {
     font-weight: normal; 
 }
+
+
+.counterTable {
+    width: 99%;
+    border-collapse: collapse;
+}
+
+.counterTable tbody {
+    
+    overflow-y: auto;
+    height: 600px;
+}
+
