@@ -75,12 +75,16 @@
             }
             
             const drawUserCounter = (div, rows) => {
+                let min = $("#min").val() || 3;
                 var clone = $("#templateTable").clone();
                 clone.removeAttr("id");
                 clone.find("th:first").text("닉네임");
                 var body = clone.find("tbody");
-                rows.sort(counterTotalDesc); //내림차순 정렬
-                rows.forEach(row => {
+
+                //rows.sort(counterTotalDesc); //내림차순 정렬
+                rows.sort(counterRateDesc); //내림차순 정렬
+                
+                rows.filter(row => (row.win + row.lose) > min).forEach(row => {
                     body.append(
                         `<tr>
                             <td><b>${row.nickname}</b></td>
@@ -149,9 +153,18 @@
                 ※ 베타 버전이며, 분석하는데 시간이 걸립니다. (개선예정)
                 </div>
                 <div class="width50p floatLeft input-group">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">닉네임</span>
+                    </div>                    
                     <input type="text" id="nickName" class="shortText form-control" 
-                        placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton" 
+                        placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton"                     
                         onKeyPress="if(event.keyCode == 13) { userCounter(); }">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">판수</span>
+                    </div>
+                    <input type="number" id="min" class="shortText form-control" 
+                        placeholder="3판이상" aria-label="3판이상" aria-describedby="searchButton" >
+
                     <div class="input-group-append" id="searchButton">
                         <button class="btn btn-outline-secondary" type="button" onClick="userCounter();">검색</button>
                     </div>
