@@ -941,7 +941,6 @@ function userSeasonRank(playerId, callback) {
     });
 }
 
-
 function drawCharCardVer(div, charInfo, nickname) {
     const {characterId, win, lose, count } = charInfo;
     let isMap = div.parent().parent().hasClass("mapCard");
@@ -981,3 +980,56 @@ function drawCharCardVer(div, charInfo, nickname) {
     div.append(card);
 }
 
+const drawDailyResult = (div, dailyMap) => {
+    let table = "<table class='table table-bordered table-striped'>";
+    let tr = "<thead><tr>"; 
+    let tbody = "<tbody><tr>";
+    let endTbody = "</tr></tbody></table>";
+
+    let th = "";
+    let td = "";
+    let trCount = 1;
+    let first = true;
+
+    dailyMap.forEach(function(item, key) {
+        th += `<th>${key}</th>`;
+        td += `<td>${item.win}승 ${item.lose}패 </td>`;
+        if (trCount % 7 == 0) {
+            let newTable = table + tr + th + tbody + td + endTbody;
+            th = "";
+            td = "";
+            if (first) {
+                div.find("#dailyResult").empty().append(newTable);
+                first = false;
+            } else {
+                div.find("#moreDailyResult").append(newTable);
+            }
+        }
+        trCount++;
+    });
+}
+
+const calcDaily = (rows) => {
+    const dailyMap = new Map();
+    rows.forEach(row => setMap(dailyMap, row.playInfo.result == 'win', getDay(row.date)));
+    return dailyMap;
+}
+
+const setMap = (map, isWin, key) => {
+    if(isWin) {
+        map.set(key, {
+            win: (map.get(key)?.win || 0) + 1,
+            lose: map.get(key)?.lose || 0,
+        });
+    }else {
+        map.set(key, {
+            win: map.get(key)?.win || 0,
+            lose: (map.get(key)?.lose || 0 ) + 1,
+        });
+    }
+}
+
+const getDay = (yyymmddStr) => {                
+    var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
+    return dateParts[0].slice(2);
+}
