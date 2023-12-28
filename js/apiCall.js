@@ -310,69 +310,45 @@ function drawInGameDetail(matchId, data, trClass) {
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
-    // if (isMobile) {
-    //     score +=
-    //         `<td>${winLoseKo(playInfo.result)}</td>
-    //          <td> ${drawCharicter(playInfo.characterId, true)} </td>
-    //          <td colspan='4'>
-    //             <div class='fontSmall'>
-    //                 &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
-    //                 ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
-    //                 <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
-    //                 ${partyCnt}
-    //             </div>
-    //          </td>
-    //          <td class='kda'>
-    //             ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
-    //             <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
-    //          </td>`;
-    // } else {
-        let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
-        let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+    let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
+    let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
 
-        score += `<td>${winLoseKo(playInfo.result)}</td>";
-                  <td>${drawCharicter(playInfo.characterId)}</td>";
-                  <td>${getPositionIcon(data.position.name)}</td>";
-                  <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
-        if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
-            score +=
-                ` <td>
-                     <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
-                     &nbsp;${partyCnt}
-                  </td>`;
-        } else {
-            score += `<td>${data.nickname} ${partyCnt}</td>`;
-        }
+    score += `<td>${winLoseKo(playInfo.result)}</td>";
+                <td>${drawCharicter(playInfo.characterId)}</td>";
+                <td>${getPositionIcon(data.position.name)}</td>";
+                <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
+    if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
         score +=
-            `<td>${playInfo.level}</td>
-             <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
-             <td class='kda'>${playInfo.killCount}</td>
-             <td class='kda'>${playInfo.deathCount}</td>
-             <td class='kda'>${playInfo.assistCount}</td>
-             <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
-             <td class='kda'>${useCoin}(${usePer}%)</td>`;
-    // }
-
-    let itemInfoId = `m${matchId}_${data.playerId}`;
-    if (!isMobile) {
-        score += `<td>
-                    <i class="fas fa-angle-double-down" data-toggle="collapse" 
-                        data-target=".${itemInfoId}" aria-expanded="true">
-                    </i>
+            ` <td>
+                    <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
+                    &nbsp;${partyCnt}
                 </td>`;
+    } else {
+        score += `<td>${data.nickname} ${partyCnt}</td>`;
     }
-    score += "</tr>"
+    score +=
+        `<td>${playInfo.level}</td>
+         <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
+         <td class='kda'>${playInfo.killCount}</td>
+         <td class='kda'>${playInfo.deathCount}</td>
+         <td class='kda'>${playInfo.assistCount}</td>
+         <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
+         <td class='kda'>${useCoin}(${usePer}%)</td>`;
 
-    //아이템 착용
-    if (!isMobile) {
-        score += `<tr class='${trClass}'>
+    let itemInfoId = `m${matchId}_${data.playerId}`;    
+    score += `<td>
+                <i class="fas fa-angle-double-down" data-toggle="collapse" 
+                    data-target=".${itemInfoId}" aria-expanded="true">
+                </i>
+            </td>
+        </tr>
+        <tr class='${trClass}'>
             <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
         </tr>`;
-    }
 
     return score;
 }
