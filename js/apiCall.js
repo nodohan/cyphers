@@ -274,15 +274,15 @@ function drawInGameList(data) {
              <td>${winLoseKo(playInfo.result)}</td>
              <td>${getPositionIcon(data.position.name)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>`;
-    if (isMobile) {
-        score +=
-            `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
-             <td>
-                <i class='fas fa-angle-double-down' data-toggle='collapse' 
-                    data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
-             </td>
-        </tr>`;
-    } else {
+    // if (isMobile) {
+    //     score +=
+    //         `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
+    //          <td>
+    //             <i class='fas fa-angle-double-down' data-toggle='collapse' 
+    //                 data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+    //          </td>
+    //     </tr>`;
+    // } else {
         score +=
             `<td>${playInfo.level}</td>
              <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
@@ -294,10 +294,10 @@ function drawInGameList(data) {
                     data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
         </tr>`;
-    }
+    // }
     score +=
         `<tr>
-            <td class='hiddenRow' colspan='${isMobile ? 7 : 12}'>
+            <td class='hiddenRow' colspan='12'>
                 <div class='collapse m${matchId}'></div>
             </td>
         </tr>`;
@@ -310,23 +310,23 @@ function drawInGameDetail(matchId, data, trClass) {
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
-    if (isMobile) {
-        score +=
-            `<td>${winLoseKo(playInfo.result)}</td>
-             <td> ${drawCharicter(playInfo.characterId, true)} </td>
-             <td colspan='4'>
-                <div class='fontSmall'>
-                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
-                    ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
-                    <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
-                    ${partyCnt}
-                </div>
-             </td>
-             <td class='kda'>
-                ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
-                <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
-             </td>`;
-    } else {
+    // if (isMobile) {
+    //     score +=
+    //         `<td>${winLoseKo(playInfo.result)}</td>
+    //          <td> ${drawCharicter(playInfo.characterId, true)} </td>
+    //          <td colspan='4'>
+    //             <div class='fontSmall'>
+    //                 &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
+    //                 ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
+    //                 <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
+    //                 ${partyCnt}
+    //             </div>
+    //          </td>
+    //          <td class='kda'>
+    //             ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
+    //             <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
+    //          </td>`;
+    // } else {
         let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
         let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
 
@@ -353,7 +353,7 @@ function drawInGameDetail(matchId, data, trClass) {
              <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
              <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
              <td class='kda'>${useCoin}(${usePer}%)</td>`;
-    }
+    // }
 
     let itemInfoId = `m${matchId}_${data.playerId}`;
     if (!isMobile) {
@@ -502,7 +502,7 @@ function drawChar(div, charInfo) {
 }
 
 function drawCharicter(charId, isLarge = false) {
-    return ` <img class='drawIcon ${isLarge ? 'charImgLarge' : ''}' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
+    return ` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
