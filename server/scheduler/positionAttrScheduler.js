@@ -12,7 +12,7 @@ module.exports = (scheduler, maria) => {
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call position attr collect scheduler");
-            await selectPositionAttr(null);
+            await selectMatchInfo(null);
             positionStats();
             logger.info("end position attr collect scheduler");
         }
@@ -27,7 +27,7 @@ module.exports = (scheduler, maria) => {
                 .end();
         }
 
-        return selectPositionAttr(res);
+        return selectMatchInfo(res);
     });
 
     //test  ( "/positionSche/positionStats" ) // 2번
@@ -44,23 +44,29 @@ module.exports = (scheduler, maria) => {
 
 
     // ------- 1. 포지션 특성 사용 이력 저장 [START] ------------------------
-
-    async function selectPositionAttr(res, day = new Date()) {
+    async function selectMatchInfo(res, day = new Date()) {
         let pageSize = 3000;
         let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -2));
         //let searchDateStr = '2022-12-06';
         let query = `SELECT matchId, jsonData, matchDate 
                      FROM matches where matchDate > '${searchDateStr}' 
                      AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
-        //logger.debug(query);
 
         let pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
             for (i = 0; i < rows.length; i++) {
                 let row = rows[i];
-                await insertPositionAttr(pool, row.matchId, JSON.parse(row.jsonData));
-                //logger.debug(`position collect end matchId = ${row.matchId}`);
+                const jsonData = JSON.parse(row.jsonData);
+                //특성 정보 insert
+                await insertPositionAttr(pool, row.matchId, jsonData);
+
+                // 매칭 플레이어 id 매핑 테이블 insert
+                try {
+                    await insertMatchUser(pool, row.matchId, jsonData);
+                } catch (matchInsertError) {
+                    logger.error("match player insert error", matchInsertError);
+                }
             }
 
         } catch (err) {
@@ -79,6 +85,22 @@ module.exports = (scheduler, maria) => {
                 .status(200)
                 .send(true.toString() + new Date().toISOString())
                 .end();
+        }
+    }
+
+    const insertMatchUser = async (pool, matchId, row) => {
+        // 플레이어 아이디를 이중 배열로 처리 (벌크돌리려구)
+        const players = [ ...row.teams[0].players.map(row => [row]), ...row.teams[1].players.map(row => [row]) ];
+        const insertQuery = ` insert into matches_users (matchId, playerId) values ( '${matchId}' , ? )  `;
+
+        try {
+            await pool.batch(insertQuery, players, function(err) {
+                console.log(err);
+                logger.error(err);
+                if (err) throw err;
+            });
+        } catch (err) {
+            logger.error(err.message);
         }
     }
 
