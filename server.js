@@ -50,6 +50,8 @@ const nodo = require('./server/controller/nodoController')(null, maria, loggerCa
 // 스케쥴러4. 사용자 상세 통계
 const userDetail = require('./server/scheduler/userDetailScheduler')(scheduler, maria, loggerCatcher);
 
+// 스케줄러5. 매칭 유저 리스트 매핑
+const matchUserScheduler = require('./server/scheduler/matchUserScheduler')(scheduler, maria, loggerCatcher);
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -74,7 +76,7 @@ app.use('/position', position);
 app.use('/positionSche', positionSche);
 app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
-
+app.use('/matchUser', matchUserScheduler);
 
 app.use(loggerCatcher());
 
