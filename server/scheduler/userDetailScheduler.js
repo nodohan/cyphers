@@ -75,7 +75,7 @@ module.exports = (scheduler, maria, acclogger) => {
     }
     
     const result = await matchDetailCharRepository.selectDetail(playerId);
-    res.send({ "resultMsg": "조회함2", "resultCode": 200, "rows" : result });
+    res.send({ "resultMsg": "조회함2", "resultCode": 200, "nickname" : req.query.nickname,  "rows" : result });
   });
 
   const reserve = async (playerId) =>  {
