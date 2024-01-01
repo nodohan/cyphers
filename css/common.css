@@ -676,15 +676,18 @@ table td {
     font-weight: normal; 
 }
 
-
 .counterTable {
     width: 99%;
     border-collapse: collapse;
 }
 
 .counterTable tbody {
-    
     overflow-y: auto;
     height: 600px;
 }
 
+
+.userCountInfo {
+    margin-left: 20px;
+    width: 320px;
+}
