@@ -83,7 +83,10 @@ module.exports = (scheduler, maria, acclogger) => {
     if(detail.length == 0) {
       await matchDetailCharRepository.insertUserDetail(playerId);
       return "insert";
-    } 
+    } else {
+      await matchDetailCharRepository.updateUserDetailState("reserve", playerId);
+      return "update";
+    }
     // 오늘이랑 checkDate를 비교해서 다르면 날짜를 update처리하고 
     return ;
   }

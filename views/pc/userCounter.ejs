@@ -31,31 +31,50 @@
 
             const callCounter = (result)  => {
                 const userDetail = result.rows[0];
-                console.log("callCounter", userDetail);
-                const data = {
-                    'nickname': $("#nickName").val()
-                };
-
                 if(userDetail == null) {
-                    ajaxCall("/userDetail/insertUserDetail", data, alterInfo);
+                    insertUserDetail();
                     return ;
                 }
                 
+                drawCountInfo(result.nickname, userDetail);
+                if(userDetail.complateDate != null) {
+                    drawCounterItems(userDetail);
+                }
+            }
+
+            const drawCountInfo = (nickname, userDetail) => {
+                if(userDetail.complateDate != null) {
+                    return ;
+                }
+
                 let resultMsg = "접수하였습니다.";
                 switch(userDetail.state) {
                     case "insert" : resultMsg = "접수하였습니다."; break;
                     case "reserve" : resultMsg = "대기중입니다."; break;
                     case "running" : resultMsg = "분석중입니다."; break;
-                    case "complate" :  {
-                        drawCounterItems(userDetail);
-                        return ;
-                    }
+                    case "complate" :  return ; break;
                 }
                 alert(resultMsg);
             }
 
+            const insertUserDetail = () => {
+                ajaxCall("/userDetail/insertUserDetail", { 'nickname': $("#nickName").val() }, alterInfo);
+                return ;
+            }
+
+            const isYesterday = (dateString) => {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                return dateString.substring(0,10) === yesterday.toISOString().substring(0, 10);
+            }
+
             const drawCounterItems = (data) => {
-                $(".userCountSpan").empty().append(`<h3>유저 상성  <수집일 : ${data.complateDate.substring(0,10)}>`)
+                let button = "";
+                if(data.state == 'complate' && !isYesterday(data.complateDate)) {
+                    button = `<button type="button" class="btn btn-primary" onClick="javascript:insertUserDetail();">재분석</button>`;
+                }
+
+                $(".userCountSpan").empty().append(`<h3>유저 상성  <수집일 : ${data.complateDate.substring(0,10)} ${button}>`)
                 $("#con1_1").empty().append(`<h4>같은 팀으로 </h4>`);
                 $("#con1_2").empty().append("<h4>적팀(win:내가 승 /lose:내가 패)</h4>");
                 $("#con2_1").empty().append("<h4>같은 팀으로</h4>");
@@ -147,30 +166,31 @@
     <%- include  ("../layout/menu") %>
         <div id="main" style="width:85%">
             <div class="top" style="width:85%; height:140px">
-                <div>
-                ※ 공식 유저의 인간/캐릭터 상성을 분석한 페이지입니다. <br>
-                ※ 아이디 검색시 자동으로 분석 등록이 됩니다. <br>
-                ※ 베타 버전이며, 분석하는데 시간이 걸립니다. (개선예정)
-                </div>
-                <div class="width50p floatLeft input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">닉네임</span>
-                    </div>                    
-                    <input type="text" id="nickName" class="shortText form-control" 
-                        placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton"                     
-                        onKeyPress="if(event.keyCode == 13) { userCounter(); }">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">판수</span>
+                <div class="width50p floatLeft">
+                    <div>
+                    ※ 공식 유저의 인간/캐릭터 상성을 분석한 페이지입니다. <br>
+                    ※ 아이디 검색시 자동으로 분석 등록이 됩니다. <br>
+                    ※ 베타 버전이며, 분석하는데 시간이 걸립니다. (개선예정)
                     </div>
-                    <input type="number" id="min" class="shortText form-control" 
-                        placeholder="3판이상" aria-label="3판이상" aria-describedby="searchButton" >
+                    <div class="width100p floatLeft input-group">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">닉네임</span>
+                        </div>                    
+                        <input type="text" id="nickName" class="shortText form-control" 
+                            placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton"                     
+                            onKeyPress="if(event.keyCode == 13) { userCounter(); }">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">판수</span>
+                        </div>
+                        <input type="number" id="min" class="shortText form-control" 
+                            placeholder="3판이상" aria-label="3판이상" aria-describedby="searchButton" >
 
-                    <div class="input-group-append" id="searchButton">
-                        <button class="btn btn-outline-secondary" type="button" onClick="userCounter();">검색</button>
+                        <div class="input-group-append" id="searchButton">
+                            <button class="btn btn-outline-secondary" type="button" onClick="userCounter();">검색</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
 
             <div id="con1" class="con" style="width:700px">
                 <span class="userCountSpan"><h3>유저 상성</h3></span>
