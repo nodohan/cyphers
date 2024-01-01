@@ -58,7 +58,7 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query);
     }
 
-    udpateUserDetailState = async(state, playerId) => {
+    updateUserDetailState = async(state, playerId) => {
         const query = `
         UPDATE userDetail 
         SET 
@@ -76,7 +76,7 @@ class matchDetailCharRepository {
         return await this.maria.doQuery(query, [ playerId ]);
     }
 
-    udpateUserDetail = async(state, playerId, result) => {
+    updateUserDetail = async(state, playerId, result) => {
         const query = `
         UPDATE userDetail 
         SET 

@@ -28,9 +28,9 @@ module.exports = (scheduler, maria, acclogger) => {
           const playerId = detail[0].playerId;
 
           logger.info("dowork userDetail scheduler %s", playerId);
-          await matchDetailCharRepository.udpateUserDetailState('running', playerId); //활성화 후 
+          await matchDetailCharRepository.updateUserDetailState('running', playerId); //활성화 후 
           let data = await doDayWork(playerId); // 시작
-          await matchDetailCharRepository.udpateUserDetail('complate', playerId, data); // 종료되면 업데이트
+          await matchDetailCharRepository.updateUserDetail('complate', playerId, data); // 종료되면 업데이트
         }
       }
   });
