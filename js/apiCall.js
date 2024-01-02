@@ -481,7 +481,17 @@ function drawCharicter(charId) {
     return ` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
+
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
+
+    let imgUrl = "http://static.cyphers.co.kr/img/game_position/";
+    switch(type){
+        case "tanker" : imgUrl += "position1.jpg";  break;
+        case "melee" : imgUrl += "position2.jpg";  break;
+        case "ad" : imgUrl += "position3.jpg";  break;
+        case "supp" : imgUrl += "position4.jpg";  break;
+    }
+
     let infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
 
     if (type != null) {
