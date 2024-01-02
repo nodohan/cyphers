@@ -477,7 +477,7 @@ function drawChar(div, charInfo) {
     div.append(`${pov.toFixed(0)}% (${charInfo.win}승 ${charInfo.lose}패)`);
 }
 
-function drawCharicter(charId, isLarge = false) {
+function drawCharicter(charId) {
     return ` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
