@@ -274,15 +274,15 @@ function drawInGameList(data) {
              <td>${winLoseKo(playInfo.result)}</td>
              <td>${getPositionIcon(data.position.name)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>`;
-    if (isMobile) {
-        score +=
-            `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
-             <td>
-                <i class='fas fa-angle-double-down' data-toggle='collapse' 
-                    data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
-             </td>
-        </tr>`;
-    } else {
+    // if (isMobile) {
+    //     score +=
+    //         `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
+    //          <td>
+    //             <i class='fas fa-angle-double-down' data-toggle='collapse' 
+    //                 data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+    //          </td>
+    //     </tr>`;
+    // } else {
         score +=
             `<td>${playInfo.level}</td>
              <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
@@ -294,10 +294,10 @@ function drawInGameList(data) {
                     data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
         </tr>`;
-    }
+    // }
     score +=
         `<tr>
-            <td class='hiddenRow' colspan='${isMobile ? 7 : 12}'>
+            <td class='hiddenRow' colspan='15'>
                 <div class='collapse m${matchId}'></div>
             </td>
         </tr>`;
@@ -310,69 +310,45 @@ function drawInGameDetail(matchId, data, trClass) {
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
-    if (isMobile) {
-        score +=
-            `<td>${winLoseKo(playInfo.result)}</td>
-             <td> ${drawCharicter(playInfo.characterId, true)} </td>
-             <td colspan='4'>
-                <div class='fontSmall'>
-                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
-                    ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
-                    <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
-                    ${partyCnt}
-                </div>
-             </td>
-             <td class='kda'>
-                ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
-                <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
-             </td>`;
-    } else {
-        let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
-        let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+    let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
+    let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
 
-        score += `<td>${winLoseKo(playInfo.result)}</td>";
-                  <td>${drawCharicter(playInfo.characterId)}</td>";
-                  <td>${getPositionIcon(data.position.name)}</td>";
-                  <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
-        if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
-            score +=
-                ` <td>
-                     <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
-                     &nbsp;${partyCnt}
-                  </td>`;
-        } else {
-            score += `<td>${data.nickname} ${partyCnt}</td>`;
-        }
+    score += `<td>${winLoseKo(playInfo.result)}</td>";
+                <td>${drawCharicter(playInfo.characterId)}</td>";
+                <td>${getPositionIcon(data.position.name)}</td>";
+                <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
+    if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
         score +=
-            `<td>${playInfo.level}</td>
-             <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
-             <td class='kda'>${playInfo.killCount}</td>
-             <td class='kda'>${playInfo.deathCount}</td>
-             <td class='kda'>${playInfo.assistCount}</td>
-             <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
-             <td class='kda'>${useCoin}(${usePer}%)</td>`;
-    }
-
-    let itemInfoId = `m${matchId}_${data.playerId}`;
-    if (!isMobile) {
-        score += `<td>
-                    <i class="fas fa-angle-double-down" data-toggle="collapse" 
-                        data-target=".${itemInfoId}" aria-expanded="true">
-                    </i>
+            ` <td>
+                    <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
+                    &nbsp;${partyCnt}
                 </td>`;
+    } else {
+        score += `<td>${data.nickname} ${partyCnt}</td>`;
     }
-    score += "</tr>"
+    score +=
+        `<td>${playInfo.level}</td>
+         <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
+         <td class='kda'>${playInfo.killCount}</td>
+         <td class='kda'>${playInfo.deathCount}</td>
+         <td class='kda'>${playInfo.assistCount}</td>
+         <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
+         <td class='kda'>${useCoin}(${usePer}%)</td>`;
 
-    //아이템 착용
-    if (!isMobile) {
-        score += `<tr class='${trClass}'>
+    let itemInfoId = `m${matchId}_${data.playerId}`;    
+    score += `<td>
+                <i class="fas fa-angle-double-down" data-toggle="collapse" 
+                    data-target=".${itemInfoId}" aria-expanded="true">
+                </i>
+            </td>
+        </tr>
+        <tr class='${trClass}'>
             <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
         </tr>`;
-    }
 
     return score;
 }
@@ -501,8 +477,8 @@ function drawChar(div, charInfo) {
     div.append(`${pov.toFixed(0)}% (${charInfo.win}승 ${charInfo.lose}패)`);
 }
 
-function drawCharicter(charId, isLarge = false) {
-    return ` <img class='drawIcon ${isLarge ? 'charImgLarge' : ''}' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
+function drawCharicter(charId) {
+    return ` <img class='drawIcon' src='https://img-api.neople.co.kr/cy/characters/${charId}' />`;
 }
 
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
@@ -941,7 +917,6 @@ function userSeasonRank(playerId, callback) {
     });
 }
 
-
 function drawCharCardVer(div, charInfo, nickname) {
     const {characterId, win, lose, count } = charInfo;
     let isMap = div.parent().parent().hasClass("mapCard");
@@ -981,3 +956,57 @@ function drawCharCardVer(div, charInfo, nickname) {
     div.append(card);
 }
 
+const drawDailyResult = (div, dailyMap) => {
+    let table = "<table class='table table-bordered table-striped'>";
+    let tr = "<thead><tr>"; 
+    let tbody = "<tbody><tr>";
+    let endTbody = "</tr></tbody></table>";
+
+    let th = "";
+    let td = "";
+    let trCount = 1;
+    let first = true;
+    let columnNum = isMobile ? 4 : 7;
+
+    dailyMap.forEach(function(item, key) {
+        th += `<th>${key}</th>`;
+        td += `<td>${item.win}승 ${item.lose}패 </td>`;
+        if (trCount % columnNum == 0) {
+            let newTable = table + tr + th + tbody + td + endTbody;
+            th = "";
+            td = "";
+            if (first) {
+                div.find("#dailyResult").empty().append(newTable);
+                first = false;
+            } else {
+                div.find("#moreDailyResult").append(newTable);
+            }
+        }
+        trCount++;
+    });
+}
+
+const calcDaily = (rows) => {
+    const dailyMap = new Map();
+    rows.forEach(row => setMap(dailyMap, row.playInfo.result == 'win', getDay(row.date)));
+    return dailyMap;
+}
+
+const setMap = (map, isWin, key) => {
+    if(isWin) {
+        map.set(key, {
+            win: (map.get(key)?.win || 0) + 1,
+            lose: map.get(key)?.lose || 0,
+        });
+    }else {
+        map.set(key, {
+            win: map.get(key)?.win || 0,
+            lose: (map.get(key)?.lose || 0 ) + 1,
+        });
+    }
+}
+
+const getDay = (yyymmddStr) => {                
+    var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
+    return dateParts[0].slice(2);
+}

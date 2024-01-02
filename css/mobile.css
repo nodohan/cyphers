@@ -103,8 +103,7 @@ table td {
 }
 
 .drawIcon {
-    width: 26px;
-    height: 26px;
+    height: 25px;
 }
 
 .drawIcon45 {
@@ -280,8 +279,7 @@ table td {
 }
 
 .charImgSmall {
-    width: 38px;
-    height: 38px;
+    width: 27%;    
 }
 
 .charImgLarge {
@@ -299,4 +297,9 @@ table td {
 
 table {
     font-size: small;
+}
+
+
+table, td, th { 
+    white-space: nowrap;
 }
