@@ -298,3 +298,8 @@ table td {
 table {
     font-size: small;
 }
+
+
+table, td, th { 
+    white-space: nowrap;
+}

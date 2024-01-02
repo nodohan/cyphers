@@ -5,6 +5,10 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
         <script type="text/javascript">
+
+            var nickname;
+            var userData = {};
+
             function searchDetail() {
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
             }
@@ -23,11 +27,11 @@
                 var div = $("#template2").clone();
 
                 var rows = data.matches.rows;
-                drawMapInfo(rows, div, 101, "#river"); //리버포트
-                drawMapInfo(rows, div, 102, "#metro"); //메트로폴리스
-                drawMapInfo(rows, div, 103, "#bristol"); //브리스톨
-                drawMapInfo(rows, div, 104, "#spring"); //스프링필드
-                drawMapInfo(rows, div, 105, "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
+                drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
+                drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
+                drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
+                drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
 
                 div.show();
 
@@ -35,12 +39,18 @@
             }
 
             function drawLeftInfo(gameType, data) {
+                userData = {}; //초기화
+                nickname = data.nickname;
+                if (userData[nickname] == null) {
+                    userData[nickname] = data;
+                }
+
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
                 var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
 
                 //기본 정보
                 var clone = $("#template").clone();
-                clone.attr("id", getUserDivId(gameType, data.nickname));
+                clone.attr("id", getUserDivId(gameType, nickname));
                 $(clone).find("#gameTypeDiv").text("[" + (gameType == 'rating' ? "공식전" : "일반전") + "]");
                 $(clone).find("#nickNameDiv").text(data.nickname);
                 $(clone).find("#levelDiv").text(data.grade + "급");
@@ -48,16 +58,18 @@
 
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
-                //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
 
                 var rows = data.matches.rows;
 
                 //포지션 별 승률
-                drawPosition(clone, rows, data.nickname);
+                drawPosition(clone, rows, nickname);
 
                 //최근 5경기 결과
                 drawRecently(clone, rows);
+
+                //일별 승패
+                drawDailyResult(clone, calcDaily(rows));
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
@@ -82,15 +94,21 @@
             /***
              * 맵별 포지션 승률
              */
-            function drawMapInfo(rows, div, mapId, mapName) {
+             function drawMapInfo(rows, div, mapId, mapName, divId) {
                 //포지션별 승률
-                var mapRow = extractMap(rows, mapId);
-                drawPosition(div.find(mapName), mapRow);
-
-                var userMapChar = extractChar(mapRow, highScore);
-                //drawCharInfo(div.find(mapName).find("#often"), userMapChar, "높은승률 TOP");
-                drawOften(div.find(mapName).find("#often"), userMapChar, drawCharCardVer);
+                let mapRow = extractMap(rows, mapName);                
+                showMapRate(div.find(divId).find(".mapRate"), mapRow);                
+                drawPosition(div.find(divId), mapRow, nickname);
+                let userMapChar = extractChar(mapRow, highScore);
+                drawOften(div.find(divId).find("#often"), userMapChar, drawCharCardVer, nickname);
             }
+
+            const showMapRate = (div, mapRow) => {
+                const totalCount = mapRow.length;
+                const winCount = mapRow.filter(row => row.playInfo.result == 'win').length;
+                div.empty().append(`(승률: ${((winCount/totalCount) * 100).toFixed(0)}% / ${totalCount}전 ${winCount}승 ${totalCount - winCount} 패 )`);
+            }
+
         </script>
 </head>
 
@@ -226,11 +244,11 @@
                     <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
                 </label>
 
-                <div id="dailyResult" class="dailyResult">
+                <div id="dailyResult" class="dailyResult width100p">
                     
                 </div>
 
-                <div id="moreDailyResult" class="collapse">
+                <div id="moreDailyResult" class="collapse width100p">
 
                 </div>
             </div>
@@ -367,6 +385,85 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div id="modalDiv">
+            <!-- 모달 영역 -->
+            <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel  ">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="templateTable" class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">날짜</th>
+                                        <th scope="col">파티</th>
+                                        <th scope="col">결과</th>
+                                        <th scope="col">포지션</th>
+                                        <th scope="col">캐릭터</th>
+                                        <th scope="col">Lv</th>
+                                        <th scope="col">KDA</th>
+                                        <th scope="col">딜량</th>
+                                        <th scope="col">피해량</th>
+                                        <th scope="col">소모품%</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="templateDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateDetailModalLabel">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="templateDetailModalLabel"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">C</th>
+                                        <th scope="col">P</th>
+                                        <th scope="col">buff</th>
+                                        <th scope="col">닉네임</th>
+                                        <th scope="col">Lv</th>
+                                        <th scope="col">KDA</th>
+                                        <th scope="col">킬</th>
+                                        <th scope="col">데스</th>
+                                        <th scope="col">도움</th>
+                                        <th scope="col">딜량</th>
+                                        <th scope="col">피해량</th>
+                                        <th scope="col">코인</th>
+                                        <th scope="col">소모품(%)</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div hide>
+                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                </div>
+            </div>
+
+
         </div>
 
 </body>

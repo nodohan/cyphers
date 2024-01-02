@@ -297,7 +297,7 @@ function drawInGameList(data) {
     // }
     score +=
         `<tr>
-            <td class='hiddenRow' colspan='12'>
+            <td class='hiddenRow' colspan='15'>
                 <div class='collapse m${matchId}'></div>
             </td>
         </tr>`;
@@ -966,11 +966,12 @@ const drawDailyResult = (div, dailyMap) => {
     let td = "";
     let trCount = 1;
     let first = true;
+    let columnNum = isMobile ? 4 : 7;
 
     dailyMap.forEach(function(item, key) {
         th += `<th>${key}</th>`;
         td += `<td>${item.win}승 ${item.lose}패 </td>`;
-        if (trCount % 7 == 0) {
+        if (trCount % columnNum == 0) {
             let newTable = table + tr + th + tbody + td + endTbody;
             th = "";
             td = "";
