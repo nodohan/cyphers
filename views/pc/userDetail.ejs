@@ -9,6 +9,7 @@
 
         <script type="text/javascript">
             pageName = "pcDetail";
+            var userData = {};
 
             var playRow = null;
             var nickname;
@@ -29,6 +30,12 @@
             }
 
             function setUserDetailInfo(data) {
+                userData = {}; //초기화
+                let nickname = data.nickname;
+                if (userData[nickname] == null) {
+                    userData[nickname] = data;
+                }
+
                 let gameType = $("input[name='gameType']:checked").val();
 
                 $("#con1_2").empty();
@@ -88,35 +95,10 @@
 
                 clone.show();
                 $("#con1_2").prepend(clone);
-            }
-
-            const calcDaily = (rows) => {
-                const dailyMap = new Map();
-                rows.forEach(row => setMap(dailyMap, row.playInfo.result == 'win', getDay(row.date)));
-                return dailyMap;
-            }
-
-            const setMap = (map, isWin, key) => {
-                if(isWin) {
-                    map.set(key, {
-                        win: (map.get(key)?.win || 0) + 1,
-                        lose: map.get(key)?.lose || 0,
-                    });
-                }else {
-                    map.set(key, {
-                        win: map.get(key)?.win || 0,
-                        lose: (map.get(key)?.lose || 0 ) + 1,
-                    });
-                }
-            }
+            }            
 
             const drawMatchUser = (div, row) => {
-            }
-
-            const getDay = (yyymmddStr) => {                
-                var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
-                return dateParts[0].slice(2);
-            }
+            }        
 
             function defaultInfo(gameType, clone, data) {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
@@ -216,7 +198,7 @@
                 //포지션별 승률
                 let mapRow = extractMap(rows, mapName);                
                 showMapRate(div.find(divId).find(".mapRate"), mapRow);                
-                drawPosition(div.find(divId), mapRow);
+                drawPosition(div.find(divId), mapRow, nickname);
                 let userMapChar = extractChar(mapRow, highScore);
                 //drawCharInfo(div.find(divId).find("#often"), userMapChar, "자주하는 TOP");
 
@@ -227,36 +209,6 @@
                 const totalCount = mapRow.length;
                 const winCount = mapRow.filter(row => row.playInfo.result == 'win').length;
                 div.empty().append(`(승률: ${((winCount/totalCount) * 100).toFixed(0)}% / ${totalCount}전 ${winCount}승 ${totalCount - winCount} 패 )`);
-            }
-
-
-            const drawDailyResult = (div, dailyMap) => {
-                let table = "<table class='table table-bordered table-striped'>";
-                let tr = "<thead><tr>"; 
-                let tbody = "<tbody><tr>";
-                let endTbody = "</tr></tbody></table>";
-
-                let th = "";
-                let td = "";
-                let trCount = 1;
-                let first = true;
-
-                dailyMap.forEach(function(item, key) {
-                    th += `<th>${key}</th>`;
-                    td += `<td>${item.win}승 ${item.lose}패 </td>`;
-                    if (trCount % 7 == 0) {
-                        let newTable = table + tr + th + tbody + td + endTbody;
-                        th = "";
-                        td = "";
-                        if (first) {
-                            div.find("#dailyResult").empty().append(newTable);
-                            first = false;
-                        } else {
-                            div.find("#moreDailyResult").append(newTable);
-                        }
-                    }
-                    trCount++;
-                });
             }
 
         </script>
