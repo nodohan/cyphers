@@ -26,12 +26,13 @@ class matchDetailCharRepository {
 
     selectMatchDetailByPlayerId = async(playerId, limit) => {
         const query = `
-            SELECT
+        SELECT
                 jsonData
-            FROM matches
+            FROM matches mc
+            INNER JOIN matches_users mu ON mu.matchId = mc.matchId 
             WHERE matchDate >= '2023-09-13'
-            AND jsonData LIKE '%${playerId}%' limit ?`;
-        return await this.maria.doQuery(query, [ limit ]);
+            AND mu.playerId = ? limit ?`;
+        return await this.maria.doQuery(query, [ playerId, limit ]);
     }
 
     // 
