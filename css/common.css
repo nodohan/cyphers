@@ -57,12 +57,10 @@ table td {
     float: left;
     margin-left: 15px;
     position: relative;
-    /* width: 29%; */
     width: 36%;
     min-width: 530px;
     min-height: 750px;
 }
-
 
 .conDetail {
     margin-top: 10px;
@@ -131,9 +129,7 @@ table td {
     overflow-y: auto;
     height: 88%;
     margin-top: 10px;
-    /* background-color: white; */
     background-color: #fff4e7;
-    
 }
 
 .infoLayer div {
