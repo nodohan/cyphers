@@ -59,6 +59,7 @@ table td {
     position: relative;
     /* width: 29%; */
     width: 36%;
+    min-width: 530px;
     min-height: 750px;
 }
 
