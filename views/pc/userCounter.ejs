@@ -103,7 +103,7 @@
                 //rows.sort(counterTotalDesc); //내림차순 정렬
                 rows.sort(counterRateDesc); //내림차순 정렬
                 
-                rows.filter(row => (row.win + row.lose) > min).forEach(row => {
+                rows.filter(row => (row.win + row.lose) >= min).forEach(row => {
                     body.append(
                         `<tr>
                             <td><b>${row.nickname}</b></td>
