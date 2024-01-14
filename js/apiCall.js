@@ -646,7 +646,7 @@ function getEachPartyResult(arr) {
     return resultTable;
 }
 
-function partyUserSearch(aTagObj, isMobile = false) {
+function partyUserSearch(aTagObj) {
     let aTag = $(aTagObj);
     let partyUserNames = aTag.text().replace(",", " ");
     let conId = aTag.closest(".infoLayer").attr("id");
