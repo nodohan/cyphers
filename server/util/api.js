@@ -122,6 +122,17 @@ class api {
     return result;
   }
 
+  searchUserGrade = async (nickname, gameType) => {
+    this.nickOpt.qs.nickname = nickname;
+    let json = await this.call(this.nickOpt);
+  
+    logger.debug("사용자 %s", json);
+    if (json == null || json.rows == null || json.rows.length == 0) {
+      return { resultCode: -1 };
+    }
+    return {  resultCode : 200, row : json.rows[0].grade };
+  }
+
   async searchMatchInfo(matchId) {
     this.matchOpt.uri += matchId;
     return await this.call(this.matchOpt);

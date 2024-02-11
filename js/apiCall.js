@@ -231,7 +231,6 @@ function searchMatch(matchId, callback, prefix = "m") {
 function drawMatch(matchId, result, divId) {
     let prefixMatchId = divId;
     let data;
-    //console.log(data);
     if (typeof result == 'string') {
         data = JSON.parse(result);
     } else {
@@ -269,22 +268,12 @@ function drawInGameList(data) {
     let playInfo = data.playInfo;
     let score =
         `<tr>
-             <td>${isMobile ? data.date.substr(5) : data.date}</td>
+             <td>${data.date}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
              <td>${winLoseKo(playInfo.result)}</td>
              <td>${getPositionIcon(data.position.name)}</td>
-             <td>${drawCharicter(playInfo.characterId)}</td>`;
-    // if (isMobile) {
-    //     score +=
-    //         `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
-    //          <td>
-    //             <i class='fas fa-angle-double-down' data-toggle='collapse' 
-    //                 data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
-    //          </td>
-    //     </tr>`;
-    // } else {
-        score +=
-            `<td>${playInfo.level}</td>
+             <td>${drawCharicter(playInfo.characterId)}</td>
+             <td>${playInfo.level}</td>
              <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
              <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
              <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
@@ -293,10 +282,8 @@ function drawInGameList(data) {
                 <i class='fas fa-angle-double-down' data-toggle='collapse' 
                     data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
-        </tr>`;
-    // }
-    score +=
-        `<tr>
+        </tr>
+        <tr>
             <td class='hiddenRow' colspan='15'>
                 <div class='collapse m${matchId}'></div>
             </td>
@@ -326,8 +313,11 @@ function drawInGameDetail(matchId, data, trClass) {
     } else {
         score += `<td>${data.nickname} ${partyCnt}</td>`;
     }
+
+    const gradeTrId = `d_${matchId}_${data.playerId}`;
     score +=
         `<td>${playInfo.level}</td>
+         <td class='${gradeTrId}'>0급</td>
          <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
          <td class='kda'>${playInfo.killCount}</td>
          <td class='kda'>${playInfo.deathCount}</td>
@@ -336,6 +326,8 @@ function drawInGameDetail(matchId, data, trClass) {
          <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
          <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
          <td class='kda'>${useCoin}(${usePer}%)</td>`;
+
+    getUserGrade(gradeTrId, data.nickname);
 
     let itemInfoId = `m${matchId}_${data.playerId}`;    
     score += `<td>
@@ -352,6 +344,26 @@ function drawInGameDetail(matchId, data, trClass) {
 
     return score;
 }
+
+
+const getUserGrade = (trId, nickname) => { 
+    $.ajax({
+        async: true,
+        url: "/user/grade",
+        data: { 'nickname': nickname },
+        success: function(data) {
+            if(data.resultCode == 200) {
+                drawUserGrade(trId, data);
+            }
+        }
+    }).done(function() {
+
+    });
+}
+
+const drawUserGrade = (trId, data) =>  {
+    $("."+ trId).empty().append(data.row+"급");
+} 
 
 function getBuffIcon(buffArr, url) {
     return buffArr

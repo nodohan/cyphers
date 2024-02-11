@@ -689,3 +689,8 @@ table td {
     margin-left: 20px;
     width: 320px;
 }
+
+
+.modal-2xl {
+    max-width: 1300px;
+}
