@@ -8,7 +8,12 @@ module.exports = (scheduler, maria, acclogger) => {
     //  url = "/user/userSearch"
     app.get('/userSearch', function(req, res) {
         commonUtil.getIp(req);
-        if (commonUtil.isMobile(req)) {
+        const isApp = req.query.isApp || false;
+        console.log("앱맞음?", isApp);
+
+        if(isApp){
+            res.render('./app/userSearch');
+        } else if (commonUtil.isMobile(req)) {
             res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
         } else {
             res.render('./pc/userSearch', { 'searchNickname': req.query.nickname });
@@ -54,10 +59,16 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    //  url = "/user/getUserInfo"    
+    //  url = "/user/getUserInfo"
     app.get('/getUserInfo', async function(req, res) {
         res.send(await new api().searchUser(req.query.nickname, req.query.gameType));
     });
+
+    //  url = "/user/grade"
+    app.get('/grade', async function(req, res) {
+        res.send(await new api().searchUserGrade(req.query.nickname, 'rating'));
+    });
+
 
     //  url = "/user/getMatchInfo"    
     app.get('/getMatchInfo', async function(req, res) {
