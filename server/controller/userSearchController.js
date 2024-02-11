@@ -8,7 +8,12 @@ module.exports = (scheduler, maria, acclogger) => {
     //  url = "/user/userSearch"
     app.get('/userSearch', function(req, res) {
         commonUtil.getIp(req);
-        if (commonUtil.isMobile(req)) {
+        const isApp = req.query.isApp || false;
+        console.log("앱맞음?", isApp);
+
+        if(isApp){
+            res.render('./app/userSearch');
+        } else if (commonUtil.isMobile(req)) {
             res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
         } else {
             res.render('./pc/userSearch', { 'searchNickname': req.query.nickname });

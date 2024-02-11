@@ -292,80 +292,79 @@
 <body class="body">
     <%- include  ("../layout/menu") %>
 
+    <!-- 카카오 광고 -->
+    <%- include  ("../layout/leftBanner") %>
+
         <div id="mainUserSearch">
-
-            <!-- 카카오 광고 -->
-            <%- include  ("../layout/leftBanner") %>
-
-                <div class="top" >
-                    <div class="floatLeft width15p">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
-                            <label class="custom-control-label" for="gameType_rating">공식</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                          <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
-                          <label class="custom-control-label" for="gameType_normal">일반</label>
-                        </div>
+            <div class="top" >
+                <div class="floatLeft width15p">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
+                        <label class="custom-control-label" for="gameType_rating">공식</label>
                     </div>
-
-                    <div class="width85">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="positionShow" checked>
-                            <label class="form-check-label" for="positionShow">포지션 노출</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="partyShow" checked>
-                            <label class="form-check-label" for="partyShow">파티 노출</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
-                            <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="recentShow" checked>
-                            <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="tackShow" checked>
-                            <label class="form-check-label" for="tackShow">고정탭 노출</label>
-                        </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
+                        <label class="custom-control-label" for="gameType_normal">일반</label>
                     </div>
                 </div>
-                <div id="con1" class="con">
-                    <h3>우리팀<span class="red gameTypeText"></span></h3>
-                    <div class="input-group">
-                        <input type="text" id="nickNames" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
-                        <div class="input-group-append" id="searchButton">
-                            <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
-                            <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');">초기화</button>
-                        </div>
-                    </div>
-                    <div id="con1_2" class="infoLayer"> </div>
-                </div>
-                <div id="con2" class="con">
-                    <h3>적팀<span class="red gameTypeText"></span></h3>
-                    <div class="input-group">
-                        <input type="text" id="nickNames2" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
-                        <div class="input-group-append" id="searchButton">
-                            <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames2', 'con2_2');">검색</button>
-                            <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con2_2');">초기화</button>
-                        </div>
-                    </div>
-                    <div id="con2_2" class="infoLayer"></div>
-                </div>
 
-                <div id="con3" class="con">
-                    <h3>고정<span class="red gameTypeText"></span></h3>
-                    <div class="input-group" hidden>
-                        <input type="text" id="nickNames3" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames3', 'con3_2'); } ">
-                        <div class="input-group-append" id="searchButton">
-                            <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames3', 'con3_2');">검색</button>
-                            <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con3_2');">초기화</button>
-                        </div>
+                <div class="width85">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="positionShow" checked>
+                        <label class="form-check-label" for="positionShow">포지션 노출</label>
                     </div>
-                    <div id="con3_2" style="height: 92%;" class="infoLayer"></div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="partyShow" checked>
+                        <label class="form-check-label" for="partyShow">파티 노출</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
+                        <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="recentShow" checked>
+                        <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="tackShow" checked>
+                        <label class="form-check-label" for="tackShow">고정탭 노출</label>
+                    </div>
                 </div>
+            </div>
+            <div id="con1" class="con">
+                <h3>우리팀<span class="red gameTypeText"></span></h3>
+                <div class="input-group">
+                    <input type="text" id="nickNames" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');">초기화</button>
+                    </div>
+                </div>
+                <div id="con1_2" class="infoLayer"> </div>
+            </div>
+            <div id="con2" class="con">
+                <h3>적팀<span class="red gameTypeText"></span></h3>
+                <div class="input-group">
+                    <input type="text" id="nickNames2" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames2', 'con2_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con2_2');">초기화</button>
+                    </div>
+                </div>
+                <div id="con2_2" class="infoLayer"></div>
+            </div>
+
+            <div id="con3" class="con">
+                <h3>고정<span class="red gameTypeText"></span></h3>
+                <div class="input-group" hidden>
+                    <input type="text" id="nickNames3" class="form-control" placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames3', 'con3_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames3', 'con3_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con3_2');">초기화</button>
+                    </div>
+                </div>
+                <div id="con3_2" style="height: 92%;" class="infoLayer"></div>
+            </div>
         </div>
 
 

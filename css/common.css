@@ -520,7 +520,8 @@ table td {
 .leftBanner {
     width: 160px;
     float: left;
-    margin-top: 75px;
+    margin-top: 30px;
+    margin-left: 30px;
 }
 
 .nicknameLayer {
