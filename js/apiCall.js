@@ -345,11 +345,10 @@ function drawInGameDetail(matchId, data, trClass) {
     return score;
 }
 
-
 const getUserGrade = (trId, nickname) => { 
     $.ajax({
         async: true,
-        url: "/user/grade",
+        url: "/user/userInfoSimple",
         data: { 'nickname': nickname },
         success: function(data) {
             if(data.resultCode == 200) {
@@ -362,7 +361,8 @@ const getUserGrade = (trId, nickname) => {
 }
 
 const drawUserGrade = (trId, data) =>  {
-    $("."+ trId).empty().append(data.row+"급");
+    console.log(data);
+    $("."+ trId).empty().append(data.row.grade+"급");
 } 
 
 function getBuffIcon(buffArr, url) {
