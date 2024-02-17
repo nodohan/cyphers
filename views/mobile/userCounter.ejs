@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include  ("../layout/head_mobile") %>
+        <script src="/js/charImage.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            pageName = "pcCounter";
+
+            $(document).ready(function() {
+                $("input[type='text']").css("width", "15%");
+
+                $("#mainMenu").removeClass("active");
+                $("#userCounterMenu").addClass("active");
+            })
+
+            function userCounter() {
+                if ($("#nickName").val().trim() === '') {
+                    alert("닉네임을 입력해주세요");
+                    return;
+                }
+                var result = getUserCounter($("#nickName").val());
+            }
+
+            const getUserCounter = (nickname) => {
+                const data = {
+                    'nickname': nickname
+                };
+                ajaxCall("/userDetail/selectUserDetail", data, callCounter);
+            }
+
+            const callCounter = (result)  => {
+                const userDetail = result.rows[0];
+                if(userDetail == null) {
+                    insertUserDetail();
+                    return ;
+                }
+                
+                drawCountInfo(result.nickname, userDetail);
+                if(userDetail.complateDate != null) {
+                    drawCounterItems(userDetail);
+                }
+            }
+
+            const drawCountInfo = (nickname, userDetail) => {
+                if(userDetail.complateDate != null) {
+                    return ;
+                }
+
+                let resultMsg = "접수하였습니다.";
+                switch(userDetail.state) {
+                    case "insert" : resultMsg = "접수하였습니다."; break;
+                    case "reserve" : resultMsg = "대기중입니다."; break;
+                    case "running" : resultMsg = "분석중입니다."; break;
+                    case "complate" :  return ; break;
+                }
+                alert(resultMsg);
+            }
+
+            const insertUserDetail = () => {
+                ajaxCall("/userDetail/insertUserDetail", { 'nickname': $("#nickName").val() }, alterInfo);
+                return ;
+            }
+
+            const isYesterday = (dateString) => {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                return dateString.substring(0,10) === yesterday.toISOString().substring(0, 10);
+            }
+
+            const drawCounterItems = (data) => {
+                let button = "";
+                if(data.state == 'complate' && !isYesterday(data.complateDate)) {
+                    button = `<button type="button" class="btn btn-primary" onClick="javascript:insertUserDetail();">재분석</button>`;
+                }
+
+                $(".userCountSpan").empty().append(`<h3>유저 상성 <br>  <수집일 : ${data.complateDate.substring(0,10)} ${button}>`)
+                $("#con1_1").empty().append(`<h4>같은 팀으로 </h4>`);
+                $("#con1_2").empty().append("<h4>적팀(win:내가 승 /lose:내가 패)</h4>");
+                $("#con2_1").empty().append("<h4>같은 팀으로</h4>");
+                $("#con2_2").empty().append("<h4>적팀(win:내가 승 /lose:내가 패)</h4>");
+
+                const user = JSON.parse(data.playerDetail);
+                const char = JSON.parse(data.charDetail);
+
+                drawUserCounter($("#con1_1"), user.myTeam);
+                drawUserCounter($("#con1_2"), user.enemyTeam);
+                drawCharCounter($("#con2_1"), char.myTeam);
+                drawCharCounter($("#con2_2"), char.enemyTeam);
+            }
+
+            const alterInfo = (data) => {
+                alert("해당 기능은 데이터 수집에 시간이 소요됩니다.\n 추후(최소2분 최대 1시간 예상) 이후 다시 확인해 주세요");
+            }
+            
+            const drawUserCounter = (div, rows) => {
+                let min = $("#min").val() || 3;
+                var clone = $("#templateTable").clone();
+                clone.removeAttr("id");
+                clone.find("th:first").text("닉네임");
+                var body = clone.find("tbody");
+
+                //rows.sort(counterTotalDesc); //내림차순 정렬
+                rows.sort(counterRateDesc); //내림차순 정렬
+                
+                rows.filter(row => (row.win + row.lose) >= min).forEach(row => {
+                    body.append(
+                        `<tr>
+                            <td><b>${row.nickname}</b></td>
+                            <td>${row.win} 승</td>
+                            <td>${row.lose} 패</td>
+                            <td>${((row.win * 100)/ (row.win + row.lose)).toFixed(0)}% </td>
+                        </tr>`);
+                });
+                div.append(clone);
+            }            
+
+            const drawCharCounter = (div, rows) => {
+                var clone = $("#templateTable").clone();
+                clone.find("th:first").text("캐릭터");
+                clone.removeAttr("id");
+                var body = clone.find("tbody");
+
+                let transArr = Object.entries(rows).map(item => {
+                    let charName = item[0];
+                    let charData = item[1];
+                    return { 
+                        win: charData.win, 
+                        lose: charData.lose, 
+                        charName: charName 
+                    };
+                });
+                
+                transArr.sort(counterRateDesc); //내림차순 정렬
+                
+                let imgBaseUrl = "https://img-api.neople.co.kr/cy/characters/";
+                transArr.forEach(row => {
+                    const charImg =  makeCharImgDiv(row.charName, imgBaseUrl + "/" + charMap.get(row.charName));
+                    body.append(
+                        `<tr>
+                            <td><b>${row.charName}</b></td>
+                            <!-- <td>${charImg}</td>-->
+                            <td>${row.win} 승</td>
+                            <td>${row.lose} 패</td>
+                            <td>${((row.win * 100)/ (row.win + row.lose)).toFixed(0)}% </td>
+                        </tr>`);
+                });
+                div.append(clone);
+            }       
+
+            const makeCharImgDiv = (charName, url)  => {
+                return `<div class="charImgDiv rounded border-primary" data-charName='${charName}' onClick="javascript:charClick('${charName}')" >
+                            <img id="char${charName.replace(/\s/g, '')}Img" src="${url}" 
+                              class="rounded charImg" alt="${charName}" /> 
+                              <span class='charNameSpan'>${charName}</span>
+                        </div>`;
+            }
+
+            const counterTotalDesc = (a, b) => (b.win + b.lose) - (a.win + a.lose);
+            const counterRateDesc = (a, b) => ((b.win * 100)/ (b.win + b.lose)) - ((a.win * 100)/ (a.win + a.lose));
+
+        </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu_mobile") %>
+        <div id="main" >
+            <div class="top" >
+                <div>
+                ※ 공식 유저의 인간/캐릭터 상성분석 <br>
+                ※ 최초 검색시 자동으로 분석 등록됩니다. <br>
+                ※ 분석등록 시 1~2분정도 소요됩니다.
+                </div>
+                <div class="width100p floatLeft input-group">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">닉네임</span>
+                    </div>                    
+                    <input type="text" id="nickName" class="shortText form-control" 
+                        placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton"                     
+                        onKeyPress="if(event.keyCode == 13) { userCounter(); }">
+                </div>
+                <div class="width100p floatLeft input-group">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">판수</span>
+                    </div>
+                    <input type="number" id="min" class="shortText form-control" 
+                        placeholder="3판이상" aria-label="3판이상" aria-describedby="searchButton" >
+
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="userCounter();">검색</button>
+                    </div>
+                </div>                
+            </div>
+
+            <div id="con1" class="con" >
+                <span class="userCountSpan"><h1>유저 상성</h1></span>
+                <div id="con1_1" class="table-responsive width50p floatLeft">
+                    <h4>같은팀으로</h4>
+                </div>
+                <div id="con1_2" class="table-responsive width50p">
+                    <h4>적팀으로</h4>
+                </div>
+
+                <div style="display:none">
+                    <table id="templateTable" class="counterTable table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">승리</th>
+                                <th scope="col">패배</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                        </thead>
+                        <tbody> </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="con2" class="con" >
+                <h1>캐릭 상성</h1>
+                <div id="con2_1" class="table-responsive width50p floatLeft">
+                    <h4>같은팀으로</h4>
+                </div>
+                <div id="con2_2" class="table-responsive width50p">
+                    <h4>적팀으로</h4>
+                </div>
+            </div>
+        </div>
+
+        <div id="template" class="infoDiv" style="display:none">
+
+        </div>
+
+</body>
+
+</html>
