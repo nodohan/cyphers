@@ -11,10 +11,8 @@ module.exports = (scheduler, maria, acclogger) => {
         const isApp = req.query.isApp || false;
         console.log("앱맞음?", isApp);
 
-        if(isApp){
-            res.render('./app/userSearch');
-        } else if (commonUtil.isMobile(req)) {
-            res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname });
+        if (isApp || commonUtil.isMobile(req)) {
+            res.render('./mobile/userSearch', { 'searchNickname': req.query.nickname, 'isApp' : isApp });
         } else {
             res.render('./pc/userSearch', { 'searchNickname': req.query.nickname });
         }
