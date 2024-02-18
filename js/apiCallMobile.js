@@ -130,6 +130,7 @@ function searchUser(inputId, divName, nickName, callback) {
                 alert(nickName + "님의 정보가 없습니다.");
                 return;
             }
+            addSearchHistory(nickName);
 
             $("#" + inputId).val("");
             if (isDuplicate(gameType, nickName)) {

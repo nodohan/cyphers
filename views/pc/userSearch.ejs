@@ -18,6 +18,7 @@
                 }
 
                 getCookie();
+                showSearchHistory();
                 $("#partyShow").on("change", () => checkVisibility("partyShow"));
                 $("#positionShow").on("change", () => checkVisibility("positionShow"));
                 $("#mostCharShow").on("change", () => checkVisibility("mostCharShow"));
@@ -297,6 +298,7 @@
 
         <div id="mainUserSearch">
             <div class="top" >
+            
                 <div class="floatLeft width15p">
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
@@ -331,6 +333,9 @@
                     </div>
                 </div>
             </div>
+
+            <div id="topHistory" class="top" ></div>
+
             <div id="con1" class="con">
                 <h3>우리팀<span class="red gameTypeText"></span></h3>
                 <div class="input-group">

@@ -12,11 +12,13 @@
 
             $(document).ready(function () {
                 getCookie();
+                showSearchHistory();
                 $("#partyShow").on("change", checkVisibility);
                 $("#positionShow").on("change", checkVisibility);
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
 
+                
                 $("input[name='gameType']").on("change", setGameType);
             });
 
@@ -345,8 +347,8 @@
                         <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
                     </div>
                 </div>
-
             </div>
+            <div id="topHistory" class="top" ></div>
             <div id="con1" class="con">
                 <div class="input-group">
                     <input type="text" id="nickNames" class="form-control"

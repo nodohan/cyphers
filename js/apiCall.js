@@ -1,9 +1,9 @@
-var tankerIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position1.jpg'>";
-var meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position2.jpg'>";
-var adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
-var suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
-var buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
-var itemDefaultUrl = "https://img-api.neople.co.kr/cy/items/";
+const tankerIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position1.jpg'>";
+const meleeIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position2.jpg'>";
+const adIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position3.jpg'>";
+const suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/game_position/position4.jpg'>";
+const buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
+const itemDefaultUrl = "https://img-api.neople.co.kr/cy/items/";
 
 var pageName = "";
 
@@ -130,6 +130,7 @@ function searchUser(inputId, divName, nickName, callback) {
                 alert(nickName + "님의 정보가 없습니다.");
                 return;
             }
+            addSearchHistory(nickName);
 
             $("#" + inputId).val("");
             if (isDuplicate(gameType, nickName)) {
