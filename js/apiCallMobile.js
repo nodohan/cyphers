@@ -266,39 +266,37 @@ function getTeam(team, result, players) {
 }
 
 function drawInGameList(data) {
-    let matchId = data.matchId;
-    let playInfo = data.playInfo;
+    const { date, matchId, playInfo  } = data;
     let score =
         `<tr>
-             <td>${isMobile ? data.date.substr(5) : data.date}</td>
+             <td>${date.substr(5)}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
              <td>${winLoseKo(playInfo.result)}</td>
              <td>${getPositionIcon(data.position.name)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>`;
-    // if (isMobile) {
-    //     score +=
-    //         `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
-    //          <td>
-    //             <i class='fas fa-angle-double-down' data-toggle='collapse' 
-    //                 data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
-    //          </td>
-    //     </tr>`;
-    // } else {
+
         score +=
-            `<td>${playInfo.level}</td>
-             <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
-             <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
-             <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
+            `<td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>
              <td>
                 <i class='fas fa-angle-double-down' data-toggle='collapse' 
                     data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
         </tr>`;
-    // }
+
+        // score +=
+        //     `<td>${playInfo.level}</td>
+        //      <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
+        //      <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
+        //      <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+        //      <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
+        //      <td>
+        //         <i class='fas fa-angle-double-down' data-toggle='collapse' 
+        //             data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+        //      </td>
+        // </tr>`;
     score +=
         `<tr>
-            <td class='hiddenRow' colspan='5'>
+            <td class='hiddenRow' colspan='7'>
                 <div class='collapse m${matchId}'></div>
             </td>
         </tr>`;
@@ -334,6 +332,7 @@ function drawInGameDetail(matchId, data, trClass) {
                 ${playInfo.getCoin.toLocaleString()}<br>
                 ${useCoin}(${usePer}%)
              </td>
+             <td><!-- empty --></td>
              `;
     } 
 
@@ -350,7 +349,7 @@ function drawInGameDetail(matchId, data, trClass) {
     //아이템 착용
     if (!isMobile) {
         score += `<tr class='${trClass}'>
-            <td class='hiddenRow' colspan='5'>
+            <td class='hiddenRow' colspan='7'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
         </tr>`;
@@ -401,7 +400,7 @@ function drawInGameDetail_org(matchId, data, trClass) {
             </td>
         </tr>
         <tr class='${trClass}'>
-            <td class='hiddenRow' colspan='5'>
+            <td class='hiddenRow' colspan='7'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
         </tr>`;
@@ -861,7 +860,7 @@ function playGameList(findId, div, nickname, showType, modalId) {
                 </td>
                 </tr>
                 <tr>
-                <td class='hiddenRow' colspan='5'>
+                <td class='hiddenRow' colspan='7'>
                 <div class='collapse char_${matchId}'></div>
                 </td>
             </tr>`;
