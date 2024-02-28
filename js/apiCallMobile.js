@@ -305,16 +305,16 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    let playInfo = data.playInfo;
-    let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
-    let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
-    let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+    const playInfo = data.playInfo;
+    const partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
+    const useCoin = playInfo.spendConsumablesCoin.toLocaleString();
+    const usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+    const itemInfoId = `m${matchId}_${data.playerId}`;
 
-    let score = `<tr class='${trClass}'>`;
-    if (isMobile) {
-        score +=
-            `<td>${winLoseKo(playInfo.result)}</td>
-             <td>
+    let score = `
+        <tr class='${trClass}'>
+            <td>${winLoseKo(playInfo.result)}</td>
+            <td>
                 <div class='fontSmall'>
                     ${drawCharicter(playInfo.characterId, true)}
                     &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
@@ -322,78 +322,17 @@ function drawInGameDetail(matchId, data, trClass) {
                     <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
                     ${partyCnt}
                 </div>
-             </td>
-             <!--<td>${playInfo.level}</td>-->
-             <td class='kda'>
+            </td>
+            <!--<td>${playInfo.level}</td>-->
+            <td class='kda'>
                 ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
                 <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K
-             </td>
-             <td class='kda'>
+            </td>
+            <td class='kda'>
                 ${playInfo.getCoin.toLocaleString()}<br>
                 ${useCoin}(${usePer}%)
-             </td>
-             <td><!-- empty --></td>
-             `;
-    } 
-
-    let itemInfoId = `m${matchId}_${data.playerId}`;
-    if (!isMobile) {
-        score += `<td>
-                    <i class="fas fa-angle-double-down" data-toggle="collapse" 
-                        data-target=".${itemInfoId}" aria-expanded="true">
-                    </i>
-                </td>`;
-    }
-    score += "</tr>"
-
-    //아이템 착용
-    if (!isMobile) {
-        score += `<tr class='${trClass}'>
-            <td class='hiddenRow' colspan='7'>
-                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
-        </tr>`;
-    }
-
-    return score;
-}
-
-
-
-function drawInGameDetail_org(matchId, data, trClass) {
-    let playInfo = data.playInfo;
-    let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
-
-    let score = `<tr class='${trClass}'>`;
-    let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
-    let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
-
-    score += `<td>${winLoseKo(playInfo.result)}</td>";
-                <td>${drawCharicter(playInfo.characterId)}</td>";
-                <td>${getPositionIcon(data.position.name)}</td>";
-                <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
-    if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
-        score +=
-            ` <td>
-                    <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
-                    &nbsp;${partyCnt}
-                </td>`;
-    } else {
-        score += `<td>${data.nickname} ${partyCnt}</td>`;
-    }
-    score +=
-        `<td>${playInfo.level}</td>
-         <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
-         <td class='kda'>${playInfo.killCount}</td>
-         <td class='kda'>${playInfo.deathCount}</td>
-         <td class='kda'>${playInfo.assistCount}</td>
-         <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
-         <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
-         <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
-         <td class='kda'>${useCoin}(${usePer}%)</td>`;
-
-    let itemInfoId = `m${matchId}_${data.playerId}`;    
-    score += `<td>
+            <td>
                 <i class="fas fa-angle-double-down" data-toggle="collapse" 
                     data-target=".${itemInfoId}" aria-expanded="true">
                 </i>
@@ -403,7 +342,7 @@ function drawInGameDetail_org(matchId, data, trClass) {
             <td class='hiddenRow' colspan='7'>
                 <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
             </td>
-        </tr>`;
+        </tr>`;    
 
     return score;
 }
@@ -414,9 +353,12 @@ function getBuffIcon(buffArr, url) {
         .join("&nbsp;");
 }
 
-function getItemIcon(buffArr, url) {
-    return buffArr
-        .map(row => `<img class='${isMobile ? 'drawIcon' : ''}' title='${row.itemName}' src='${url+row.itemId}' />`)
+function getItemIcon(itemArr, url) {
+    return itemArr
+        .map((row, index ) => {
+            const img = `<img class='drawIcon35' title='${row.itemName}' src='${url+row.itemId}' />`;
+            return index == 8 ? "<br>" + img : img;
+        }  )
         .join("&nbsp;");
 }
 
