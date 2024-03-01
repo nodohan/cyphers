@@ -53,6 +53,10 @@ const userDetail = require('./server/scheduler/userDetailScheduler')(scheduler, 
 // 스케줄러5. 매칭 유저 리스트 매핑
 const matchUserScheduler = require('./server/scheduler/matchUserScheduler')(scheduler, maria, loggerCatcher);
 
+// 비공개 처리용
+const provider = require('./server/controller/providerController')(null, maria, loggerCatcher);
+
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'ico', 'favicon.ico')))
@@ -77,10 +81,12 @@ app.use('/positionSche', positionSche);
 app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
 app.use('/matchUser', matchUserScheduler);
+app.use('/provide', provider);
+
 
 app.use(loggerCatcher());
 
-const port = 8080;
+const port = process.env.SERVER_PORT;
 
 app.get('/', function(req, res) {
     commonUtil.getIp(req);
