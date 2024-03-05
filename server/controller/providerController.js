@@ -6,8 +6,8 @@ module.exports = (scheduler, maria, acclogger) => {
     app.use(acclogger());
 
     app.get('/app', function(req, res) {
-        //res.redirect("/user/userSearch?isApp=true");
-        res.render('./mobile/invalid');
+        res.redirect("/user/userSearch?isApp=true");
+        //res.render('./mobile/invalid');
     });
 
     app.get('/invalid', function(req, res) {
