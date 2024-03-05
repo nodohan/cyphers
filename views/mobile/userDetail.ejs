@@ -8,6 +8,12 @@
 
             var nickname;
             var userData = {};
+            pageName = "mDetail";
+
+            
+            $(document).ready(function () {
+                showSearchHistory();
+            });
 
             function searchDetail() {
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
@@ -124,6 +130,7 @@
                 <input type="text" id="nickNames" onKeyPress="if(event.keyCode == 13) { searchDetail('nickNames'); } " placeholder="한명만 검색하세요" />
                 <input type="button" value="검색" onClick="searchDetail('nickNames');">
             </div>
+            <div id="topHistory" class="top" ></div>
             <div id="con1" class="con" style="min-height: 430px;">
                 <div id="con1_2" class="infoLayer2"> </div>
             </div>
