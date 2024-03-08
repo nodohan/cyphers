@@ -181,6 +181,8 @@ function drawPosition(div, rows, nickname) {
     let melee = extractPlayType(rows, "근거리딜러");
     let supp = extractPlayType(rows, "서포터");
 
+    $(div).find("#positionDiv").empty();
+
     //포지션별 승률
     appendPlayTypeInfo(div, tanker, "tanker", "탱커", nickname); //탱커
     appendPlayTypeInfo(div, melee, "melee", "근거리딜러", nickname);
@@ -482,7 +484,7 @@ function drawCharicter(charId) {
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
 
     let imgUrl = "http://static.cyphers.co.kr/img/game_position/";
-    switch(type){
+    switch(typeId){
         case "tanker" : imgUrl += "position1.jpg";  break;
         case "melee" : imgUrl += "position2.jpg";  break;
         case "ad" : imgUrl += "position3.jpg";  break;
@@ -497,11 +499,25 @@ function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
         const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         const moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
 
-        infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br>
-                  <small class='text-muted'>${type.rateInfo}</small>`;
-
+        infoStr= `
+            <div class="card">
+                <div class="row no-gutters">
+                    <div>
+                        <img src="${imgUrl}">
+                    </div>
+                    <div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                ${type.rate.toFixed(0)}% ${moreAlink}<br>
+                                <small class='text-muted'>${type.rateInfo}</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
     }
-    $(div).find("#" + typeId + "Span").empty().append(infoStr);
+    $(div).find("#positionDiv").append(infoStr);
 }
 
 function clearDiv(divId) {
@@ -509,10 +525,10 @@ function clearDiv(divId) {
 }
 
 function extractPlayType(rows, type) {
-    let item = {};
+    let item = { "rate" : 0, "rateInfo" : "0승 0패"};
     let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
     if (result.length == 0) {
-        return null;
+        return item;
     }
     let win = result.filter(row => row.playInfo.result == "win");
     item["rate"] = (win.length * 100 / result.length);
