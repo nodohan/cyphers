@@ -19,19 +19,8 @@ module.exports = (scheduler, maria, acclogger) => {
 
     //test  ( "/statsSeasonSche/insertStats" )
     app.get('/insertStats', function(req, res) {
-        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
-        const ip = req.headers['x-forwarded-for'] || req.ip;
-
-        if (ip.indexOf(",") > 0) {
-            ip = ip.toString().split(",")[1].trim();
-        }
-
-        logger.debug("call insertStats ip", ip);
-        if (!allowIps.includes(ip)) {
-            return res
-                .status(403)
-                .send('Not allow IP :' + ip + ' \n')
-                .end();
+        if (!commonUtil.isMe(req)) {
+            return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
 
         try {
@@ -48,18 +37,18 @@ module.exports = (scheduler, maria, acclogger) => {
 
     async function callInsertStats() {
         //SEASON
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "ATTACK", "DESC");
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "ATTACK", "ASC");
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "TANKER", "DESC");
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "TANKER", "ASC");
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "ALL", "DESC");
-        await insertStats('2023-02-23', '2023-09-13', "2023H", "ALL", "ASC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "ATTACK", "DESC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "ATTACK", "ASC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "TANKER", "DESC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "TANKER", "ASC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "ALL", "DESC");
+        await insertStats('2023-09-14', '2024-03-21', "2023U", "ALL", "ASC");
     }
 
     async function insertStats(startDate, endDate, statsType, combiType, order) {
         let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";        
         if (combiType == 'ALL') {
-            combiTarget = 'allJoin';            
+            combiTarget = 'allJoin';
         }
 
         let query =
@@ -99,7 +88,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = `
             INSERT INTO char_stats
             SELECT 
-                '2023H' season, charName
+                '2023U' season, charName
                 , total, win, lose
                 , CEILING( win / total * 100 ) AS rate 
             FROM ( 
@@ -109,7 +98,7 @@ module.exports = (scheduler, maria, acclogger) => {
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose
                 FROM matches_char 
-                WHERE matchDate BETWEEN '2023-02-23' AND '2023-09-13'
+                WHERE matchDate BETWEEN '2023-09-14' AND '2024-03-21'
                 GROUP BY charName
             ) aa `;
     }

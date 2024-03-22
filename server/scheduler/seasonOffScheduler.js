@@ -9,30 +9,18 @@ module.exports = (scheduler, maria, acclogger) => {
 
     //test  ( "/seasonOff/charCollect" )
     app.get('/charCollect', async function(req, res) {
-        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
-        const ip = req.headers['x-forwarded-for'] || req.ip;
-
-        if (ip.indexOf(",") > 0) {
-            ip = ip.toString().split(",")[1].trim();
-        }
-
-        logger.debug("call charCollect ip", ip);
-        if (!allowIps.includes(ip)) {
-            return res
-                .status(403)
-                .send('Not allow IP :' + ip + ' \n')
-                .end();
+        if (!commonUtil.isMe(req)) {
+            return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
 
         try {
             //데이터 많으니 분할처리
-            await collectCharRate('2023-02-23', '2023-03-22');
-            await collectCharRate('2023-03-23', '2023-04-22');
-            await collectCharRate('2023-04-23', '2023-05-22');
-            await collectCharRate('2023-05-23', '2023-06-22');
-            await collectCharRate('2023-06-23', '2023-07-22');
-            await collectCharRate('2023-07-23', '2023-08-22');
-            await collectCharRate('2023-08-23', '2023-09-13');
+            await collectCharRate('2023-09-14', '2023-10-14');
+            await collectCharRate('2023-10-14', '2023-11-14');
+            await collectCharRate('2023-11-14', '2023-12-14');
+            await collectCharRate('2023-12-14', '2024-01-14');
+            await collectCharRate('2024-01-14', '2024-02-14');
+            await collectCharRate('2024-02-14', '2024-03-20');
         } catch (err) {
             res.send(err);
         }
