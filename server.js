@@ -53,6 +53,9 @@ const userDetail = require('./server/scheduler/userDetailScheduler')(scheduler, 
 // 스케줄러5. 매칭 유저 리스트 매핑
 const matchUserScheduler = require('./server/scheduler/matchUserScheduler')(scheduler, maria, loggerCatcher);
 
+// 스케줄러6. 시즌오프용
+const statsSeasonSche = require('./server/scheduler/statsSeasonScheduler')(scheduler, maria, loggerCatcher);
+
 // 비공개 처리용
 const provider = require('./server/controller/providerController')(null, maria, loggerCatcher);
 
@@ -82,6 +85,7 @@ app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
 app.use('/matchUser', matchUserScheduler);
 app.use('/provide', provider);
+app.use('/statsSeasonSche', statsSeasonSche);
 
 
 app.use(loggerCatcher());

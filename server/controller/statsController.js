@@ -78,6 +78,10 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/statsSeason', { 'season': '2023H' });
     });
 
+    app.get('/stats2023u', function(req, res) {
+        res.render('./pc/statsSeason', { 'season': '2023U' });
+    });
+
     app.get('/statsSeasonList', async function(req, res) {
         let season = req.query.season
 
@@ -101,7 +105,7 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/charList', async function(req, res) {
         let season = req.query.season;
         if (season == null) {
-            season = '2022H';
+            season = '2023U';
         }
 
         pool = await maria.getPool();
