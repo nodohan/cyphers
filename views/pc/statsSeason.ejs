@@ -7,7 +7,7 @@
         <script type="text/javascript">
             var myChart;
             var season = '<%=season%>';
-            var charCount = 75;
+            var charCount = 78;
 
             $(document).ready(function() {
                 $("#mainMenu").removeClass("active");
@@ -15,8 +15,10 @@
                     $("#stats2022h").addClass("active");
                 } else if (season == '2022U') {
                     $("#stats2022u").addClass("active");
-                } else {
+                } else if (season == '2023H') {
                     $("#stats2023h").addClass("active");
+                } else {
+                    $("#stats2023u").addClass("active");
                 }
 
                 if(season == '2023H'){
@@ -62,6 +64,10 @@
                 table.removeAttr("id");
                 table.find("th:eq(1)").text(colname);
 
+                if(colname == '캐릭터') {
+                    table.find("th:eq(1)").after("<th scope='col'>이름</th>");
+                }
+
                 let tbody = table.find("tbody");
 
                 if (data.length == 0) {
@@ -80,12 +86,13 @@
                     if (colname == '조합') {
                         tr += `<td>${getChars(row.combi.split("|"))}</td>`;
                     } else {
-                        tr += "<td>" + getChars([row.charName]) + "</td>";
+                        tr += `<td>${getChars([row.charName])}</td>
+                               <td>${row.charName}</td>`;
                     }
-                    tr += "<td>" + numberWithCommas(row.total) + "</td>";
-                    tr += "<td>" + numberWithCommas(row.win) + "</td>";
-                    tr += "<td>" + numberWithCommas(row.lose) + "</td>";
-                    tr += `<td>${colname == '조합' ? row.late : row.rate}%</td>`;
+                    tr += ` <td>${numberWithCommas(row.total)}</td>
+                            <td>${numberWithCommas(row.win)}</td>
+                            <td>${numberWithCommas(row.lose)}</td>
+                            <td>${colname == '조합' ? row.late : row.rate}%</td>`;
                     tbody.append(tr);
                 }
 
