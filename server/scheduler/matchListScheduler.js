@@ -116,7 +116,7 @@ module.exports = (scheduler, maria) => {
         let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
 
         await pool.query("DELETE FROM matchId_temp");
-        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2023U' ) `;
+        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2024H' ) `;
         logger.debug(query);
 
         await pool.batch(query, rows.map(id => [id]), function(err) {

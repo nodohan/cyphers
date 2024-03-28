@@ -97,7 +97,7 @@ module.exports = (scheduler, maria) => {
         let hasBefore = `
             INSERT INTO userRank
             SELECT 
-                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2023U', sy.rp  
+                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2024H', sy.rp  
             FROM rank_sync sy
             INNER JOIN (
                 SELECT playerId, rankNumber, nickname 
@@ -109,7 +109,7 @@ module.exports = (scheduler, maria) => {
         let emtpyBefore = `
             INSERT INTO userRank
             SELECT
-               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2023U', sy.rp 
+               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2024H', sy.rp 
             FROM (
                 SELECT distinct nm.nickname, nm.playerId FROM nickNames nm
                 INNER JOIN ( 
