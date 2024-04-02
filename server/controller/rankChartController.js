@@ -11,6 +11,7 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/userChart');
     });
 
+    // /rankChart/chartDate
     app.get('/chartDate', async function(req, res) {
         let chartDateList = await chartDate(req.query.season);
         if (chartDateList == null) {
