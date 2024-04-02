@@ -230,33 +230,11 @@
 
             function extractParty(rows) {
                 let partyResult = {
-                    solo: {
-                        win: 0,
-                        lose: 0
-                    },
-                    all: {
-                        all: 0,
-                        win: 0,
-                        lose: 0
-                    },
-                    two: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
-                    three: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
-                    five: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
+                    solo: { win: 0, lose: 0 },
+                    all: { all: 0, win: 0, lose: 0 },
+                    two: { all: 0, win: 0, lose: 0, party: {} },
+                    three: { all: 0, win: 0, lose: 0, party: {} },
+                    five: { all: 0, win: 0, lose: 0, party: {} },
                 };
 
                 let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
