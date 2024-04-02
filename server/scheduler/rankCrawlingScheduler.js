@@ -20,21 +20,10 @@ module.exports = (scheduler, maria) => {
 
     // "/rank/getHtml"
     app.get('/getHtml', function(req, res) {
-        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
-        const ip = req.headers['x-forwarded-for'] || req.ip;
-
-        if (ip.indexOf(",") > 0) {
-            ip = ip.toString().split(",")[1].trim();
+        if (!commonUtil.isMe(req)) {
+            res.send({ "resultMsg": "내가 아닌데??" });
+            return;
         }
-
-        logger.debug("call getHtml ip", ip);
-        if (!allowIps.includes(ip)) {
-            return res
-                .status(403)
-                .send('Not allow IP :' + ip + ' \n')
-                .end();
-        }
-
         getRanks();
 
         return res
