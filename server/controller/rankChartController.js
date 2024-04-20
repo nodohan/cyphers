@@ -11,6 +11,7 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/userChart');
     });
 
+    // /rankChart/chartDate
     app.get('/chartDate', async function(req, res) {
         let chartDateList = await chartDate(req.query.season);
         if (chartDateList == null) {
@@ -64,7 +65,7 @@ module.exports = (scheduler, maria, acclogger) => {
         return null;
     }
 
-    async function searchUserRank(userName, season = '2023U') {
+    async function searchUserRank(userName, season = '2024H') {
         let query = `SELECT 
 		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
                     FROM userRank 

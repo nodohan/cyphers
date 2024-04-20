@@ -230,33 +230,11 @@
 
             function extractParty(rows) {
                 let partyResult = {
-                    solo: {
-                        win: 0,
-                        lose: 0
-                    },
-                    all: {
-                        all: 0,
-                        win: 0,
-                        lose: 0
-                    },
-                    two: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
-                    three: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
-                    five: {
-                        all: 0,
-                        win: 0,
-                        lose: 0,
-                        party: {}
-                    },
+                    solo: { win: 0, lose: 0 },
+                    all: { all: 0, win: 0, lose: 0 },
+                    two: { all: 0, win: 0, lose: 0, party: {} },
+                    three: { all: 0, win: 0, lose: 0, party: {} },
+                    five: { all: 0, win: 0, lose: 0, party: {} },
                 };
 
                 let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
@@ -352,8 +330,8 @@
             <div id="con1" class="con">
                 <div class="input-group">
                     <input type="text" id="nickNames" class="form-control"
-                        placeholder="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..."
-                        aria-label="띄워쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
+                        placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..."
+                        aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
                         onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
                     <div class="input-group-append" id="searchButton">
                         <button class="btn btn-outline-secondary" type="button"
