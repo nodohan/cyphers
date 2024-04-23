@@ -23,22 +23,10 @@ module.exports = (scheduler, maria) => {
 
     //test  ( "/matches/insertMatches?matchType=rating" )
     app.get('/insertMatches', function(req, res) {
-        let allowIps = ["localhost", "127.0.0.1", "221.143.115.91", ":114.207.113.136", "::1", "::ffff:127.0.0.1", "34.64.4.116"];
-        const ip = req.headers['x-forwarded-for'] || req.ip;
-        let matchType = req.query.matchType;
-
-        if (ip.indexOf(",") > 0) {
-            ip = ip.toString().split(",")[1].trim();
+        if (!commonUtil.isMe(req)) {
+            return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
-
-        logger.debug("call insertMatches ip", ip);
-        if (!allowIps.includes(ip)) {
-            return res
-                .status(403)
-                .send('Not allow IP :' + ip + ' \n')
-                .end();
-        }
-
+        const matchType = req.query.matchType;
         return insertMatches(matchType, res);
     });
 
