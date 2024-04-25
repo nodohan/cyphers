@@ -1,16 +1,13 @@
 //const fetch = require("node-fetch");
 const axios = require("axios");
-const querystring = require("querystring");
+const qs = require('qs');
 const myConfig = require("../../config/config.js");
 const commonUtil = require("./commonUtil");
 
 class api {
   constructor() {
-    this.newSeasonStartDay = "2022-02-17 11:00";
-    this.newSeasonDay = new Date(this.newSeasonStartDay);
 
-    this.seasonStartDay = "2021-07-15 12:00"; //이번시즌 시작일
-    //this.seasonStartDay = '2021-08-05 10:00'; // 인틈 삭제일
+    this.seasonStartDay = "2024-03-21 12:00"; //이번시즌 시작일
     this.apiKey = myConfig.apiKey;
 
     this.nickOpt = {
@@ -26,8 +23,9 @@ class api {
 
   async call(opt) {
     try {
-      const url = (opt.uri || opt.url) + "?" + querystring.stringify(opt.qs);
-      const response = await axios.get(url);
+      const url = (opt.uri || opt.url);
+      logger.debug("url: %s", url);
+      const response = await axios.get(url, { params: opt.qs} );
 
       if (response.status != 200) {
         logger.error("%d error : %s", response.statusCode, JSON.stringify(opt));
@@ -52,6 +50,7 @@ class api {
       },
       playerId: userId,
     };
+
     matchInfo.url = matchInfo.url.replace("#playerId#", userId);
     return await this.getMatchInfo(matchInfo, null);
   }
@@ -84,15 +83,9 @@ class api {
 
   async searchUser(nickname, gameType) {
     this.nickOpt.qs.nickname = nickname;
-
-    let today = new Date();
-    if (today >= this.newSeasonDay) {
-      this.seasonStartDay = this.newSeasonStartDay;
-    }
-
     let json = await this.call(this.nickOpt);
   
-    logger.debug("사용자 %s", json);
+    logger.debug("사용자 %s", JSON.stringify(json));
 
     if (json == null || json.rows == null || json.rows.length == 0) {
       return { resultCode: -1 };
@@ -115,6 +108,7 @@ class api {
           commonUtil.timestamp(endDate)
         )
       );
+      
       startDate = endDate;
       endDate = getMinDay(addDays(startDate, 90), new Date());
       diffDay = diffDay - 90;

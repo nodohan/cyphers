@@ -49,6 +49,7 @@ class commonUtil {
 
     timestamp(date) {
         date.setHours(date.getHours() + 9);
+        date.setMinutes(date.getMinutes() - 2);
         return date.toISOString().replace('T', ' ').substring(0, 16);
     }
 
