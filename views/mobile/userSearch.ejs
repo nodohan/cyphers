@@ -18,7 +18,6 @@
                 $("#mostCharShow").on("change", checkVisibility);
                 $("#recentShow").on("change", checkVisibility);
 
-                
                 $("input[name='gameType']").on("change", setGameType);
             });
 
@@ -102,20 +101,28 @@
 
             //기본정보
             function drawDefault(div, data, rating) {
-                var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
+                const { winCount, loseCount, stopCount} = rating;
+                const { playerId, nickname, grade, clanName, tierName, ratingPoint, maxRatingPoint } = data;
+                var pov = ((winCount * 100) / (winCount + loseCount)) || 0;
+                const historyDivId = "historyDiv_" + playerId;
+                
+                $(div).find("#nickNameDiv").append(nickname + " <a href='javascript:openDetail(\"" + nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
+                $(div).find("#nickNameDiv").append(` 
+                    <a href="#${historyDivId}" onClick='javascript:nickHistory("${playerId}");' 
+                        data-toggle="collapse" role="button" aria-expanded="false" aria-controls="${historyDivId}" >
+                        <i class='red fas fas fa-heading'></i>
+                    </a>`);                
+                $(div).find("#levelDiv").text(grade + "급");
+                $(div).find("#clanDiv").text(clanName);
+                $(div).find("#historyDiv").removeAttr("id").attr("id", historyDivId);
 
-                $(div).find("#nickNameDiv").append(data.nickname + " <a href='javascript:openDetail(\"" + data.nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
-                $(div).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
-                $(div).find("#levelDiv").text(data.grade + "급");
-                $(div).find("#clanDiv").text(data.clanName);
-
-                getTierColerName($(div).find("#tierName"), data.tierName);
-                if (data.ratingPoint != null) {
-                    $(div).find("#currRP").text(data.ratingPoint);
-                    $(div).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+                getTierColerName($(div).find("#tierName"), tierName);
+                if (ratingPoint != null) {
+                    $(div).find("#currRP").text(ratingPoint);
+                    $(div).find("#maxRP").text("( " + maxRatingPoint + " )");
                 }
-                $(div).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
-                $(div).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                $(div).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${playerId}", drawSeasonRank);' >전시즌</a>`);
+                $(div).find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${winCount}승 ${loseCount}패 ${stopCount}중단]`);
             }
 
             function drawSeasonRank(data) {
@@ -140,17 +147,29 @@
                 historyNickname(nickId, showNickHistory);
             }
 
-            function showNickHistory(data) {
-                let info = "";
-                for (idx in data) {
-                    let row = data[idx];
-                    info += row.season + " " + row.nickname + " 체크일(닉변일아님):" + row.checkingDate + "\n";
-                }
+            function showNickHistory(data, playerId) {
+                let info;
 
                 if (data.length == 0) {
                     info = "수집된 닉변기록이 없습니다";
+                } else {
+                    info = `<table class="table"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">시즌</th>
+                                <th scope="col">닉네임</th>
+                                <th scope="col">체크일</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                    for (idx in data) {
+                        const { season, nickname, checkingDate }  = data[idx];
+                        info += `<tr><td>${season}</td><td>${nickname}</td><td>${checkingDate}</td>`;
+                    }
+                    info += " </tbody></table>";
+
                 }
-                alert(info);
+                $("#historyDiv_" + playerId).empty().append(info);
             }
 
             //파티별 승률 (솔로/파티)
@@ -207,21 +226,24 @@
             }
 
             function getEachPartyResult(arr) {
-                let resultTable = "<table class='table'> ";
-                resultTable += "<thead class='thead-dark'><tr>";
-                resultTable += "<th scope='col'>파티원</th>";
-                resultTable += "<th scope='col'>승</th>";
-                resultTable += "<th scope='col'>패</th>";
-                resultTable += "</tr></thead><tbody>";
+                let resultTable = `<table class='table'> 
+                    <thead class='thead-dark'>
+                        <tr>
+                            <th scope='col'>파티원</th>
+                            <th scope='col'>승</th>
+                            <th scope='col'>패</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
                 for (idx in arr) {
-                    let row = arr[idx];
-                    resultTable += "<tr>";
-                    resultTable += "<th scope='row'>" + row.name + "</th>";
-                    resultTable += "<td>" + row.win + "</td>";
-                    resultTable += "<td>" + row.lose + "</td>";
-                    resultTable += "</tr>";
-
+                    const { name, win, lose } = arr[idx];
+                    resultTable += `
+                        <tr>
+                            <th scope='row'>${name}</th>
+                            <td>${win}</td>
+                            <td>${lose}</td>
+                        </tr>`;
                 }
                 resultTable += "</tbody></table>";
 
@@ -349,11 +371,14 @@
         <div id="template" class="infoDiv" style="display:none">
             <div id="defaultDiv">
                 <div id="gameTypeDiv" class="red bold width100p"></div>
-                <div class="width100p">
+                <div class="width100p">                    
                     <div id="nickNameDiv" class="width40p bold"> </div>
                     <div id="levelDiv" class="width20p"></div>
                     <div id="clanDiv" class="width40p"></div>
                 </div>
+                <div id="historyDiv" class="width100p" invisible>                    
+                </div>
+
                 <div class="width100p">
                     <div class="width100p">
                         RP : <span id="tierName"></span>&nbsp;

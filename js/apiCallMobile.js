@@ -920,7 +920,7 @@ function historyNickname(playerId, callback) {
         url: "/user/getNicknameHistory",
         data: { 'playerId': playerId },
         success: function(data) {
-            callback(data);
+            callback(data, playerId);
         }
     }).done(function() {
 
