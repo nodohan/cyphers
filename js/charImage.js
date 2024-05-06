@@ -78,3 +78,4 @@ charMap.set('그레타', 'b605a378d8cfe96f133034db0810014c');
 charMap.set('바스티안', '3dab248071530f76ea748d54c188b48b');
 charMap.set('재뉴어리', '9a5046067b471e154d7f0d5dfb75a523');
 charMap.set('니콜라스', 'f3f7129ae7ea788755fc16f938523652');
+charMap.set('키아라', 'e95cf83fbb35243fac1ef42b8a40314b');
