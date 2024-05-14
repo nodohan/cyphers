@@ -34,24 +34,26 @@ class api {
 
       return await response.data;
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error("Error: %s", JSON.stringify(opt), error);
     }
   }
 
   async getUserInfoCall(userId, gameType, startDate, endDate) {
+    logger.info("userId: %s, start: %s, end: %s", userId, startDate, endDate)
+
+    let urlInfo = "https://api.neople.co.kr/cy/players/#playerId#/matches?apikey=#apiKey#&gameTypeId=#gameTypeId#&limit=100&startDate=#startDate#&endDate=#endDate#";
+    urlInfo = urlInfo.replace("#playerId#", userId)
+                     .replace("#apiKey#", myConfig.apiKey)
+                     .replace("#gameTypeId#", gameType)
+                     .replace("#startDate#", startDate)
+                     .replace("#endDate#", endDate);
+
     var matchInfo = {
-      url: "https://api.neople.co.kr/cy/players/#playerId#/matches",
-      qs: {
-        apikey: this.apiKey,
-        gameTypeId: gameType,
-        limit: 100,
-        startDate: startDate,
-        endDate: endDate,
-      },
+      url: urlInfo,
+      qs: {},
       playerId: userId,
     };
 
-    matchInfo.url = matchInfo.url.replace("#playerId#", userId);
     return await this.getMatchInfo(matchInfo, null);
   }
 

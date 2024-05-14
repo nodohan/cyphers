@@ -49,8 +49,8 @@ class commonUtil {
 
     timestamp(date) {
         date.setHours(date.getHours() + 9);
-        date.setMinutes(date.getMinutes() - 2);
-        return date.toISOString().replace('T', ' ').substring(0, 16);
+        date.setMinutes(date.getMinutes() - 4);
+        return date.toISOString().replace(/-/g, '').replace(/:/g, '').substring(0,15);
     }
 
     setFromDay(date) {
