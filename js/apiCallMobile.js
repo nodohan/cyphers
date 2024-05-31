@@ -284,18 +284,6 @@ function drawInGameList(data) {
                     data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
         </tr>`;
-
-        // score +=
-        //     `<td>${playInfo.level}</td>
-        //      <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
-        //      <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
-        //      <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
-        //      <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
-        //      <td>
-        //         <i class='fas fa-angle-double-down' data-toggle='collapse' 
-        //             data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
-        //      </td>
-        // </tr>`;
     score +=
         `<tr>
             <td class='hiddenRow' colspan='7'>
@@ -313,6 +301,10 @@ function drawInGameDetail(matchId, data, trClass) {
     const usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
     const itemInfoId = `m${matchId}_${data.playerId}`;
 
+    const gradeTrId = `d_${matchId}_${data.playerId}_grade`;
+    const rpTrId = `d_${matchId}_${data.playerId}_rp`;    
+    getUserGradeRp(gradeTrId, rpTrId, data.playerId);
+
     let score = `
         <tr class='${trClass}'>
             <td>${winLoseKo(playInfo.result)}</td>
@@ -322,7 +314,8 @@ function drawInGameDetail(matchId, data, trClass) {
                     &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
                     ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
                     <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
-                    ${partyCnt}
+                    ${partyCnt}<br> 
+                    &nbsp;<span class=${gradeTrId}></span> <span class=${rpTrId}></span>
                 </div>
             </td>
             <!--<td>${playInfo.level}</td>-->
@@ -348,6 +341,31 @@ function drawInGameDetail(matchId, data, trClass) {
 
     return score;
 }
+
+
+const getUserGradeRp = (gradeTrId, rpTrId, nickname) => { 
+    $.ajax({
+        async: true,
+        url: "/user/userInfoSimple",
+        data: { 'playerId': nickname },
+        success: function(data) {
+            if(data.resultCode == 200) {
+                drawUserGradeRp(gradeTrId, rpTrId, data);
+            }
+        }
+    }).done(function() {
+
+    });
+}
+
+const drawUserGradeRp = (gradeTrId, rpTrId, data) =>  {    
+    console.log(data);
+    const { grade, ratingPoint, maxRatingPoint } = data.row;
+
+    $("."+ gradeTrId).empty().append(grade+"급");
+    $("."+ rpTrId).empty().append(`${ratingPoint}(${maxRatingPoint})`);
+} 
+
 
 function getBuffIcon(buffArr, url) {
     return buffArr
