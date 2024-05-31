@@ -315,10 +315,12 @@ function drawInGameDetail(matchId, data, trClass) {
         score += `<td>${data.nickname} ${partyCnt}</td>`;
     }
 
-    const gradeTrId = `d_${matchId}_${data.playerId}`;
-    score +=
-        `<td>${playInfo.level}</td>
+    const gradeTrId = `d_${matchId}_${data.playerId}_grade`;
+    const rpTrId = `d_${matchId}_${data.playerId}_rp`;
+    score += `
          <td class='${gradeTrId}'>0급</td>
+         <td class='${rpTrId}'>0</td>
+         <td>${playInfo.level}</td>
          <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
          <td class='kda'>${playInfo.killCount}</td>
          <td class='kda'>${playInfo.deathCount}</td>
@@ -328,7 +330,7 @@ function drawInGameDetail(matchId, data, trClass) {
          <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
          <td class='kda'>${useCoin}(${usePer}%)</td>`;
 
-    getUserGrade(gradeTrId, data.nickname);
+    getUserGradeRp(gradeTrId, rpTrId, data.playerId);
 
     let itemInfoId = `m${matchId}_${data.playerId}`;    
     score += `<td>
@@ -346,14 +348,14 @@ function drawInGameDetail(matchId, data, trClass) {
     return score;
 }
 
-const getUserGrade = (trId, nickname) => { 
+const getUserGradeRp = (gradeTrId, rpTrId, nickname) => { 
     $.ajax({
         async: true,
         url: "/user/userInfoSimple",
-        data: { 'nickname': nickname },
+        data: { 'playerId': nickname },
         success: function(data) {
             if(data.resultCode == 200) {
-                drawUserGrade(trId, data);
+                drawUserGradeRp(gradeTrId, rpTrId, data);
             }
         }
     }).done(function() {
@@ -361,9 +363,12 @@ const getUserGrade = (trId, nickname) => {
     });
 }
 
-const drawUserGrade = (trId, data) =>  {
+const drawUserGradeRp = (gradeTrId, rpTrId, data) =>  {    
     console.log(data);
-    $("."+ trId).empty().append(data.row.grade+"급");
+    const { grade, ratingPoint, maxRatingPoint } = data.row;
+
+    $("."+ gradeTrId).empty().append(grade+"급");
+    $("."+ rpTrId).empty().append(`${ratingPoint}(${maxRatingPoint})`);
 } 
 
 function getBuffIcon(buffArr, url) {

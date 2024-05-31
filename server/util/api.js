@@ -118,14 +118,15 @@ class api {
     return result;
   }
 
-  userInfoSimple = async (nickname) => {
-    this.nickOpt.qs.nickname = nickname;
-    let json = await this.call(this.nickOpt);
-  
-    if (json == null || json.rows == null || json.rows.length == 0) {
+  userInfoSimple = async (playerId) => {
+    let reqParam = { ...this.nickOpt};
+    reqParam.uri = reqParam.uri + "/"+ playerId;  
+    let json = await this.call(reqParam);
+    
+    if (json == null) {
       return { resultCode: -1 };
     }
-    return {  resultCode : 200, row : json.rows[0] };
+    return {  resultCode : 200, row : json };
   }
 
   async searchMatchInfo(matchId) {

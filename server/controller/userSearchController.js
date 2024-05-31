@@ -64,7 +64,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
     //  url = "/user/grade"
     app.get('/userInfoSimple', async function(req, res) {
-        res.send(await new api().userInfoSimple(req.query.nickname));
+        res.send(await new api().userInfoSimple(req.query.playerId));
     });
 
 
