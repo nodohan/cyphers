@@ -307,11 +307,13 @@ function drawInGameDetail(matchId, data, trClass) {
 
     let score = `
         <tr class='${trClass}'>
-            <td>${winLoseKo(playInfo.result)}</td>
+            <td>
+                ${winLoseKo(playInfo.result)}
+                &nbsp;${getPositionIcon(data.position.name)}
+                &nbsp;${drawCharicter(playInfo.characterId, true)}
+            </td>
             <td>
                 <div class='fontSmall'>
-                    ${drawCharicter(playInfo.characterId, true)}
-                    &nbsp;${getPositionIcon(data.position.name)}&nbsp;&nbsp;
                     ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
                     <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
                     ${partyCnt}<br> 
