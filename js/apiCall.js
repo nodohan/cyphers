@@ -327,6 +327,7 @@ function drawInGameDetail(matchId, data, trClass) {
          <td class='kda'>${playInfo.assistCount}</td>
          <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
          <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${(playInfo.healAmount / 1000).toFixed(0)}K</td>
          <td class='kda'>${playInfo.demolisherKillCount}</td>
          <td class='kda'>${playInfo.sentinelKillCount}</td>
          <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
