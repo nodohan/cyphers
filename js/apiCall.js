@@ -321,18 +321,20 @@ function drawInGameDetail(matchId, data, trClass) {
          <td class='${gradeTrId}'>0급</td>
          <td class='${rpTrId}'>0</td>
          <td>${playInfo.level}</td>
-         <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td>
+         <!-- <td class='kda'>${(playInfo.killCount + playInfo.deathCount / playInfo.assistCount).toFixed(0)}</td> -->
          <td class='kda'>${playInfo.killCount}</td>
          <td class='kda'>${playInfo.deathCount}</td>
          <td class='kda'>${playInfo.assistCount}</td>
          <td class='kda'>${(playInfo.attackPoint / 1000).toFixed(0)}K</td>
          <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
+         <td class='kda'>${playInfo.demolisherKillCount}</td>
+         <td class='kda'>${playInfo.sentinelKillCount}</td>
          <td class='kda'>${playInfo.getCoin.toLocaleString()}</td>
          <td class='kda'>${useCoin}(${usePer}%)</td>`;
 
     getUserGradeRp(gradeTrId, rpTrId, data.playerId);
 
-    let itemInfoId = `m${matchId}_${data.playerId}`;    
+    let itemInfoId = `m${matchId}_${data.playerId}`;
     score += `<td>
                 <i class="fas fa-angle-double-down" data-toggle="collapse" 
                     data-target=".${itemInfoId}" aria-expanded="true">
