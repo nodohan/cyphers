@@ -607,19 +607,32 @@ function drawPartyType(userDivId, clone, row) {
     appendHtml += `<b class="red">솔플</b>: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
                    <b class="red">파티</b>: ${partyAllCnt}전 ${partyJson.all.win}승 ${partyJson.all.lose}패 <br>`;
 
+    let index = 0;
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
     if (partyJson.two.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>2인</span>: ${partyJson.two.win}승 ${partyJson.two.lose}패 
             <a data-toggle='collapse' href='#two${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
+        index++;
     }
     if (partyJson.three.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>3인</span>: ${partyJson.three.win}승 ${partyJson.three.lose}패 
             <a data-toggle='collapse' href='#three${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
+        index++;
     }
+    if (partyJson.four.count != 0) {
+        if(index == 2) {
+            appendHtml += "<br>";
+        }
+        appendHtml +=
+            `&nbsp;[ <span class='blue'>4인</span>: ${partyJson.four.win}승 ${partyJson.four.lose}패 
+            <a data-toggle='collapse' href='#four${userDivId}' role='button' 
+	            aria-expanded='false' aria-controls='four${userDivId}' >${moreIcon}</a>  ]`;
+    }
+
     if (partyJson.five.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>5인</span>: ${partyJson.five.win}승 ${partyJson.five.lose}패 
@@ -635,6 +648,10 @@ function drawPartyType(userDivId, clone, row) {
     if (partyJson.three.count != 0) {
         let partyResult = getEachPartyResult(partyJson.three.party);
         appendHtml += `<div class='collapse multi-collapse' id='three${userDivId}'>${partyResult}</div>`;
+    }
+    if (partyJson.four.count != 0) {
+        let partyResult = getEachPartyResult(partyJson.four.party);
+        appendHtml += `<div class='collapse multi-collapse' id='four${userDivId}'>${partyResult}</div>`;
     }
     if (partyJson.five.count != 0) {
         let partyResult = getEachPartyResult(partyJson.five.party);
@@ -721,33 +738,12 @@ function addPlayResult(subPartyResult, matchId, data, isParty) {
 
 function extractParty(rows) {
     let partyResult = {
-        solo: {
-            win: 0,
-            lose: 0
-        },
-        all: {
-            count: 0,
-            win: 0,
-            lose: 0
-        },
-        two: {
-            count: 0,
-            win: 0,
-            lose: 0,
-            party: {}
-        },
-        three: {
-            count: 0,
-            win: 0,
-            lose: 0,
-            party: {}
-        },
-        five: {
-            count: 0,
-            win: 0,
-            lose: 0,
-            party: {}
-        },
+        solo: { win: 0, lose: 0 },
+        all: { count: 0, win: 0,lose: 0 },
+        two: { count: 0, win: 0, lose: 0, party: {} },
+        three: { count: 0, win: 0, lose: 0, party: {} },
+        four: { count: 0, win: 0, lose: 0, party: {} },
+        five: { count: 0, win: 0, lose: 0, party: {} },
     };
 
     let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
@@ -765,6 +761,8 @@ function extractParty(rows) {
             addPlayResult(partyResult.two, matchId, playInfo, true);
         } else if (cnt == 3) {
             addPlayResult(partyResult.three, matchId, playInfo, true);
+        } else if (cnt == 4) {
+            addPlayResult(partyResult.four, matchId, playInfo, true);
         } else if (cnt == 5) {
             addPlayResult(partyResult.five, matchId, playInfo, true);
         }
@@ -772,6 +770,7 @@ function extractParty(rows) {
 
     partyResult.two.party = partySort(partyResult.two.party, sortCase);
     partyResult.three.party = partySort(partyResult.three.party, sortCase);
+    partyResult.four.party = partySort(partyResult.four.party, sortCase);
     partyResult.five.party = partySort(partyResult.five.party, sortCase);
 
     return partyResult;
