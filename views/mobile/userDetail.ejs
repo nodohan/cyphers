@@ -33,11 +33,12 @@
                 var div = $("#template2").clone();
 
                 var rows = data.matches.rows;
-                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
+                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포드
                 drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
                 drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
                 drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 106, '리버포드 앳 던', "#atDawn"); //그랑플람 아시아 지부
 
                 div.show();
 
@@ -237,6 +238,15 @@
                     <div id="mostCharDetailDiv"></div>
                 </div>
             </div>
+            <div id="atDawn" class="mapCard">
+                <div class="title bold width100p">리버포드 앳 던</div>
+                <div id="positionDiv" class="positionDiv"></div>
+                <div id="often" class="width100p mostCharDiv">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv"></div>
+                </div>
+            </div>
+
         </div>
 
 
