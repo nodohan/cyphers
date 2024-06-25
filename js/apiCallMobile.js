@@ -976,25 +976,21 @@ function drawCharCardVer(div, charInfo, nickname) {
     }
     
     var card = $(`
-            <div id="cardTemp" class="card" hidden>
+            <div class="card" >
                 <div class="row no-gutters">
                     <div class="col-md-5">
-                        <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
+                        <img src='https://img-api.neople.co.kr/cy/characters/${characterId}' />
                     </div>
                     <div class="col-md-7">
                         <div class="card-body">
                             <p class="card-text">
-                                <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
+                                ${cardText}
                             </p>
                         </div>
                     </div>
                 </div>
             </div>`);
 
-    card.removeAttr("id");
-    card.removeAttr("hidden");
-    card.find(".col-md-5").append("<img src='https://img-api.neople.co.kr/cy/characters/" + characterId + "' />");
-    card.find(".card-text").empty().append(cardText);
     div.append(card);
 }
 

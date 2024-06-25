@@ -54,6 +54,7 @@
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
                 drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
                 drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 106, '리버포드 앳 던', "#atDawn"); //그랑플람 아시아 지부
 
                 div.show();
 
@@ -273,79 +274,11 @@
             </div>
 
             <!-- 포지션별 승률 -->
-            <div id="positionDiv" class="positionDiv">
-                <div id="positionTanker" class="card">
-                    <div class="row no-gutters">
-                        <div class="col-md-5">
-                            <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionMelee" class="card">
-                    <div class="row no-gutters">
-                        <div class="col-md-5">
-                            <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionAd" class="card">
-                    <div class="row no-gutters">
-                        <div class="col-md-5">
-                            <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionSupp" class="card">
-                    <div class="row no-gutters">
-                        <div class="col-md-5">
-                            <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                <p id="suppSpan" class="card-text"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="positionDiv" class="positionDiv"></div>
 
             <div id="mostCharDiv">
                 <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
-                    <!-- 자주하는 캐릭 top3 -->
-                    <div id="cardTemp" class="card" hidden>
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p class="card-text">
-                                        <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
             </div>
             <div id="recentlyDiv" class="width100p">
                 <div class="width100p bold" id="recentlyDivTitle">
@@ -357,15 +290,8 @@
                 <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
             </label>
 
-            <div id="dailyResult" class="dailyResult">
-                
-            </div>
-
-            <div id="moreDailyResult" class="collapse">
-
-            </div>
-
-
+            <div id="dailyResult" class="dailyResult"></div>
+            <div id="moreDailyResult" class="collapse"></div>
             <div id="playGameList" class="playGameList">
 
             </div>
@@ -392,59 +318,7 @@
             <div id="river" class="mapCard">
                 <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv">
-                    <div id="positionTanker" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionMelee" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionAd" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionSupp" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="suppSpan" class="card-text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv">
@@ -455,59 +329,7 @@
             <div id="metro" class="mapCard">
                 <div class="bold width100p">메트로폴리스 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv">
-                    <div id="positionTanker" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionMelee" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionAd" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionSupp" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="suppSpan" class="card-text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv">
@@ -518,59 +340,7 @@
             <div id="bristol" class="mapCard">
                 <div class="bold width100p">브리스톨 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv">
-                    <div id="positionTanker" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionMelee" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionAd" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionSupp" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="suppSpan" class="card-text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv">
@@ -581,122 +351,18 @@
             <div id="spring" class="mapCard">
                 <div class="bold width100p">스프링필드 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv">
-                    <div id="positionTanker" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionMelee" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionAd" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionSupp" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="suppSpan" class="card-text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv">
                         <!-- 자주하는 캐릭 top3 -->
                     </div>
-                </div>
+                </div> 
             </div>
             <div id="asia" class="mapCard">
                 <div class="bold width100p">그랑플람 아시아지부 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv">
-                    <div id="positionTanker" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img class="drawIcon45" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionMelee" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img class="drawIcon45" src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionAd" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img class="drawIcon45" src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="positionSupp" class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-5">
-                                <img class="drawIcon45" src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <p id="suppSpan" class="card-text"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv">
@@ -704,6 +370,18 @@
                     </div>
                 </div>
             </div>
+            <div id="atDawn" class="mapCard">
+                <div class="bold width100p">리버포드 앳 던 <span class="mapRate"></span></div>
+                <!-- 포지션별 승률 -->
+                <div id="positionDiv" class="positionDiv"></div>
+                <div id="often" class="width100p">
+                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                    <div id="mostCharDetailDiv">
+                        <!-- 자주하는 캐릭 top3 -->
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div id="modalDiv">
