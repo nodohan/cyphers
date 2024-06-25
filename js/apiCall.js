@@ -182,10 +182,12 @@ function drawPosition(div, rows, nickname) {
     let supp = extractPlayType(rows, "서포터");
 
     //포지션별 승률
-    appendPlayTypeInfo(div, tanker, "tanker", "탱커", nickname); //탱커
-    appendPlayTypeInfo(div, melee, "melee", "근거리딜러", nickname);
-    appendPlayTypeInfo(div, ad, "ad", "원거리딜러", nickname);
-    appendPlayTypeInfo(div, supp, "supp", "서포터", nickname);
+    const positionDiv = $(div).find("#positionDiv");
+    positionDiv.empty();
+    appendPlayTypeInfo(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
+    appendPlayTypeInfo(positionDiv, melee, "melee", "근거리딜러", nickname);
+    appendPlayTypeInfo(positionDiv, ad, "ad", "원거리딜러", nickname);
+    appendPlayTypeInfo(positionDiv, supp, "supp", "서포터", nickname);
 }
 
 function isDuplicate(gameType, nickName) {
@@ -506,7 +508,7 @@ function drawCharicter(charId) {
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
 
     let imgUrl = "http://static.cyphers.co.kr/img/game_position/";
-    switch(type){
+    switch(typeId){
         case "tanker" : imgUrl += "position1.jpg";  break;
         case "melee" : imgUrl += "position2.jpg";  break;
         case "ad" : imgUrl += "position3.jpg";  break;
@@ -525,7 +527,20 @@ function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
                   <small class='text-muted'>${type.rateInfo}</small>`;
 
     }
-    $(div).find("#" + typeId + "Span").empty().append(infoStr);
+
+    $(div).append(`
+        <div class="card">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="${imgUrl}">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">${infoStr}</p>
+                    </div>
+                </div>
+            </div>
+        </div>`);
 }
 
 function clearDiv(divId) {
