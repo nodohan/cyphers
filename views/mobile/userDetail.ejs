@@ -89,13 +89,21 @@
 
             //캐릭터 승률
             function drawCharCardVer(div, charInfo) {
-                var card = $(div).find("#cardTemp").clone();
-                card.removeAttr("id");
-                card.removeAttr("hidden");
-                card.find(".charImg").append("<img src='https://img-api.neople.co.kr/cy/characters/" + charInfo.characterId + "' />");
-                var pov = ((charInfo.win * 100) / charInfo.count);
-                card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승 " + charInfo.lose + "패</small>");
-                div.append(card);
+                let pov = ((charInfo.win * 100) / charInfo.count);                
+                div.append(`<div class="card" >
+                        <div class="row no-gutters">
+                            <div class="charImg">
+                                <img src="https://img-api.neople.co.kr/cy/characters/${charInfo.characterId}">
+                            </div>
+                            <div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        ${pov.toFixed(0)}% <br/> <small class='text-muted'>${charInfo.win}승 ${charInfo.lose}패</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
             }
 
             /***
