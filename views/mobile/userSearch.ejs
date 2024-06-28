@@ -188,29 +188,33 @@
     <%- include ("../layout/menu_mobile") %>
 
         <div id="main">
-            <div class="top">
-                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label
-                    for="gameType_rating"> 공식 </label>
-                <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal">
-                    일반 </label>
-                <!-- <b>닉변은 공식전 기준으로 2021년 7월17일 기준으로 수집된 <span class="red">공식전</span> 데이터를 기반으로 제공됩니다.  </b>-->
+            <div class="top accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                    <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
+                    <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
+                    <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">>></label>
+                    </div>
 
-                <div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="positionShow" checked>
-                        <label class="form-check-label" for="positionShow">포지션 노출</label>
+                    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="positionShow" checked>
+                            <label class="form-check-label" for="positionShow">포지션 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="partyShow" checked>
+                            <label class="form-check-label" for="partyShow">파티 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
+                            <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="recentShow" checked>
+                            <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="partyShow" checked>
-                        <label class="form-check-label" for="partyShow">파티 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
-                        <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="recentShow" checked>
-                        <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
                     </div>
                 </div>
             </div>
@@ -228,10 +232,18 @@
                             onClick="clearDiv('con1_2');">초기화</button>
                     </div>
                 </div>
-
+                <div style="height: 65px;align-content: center;">
+                    <ins class="kakao_ad_area" 
+                        data-ad-unit = "DAN-AUzZlTfK9XyuKNOY"
+                        data-ad-width = "320"
+                        data-ad-height = "50"></ins>
+                        <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+                </div>
 
                 <div id="con1_2" class="infoLayer"> </div>
             </div>
+
+            
         </div>
 
         <div id="template" class="infoDiv" style="display:none">
