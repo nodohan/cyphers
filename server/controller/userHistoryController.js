@@ -145,9 +145,14 @@ module.exports = (scheduler, maria, acclogger) => {
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
                      FROM nickNames nick 
                      WHERE nick.playerId = (
-                         SELECT distinct playerId
-                         FROM nickNames WHERE nickname = '${userName}' and privateYn = 'N' 
-                         order by checkingDate desc
+                        SELECT 
+                            distinct playerId
+                        FROM nickNames 
+                        WHERE nickname = '${userName}' 
+                        and privateYn = 'N' 
+                        and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                        order by checkingDate desc 
+                        limit 1
                     )
                     and checkingDate >= (NOW() - INTERVAL 1 YEAR)
                     ORDER BY checkingDate DESC; `;
