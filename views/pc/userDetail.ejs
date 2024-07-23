@@ -118,8 +118,13 @@
             
             function playGameList(charId, div) {
                 let rows = playRow;
-                if (charId != 'all') {
+
+                const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
+                const searchPosition = positions.indexOf(charId) > 0;
+                if (charId != 'all' && !searchPosition ) {
                     rows = rows.filter(row => row.playInfo.characterId == charId);
+                } else if(searchPosition) {
+                    rows = rows.filter(row => row.position.name == charId);
                 }
 
                 var clone = $("#templateTable").clone();
@@ -201,8 +206,7 @@
                 showMapRate(div.find(divId).find(".mapRate"), mapRow);                
                 drawPosition(div.find(divId), mapRow, nickname);
                 let userMapChar = extractChar(mapRow, highScore);
-                //drawCharInfo(div.find(divId).find("#often"), userMapChar, "자주하는 TOP");
-
+                
                 drawOften(div.find(divId).find("#often"), userMapChar, drawCharCardVer, nickname);
             }
 
@@ -437,17 +441,20 @@
                                         <th scope="col">P</th>
                                         <th scope="col">buff</th>
                                         <th scope="col">닉네임</th>
+                                        <th scope="col">급</th>
+                                        <th scope="col">rp</th>
                                         <th scope="col">Lv</th>
-                                        <th scope="col">급수</th>
-                                        <th scope="col">KDA</th>
                                         <th scope="col">킬</th>
                                         <th scope="col">데스</th>
                                         <th scope="col">도움</th>
                                         <th scope="col">딜량</th>
                                         <th scope="col">피해량</th>
+                                        <th scope="col">치유</th>
+                                        <th scope="col">철거반</th>
+                                        <th scope="col">센티넬</th>
                                         <th scope="col">코인</th>
                                         <th scope="col">소모품(%)</th>
-                                        <th scope="col"></th>
+                                        <th scope="col"> </th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
