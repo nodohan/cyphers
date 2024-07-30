@@ -821,16 +821,16 @@ function playGameList(findId, div, nickname, showType, modalId) {
 
         let text =
             `<tr>
-                <td> ${row.date} </td>
+                <td> ${row.date.substr(5)} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
                 <td><b>${winLoseKo(result)}</b></td>
                 <td>${getPositionIcon(row.position.name)}</td>
                 <td>${drawCharicter(characterId)}</td>
-                <td>${level}</td>
+                <!-- <td>${level}</td>-->
                 <td class='kda'>${killCount}/${deathCount}/${assistCount}</td>
-                <td class='kda'>${(attackPoint / 1000).toFixed(0)}k</td>
+                <!-- <td class='kda'>${(attackPoint / 1000).toFixed(0)}k</td>
                 <td class='kda'>${(damagePoint / 1000).toFixed(0)}k</td>
-                <td class='kda'>${((spendConsumablesCoin / getCoin) * 100).toFixed(0)}%</td>
+                <td class='kda'>${((spendConsumablesCoin / getCoin) * 100).toFixed(0)}%</td> --> 
                 <td>
                     <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
                         onClick='searchMatch("${matchId}", null, "char_")' >
