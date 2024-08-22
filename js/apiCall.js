@@ -506,6 +506,8 @@ function drawCharicter(charId) {
 
 
 function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
+    let isMap = div.parent().hasClass("mapCard");
+    let mapName = div.parent().data("mapname");
 
     let imgUrl = "http://static.cyphers.co.kr/img/game_position/";
     switch(typeId){
@@ -521,11 +523,14 @@ function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
         const gameType = $("input[name='gameType']:checked").val();
         const modalId = `pop${nickname}_${gameType}_${typeId}_modal`;
         const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-        const moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
-
-        infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br>
-                  <small class='text-muted'>${type.rateInfo}</small>`;
-
+        let moreAlink;
+        if(isMap) {
+            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
+        } else {
+            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+        }
+        
+        infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br><small class='text-muted'>${type.rateInfo}</small>`;
     }
 
     $(div).append(`
@@ -965,17 +970,21 @@ function userSeasonRank(playerId, callback) {
 function drawCharCardVer(div, charInfo, nickname) {
     const {characterId, win, lose, count } = charInfo;
     let isMap = div.parent().parent().hasClass("mapCard");
+    let mapName = div.parent().parent().data("mapname");
 
-    let modalId = `pop${nickname}_${characterId}_modal`;
     var pov = ((win * 100) / count) || 0;
 
     let cardText;
     if(!isMap) {
+        let modalId = `pop${nickname}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;
         cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;    
     } else {
-        cardText = `${pov.toFixed(0)}% <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;    
+        let modalId = `pop${nickname}_${mapName}_${characterId}_modal`;
+        let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+        let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${characterId}', '${mapName}');">${moreIcon}</a>`;
+        cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;    
     }
     
     var card = $(`

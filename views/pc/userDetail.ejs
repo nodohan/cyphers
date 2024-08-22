@@ -3,10 +3,7 @@
 
 <head>
     <%- include  ("../layout/head") %>
-    <!-- <script src="/js/sample.js" crossorigin="anonymous"></script>-->
-    <!-- <script src="/js/matchDetailSample.js" crossorigin="anonymous"></script> -->
-    <!-- <script src="/js/matchResult.js" crossorigin="anonymous"></script>-->
-
+    
         <script type="text/javascript">
             pageName = "pcDetail";
             var userData = {};
@@ -73,6 +70,9 @@
                 var rows = data.matches.rows;
                 playRow = rows;
 
+                window.localStorage.setItem("nick" + nickname, JSON.stringify(rows));
+                window.localStorage.setItem("nickname",nickname);
+
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
@@ -96,7 +96,7 @@
 
                 clone.show();
                 $("#con1_2").prepend(clone);
-            }            
+            }
 
             const drawMatchUser = (div, row) => {
             }        
@@ -120,7 +120,7 @@
                 let rows = playRow;
 
                 const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
-                const searchPosition = positions.indexOf(charId) > 0;
+                const searchPosition = positions.indexOf(charId) >= 0;
                 if (charId != 'all' && !searchPosition ) {
                     rows = rows.filter(row => row.playInfo.characterId == charId);
                 } else if(searchPosition) {
@@ -153,6 +153,41 @@
                 }
                 div.find("#playGameList").empty().append(clone);
             }
+
+            function playGameMapList(charId, div, showType) {
+                let nickname = window.localStorage.getItem("nickname");
+                let rows = JSON.parse(window.localStorage.getItem("nick" + nickname));
+                rows = extractMap(rows, div);
+
+                const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
+                const searchPosition = positions.indexOf(charId) >= 0;
+                if (charId != 'all' && !searchPosition ) {
+                    rows = rows.filter(row => row.playInfo.characterId == charId);
+                } else if(searchPosition) {
+                    rows = rows.filter(row => row.position.name == charId);
+                }
+
+                var clone = $("#playGameList");
+                var body = clone.find("tbody");
+                body.empty();
+                rows.forEach(row => {
+                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint} = row.playInfo;
+                    //date
+                    let text = "<tr>";
+                    text += `<td> ${row.date} </td>`;
+                    text += `<td><b>${winLoseKo(result)}</b></td>`;
+                    text += "<td>" + drawCharicter(characterId) + "</td>";
+                    text += "<td class='kda'>" + killCount + "/" + deathCount + "/" + assistCount + "</td>"
+                    text += "<td class='kda'>" + (attackPoint / 1000).toFixed(0) + "k</td>";
+                    text += "<td class='kda'>" + (damagePoint / 1000).toFixed(0) + "k</td>";
+
+                    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                    text += `<td onClick='searchMatch("${row.matchId}", drawMatchDetailPopup )'>${moreIcon}</td> `
+                    text += "</tr>"
+                    body.append(text);
+                });
+            }
+
 
             function drawMatchDetailPopup(matchId, result) {
                 let prefixMatchId = "m" + matchId;
@@ -202,8 +237,8 @@
              */
             function drawMapInfo(rows, div, mapId, mapName, divId) {
                 //포지션별 승률
-                let mapRow = extractMap(rows, mapName);                
-                showMapRate(div.find(divId).find(".mapRate"), mapRow);                
+                let mapRow = extractMap(rows, mapName);
+                showMapRate(div.find(divId).find(".mapRate"), mapRow);
                 drawPosition(div.find(divId), mapRow, nickname);
                 let userMapChar = extractChar(mapRow, highScore);
                 
@@ -319,7 +354,7 @@
         </div>
 
         <div id="template2" style="display:none">
-            <div id="river" class="mapCard">
+            <div id="river" data-mapName="리버포드" class="mapCard">
                 <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
@@ -330,7 +365,7 @@
                     </div>
                 </div>
             </div>
-            <div id="metro" class="mapCard">
+            <div id="metro" data-mapName="메트로폴리스" class="mapCard">
                 <div class="bold width100p">메트로폴리스 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
@@ -341,7 +376,7 @@
                     </div>
                 </div>
             </div>
-            <div id="bristol" class="mapCard">
+            <div id="bristol" data-mapName="브리스톨" class="mapCard">
                 <div class="bold width100p">브리스톨 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
@@ -352,7 +387,7 @@
                     </div>
                 </div>
             </div>
-            <div id="spring" class="mapCard">
+            <div id="spring" data-mapName="스프링필드" class="mapCard">
                 <div class="bold width100p">스프링필드 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
@@ -363,8 +398,8 @@
                     </div>
                 </div> 
             </div>
-            <div id="asia" class="mapCard">
-                <div class="bold width100p">그랑플람 아시아지부 <span class="mapRate"></span></div>
+            <div id="asia" data-mapName="그랑플람 아시아 지부" class="mapCard">
+                <div class="bold width100p">그랑플람 아시아 지부 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p">
@@ -374,7 +409,7 @@
                     </div>
                 </div>
             </div>
-            <div id="atDawn" class="mapCard">
+            <div id="atDawn" data-mapName="리버포드 앳 던" class="mapCard">
                 <div class="bold width100p">리버포드 앳 던 <span class="mapRate"></span></div>
                 <!-- 포지션별 승률 -->
                 <div id="positionDiv" class="positionDiv"></div>
