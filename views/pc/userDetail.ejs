@@ -6,8 +6,7 @@
     
         <script type="text/javascript">
             pageName = "pcDetail";
-            var userData = {};
-
+            
             var playRow = null;
             var nickname;
             $(document).ready(function() {
@@ -26,13 +25,7 @@
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
             }
 
-            function setUserDetailInfo(data) {
-                userData = {}; //초기화
-                let nickname = data.nickname;
-                if (userData[nickname] == null) {
-                    userData[nickname] = data;
-                }
-
+            function setUserDetailInfo(data) {                
                 let gameType = $("input[name='gameType']:checked").val();
 
                 $("#con1_2").empty();
@@ -59,7 +52,7 @@
             }
 
             function drawLeftInfo(gameType, data) {
-                const nickname = data.nickname;
+                nickname = data.nickname;
                 var userDivId = getUserDivId(gameType, nickname);
 
                 //기본 정보
@@ -70,8 +63,8 @@
                 var rows = data.matches.rows;
                 playRow = rows;
 
-                window.localStorage.setItem("nick" + nickname, JSON.stringify(rows));
-                window.localStorage.setItem("nickname",nickname);
+                //window.localStorage.setItem("nick" + nickname, JSON.stringify(rows));
+                //window.localStorage.setItem("nickname",nickname);
 
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
@@ -155,8 +148,8 @@
             }
 
             function playGameMapList(charId, div, showType) {
-                let nickname = window.localStorage.getItem("nickname");
-                let rows = JSON.parse(window.localStorage.getItem("nick" + nickname));
+                //let rows = JSON.parse(window.localStorage.getItem("nick" + nickname));                
+                let rows = playRow;
                 rows = extractMap(rows, div);
 
                 const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
