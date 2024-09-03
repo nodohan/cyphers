@@ -37,6 +37,8 @@ table th,
 table td {
     vertical-align: middle !important;
     text-align: center;
+    font-size: smaller;
+    padding: 0rem !important;
 }
 
 .hiddenRow {
