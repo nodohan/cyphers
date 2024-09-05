@@ -44,7 +44,7 @@ class maria {
         };
 
         this.doQuery =  async(query, params) => {
-            logger.info("### doQuery ###\n%s\n%s", query, params);
+            //logger.info("### doQuery ###\n%s\n%s", query, params);
 
             let pool = await this.getPool();
             let result = null;
