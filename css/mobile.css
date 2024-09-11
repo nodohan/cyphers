@@ -90,8 +90,6 @@ table td {
 .infoLayer {
     overflow-y: scroll;
     height: 590px;
-    /* background-color: white;
-    border: dashed; */
 }
 
 .infoLayer div {
@@ -277,11 +275,6 @@ table td {
     width: 100%;
     background-color: rgb(173 173 173 / 80%);
     border-radius: 7px;
-}
-
-.charImg {
-    /*width: 35px;
-    height: 35px;*/
 }
 
 .charImgSmall {
