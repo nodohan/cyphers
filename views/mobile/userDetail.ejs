@@ -32,7 +32,7 @@
             function drawRightInfo(gameType, data) {
                 var div = $("#template2").clone();
 
-                var rows = data.matches.rows;
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포드
                 drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
@@ -67,7 +67,7 @@
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
 
-                var rows = data.matches.rows;
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 //포지션 별 승률
                 drawPosition(clone, rows, nickname);

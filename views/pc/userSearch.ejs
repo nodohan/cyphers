@@ -199,7 +199,7 @@
 
                 defaultInfo(userDivId, gameType, clone, data, divName != "con3_2");
 
-                var rows = data.matches.rows;
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 //printChar(rows);
 
                 //파티별

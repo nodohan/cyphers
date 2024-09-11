@@ -38,7 +38,7 @@
             function drawRightInfo(gameType, data) {
                 var div = $("#template2").clone();
 
-                var rows = data.matches.rows;
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
                 drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
@@ -60,8 +60,8 @@
                 clone.attr("id", userDivId);
                 defaultInfo(gameType, clone, data);
 
-                var rows = data.matches.rows;
-                playRow = rows;
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 //window.localStorage.setItem("nick" + nickname, JSON.stringify(rows));
                 //window.localStorage.setItem("nickname",nickname);
