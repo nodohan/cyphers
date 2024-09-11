@@ -30,6 +30,7 @@ body {
 }
 
 table {
+    font-size: small;
     background-color: white;
 }
 
@@ -38,7 +39,11 @@ table td {
     vertical-align: middle !important;
     text-align: center;
     font-size: smaller;
-    padding: 0rem !important;
+    padding: 0.1rem !important;
+}
+
+table, td, th { 
+    white-space: nowrap;
 }
 
 .hiddenRow {
@@ -292,14 +297,5 @@ table td {
 
 .textLeft {
     text-align: left;
-}
-
-table {
-    font-size: small;
-}
-
-
-table, td, th { 
-    white-space: nowrap;
 }
 
