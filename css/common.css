@@ -696,7 +696,11 @@ table td {
     width: 320px;
 }
 
-
 .modal-2xl {
-    max-width: 1450px;
+    max-width: 1500px;
+}
+
+.secondChar {
+    width: 32px;
+    height: 35px;
 }

@@ -296,15 +296,17 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    let playInfo = data.playInfo;
+    const { playInfo, items }  = data;
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
     let useCoin = playInfo.spendConsumablesCoin.toLocaleString();
     let usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
+    const isSecond = items.some(item => item.itemName.endsWith("SU"));
+    const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
 
     score += `<td>${winLoseKo(playInfo.result)}</td>";
-                <td>${drawCharicter(playInfo.characterId)}</td>";
+                <td>${isSecond? secondIcon : ""} ${drawCharicter(playInfo.characterId)}</td>";
                 <td>${getPositionIcon(data.position.name)}</td>";
                 <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
     if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
