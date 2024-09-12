@@ -306,7 +306,8 @@ function drawInGameDetail(matchId, data, trClass) {
     const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
 
     score += `<td>${winLoseKo(playInfo.result)}</td>";
-                <td>${isSecond? secondIcon : ""} ${drawCharicter(playInfo.characterId)}</td>";
+                <td>${isSecond? secondIcon : ""}</td>
+                <td>${drawCharicter(playInfo.characterId)}</td>";
                 <td>${getPositionIcon(data.position.name)}</td>";
                 <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
     if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
