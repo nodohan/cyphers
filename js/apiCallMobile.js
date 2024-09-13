@@ -295,11 +295,13 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    const playInfo = data.playInfo;
+    const { playInfo, items } = data;
     const partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
     const useCoin = playInfo.spendConsumablesCoin.toLocaleString();
     const usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
     const itemInfoId = `m${matchId}_${data.playerId}`;
+    const isSecond = items.some(item => item.itemName.endsWith("SU"));
+    const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
 
     const gradeTrId = `d_${matchId}_${data.playerId}_grade`;
     const rpTrId = `d_${matchId}_${data.playerId}_rp`;    
@@ -309,8 +311,15 @@ function drawInGameDetail(matchId, data, trClass) {
         <tr class='${trClass}'>
             <td>
                 ${winLoseKo(playInfo.result)}
-                &nbsp;${getPositionIcon(data.position.name)}
-                &nbsp;${drawCharicter(playInfo.characterId, true)}
+            </td>
+            <td>
+                ${getPositionIcon(data.position.name)}
+            </td>
+            <td>
+                ${isSecond? secondIcon : "" }
+            </td>
+            <td>
+                ${drawCharicter(playInfo.characterId, true)}
             </td>
             <td>
                 <div class='fontSmall'>
