@@ -38,6 +38,18 @@ img {
     border-radius: 7px;
 }
 
+.topHistory {
+    margin-top: 10px;
+    float: left;
+    margin-left: 20px;
+    padding: 15px;
+    position: relative;
+    width: 77%;
+    min-height: 52px;
+    background-color: #fff4e7;    
+    border-radius: 7px;
+}
+
 table {
     background-color: white;
 }

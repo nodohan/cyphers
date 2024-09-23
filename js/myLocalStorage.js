@@ -32,20 +32,25 @@ const delSearchHistory = (name) => {
 
 const showSearchHistory = () => {
     const historyDiv = $("#topHistory").empty()
-    const drawFunc = pageName != "mDetail" ? drawSearchHistory : drawSearchHistoryDetail;
+    const drawFunc = IsDetailPage() ? drawSearchHistoryDetail : drawSearchHistory;
     const list = searchHistory();
     list.forEach(nickName => {
         historyDiv.append(drawFunc(nickName));
     });
 }
 
+const IsDetailPage = () => {
+    return pageName == "mDetail" ||  pageName == "pcDetail";
+}
+
 const drawSearchHistory = (nickName) => {
     return `
     <span class="red" id="spanSearch_${nickName}">
-        <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a> 
+        <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a>
         <a href='javascript:delSearchHistory("${nickName}")'>
             [x]
         </a>
+        &nbsp; 
     <span>`
 }
 
