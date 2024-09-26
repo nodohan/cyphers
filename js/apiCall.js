@@ -393,7 +393,7 @@ function getItemIcon(buffArr, url) {
 
 function getPartyInfoText(partyInfo) {
     let icon = isMobile ? "" : `<i class="fa fa-info-circle"></i>`;
-    let partySize = partyInfo.length;
+    let partySize = partyInfo == null ? 0 : partyInfo.length;
     if (partySize == 0) {
         return "솔로";
     }
@@ -757,11 +757,11 @@ function extractParty(rows) {
         five: { count: 0, win: 0, lose: 0, party: {} },
     };
 
-    let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
+    let solo = rows.filter(row => row.playInfo.partyInfo == null);
     partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
     partyResult.solo.lose = solo.filter(row => row.playInfo.result == 'lose' && row.playInfo.playTypeName == '정상').length;
 
-    let party = rows.filter(row => row.playInfo.partyInfo.length != 0);
+    let party = rows.filter(row => row.playInfo.partyInfo != null);
     for (let i in party) {
         let matchId = party[i].matchId;
         let playInfo = party[i].playInfo;
