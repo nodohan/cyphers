@@ -282,11 +282,11 @@
                     },
                 };
 
-                let solo = rows.filter(row => row.playInfo.partyInfo.length == 0);
+                let solo = rows.filter(row => row.playInfo.partyInfo == null);
                 partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
                 partyResult.solo.lose = (solo.length - partyResult.solo.win);
 
-                let party = rows.filter(row => row.playInfo.partyInfo.length != 0);
+                let party = rows.filter(row => row.playInfo.partyInfo != null);
                 for (let i in party) {
                     let matchId = party[i].matchId;
                     let playInfo = party[i].playInfo;
