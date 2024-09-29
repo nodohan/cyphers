@@ -25,12 +25,12 @@ module.exports = (scheduler, maria, acclogger) => {
 
     async function callInsertStats() {
         //SEASON
-        await insertStats('2023-03-21', '2023-04-20', "2024H", "ATTACK", "DESC");
-        await insertStats('2024-04-21', '2023-05-20', "2024H", "ATTACK", "ASC");
-        await insertStats('2024-05-21', '2023-06-20', "2024H", "TANKER", "DESC");
-        await insertStats('2024-06-21', '2024-07-20', "2024H", "TANKER", "ASC");
-        await insertStats('2024-07-21', '2024-08-20', "2024H", "ALL", "DESC");
-        await insertStats('2024-08-21', '2024-09-25', "2024H", "ALL", "ASC");
+        await insertStats('2023-03-21', '2024-09-25', "2024H", "ATTACK", "DESC");
+        await insertStats('2024-03-21', '2024-09-25', "2024H", "ATTACK", "ASC");
+        await insertStats('2024-03-21', '2024-09-25', "2024H", "TANKER", "DESC");
+        await insertStats('2024-03-21', '2024-09-25', "2024H", "TANKER", "ASC");
+        await insertStats('2024-03-21', '2024-09-25', "2024H", "ALL", "DESC");
+        await insertStats('2024-03-21', '2024-09-25', "2024H", "ALL", "ASC");        
     }
 
     async function insertStats(startDate, endDate, statsType, combiType, order) {
