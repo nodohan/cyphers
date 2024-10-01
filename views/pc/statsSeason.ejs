@@ -17,12 +17,16 @@
                     $("#stats2022u").addClass("active");
                 } else if (season == '2023H') {
                     $("#stats2023h").addClass("active");
+                } else if (season == '2024H') {
+                    $("#stats2024h").addClass("active");
                 } else {
                     $("#stats2023u").addClass("active");
                 }
 
                 if(season == '2023H'){
                     charCount = 78;
+                } else if(season == '2024H'){
+                    charCount = 80;
                 }
 
                 getStats("statsList", drawStatsList); // 조합통계 

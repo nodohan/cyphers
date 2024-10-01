@@ -82,6 +82,10 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/statsSeason', { 'season': '2023U' });
     });
 
+    app.get('/stats2024h', function(req, res) {
+        res.render('./pc/statsSeason', { 'season': '2024H' });
+    });
+
     app.get('/statsSeasonList', async function(req, res) {
         let season = req.query.season
 
