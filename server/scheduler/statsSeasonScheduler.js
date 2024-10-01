@@ -86,7 +86,7 @@ module.exports = (scheduler, maria, acclogger) => {
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose
                 FROM matches_char 
-                WHERE matchDate BETWEEN '2023-09-14' AND '2024-03-21'
+                WHERE matchDate BETWEEN '2024-03-21' AND '2024-09-25'
                 GROUP BY charName
             ) aa `;
     }
