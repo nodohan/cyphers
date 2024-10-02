@@ -29,7 +29,7 @@ const drawNormalUserInfo = (gameType, divName, data, nickname) => {
     drawOftenNormal(clone, userChar, nickname);
 
     //최근 10경기 결과
-    drawRecently(clone, rows, userDivId);
+    drawRecentlyNormal(clone, rows, userDivId);
 
     clone.show();
     $("#" + divName).prepend(clone);
@@ -68,11 +68,10 @@ const defaultInfoNormal = (divId, gameType, clone, data, tackShow) => {
 //파티별 승률 (솔로/파티)
 const drawPartyTypeNormal = (userDivId, clone, row) => {
     let partyJson = extractParty(row);
-    const soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
     const partyAllCnt = partyJson.all.count;
     let appendHtml = "";
 
-    $(clone).parent().find("#playGameDiv").append(` (<span class="red">솔플</span>: ${soloAllCnt}전, <span class="red">파티</span>: ${partyAllCnt}전)<br>`);
+    $(clone).parent().find("#playGameDiv").append(` (<span class="red">솔플</span>: ${partyJson.solo.count}전, <span class="red">파티</span>: ${partyAllCnt}전)<br>`);
 
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
     if (partyJson.two.count != 0) {
@@ -304,4 +303,33 @@ const drawCharCardVerNormal = (div, charInfo, nickname) => {
                 </div>
             </div>`);
     div.append(card);
+}
+
+
+const drawRecentlyNormal = (div, rows, userDivId) => {
+    let bodyCount = Math.min(20, rows.length);
+
+    let title = $(div).find("#recentlyDivTitle");
+    if (!isMobile) {
+        title.prepend(`최근 ${bodyCount} 게임 보기`);
+    }
+
+    const modalId = `pop${userDivId}Modal`;
+    const labelId = `pop${userDivId}ModalLabel`;
+
+    let body = $("#templateModal").clone();
+    body.attr("id", modalId);
+    body.attr("aria-labelledby", labelId);
+    body.find("#templateModalLabel")
+        .attr("id", labelId)
+        .empty()
+        .append(`최근 ${bodyCount} 게임`);
+
+    rows.sort(sortDate);
+    let titleText = "";
+    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
+    title.append(titleText);
+    title.append(`<a data-toggle='modal' data-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+
+    $("#modalDiv").append(body);
 }
