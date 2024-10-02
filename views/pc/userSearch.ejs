@@ -179,11 +179,19 @@
             }
 
             function setUserInfo(gameType, divName, data) {
-                let nickname = data.nickname;
+                const nickname = data.nickname;
                 if (userData[nickname] == null) {
                     userData[nickname] = data;
                 }
 
+                if(gameType == 'rating') {
+                    drawRatingUserInfo(gameType, divName, data, nickname);
+                } else {
+                    drawNormalUserInfo(gameType, divName, data, nickname);
+                }
+            }
+
+            const drawRatingUserInfo = (gameType, divName, data, nickname) => {
                 var userDivId = getUserDivId(gameType, nickname);
                 if ($("#" + userDivId).length != 0) {
                     return;
@@ -206,7 +214,7 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션별 
-                drawPosition(clone, rows, data.nickname);
+                drawPosition(clone, rows, nickname);
 
                 //최근 10경기 결과
                 drawRecently(clone, rows, userDivId);
