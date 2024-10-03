@@ -233,7 +233,7 @@ const appendPlayTypeInfoNormal = (div, type, typeId, positionName, nickname) => 
         if(isMap) {
             moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
         } else {
-            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameListNormal('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
         }
         infoStr = `${type.count} ${moreAlink}`;
     }
@@ -279,7 +279,7 @@ const drawCharCardVerNormal = (div, charInfo, nickname) => {
         let modalId = `pop${nickname}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         cardText = `${count}전 <a href='#' data-toggle="modal" data-target="#${modalId}" 
-                            onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;    
+                            onClick="javascript:playGameListNormal('${characterId}', null, '${nickname}');">${moreIcon}</a>`;    
     } else {
         let modalId = `pop${nickname}_${mapName}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
@@ -316,20 +316,252 @@ const drawRecentlyNormal = (div, rows, userDivId) => {
 
     const modalId = `pop${userDivId}Modal`;
     const labelId = `pop${userDivId}ModalLabel`;
+    const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
 
-    let body = $("#templateModal").clone();
-    body.attr("id", modalId);
-    body.attr("aria-labelledby", labelId);
-    body.find("#templateModalLabel")
-        .attr("id", labelId)
-        .empty()
-        .append(`최근 ${bodyCount} 게임`);
-
+    let body = $(getTempModalTableNormal(modalId, labelId,  `최근 ${bodyCount} 게임`));
     rows.sort(sortDate);
-    let titleText = "";
-    let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
-    title.append(titleText);
+    for (let j = 0; j < bodyCount; j++) {
+        body.find("tbody").append(drawInGameListNormal(rows[j]));
+    }
     title.append(`<a data-toggle='modal' data-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
 
     $("#modalDiv").append(body);
+}
+
+function drawInGameListNormal(data) {
+    let matchId = data.matchId;
+    let playInfo = data.playInfo;
+    let score =
+        `<tr>
+             <td>${data.date}</td>
+             <td>${getPartyInfoText(playInfo.partyInfo)}</td>
+             <td>${getPositionIcon(data.position.name)}</td>
+             <td>${drawCharicter(playInfo.characterId)}</td>
+             <td>${playInfo.level}</td>
+             <td>
+                <i class='fas fa-angle-double-down' data-toggle='collapse' 
+                    data-target='.m${matchId}' onClick='searchMatchNormal("${matchId}")' >
+             </td>
+        </tr>
+        <tr>
+            <td class='hiddenRow' colspan='15'>
+                <div class='collapse m${matchId}'></div>
+            </td>
+        </tr>`;
+
+    return score;
+}
+
+const playGameListNormal = (findId, div, nickname, showType, modalId) => {
+    modalId =  modalId || `pop${nickname}_${findId}_modal`;
+    const labelId = `pop${nickname}_${findId}_label`;
+
+    if ($("#" + modalId).length != 0) {
+        return;
+    }
+
+    let rows = userData[nickname].matches.rows;
+    if (rows == null) {
+        return;
+    }
+
+    if(showType == 'position') {
+        rows = rows.filter(row => row.position.name == findId);
+    } else if (findId != 'all') {
+        rows = rows.filter(row => row.playInfo.characterId == findId);
+    }
+
+    const kindName = showType == 'position' ? findId : rows[0].playInfo.characterName;
+    let title = `${nickname}의 ${kindName} ${rows.length} 게임`;
+    let clone = getTempModalTableNormal(modalId, labelId, title);
+
+    rows.forEach(row => {
+        const { partyInfo, result, characterId, level } = row.playInfo;
+        
+        let matchId = row.matchId;
+        clone +=
+            `<tr>
+                <td> ${row.date} </td>
+                <td>${getPartyInfoText(partyInfo)}</td>
+                <td>${getPositionIcon(row.position.name)}</td>
+                <td>${drawCharicter(characterId)}</td>
+                <td>${level}</td>
+                <td>
+                    <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
+                        onClick='searchMatchNormal("${matchId}", null, "char_")' >
+                </td>
+            </tr>
+            <tr>
+                <td class='hiddenRow' colspan='12'>
+                <div class='collapse char_${matchId}'></div>
+                </td>
+            </tr>`;
+    });
+
+    clone += `              </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>`
+
+    if(div == null) {
+        div = $("#modalDiv");
+    }
+
+    div.append(clone);
+}
+
+const getTempModalTableNormal = (modalId, labelId, title) => {
+    return `
+        <div id="${modalId}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="${labelId}">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="${labelId}">${title}</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body modal-dialog-scrollable">
+                        <table id="templateTable" class="table table-striped table-condensed">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">날짜</th>
+                                    <th scope="col">파티</th>
+                                    <th scope="col">P</th>
+                                    <th scope="col">Char</th>
+                                    <th scope="col">Lv</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+}
+
+const searchMatchNormal = (matchId, callback, prefix = "m") => {
+    let divId = `${prefix}${matchId}`;
+    let div = $(`.${divId}`);
+    let divVs = $(`#${divId}Modal`);
+
+    if (div.text().length != 0 || divVs.text().length != 0) {
+        if (typeof callback == 'function') {
+            callback(matchId, null);
+        }
+        return;
+    }
+
+    let result;
+    $.ajax({
+        async: false,
+        url: "/user/getMatchInfo",
+        data: { 'matchId': matchId },
+        success: function(data) {
+            if (typeof callback == 'function') {
+                return callback(matchId, data, divId);
+            }
+            drawMatchNormal(matchId, data, divId);
+        }
+    }).done(function() {
+
+    });
+    return result;
+}
+
+const drawMatchNormal = (matchId, result, divId) => {
+    let prefixMatchId = divId;
+    let data;
+    if (typeof result == 'string') {
+        data = JSON.parse(result);
+    } else {
+        data = result;
+    }
+    let div = $("." + prefixMatchId);
+    let table = $(`
+        <table id="matchInfoTemplate" class="table table-striped table-condensed">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">C</th>
+                    <th scope="col">P</th>
+                    <th scope="col">buff</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">급</th>
+                    <th scope="col">rp</th>
+                    <th scope="col">Lv</th>
+                    <th scope="col"> </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    `);
+    table.attr("id", prefixMatchId + "div");
+    let tbody = table.find("tbody");
+
+    let winTeam = getTeamNormal(data.teams, 0, data.players);
+    let loseTeam = getTeamNormal(data.teams, 1, data.players);
+
+    for (idx in winTeam) {
+        tbody.append(drawInGameDetailNormal(matchId, winTeam[idx], "table-primary"));
+    }
+    for (idx in loseTeam) {
+        tbody.append(drawInGameDetailNormal(matchId, loseTeam[idx], "table-danger"));
+    }
+
+    div.append(table);
+}
+
+
+const getTeamNormal = (team, result, players) => {
+    let findTeam = team[result].players;
+    let resultTeam = players.filter(player => findTeam.includes(player.playerId));
+    resultTeam.forEach(item => item.playInfo.result = result);
+
+    return resultTeam;
+}
+
+const drawInGameDetailNormal = (matchId, data, trClass) => {
+    const { playInfo, items }  = data;
+    let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
+
+    let score = `<tr class='${trClass}'>`
+    const isSecond = items.some(item => item.itemName.endsWith("SU"));
+    const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
+
+    score += `<td>${isSecond? secondIcon : ""}</td>
+              <td>${drawCharicter(playInfo.characterId)}</td>
+              <td>${getPositionIcon(data.position.name)}</td>
+              <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
+    if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
+        score +=
+            ` <td>
+                    <a href='#' onClick='javascript:partyUserSearch(this);'>${data.nickname}</a>
+                    &nbsp;${partyCnt}
+                </td>`;
+    } else {
+        score += `<td>${data.nickname} ${partyCnt}</td>`;
+    }
+
+    const gradeTrId = `d_${matchId}_${data.playerId}_grade`;
+    const rpTrId = `d_${matchId}_${data.playerId}_rp`;
+    score += `
+         <td class='${gradeTrId}'>0급</td>
+         <td class='${rpTrId}'>0</td>
+         <td>${playInfo.level}</td>`;
+
+    getUserGradeRp(gradeTrId, rpTrId, data.playerId);
+
+    let itemInfoId = `m${matchId}_${data.playerId}`;
+    score += `<td>
+                <i class="fas fa-angle-double-down" data-toggle="collapse" 
+                    data-target=".${itemInfoId}" aria-expanded="true">
+                </i>
+            </td>
+        </tr>
+        <tr class='${trClass}'>
+            <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
+                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
+            </td>
+        </tr>`;
+
+    return score;
 }
