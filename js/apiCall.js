@@ -372,7 +372,6 @@ const getUserGradeRp = (gradeTrId, rpTrId, nickname) => {
 }
 
 const drawUserGradeRp = (gradeTrId, rpTrId, data) =>  {    
-    console.log(data);
     const { grade, ratingPoint, maxRatingPoint } = data.row;
 
     $("."+ gradeTrId).empty().append(grade+"급");
