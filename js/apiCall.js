@@ -748,7 +748,7 @@ function addPlayResult(subPartyResult, matchId, data, isParty) {
 
 function extractParty(rows) {
     let partyResult = {
-        solo: { win: 0, lose: 0 },
+        solo: { count: 0, win: 0, lose: 0 },
         all: { count: 0, win: 0,lose: 0 },
         two: { count: 0, win: 0, lose: 0, party: {} },
         three: { count: 0, win: 0, lose: 0, party: {} },
@@ -757,6 +757,7 @@ function extractParty(rows) {
     };
 
     let solo = rows.filter(row => row.playInfo.partyInfo == null);
+    partyResult.solo.count = solo.length;
     partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
     partyResult.solo.lose = solo.filter(row => row.playInfo.result == 'lose' && row.playInfo.playTypeName == '정상').length;
 
