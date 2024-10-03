@@ -71,6 +71,14 @@
                     userData[nickname] = data;
                 }
 
+                if(gameType == 'rating') {
+                    drawRatingUserInfo(gameType, divName, data, nickname);
+                } else {
+                    drawNormalUserInfo(gameType, divName, data, nickname);
+                }
+            }
+
+            const drawRatingUserInfo = (gameType, divName, data, nickname) => {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
                 var userDivId = getUserDivId(gameType, data.nickname);
                 //기본 정보 
@@ -335,13 +343,11 @@
                 <div id="mostCharDetailDiv">
                     <div id="cardTemp" class="card" hidden>
                         <div class="row no-gutters">
-                            <div class="charImg">
-                                <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
+                            <div class="charImg">  
                             </div>
                             <div>
                                 <div class="card-body">
                                     <p class="card-text">
-                                        <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->
                                     </p>
                                 </div>
                             </div>

@@ -200,7 +200,7 @@ table, td, th {
 }
 
 .infoDiv .card {
-    width: 50%;
+    width: 25%;
     background-color: white;
 }
 
@@ -283,7 +283,7 @@ table, td, th {
 }
 
 .charImgSmall {
-    width: 27%;    
+    width: 35px;    
 }
 
 .charImgLarge {
