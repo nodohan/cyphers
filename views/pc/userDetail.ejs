@@ -9,6 +9,9 @@
             
             var playRow = null;
             var nickname;
+            var userData = {};
+            const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
+
             $(document).ready(function() {
 
                 $("#mainMenu").removeClass("active");
@@ -26,34 +29,27 @@
                 searchUser("nickNames", null, $("#nickNames").val(), setUserDetailInfo);
             }
 
-            function setUserDetailInfo(data) {                
+            function setUserDetailInfo(data) {
                 let gameType = $("input[name='gameType']:checked").val();
 
                 $("#con1_2").empty();
                 $("#con2_2").empty();
 
-                drawLeftInfo(gameType, data);
-                drawRightInfo(gameType, data);
-            }
-
-            function drawRightInfo(gameType, data) {
-                var div = $("#template2").clone();
-
-                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
-                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
-                drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
-                drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
-                drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
-                drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
-                drawMapInfo(rows, div, 106, '리버포드 앳 던', "#atDawn"); //그랑플람 아시아 지부
-
-                div.show();
-
-                $("#con2_2").empty().append(div);
-            }
-
-            function drawLeftInfo(gameType, data) {
                 nickname = data.nickname;
+                if (userData[nickname] == null) {
+                    userData[nickname] = data;
+                }
+
+                if(gameType == 'rating') {
+                    drawLeftInfo(gameType, data);
+                    drawRightInfo(data);
+                } else {
+                    drawLeftInfoNormal(gameType, data);
+                    drawRightInfoNormal(data);
+                }
+            }
+
+            const drawLeftInfo = (gameType, data) => {
                 var userDivId = getUserDivId(gameType, nickname);
 
                 //기본 정보
@@ -63,9 +59,6 @@
 
                 var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                //window.localStorage.setItem("nick" + nickname, JSON.stringify(rows));
-                //window.localStorage.setItem("nickname",nickname);
 
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
@@ -83,19 +76,81 @@
                 // 일별 승률
                 drawDailyResult(clone, calcDaily(rows));
 
-                drawMatchUser(clone, rows);
-
                 // 플레이 리스트 
-                playGameList("all", clone);
+                playDetailGameList("all", clone);
 
                 clone.show();
                 $("#con1_2").prepend(clone);
             }
+            
+            const drawRightInfo = (data) => {
+                var div = $("#template2").clone();
 
-            const drawMatchUser = (div, row) => {
-            }        
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
+                drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
+                drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
+                drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
+                drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 106, '리버포드 앳 던', "#atDawn"); //그랑플람 아시아 지부
 
-            function defaultInfo(gameType, clone, data) {
+                div.show();
+
+                $("#con2_2").empty().append(div);
+            }
+
+            const drawLeftInfoNormal = (gameType, data) => {
+                nickname = data.nickname;
+                var userDivId = getUserDivId(gameType, nickname);
+
+                //기본 정보
+                var clone = $("#template").clone();
+                clone.attr("id", userDivId);
+                defaultInfo(gameType, clone, data);
+
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                //파티별
+                drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
+
+                //포지션 별 승률
+                drawPositionNormal(clone, rows, nickname);
+
+                //자주하는 캐릭
+                var userChar = extractChar(rows, sortCase);
+                drawOftenNormal(clone, userChar, nickname);
+
+                //최근 10게임
+                drawRecentlyNormal(clone, rows);
+
+                // 일별 승률
+                drawDailyResultNormal(clone, calcDaily(rows));
+
+                // 플레이 리스트 
+                playDetailGameListNormal("all", clone);
+
+                clone.show();
+                $("#con1_2").prepend(clone);
+            }
+            
+            const drawRightInfoNormal = (data) => {
+                var div = $("#template2").clone();
+
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
+                drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
+                drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
+                drawMapInfo(rows, div, 104, '스프링필드', "#spring"); //스프링필드
+                drawMapInfo(rows, div, 105, '그랑플람 아시아 지부', "#asia"); //그랑플람 아시아 지부
+                drawMapInfo(rows, div, 106, '리버포드 앳 던', "#atDawn"); //그랑플람 아시아 지부
+
+                div.show();
+
+                $("#con2_2").empty().append(div);
+            }
+
+            const defaultInfo = (gameType, clone, data) => {
                 var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
                 var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
 
@@ -110,10 +165,9 @@
                 $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
             
-            function playGameList(charId, div) {
+            const playDetailGameList = (charId, div) => {
                 let rows = playRow;
-
-                const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
+                
                 const searchPosition = positions.indexOf(charId) >= 0;
                 if (charId != 'all' && !searchPosition ) {
                     rows = rows.filter(row => row.playInfo.characterId == charId);
@@ -148,12 +202,10 @@
                 div.find("#playGameList").empty().append(clone);
             }
 
-            function playGameMapList(charId, div, showType) {
-                //let rows = JSON.parse(window.localStorage.getItem("nick" + nickname));                
+            const playGameMapList = (charId, div, showType) => {
                 let rows = playRow;
                 rows = extractMap(rows, div);
-
-                const positions = [ '탱커', '근거리딜러', '원거리딜러', '서포터'];
+                
                 const searchPosition = positions.indexOf(charId) >= 0;
                 if (charId != 'all' && !searchPosition ) {
                     rows = rows.filter(row => row.playInfo.characterId == charId);
@@ -182,8 +234,7 @@
                 });
             }
 
-
-            function drawMatchDetailPopup(matchId, result) {
+            const drawMatchDetailPopup = (matchId, result) => {
                 let prefixMatchId = "m" + matchId;
 
                 var data;
@@ -229,7 +280,7 @@
             /***
              * 맵별 포지션 승률
              */
-            function drawMapInfo(rows, div, mapId, mapName, divId) {
+            const drawMapInfo = (rows, div, mapId, mapName, divId) => {
                 //포지션별 승률
                 let mapRow = extractMap(rows, mapName);
                 showMapRate(div.find(divId).find(".mapRate"), mapRow);

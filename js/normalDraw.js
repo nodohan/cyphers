@@ -529,3 +529,111 @@ const drawInGameDetailNormal = (matchId, data, trClass) => {
 
     return score;
 }
+
+const drawDailyResultNormal = (div, dailyMap) => {
+    let table = "<table class='table table-bordered table-striped'>";
+    let tr = "<thead><tr>"; 
+    let tbody = "<tbody><tr>";
+    let endTbody = "</tr></tbody></table>";
+
+    let th = "";
+    let td = "";
+    let trCount = 1;
+    let first = true;
+    let columnNum = isMobile ? 4 : 7;
+
+    dailyMap.forEach(function(item, key) {
+        th += `<th>${key}</th>
+               <td>${item.win+item.lose}판 </td>`;
+        if (trCount % columnNum == 0) {
+            let newTable = table + tr + th + tbody + td + endTbody;
+            th = "";
+            td = "";
+            if (first) {
+                div.find("#dailyResult").empty().append(newTable);
+                first = false;
+            } else {
+                div.find("#moreDailyResult").append(newTable);
+            }
+        }
+        trCount++;
+    });
+}
+
+const playDetailGameListNormal = (charId, div) => {
+    let rows = playRow;
+    
+    const searchPosition = positions.indexOf(charId) >= 0;
+    if (charId != 'all' && !searchPosition ) {
+        rows = rows.filter(row => row.playInfo.characterId == charId);
+    } else if(searchPosition) {
+        rows = rows.filter(row => row.position.name == charId);
+    }
+
+    var clone = $("#templateTable").clone();
+    clone.removeAttr("id");
+
+    var body = clone.find("tbody");
+    const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+    rows.forEach(row => {
+        const {result, characterId, level} = row.playInfo;
+        let text = `
+            <tr>
+                <td> ${row.date} </td>
+                <td><b>${winLoseKo(result)}</b></td>
+                <td>${drawCharicter(characterId)}</td>
+                <td>${level}</td>
+                <td onClick='searchMatchNormal("${row.matchId}", drawMatchDetailPopupNormal )'>${moreIcon}</td>
+            </tr>`;
+        body.append(text);
+    });
+
+    if (div == null) {
+        div = $("#con1_2");
+    }
+    div.find("#playGameList").empty().append(clone);
+}
+
+
+const drawMatchDetailPopupNormal = (matchId, result) => {
+    let prefixMatchId = "m" + matchId;
+
+    var data;
+    if (result == null) {
+        $("#" + prefixMatchId + "Btn").click();
+        return;
+    }
+
+    if (typeof result == 'string') {
+        data = JSON.parse(result);
+    } else {
+        data = result;
+    }
+
+    var body = $("#templateDetailModal").clone();
+    body.attr("id", prefixMatchId + "Modal");
+    body.attr("aria-labelledby", prefixMatchId + "ModalLabel");
+    body.find("#templateDetailModalLabel")
+        .attr("id", prefixMatchId + "ModalLabel")
+        .text("매칭아이디: " + matchId);
+    body.find("#matchInfoTemplate").attr("id", prefixMatchId + "div");
+    var tbody = body.find("tbody");
+
+    let winTeam = getTeam(data.teams, "win", data.players);
+    let loseTeam = getTeam(data.teams, "lose", data.players);
+
+    for (idx in winTeam) {
+        tbody.append(drawInGameDetail(matchId, winTeam[idx], "table-primary"));
+    }
+    for (idx in loseTeam) {
+        tbody.append(drawInGameDetail(matchId, loseTeam[idx], "table-danger"));
+    }
+
+    //클릭이벤트 설정용
+    var btn = $(body).find("#matchBtn");
+    btn.attr("id", prefixMatchId + "Btn");
+    btn.attr("data-target", "#" + prefixMatchId + "Modal");
+    $("#modalDiv").append(body);
+
+    btn.click();
+}
