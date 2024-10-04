@@ -1,40 +1,4 @@
 
-const drawNormalUserInfo = (gameType, divName, data, nickname) => {
-    var userDivId = getUserDivId(gameType, nickname);
-    if ($("#" + userDivId).length != 0) {
-        return;
-    }
-
-    //기본 정보 
-    var clone = $("#template").clone();
-    clone.attr("id", userDivId);
-    if (divName == "con2_2") {
-        clone.removeClass("infoDiv");
-        clone.addClass("infoDivRed");
-    }
-
-    defaultInfoNormal(userDivId, gameType, clone, data, divName != "con3_2");
-
-    var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
-    //printChar(rows);
-
-    //파티별
-    drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
-
-    //포지션별 
-    drawPositionNormal(clone, rows, data.nickname);
-
-    //자주하는 캐릭
-    var userChar = extractChar(rows, sortCase);
-    drawOftenNormal(clone, userChar, nickname);
-
-    //최근 10경기 결과
-    drawRecentlyNormal(clone, rows, userDivId);
-
-    clone.show();
-    $("#" + divName).prepend(clone);
-}
-
 const defaultInfoNormal = (divId, gameType, clone, data, tackShow) => {
     var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0, playCount : 0 };
     let item = $(clone);
