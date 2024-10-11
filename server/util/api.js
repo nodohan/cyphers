@@ -7,7 +7,7 @@ const commonUtil = require("./commonUtil");
 class api {
   constructor() {
 
-    this.seasonStartDay = "2024-03-21 12:00"; //이번시즌 시작일
+    this.seasonStartDay = "2024-09-26 10:00"; //이번시즌 시작일
     this.apiKey = myConfig.apiKey;
 
     this.nickOpt = {
@@ -60,9 +60,10 @@ class api {
   async getMatchInfo(matchInfo, mergeData) {
     try {
       var resultJson = await this.call(matchInfo);
+      //logger.debug("resultJson: %s" , resultJson.matches);
       mergeData = mergeJson(mergeData, resultJson);
       let next = resultJson.matches.next;
-      if (next != null) {
+      if (next != null && matchInfo.qs.next != next ) {
         matchInfo.qs.next = next;
         await this.getMatchInfo(matchInfo, mergeData);
       }
@@ -114,6 +115,7 @@ class api {
       startDate = endDate;
       endDate = getMinDay(addDays(startDate, 90), new Date());
       diffDay = diffDay - 90;
+      logger.debug("diff:" , diffDay);
     }
     return result;
   }
