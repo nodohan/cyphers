@@ -146,6 +146,11 @@ function mergeJson(mergeData, resultJson) {
     );
   }
 
+  let rows = mergeData.matches.rows;
+  rows = rows.filter((obj, index, self) =>
+    index === self.findIndex((t) => t.matchId === obj.matchId)
+  ); 
+  mergeData.matches.rows = rows;
   return mergeData;
 }
 
