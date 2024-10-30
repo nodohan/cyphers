@@ -14,6 +14,10 @@ module.exports = (scheduler, maria) => {
             logger.info("call match rating scheduler");
             await insertMatches('rating', null, new Date());
             logger.info("end match rating scheduler");
+
+            logger.info("call match rating scheduler");
+            await insertMatches('normal', null, new Date());
+            logger.info("end match rating scheduler");
         }
     });
 
