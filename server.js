@@ -59,6 +59,8 @@ const statsSeasonSche = require('./server/scheduler/statsSeasonScheduler')(sched
 // 비공개 처리용
 const provider = require('./server/controller/providerController')(null, maria, loggerCatcher);
 
+const matchMapScehduler = require('./server/scheduler/matchMapScheduler')(scheduler, maria, loggerCatcher);
+
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -73,6 +75,7 @@ app.use('/sitemap', express.static(__dirname + '/sitemap')); // redirect sitemap
 app.use('/user', userController);
 app.use('/rank', rankScheduler);
 app.use('/matches', matchScehduler);
+app.use('/matchesMap/', matchMapScehduler);
 app.use('/rankChart', rankChart);
 app.use('/history', userHistory);
 app.use('/combi', combi);
