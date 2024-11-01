@@ -12,42 +12,55 @@ module.exports = (scheduler, maria) => {
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match map scheduler");
-            await selectMatches('rating', null, new Date());
+            let isRun = true;
+            while(isRun) {
+                isRun = await selectMatches(res, '2024-09-25');
+            }
             logger.info("end match map scheduler");
         }
     });
 
     //test  ( "/matchesMap/insertMatchesMap" )
-    app.get('/insertMatchesMap', function(req, res) {
+    app.get('/insertMatchesMap', async function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
-        return selectMatches(res, '2024-09-25');
+
+        res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
+        let isRun = true;
+        while(isRun) {
+            isRun = await selectMatches('2024-09-27');
+        }
     });
 
-    async function selectMatches(res, day = new Date()) {
+    selectMatches = async (day = new Date()) => {
         //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
         const query = `
-            SELECT ma.matchId, jsonData 
-            FROM matches ma 
-            LEFT JOIN matches_map map ON map.matchId = ma.matchId 
-            WHERE matchDate >= '${day}'
-            AND map.matchId IS NULL limit 1000 `;
+        select 
+            matchId, jsonData
+        from matches 
+        where matchId in ( 
+            SELECT ma.matchId
+            FROM matches ma
+            LEFT JOIN (
+                select matchId from matches_map group by matchId
+            ) map ON map.matchId = ma.matchId 
+            WHERE matchDate >= '${day}' AND map.matchId IS NULL
+        ) limit 3000`;
        
         logger.debug(query);
+        let matchMap = [];
 
         let pool = await maria.getPool();
         try {
             let rows = await pool.query(query);
-            let matchMap = extractPlayerId(rows);
-            let result = await insertMatchId(matchMap);
-            if (res) {
-                res.send(result > 0); // rows 를 보내주자
-            }
+            matchMap = extractPlayerId(rows);
+            await insertMatchId(matchMap);
         } catch (err) {
             console.log("에러1",err);
             logger.error(err);
         }
+        return matchMap.length > 0;
     }
 
     function extractPlayerId(rows) {
@@ -56,9 +69,13 @@ module.exports = (scheduler, maria) => {
         //사용자 매칭 데이터 검색 
         let items = [];
         rows.forEach(row => {
-            const matchId = row.matchId;
-            JSON.parse(row.jsonData).players.forEach(row2 => {
-                items.push([matchId, row2.playerId]);
+            const { matchId, jsonData } = row;
+            let json = JSON.parse(jsonData);
+            const teams = json.teams;
+            json.players.forEach(row2 => {
+                row2["matchId"] = matchId;
+                row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
+                items.push([matchId, row2.playerId, row2 ]);
             });
         });
 
@@ -67,7 +84,7 @@ module.exports = (scheduler, maria) => {
 
     async function insertMatchId(rows) {
         let pool = await maria.getPool();        
-        let query = `INSERT INTO matches_map (matchId, playerId) VALUES ( ?, ? ) `;
+        let query = `INSERT INTO matches_map (matchId, playerId, jsonData) VALUES ( ?, ?, ? ) `;
         logger.debug(query);
 
         await pool.batch(query, rows, function(err) {

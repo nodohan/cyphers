@@ -1,9 +1,11 @@
 const commonUtil = require('../util/commonUtil');
 const api = require('../util/api');
+const repository = require('../repository/userRepository');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
+    const userRepository = new repository(maria);
 
     //  url = "/user/userSearch"
     app.get('/userSearch', function(req, res) {
@@ -59,7 +61,20 @@ module.exports = (scheduler, maria, acclogger) => {
 
     //  url = "/user/getUserInfo"
     app.get('/getUserInfo', async function(req, res) {
-        res.send(await new api().searchUser(req.query.nickname, req.query.gameType));
+        let userInfo = await new api().searchUser(req.query.nickname, req.query.gameType);
+        try {
+            let matches = await userRepository.selectUserMatches(userInfo.playerId);
+            matches = matches.map(row => JSON.parse(row.jsonData)) || [];
+            userInfo.matches.rows.push(... matches);
+            let rows = userInfo.matches.rows;
+            rows = rows.filter((obj, index, self) => index === self.findIndex((t) => t.matchId === obj.matchId));
+            userInfo.matches.rows = rows;
+            //const hasMatchIds = userInfo.matches.rows.length != 0 ? userInfo.matches.rows.map(row => "'" +  row.matchId + "'").join(",") : "";
+            logger.debug("getUserInfo matchRow: " + rows.length);
+        } catch(err) {
+            logger.error(err);
+        }
+        res.send(userInfo);
     });
 
     //  url = "/user/grade"
