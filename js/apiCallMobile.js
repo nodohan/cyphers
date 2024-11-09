@@ -1052,7 +1052,11 @@ const setMap = (map, isWin, key) => {
     }
 }
 
-const getDay = (yyymmddStr) => {                
-    var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
-    return dateParts[0].slice(2);
+const getDay = (yyymmddStr) => {
+    if(yyymmddStr){
+        var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
+        return dateParts[0].slice(2);
+    } else {
+        return "분석중";
+    }    
 }
