@@ -61,21 +61,26 @@ module.exports = (scheduler, maria, acclogger) => {
 
     //  url = "/user/getUserInfo"
     app.get('/getUserInfo', async function(req, res) {
-        let userInfo = await new api().searchUser(req.query.nickname, req.query.gameType);
-        try {
-            let matches = await userRepository.selectUserMatches(userInfo.playerId);
-            matches = matches.map(row => JSON.parse(row.jsonData)) || [];
-            userInfo.matches.rows.push(... matches);
-            let rows = userInfo.matches.rows;
-            rows = rows.filter((obj, index, self) => index === self.findIndex((t) => t.matchId === obj.matchId));
-            userInfo.matches.rows = rows;
-            //const hasMatchIds = userInfo.matches.rows.length != 0 ? userInfo.matches.rows.map(row => "'" +  row.matchId + "'").join(",") : "";
-            logger.debug("getUserInfo matchRow: " + rows.length);
-        } catch(err) {
-            logger.error(err);
+        const { nickname, gameType} = req.query;
+        let userInfo = await new api().searchUser(nickname, gameType);
+        if(gameType == 'rating') {
+            try {
+                let matches = await userRepository.selectUserMatches(userInfo.playerId);
+                matches = matches.map(row => JSON.parse(row.jsonData)) || [];
+                userInfo.matches.rows.push(... matches);
+                let rows = userInfo.matches.rows;
+                rows = rows.filter((obj, index, self) => index === self.findIndex((t) => t.matchId === obj.matchId));
+                userInfo.matches.rows = rows;
+                //const hasMatchIds = userInfo.matches.rows.length != 0 ? userInfo.matches.rows.map(row => "'" +  row.matchId + "'").join(",") : "";
+                logger.debug("getUserInfo matchRow: " + rows.length);
+            } catch(err) {
+                logger.error(err);
+            }
         }
+            
         res.send(userInfo);
     });
+
 
     //  url = "/user/grade"
     app.get('/userInfoSimple', async function(req, res) {
