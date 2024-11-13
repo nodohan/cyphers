@@ -52,3 +52,6 @@ positionAttr.set('호위','28bcd65c129d0c93789c321e0a183bd8');
 positionAttr.set('활성화 지원', '100b40cb5e22f5613492234dcba705c6');
 positionAttr.set('회피 사격', '8463eb228149f8d8a81bafc3a05e5e1c');
 positionAttr.set('임기응변', '3db41122c3584a1e385f1a83d8d062c0');
+positionAttr.set('임시방편', 'e4ef8e88b20533acadd2f3c8643398e9');
+positionAttr.set('공성추', '6bcea3e0104ee4b330f897b6c7e6c3e0');
+positionAttr.set('석화', '87ef38ce12c30f3757a47c3e95311bcf');
