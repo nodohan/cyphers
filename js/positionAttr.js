@@ -55,3 +55,4 @@ positionAttr.set('임기응변', '3db41122c3584a1e385f1a83d8d062c0');
 positionAttr.set('임시방편', 'e4ef8e88b20533acadd2f3c8643398e9');
 positionAttr.set('공성추', '6bcea3e0104ee4b330f897b6c7e6c3e0');
 positionAttr.set('석화', '87ef38ce12c30f3757a47c3e95311bcf');
+positionAttr.set('정신집중', 'fc58fc5bac9416332e56eaf443d08134');
