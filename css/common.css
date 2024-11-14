@@ -74,6 +74,14 @@ table td {
     min-height: 750px;
 }
 
+.conNormal {
+    margin-top: 10px;
+    float: left;
+    margin-left: 15px;
+    position: relative;
+    min-height: 750px;
+}
+
 .conDetail {
     margin-top: 10px;
     float: left;

@@ -3,6 +3,8 @@
 
 <head>
     <%- include  ("../layout/head") %>
+    <script src="/js/normalVsDraw.js" crossorigin="anonymous"></script>
+
 
         <script type="text/javascript">
             pageName = "pcVs";
@@ -24,13 +26,19 @@
                     alert("상대방 닉네임을 입력해주세요");
                     return;
                 }
-                let gameType = $("input[name='gameType']:checked").val();
+                const gameType = $("input[name='gameType']:checked").val();
                 var result = searchVsUser(gameType, $("#nickNames").val(), $("#nickNames2").val());
 
-                drawVs(result);
+                if(gameType == 'rating') {
+                    drawVs(result);
+                }else {
+                    drawVsNormal(result);
+                }
+                
             }
 
             function drawVs(result) {
+                $(".conNormal").attr("style", "width:650px").removeAttr("class").attr("class", "con");
                 $("#con1_2").empty();
                 $("#con2_2").empty();
 
@@ -126,6 +134,9 @@
                     <label class="btn btn-light active">
                       <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
                     </label>
+                    <label class="btn btn-light">
+                        <input type="radio" name="gameType" id="gameType_normal" value="normal" /> 일반
+                    </label>
                 </div>
 
                 <div class="width50p floatLeft input-group">
@@ -157,6 +168,17 @@
                                 <th scope="col">너</th>
                                 <th scope="col">KDA</th>
                                 <th scope="col">딜</th>
+                                <th scope="col">More</th>
+                            </tr>
+                        </thead>
+                        <tbody> </tbody>
+                    </table>
+                    <table id="templateTableNormal" class="vsTable table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">날짜</th>
+                                <th scope="col">나</th>
+                                <th scope="col">너</th>
                                 <th scope="col">More</th>
                             </tr>
                         </thead>
@@ -222,6 +244,42 @@
                     <a id="matchBtn" data-toggle='modal' data-target=''></a>
                 </div>
             </div>
+
+
+            <div id="templateModalNormal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalNormalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="templateModalNormalLabel"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">C</th>
+                                        <th scope="col">P</th>
+                                        <th scope="col">buff</th>
+                                        <th scope="col">닉네임</th>
+                                        <th scope="col">급수</th>
+                                        <th scope="col">RP(MAX)</th>
+                                        <th scope="col">Lv</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div hide>
+                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                </div>
+            </div>
+
         </div>
 
 </body>
