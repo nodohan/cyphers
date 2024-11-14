@@ -30,7 +30,7 @@ class matchDetailCharRepository {
                 jsonData
             FROM matches mc
             INNER JOIN matches_users mu ON mu.matchId = mc.matchId 
-            WHERE matchDate >= '2023-09-13'
+            WHERE matchDate >= '2024-09-26'
             AND mu.playerId = ? limit ?`;
         return await this.maria.doQuery(query, [ playerId, limit ]);
     }

@@ -47,7 +47,6 @@ module.exports = (scheduler, maria) => {
     async function selectMatchInfo(res, day = new Date()) {
         let pageSize = 3000;
         let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -2));
-        //let searchDateStr = '2022-12-06';
         let query = `SELECT matchId, jsonData, matchDate 
                      FROM matches where matchDate > '${searchDateStr}' 
                      AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
@@ -163,7 +162,7 @@ module.exports = (scheduler, maria) => {
     // ------- 2. 포지션 특성 통계 저장 [start] ------------------------
 
     async function positionStats(res) {
-        let seasonOpoenDay = '2023-09-14';
+        let seasonOpoenDay = '2024-09-26';
         let checkDate = commonUtil.getYYYYMMDD(new Date(), false);
         let aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -8), false);
 
@@ -219,7 +218,7 @@ module.exports = (scheduler, maria) => {
      * 
      * @param checkDate 
      * @param checkType : ALL-이번시즌 / W-최근일주 / D-일일 (일별은 하지말까..)
-     * @param lv 
+     * @param lv `
      * @param matchDate 
      */
     async function insertPositionAttrResult(pool, checkDate, checkType, lv, matchDate, isChar) {

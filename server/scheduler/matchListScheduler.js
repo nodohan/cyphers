@@ -15,19 +15,19 @@ module.exports = (scheduler, maria) => {
             await insertMatches('rating', null, new Date());
             logger.info("end match rating scheduler");
 
-            logger.info("call match rating scheduler");
-            await insertMatches('normal', null, new Date());
-            logger.info("end match rating scheduler");
+            // logger.info("call match rating scheduler");
+            // await insertMatches('normal', null, new Date());
+            // logger.info("end match rating scheduler");
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating" )
+    //test  ( "/matches/insertMatches?matchType=rating&date=2024-11-02" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
         const matchType = req.query.matchType;
-        return insertMatches(matchType, res);
+        return insertMatches(matchType, res, new Date(req.query.date));
     });
 
     async function insertMatches(matchType, res, day = new Date()) {
@@ -104,7 +104,7 @@ module.exports = (scheduler, maria) => {
         let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
 
         await pool.query("DELETE FROM matchId_temp");
-        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2024H' ) `;
+        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2024U' ) `;
         logger.debug(query);
 
         await pool.batch(query, rows.map(id => [id]), function(err) {

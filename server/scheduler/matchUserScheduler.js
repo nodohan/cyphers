@@ -21,7 +21,7 @@ module.exports = (scheduler, maria) => {
         let pageSize = 6000;
         let query = `SELECT matchId, jsonData, matchDate 
                      FROM matches 
-                     where matchDate > '2023-09-13'
+                     where matchDate > '2024-09-26'
                      and jsonData IS NOT NULL and userCollect = 'N' LIMIT ${pageSize}`;
 
         let pool = await maria.getPool();

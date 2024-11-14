@@ -14,7 +14,7 @@ module.exports = (scheduler, maria) => {
             logger.info("call match map scheduler");
             let isRun = true;
             while(isRun) {
-                isRun = await selectMatches(res, '2024-09-25');
+                isRun = await selectMatches('2024-09-25');
             }
             logger.info("end match map scheduler");
         }
