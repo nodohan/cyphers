@@ -21,13 +21,14 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&date=2024-11-02" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2024-11-01" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
-        const matchType = req.query.matchType;
-        return insertMatches(matchType, res, new Date(req.query.date));
+
+        const {matchType, day } = req.query;
+        return insertMatches(matchType, res, new Date(day));
     });
 
     async function insertMatches(matchType, res, day = new Date()) {
@@ -61,7 +62,7 @@ module.exports = (scheduler, maria) => {
 
     async function getMatchListByAPI(matchType, rows, day = new Date()) {
         let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
-        let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(day, -1)));
+        let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(new Date(), -1)));
 
         logger.debug("search matchList yesterday = %s, today = %s, length= %d", yesterday, today, rows.length);
 
