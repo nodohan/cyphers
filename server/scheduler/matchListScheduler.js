@@ -21,7 +21,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&day=2024-11-01" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2024-12-11" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -34,8 +34,8 @@ module.exports = (scheduler, maria) => {
     async function insertMatches(matchType, res, day = new Date()) {
         let query;
         if (matchType == 'rating') {
-            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
-            query = `SELECT playerId FROM userRank where rankDate = '${searchDateStr}' `;
+            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -10));
+            query = `SELECT distinct playerId FROM userRank where rankDate > '${searchDateStr}' `;
         } else {
             query = `SELECT playerId FROM player`;
         }
