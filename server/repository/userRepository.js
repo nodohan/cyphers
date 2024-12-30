@@ -10,6 +10,7 @@ class userRepository {
             jsonData
         from matches_map 
         where playerId = '${playerId}'
+        and matchDate >= '2024-09-26 11:00:00'
         limit 3000`;
 
         let pool = await this.maria.getPool();
