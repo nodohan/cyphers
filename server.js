@@ -9,6 +9,7 @@ var path = require('path');
 const commonUtil = require('./server/util/commonUtil');
 const scheduler = require('node-schedule');
 var maria = require('./config/maria');
+global.mariadb = maria;
 
 const loggerCatcher = require('./config/logger-catcher');
 
