@@ -37,7 +37,7 @@ module.exports = (scheduler, maria) => {
         //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
         const query = `
         select 
-            matchId, jsonData
+            matchId, jsonData, matchDate
         from matches 
         where matchId in ( 
             SELECT ma.matchId
@@ -69,11 +69,12 @@ module.exports = (scheduler, maria) => {
         //사용자 매칭 데이터 검색 
         let items = [];
         rows.forEach(row => {
-            const { matchId, jsonData } = row;
+            const { matchId, jsonData, matchDate } = row;
             let json = JSON.parse(jsonData);
             const teams = json.teams;
             json.players.forEach(row2 => {
                 row2["matchId"] = matchId;
+                row2["date"] = matchDate;
                 row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
                 items.push([matchId, row2.playerId, row2 ]);
             });
