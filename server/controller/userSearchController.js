@@ -63,6 +63,12 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/getUserInfo', async function(req, res) {
         const { nickname, gameType} = req.query;
         let userInfo = await new api().searchUser(nickname, gameType);
+        //getRatingData(userInfo);
+        
+        res.send(userInfo);
+    });
+
+    const getRatingData = async (userInfo) => {
         if(gameType == 'rating') {
             try {
                 let matches = await userRepository.selectUserMatches(userInfo.playerId);
@@ -77,9 +83,7 @@ module.exports = (scheduler, maria, acclogger) => {
                 logger.error(err);
             }
         }
-            
-        res.send(userInfo);
-    });
+    }
 
 
     //  url = "/user/grade"
