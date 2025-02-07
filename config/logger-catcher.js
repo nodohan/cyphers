@@ -7,7 +7,7 @@ module.exports = () => {
     const historyRepository = new repository(mariadb);
     const insertHistory =  (req) => {
         try {
-            if(process.env.MOD == "LOCAL") {
+            if(process.env.MOD != "REAL") {
                 return;
             }
             const url = req.url;
