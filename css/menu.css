@@ -61,7 +61,7 @@ header nav > ul > li > a {
     padding: 0 16px;
     transition: 0.5s;
 }
-header nav > ul > li > a:hover {
+header nav > ul > li:hover a {
     color: #fff;
 }
 header nav > ul > li > a::before, header nav ul > li > a::after {
