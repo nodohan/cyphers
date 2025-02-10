@@ -103,14 +103,22 @@ module.exports = (scheduler, maria, acclogger) => {
         let startDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -4)), false);
         let endDate = commonUtil.getYYYYMMDD(commonUtil.setEndDay(commonUtil.addDays(day, -1)), false);
 
-        let query = ` SELECT * FROM ( 
-                     	SELECT nickname, COUNT(nickname) cnt 
-                     	FROM nickNameSearch  
-                     	WHERE searchDate BETWEEN '${startDate}' AND '${endDate}' 
-                     	GROUP BY nickname 
-                     ) aa  
-                     ORDER BY cnt DESC  
-                     LIMIT 15  `;
+        let query =`SELECT *
+                    FROM (
+                        SELECT 
+                            nickname, COUNT(nickname) AS cnt
+                        FROM (
+                            SELECT DISTINCT 
+                                nickname, 
+                                ip, 
+                                DATE(searchDate) AS search_date
+                            FROM nickNameSearch
+                            WHERE searchDate BETWEEN '${startDate}' AND '${endDate}'
+                        ) AS distinct_searches
+                        GROUP BY nickname
+                    ) AS aa
+                    ORDER BY cnt DESC
+                    LIMIT 15 `;
         //logger.debug(query);
 
         pool = await maria.getPool();
