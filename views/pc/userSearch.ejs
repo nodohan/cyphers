@@ -343,15 +343,13 @@
         <div id="mainUserSearch">
             <div class="top" >
             
-                <div class="floatLeft width15p">
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
-                        <label class="custom-control-label" for="gameType_rating">공식</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
-                        <label class="custom-control-label" for="gameType_normal">일반</label>
-                    </div>
+                <div class="btn-group btn-group-toggle floatLeft" data-bs-toggle="buttons">
+                    <label class="btn btn-light active">
+                      <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
+                    </label>
+                    <label class="btn btn-light">
+                        <input type="radio" name="gameType" id="gameType_normal" value="normal" /> 일반
+                    </label>
                 </div>
 
                 <div class="width85">

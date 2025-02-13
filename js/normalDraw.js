@@ -74,13 +74,13 @@ const drawPartyTypeNormal = (userDivId, clone, row) => {
 
 const drawPartInfoHtml = (win, lose, divId, moreIcon) => {
     return `&nbsp;[ <span class='blue'>2인</span>: ${partyJson.two.win}승 ${partyJson.two.lose}패 
-                <a data-toggle='collapse' href='#two${userDivId}' role='button' 
+                <a data-bs-toggle='collapse' href='#two${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  ]&nbsp;`
 }
 
 const drawPartInfoNormalHtml = (title, count, userDivId, moreIcon) => {
     return `&nbsp;[ <span class='blue'>${title}</span>: ${count}전 
-                <a data-toggle='collapse' href='#${userDivId}' role='button' 
+                <a data-bs-toggle='collapse' href='#${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='${userDivId}' >${moreIcon}</a>  ]&nbsp;`
 }
 
@@ -195,9 +195,9 @@ const appendPlayTypeInfoNormal = (div, type, typeId, positionName, nickname) => 
         const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         let moreAlink;
         if(isMap) {
-            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
+            moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
         } else {
-            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameListNormal('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+            moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameListNormal('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
         }
         infoStr = `${type.count} ${moreAlink}`;
     }
@@ -242,12 +242,12 @@ const drawCharCardVerNormal = (div, charInfo, nickname) => {
     if(!isMap) {
         let modalId = `pop${nickname}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-        cardText = `${count}전 <a href='#' data-toggle="modal" data-target="#${modalId}" 
+        cardText = `${count}전 <a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" 
                             onClick="javascript:playGameListNormal('${characterId}', null, '${nickname}');">${moreIcon}</a>`;    
     } else {
         let modalId = `pop${nickname}_${mapName}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-        cardText = `${count}전 <a href='#' data-toggle="modal" data-target="#${modalId}" 
+        cardText = `${count}전 <a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" 
                             onClick="javascript:playGameMapList('${characterId}', '${mapName}');">${moreIcon}</a>`;    
     }
     
@@ -287,7 +287,7 @@ const drawRecentlyNormal = (div, rows, userDivId) => {
     for (let j = 0; j < bodyCount; j++) {
         body.find("tbody").append(drawInGameListNormal(rows[j]));
     }
-    title.append(`<a data-toggle='modal' data-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+    title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
 
     $("#modalDiv").append(body);
 }
@@ -303,8 +303,8 @@ function drawInGameListNormal(data) {
              <td>${drawCharicter(playInfo.characterId)}</td>
              <td>${playInfo.level}</td>
              <td>
-                <i class='fas fa-angle-double-down' data-toggle='collapse' 
-                    data-target='.m${matchId}' onClick='searchMatchNormal("${matchId}")' >
+                <i class='fas fa-angle-double-down' data-bs-toggle='collapse' 
+                    data-bs-target='.m${matchId}' onClick='searchMatchNormal("${matchId}")' >
              </td>
         </tr>
         <tr>
@@ -351,7 +351,7 @@ const playGameListNormal = (findId, div, nickname, showType, modalId) => {
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td>
-                    <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
+                    <i class='fas fa-angle-double-down' data-bs-toggle='collapse' data-bs-target='.char_${matchId}' 
                         onClick='searchMatchNormal("${matchId}", null, "char_")' >
                 </td>
             </tr>
@@ -516,8 +516,8 @@ const drawInGameDetailNormal = (matchId, data, trClass) => {
 
     let itemInfoId = `m${matchId}_${data.playerId}`;
     score += `<td>
-                <i class="fas fa-angle-double-down" data-toggle="collapse" 
-                    data-target=".${itemInfoId}" aria-expanded="true">
+                <i class="fas fa-angle-double-down" data-bs-toggle="collapse" 
+                    data-bs-target=".${itemInfoId}" aria-expanded="true">
                 </i>
             </td>
         </tr>
@@ -632,7 +632,7 @@ const drawMatchDetailPopupNormal = (matchId, result) => {
     //클릭이벤트 설정용
     var btn = $(body).find("#matchBtn");
     btn.attr("id", prefixMatchId + "Btn");
-    btn.attr("data-target", "#" + prefixMatchId + "Modal");
+    btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
     $("#modalDiv").append(body);
 
     btn.click();

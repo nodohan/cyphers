@@ -101,7 +101,7 @@
                 //클릭이벤트 설정용
                 var btn = $(body).find("#matchBtn");
                 btn.attr("id", prefixMatchId + "Btn");
-                btn.attr("data-target", "#" + prefixMatchId + "Modal");
+                btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
                 $("#modalDiv").append(body);
 
                 btn.click();
@@ -187,7 +187,7 @@
                     </div>
                 </div>
                 <div hide>
-                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                    <a id="matchBtn" data-bs-toggle='modal' data-bs-target=''></a>
                 </div>
             </div>
         </div>

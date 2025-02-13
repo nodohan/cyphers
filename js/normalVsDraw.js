@@ -75,7 +75,7 @@ function drawMatchVsNormal(matchId, result) {
     //클릭이벤트 설정용
     var btn = $(body).find("#matchBtn");
     btn.attr("id", prefixMatchId + "Btn");
-    btn.attr("data-target", "#" + prefixMatchId + "Modal");
+    btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
     $("#modalDiv").append(body);
 
     btn.click();

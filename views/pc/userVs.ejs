@@ -118,7 +118,7 @@
                 //클릭이벤트 설정용
                 var btn = $(body).find("#matchBtn");
                 btn.attr("id", prefixMatchId + "Btn");
-                btn.attr("data-target", "#" + prefixMatchId + "Modal");
+                btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
                 $("#modalDiv").append(body);
 
                 btn.click();
@@ -130,7 +130,7 @@
     <%- include  ("../layout/menu") %>
         <div id="main" style="width:1530px">
             <div class="topUserVs width85">
-                <div class="btn-group btn-group-toggle width10p floatLeft" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle floatLeft" data-bs-toggle="buttons">
                     <label class="btn btn-light active">
                       <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
                     </label>
@@ -241,7 +241,7 @@
                     </div>
                 </div>
                 <div hide>
-                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                    <a id="matchBtn" data-bs-toggle='modal' data-bs-target=''></a>
                 </div>
             </div>
 
@@ -276,7 +276,7 @@
                     </div>
                 </div>
                 <div hide>
-                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                    <a id="matchBtn" data-bs-toggle='modal' data-bs-target=''></a>
                 </div>
             </div>
 
