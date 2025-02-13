@@ -60,7 +60,7 @@ header nav > ul > li:not(:last-of-type)::before {
     position: absolute;
     width: 1px;
     height: 20%;
-    background: #fff;
+    background: #ccc;
     right: 0;
     top: 40%;
 }
