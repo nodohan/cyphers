@@ -4,87 +4,76 @@
     }
 </script>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-    <a class="navbar-brand" href="/">
-        <img src="/image/titleIcon.png" class="mainIcon" alt="">
-    </a>
-
-    <div class="collapse navbar-collapse" id="navbarColor01">
-
-        <ul class="navbar-nav mr-auto">
-            <li id="mainMenu" class="nav-item">
-                <a class="nav-link" href="/user/userSearch">전적 검색(다수) <span class="sr-only">(current)</span></a>
+<header>
+    <h1>
+        <a href="/">
+            <img src="/image/titleIcon.png" class="mainIcon" alt="">
+        </a>
+    </h1>
+    <nav>
+        <ul>
+            <li>
+                <a href="/user/userSearch">전적 검색</a>
+                <ul>
+                    <li>
+                        <a href="/user/userSearch">세로</a>
+                    </li>
+                    <li id="userSearch_vertical">
+                        <a href="/user/userSearch_vertical">가로</a>
+                    </li>
+                    <li id="userDetailMenu">
+                        <a href="/user/userDetail">상세</a>
+                    </li>
+                </ul>
             </li>
-
-            <li id="userSearch_vertical" class="nav-item">
-                <a class="nav-link" href="/user/userSearch_vertical">전적 검색(가로)</a>
+            <li>
+                <a href="/user/userVs">특수</a>
+                <ul>
+                    <li id="userVsMenu">
+                        <a href="/user/userVs">갈등을 빚자</a>
+                    </li>
+                    <li id="userCounterMenu">
+                        <a href="/userDetail/userCounter">인간상성</a>
+                    </li>
+                    <li id="userHistory">
+                        <a href="/history/nicknameHistory">닉변이력</a>
+                    </li>
+                </ul>
             </li>
-
-            <li id="userDetailMenu" class="nav-item">
-                <a class="nav-link" href="/user/userDetail">상세</a>
+            <li>
+                <a href="/position/positionAttr">통계</a>
+                <ul>
+                    <li id="positionAttr">
+                        <a href="/position/positionAttr">특성통계</a>
+                    </li>
+                    <li id="userChart">
+                        <a href="/rankChart/userChart">랭킹 차트</a>
+                    </li>
+                    <li id="stats2024h">
+                        <a href="/stats/stats2024h">결산</a>
+                    </li>
+                </ul>
             </li>
-            <li id="userCounterMenu" class="nav-item">
-                <a class="nav-link" href="/userDetail/userCounter">인간상성<span class="badge badge-secondary">beta</span></a>
+            <li>
+                <a href="https://blog.naver.com/dododosa">기타</a>
+                <ul>
+                    <li id="notice">
+                        <a href="https://blog.naver.com/dododosa">공지</a>
+                    </li>
+                    <li id="teamDiv">
+                        <a href="http://teamDiv.doseh.co.kr">팀나눠</a>
+                    </li>
+                    <li id="clan">
+                        <a href="http://clan.doseh.co.kr" target="_blank">마주클</a>
+                    </li>
+                    <li id="androidApp">
+                        <a href="http://doseh.co.kr/image/cyphers_%EB%A7%88%EC%9D%84%EC%A3%BC%EB%AF%BC%EA%B2%80%EC%83%89%EA%B8%B0.apk">android</a>
+                    </li>
+                </ul>
             </li>
-            <li id="userVsMenu" class="nav-item">
-                <a class="nav-link" href="/user/userVs">VS(갈등을빚자)</a>
-            </li>
-
-            <!-- <li id="combi" class="nav-item">
-                <a class="nav-link" href="/combi/combi">조합통계</a>
-            </li> --> 
-
-            <li id="positionAttr" class="nav-item">
-                <a class="nav-link" href="/position/positionAttr">특성통계</a>
-            </li>
-
-            <li id="userChart" class="nav-item">
-                <a class="nav-link" href="/rankChart/userChart">차트</a>
-            </li>
-
-            <li id="userHistory" class="nav-item">
-                <a class="nav-link" href="/history/nicknameHistory">닉변이력</a>
-            </li>
-
-            <!-- <li id="stats2022h" class="nav-item">
-                <a class="nav-link" href="/stats/stats2022h">2022H 결산</a>
-            </li>
-            <li id="stats2022u" class="nav-item">
-                <a class="nav-link" href="/stats/stats2022u">2022U 결산</a>
-            </li>
-            <li id="stats2023h" class="nav-item">
-                <a class="nav-link" href="/stats/stats2023h">2023H 결산</a>
-            </li> 
-
-            <li id="stats2023u" class="nav-item">
-                <a class="nav-link" href="/stats/stats2023u">2023U 결산</a>
-            </li> --> 
-
-            <li id="stats2024h" class="nav-item">
-                <a class="nav-link" href="/stats/stats2024h">2024H 결산(NEW)</a>
-            </li>
-
-            <li id="clan" class="nav-item">
-                <a class="nav-link" target="_blank" href="http://clan.doseh.co.kr">클랜검색</a>
-            </li>
-
-            <li id="notice" class="nav-item">
-                <a class="nav-link" href="https://blog.naver.com/dododosa">공지</a>
-            </li>
-
-            <li id="androidApp" class="nav-item">
-                <a class="nav-link" href="http://doseh.co.kr/image/cyphers_%EB%A7%88%EC%9D%84%EC%A3%BC%EB%AF%BC%EA%B2%80%EC%83%89%EA%B8%B0.apk">androidApp</a>
-            </li>            
-
-            <li id="teamDiv" class="nav-item">
-                <a class="nav-link" href="http://teamDiv.doseh.co.kr">팀나눠</a>
-            </li>
-
-
         </ul>
-    </div>
-</nav>
+    </nav>
+</header>
 
 <div id="bi" style="position: fixed;right: 15px;bottom: 5px;">
     <a href="http://developers.neople.co.kr" target="_blank">
