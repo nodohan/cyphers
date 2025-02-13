@@ -47,9 +47,7 @@ const drawSearchHistory = (nickName) => {
     return `
     <span class="red" id="spanSearch_${nickName}">
         <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a>
-        <a href='javascript:delSearchHistory("${nickName}")'>
-            [x]
-        </a>
+        <a href='javascript:delSearchHistory("${nickName}")'>[x]</a>
         &nbsp; 
     <span>`
 }
@@ -58,8 +56,6 @@ const drawSearchHistoryDetail = (nickName) => {
     return `
     <span class="red" id="spanSearch_${nickName}">
         <a href='javascript:searchUser("nickNames", null, "${nickName}", setUserDetailInfo);'>${nickName}</a> 
-        <a href='javascript:delSearchHistory("${nickName}")'>
-            [x]
-        </a>
+        <a href='javascript:delSearchHistory("${nickName}")'>[x]</a>
     <span>`
 }
