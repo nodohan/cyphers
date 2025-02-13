@@ -10,28 +10,31 @@
             var charCount = 78;
 
             $(document).ready(function() {
-                $("#mainMenu").removeClass("active");
-                if (season == '2022H') {
-                    $("#stats2022h").addClass("active");
-                } else if (season == '2022U') {
-                    $("#stats2022u").addClass("active");
-                } else if (season == '2023H') {
-                    $("#stats2023h").addClass("active");
-                } else if (season == '2024H') {
-                    $("#stats2024h").addClass("active");
-                } else {
-                    $("#stats2023u").addClass("active");
-                }
-
                 if(season == '2023H'){
                     charCount = 78;
                 } else if(season == '2024H'){
                     charCount = 80;
                 }
 
+                refreshData();
+                $("#seasonSelect").on("change", refreshData);
+            });
+
+            const refreshData = () => {                
+                season = $("#seasonSelect").val();
+                console.log(season);
+                $("#charRate").empty();
+                $("#charTotal").empty();
+                $("#bestAttack").empty();
+                $("#worstAttack").empty();
+                $("#bestTanker").empty();
+                $("#worstTanker").empty();
+                $("#bestAll").empty();
+                $("#worstAll").empty();
+
                 getStats("statsList", drawStatsList); // 조합통계 
                 getStats("charList", drawCharList); // 캐릭터 통계
-            });
+            }
 
             function drawCharList(data) {
                 drawStatsListDiv("charRate", data.row, '캐릭터', charCount);
@@ -144,17 +147,27 @@
 
         <div id="statsMain">
 
+            <div>
+                <select id="seasonSelect" class="form-select">
+                    <option>2024H</option>
+                    <option>2023U</option>
+                    <option>2023H</option>
+                    <option>2022U</option>
+                    <option>2022H</option>
+                  </select>
+            </div>
+
             <div id="con1" class="conLayer">
                 <h4>조합통계</h4>
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="tanker" aria-selected="true">전체조합</a>
-                        <a class="nav-link" id="tanker-tab" data-toggle="tab" href="#tanker" role="tab" aria-controls="tanker" aria-selected="true">탱커조합</a>
-                        <a class="nav-link" id="attack-tab" data-toggle="tab" href="#attack" role="tab" aria-controls="attack" aria-selected="false">딜러조합</a>
+                        <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab" aria-controls="tanker" aria-selected="true">전체조합</a>
+                        <a class="nav-link" id="tanker-tab" data-bs-toggle="tab" href="#tanker" role="tab" aria-controls="tanker" aria-selected="true">탱커조합</a>
+                        <a class="nav-link" id="attack-tab" data-bs-toggle="tab" href="#attack" role="tab" aria-controls="attack" aria-selected="false">딜러조합</a>
                     </div>
                 </nav>
                 <div class="tab-content seasonTabDiv" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="tanker-tab">
+                    <div class="tab-pane active" id="all" role="tabpanel" aria-labelledby="tanker-tab">
                         <h4>Best 5</h4>
                         <div id="bestAll"></div>
                         <h4>Worst 5</h4>
@@ -178,8 +191,8 @@
                 <h4>캐릭통계</h4>
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="rate-tab" data-toggle="tab" href="#charRateTab" role="tab" aria-controls="charRateTab" aria-selected="true">승률순</a>
-                        <a class="nav-link" id="total-tab" data-toggle="tab" href="#charTotalTab" role="tab" aria-controls="charTotalTab" aria-selected="true">판수순</a>
+                        <a class="nav-link active" id="rate-tab" data-bs-toggle="tab" href="#charRateTab" role="tab" aria-controls="charRateTab" aria-selected="true">승률순</a>
+                        <a class="nav-link" id="total-tab" data-bs-toggle="tab" href="#charTotalTab" role="tab" aria-controls="charTotalTab" aria-selected="true">판수순</a>
                     </div>
                 </nav>
                 <div class="tab-content seasonTabDiv" id="nav-tabContent">
