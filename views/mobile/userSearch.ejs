@@ -117,7 +117,7 @@
                 $(div).find("#nickNameDiv").append(nickname + " <a href='javascript:openDetail(\"" + nickname + "\");' ><i class='red fas fa-caret-square-right'></i></a>");
                 $(div).find("#nickNameDiv").append(` 
                     <a href="#${historyDivId}" onClick='javascript:nickHistory("${playerId}");' 
-                        data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="${historyDivId}" >
+                        data-toggle="collapse" role="button" aria-expanded="false" aria-controls="${historyDivId}" >
                         <i class='red fas fas fa-heading'></i>
                     </a>`);                
                 $(div).find("#levelDiv").text(grade + "급");
@@ -201,7 +201,7 @@
                     <div class="card-header" id="headingOne">
                     <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /><label for="gameType_rating"> 공식 </label>
                     <input type="radio" name="gameType" id="gameType_normal" value="normal" /><label for="gameType_normal"> 일반 </label>
-                    <label data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">>></label>
+                    <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">>></label>
                     </div>
 
                     <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
