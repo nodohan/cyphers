@@ -187,6 +187,7 @@ table td {
 }
 
 #mainV2 {
+    position: relative;
     width: 100%;
     margin: 0px auto;
 }
@@ -409,13 +410,13 @@ table td {
 }
 
 .conUserV2 {
-    margin-top: 10px;
-    float: left;
     position: relative;
     width: 100%;
+    max-width: 1320px;
     min-height: 350px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 7px;
+    margin: 0 auto;
     /* border: dashed; */
 }
 
@@ -495,7 +496,7 @@ table td {
 }
 
 .floatLeft {
-    float: left
+    /*float: left*/
 }
 
 .mostCharDetailDivV2 {
@@ -509,14 +510,14 @@ table td {
 }
 
 .head {
-    margin: 0px auto;
-    width: 50%;
-    margin-top: 10px;
-    padding: 15px;
-    position: relative;
-    height: 50px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 7px;
+    /*margin: 0px auto;*/
+    /*width: 50%;*/
+    /*margin-top: 10px;*/
+    /*padding: 15px;*/
+    /*position: relative;*/
+    /*height: 50px;*/
+    /*background-color: rgba(255, 255, 255, 0.8);*/
+    /*border-radius: 7px;*/
 }
 
 .head2flow {

@@ -1,0 +1,76 @@
+.mainV2 {
+    position: relative;
+}
+.sideNav {
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
+    height: calc(100vh - 80px);
+    padding: 40px 20px;
+}
+.closeSideNav {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+}
+.closeSideNav span {
+    position: absolute;
+    width: 80%;
+    height: 2px;
+    background: #FFF;
+}
+.inputWrap {
+    display: flex;
+    flex-direction: column;
+}
+.searchInput {
+    height: 40px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 4px;
+}
+div:has(> .searchInput) {
+    position: relative;
+}
+.searchInput + button {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("/image/searchIcon_small.svg");
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    border: 0;
+    background-color: transparent;
+}
+.resetBtn {
+    background: url(/image/deleteIcon.svg);
+}
+.gameModeCheck {
+    display: none;
+}
+.gameModeCheck + label {
+    cursor: pointer;
+}
+.gameModeCheck:checked + label {
+    background: #FFF;
+}
+.officialGameCheck {
+
+}
+.searchSettingCheck {
+    display: none;
+}
+.searchSettingCheck + label {
+    cursor: pointer;
+    transition: 0.5s;
+    display: block;
+}
+.searchSettingCheck:checked + label {
+    background: #FFF;
+}
