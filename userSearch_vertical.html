@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+    <meta charset="UTF-8">
+    <meta property="title" content="마을주민검색기">
+    <meta property="og:title" content="마을주민검색기">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://doseh.co.kr">
+    <meta property="og:image" content="http://doseh.co.kr/favicon.ico">
+    <meta name="keyword" content="마을주민검색기, 마을주민 검색기, 마을주민1검색기, 사이퍼즈">
+    <meta name="naver-site-verification" content="cd47685c13117b024f3dc2b890bb9b4d377b3dfa"><!-- 네이버 인증 -->
+
+    <title>마을주민검색기</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="/css/common.css">-->
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/renewal.css">
+    <link rel="stylesheet" href="/css/reset.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/myLocalStorage.js" crossorigin="anonymous"></script>
+    <script src="/js/common.js" crossorigin="anonymous"></script>
+    <script src="/js/renewal.js" crossorigin="anonymous"></script>
+    <script src="/js/apiCall.js" crossorigin="anonymous"></script>
+    <script src="/js/normalDraw.js" crossorigin="anonymous"></script>
+    <script src="/js/ieChecker.js" crossorigin="anonymous"></script>
+    <script src="/js/positionAttr.js" crossorigin="anonymous"></script>
+    <!-- <script src="/js/utils.js"></script>-->
+
+    <!-- 데이트 피커 -->
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="/js/gijgo-combined-1.9.13/message/messages.kr-ko.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css">
+
+    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9883938094775799" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        var isMobile = false;
+
+        $(document).ready(function() {
+            $("#mainMenu").addClass("active");
+            $("#userDetailMenu").removeClass("active");
+        });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
+</head>
+
+<body class="body">
+<script type="text/javascript">
+    function notOpper() {
+        alert("이전시즌의 데이터로 당분간 제공하지 않습니다.");
+    }
+</script>
+
+<header class="">
+    <h1>
+        <a href="/">
+<!--            <img src="/image/titleIcon.png" class="mainIcon" alt="">-->
+        </a>
+    </h1>
+    <nav>
+        <ul>
+            <li class="">
+                <a href="/user/userSearch">전적 검색</a>
+                <ul>
+                    <li>
+                        <a href="/user/userSearch">세로</a>
+                    </li>
+                    <li id="userSearch_vertical" class="active">
+                        <a href="/user/userSearch_vertical">가로</a>
+                    </li>
+                    <li id="userDetailMenu">
+                        <a href="/user/userDetail">상세</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/user/userVs">특수</a>
+                <ul>
+                    <li id="userVsMenu">
+                        <a href="/user/userVs">갈등을 빚자</a>
+                    </li>
+                    <li id="userCounterMenu">
+                        <a href="/userDetail/userCounter">인간상성</a>
+                    </li>
+                    <li id="userHistory">
+                        <a href="/history/nicknameHistory">닉변이력</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/position/positionAttr">통계</a>
+                <ul>
+                    <li id="positionAttr">
+                        <a href="/position/positionAttr">특성통계</a>
+                    </li>
+                    <li id="userChart">
+                        <a href="/rankChart/userChart">랭킹 차트</a>
+                    </li>
+                    <li id="stats2024h">
+                        <a href="/stats/stats2024h">결산</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="https://blog.naver.com/dododosa">기타</a>
+                <ul>
+                    <li id="notice">
+                        <a href="https://blog.naver.com/dododosa">공지</a>
+                    </li>
+                    <li id="teamDiv">
+                        <a href="http://teamDiv.doseh.co.kr">팀나눠</a>
+                    </li>
+                    <li id="clan">
+                        <a href="http://clan.doseh.co.kr" target="_blank">마주클</a>
+                    </li>
+                    <li id="androidApp">
+                        <a href="http://doseh.co.kr/image/cyphers_%EB%A7%88%EC%9D%84%EC%A3%BC%EB%AF%BC%EA%B2%80%EC%83%89%EA%B8%B0.apk">android</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div id="bi" style="position: fixed;right: 15px;bottom: 5px;">
+    <a href="http://developers.neople.co.kr" target="_blank">
+        <img style="width:132px;height:37px" alt="Neople 오픈 API" src="/image/bi_color.png">
+    </a>
+</div>
+
+<div id="mainV2">
+    <div class="width100p hamburgerNav">
+        <div class="head">
+            <div>
+                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked="">&nbsp;<label for="gameType_rating"> 공식 </label>&nbsp;&nbsp;
+                <input type="radio" name="gameType" id="gameType_normal" value="normal">&nbsp;<label for="gameType_normal"> 일반 </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="positionShow" checked="checked">
+                    <label class="form-check-label" for="positionShow">포지션 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="partyShow" checked="checked">
+                    <label class="form-check-label" for="partyShow">파티 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="mostCharShow" checked="checked">
+                    <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="recentShow" checked="checked">
+                    <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                </div>
+            </div>
+        </div>
+        <div class="head2flow">
+            <div class="width50p floatLeft">
+                <div class="input-group">
+                    <input type="text" id="nickNames" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onkeypress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onclick="search('nickNames', 'con1_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="clearDivV2('con1_2');">초기화</button>
+                    </div>
+                </div>
+            </div>
+            <div class="width50p floatLeft">
+                <div class="input-group">
+                    <input type="text" id="nickNames2" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onkeypress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onclick="search('nickNames2', 'con2_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="clearDivV2('con2_2');">초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="con1" class="conUserV2">
+        <div id="con1_2" class="infoLayerV2">
+            <div id="김치맹_rating" class="infoDivV2" style="">
+                <div id="defaultDiv">
+                    <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
+                    <div class="width100p">
+                        <span id="nickNameDiv" class="bold"> 김치맹 <a href="javascript:nickHistory(&quot;4a44d0ebb7e97aa8885f3ed4c1e0c245&quot;);"><i class="red fas fas fa-heading"></i></a></span>&nbsp;&nbsp;
+                        <span id="levelDiv">77급 </span>&nbsp;&nbsp;
+                        <span id="clanDiv">누비누비</span>
+                    </div>
+                    <div class="width100p">
+                        <div class="width100p">
+                            <span id="tierName" class="JOKER 3RD">JOKER 3RD</span>&nbsp;<span id="currRP" class="bold">1746</span> <span id="maxRP">( 1797 )</span>
+                        </div>
+                        <div id="playGameDiv">승률 : 57% [128전 72승 55패 1중단]</div>
+
+                    </div>
+                    <div id="playParty" class="playParty width100p">
+
+                        <b>솔플</b>: 122전 71승 51패, <b>파티</b>: 4전 1승 3패 <br>    2인: 1승 3패 <a data-toggle="collapse" href="#two김치맹_rating" role="button" aria-expanded="false" aria-controls="two김치맹_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a>  3인: 0승 0패 <a data-toggle="collapse" href="#three김치맹_rating" role="button" aria-expanded="false" aria-controls="three김치맹_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a>  5인: 0승 0패 <a data-toggle="collapse" href="#five김치맹_rating" role="button" aria-expanded="false" aria-controls="five김치맹_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a>  <br><div class="row"></div><div class="collapse multi-collapse" id="two김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody><tr><th scope="row"> <a href="#" onclick="partyUserSearch(this);">고수달</a></th><td>4</td><td>1</td><td>3</td><td>25%</td></tr></tbody></table></div><div class="collapse multi-collapse" id="three김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div><div class="collapse multi-collapse" id="five김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div></div>
+                </div>
+
+                <!-- 포지션별 승률 -->
+                <div id="positionDiv" class="positionDiv">
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p id="tankerSpan" class="card-text">51% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_tanker_modal" onclick="javascript:playGameList('탱커', null, '김치맹', 'position', 'pop김치맹_rating_tanker_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">34승 33패</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p id="tankerSpan" class="card-text">59% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_melee_modal" onclick="javascript:playGameList('근거리딜러', null, '김치맹', 'position', 'pop김치맹_rating_melee_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">26승 18패</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p id="tankerSpan" class="card-text">50% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_ad_modal" onclick="javascript:playGameList('원거리딜러', null, '김치맹', 'position', 'pop김치맹_rating_ad_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">1승 1패</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p id="tankerSpan" class="card-text">85% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_supp_modal" onclick="javascript:playGameList('서포터', null, '김치맹', 'position', 'pop김치맹_rating_supp_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">11승 2패</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div></div>
+
+                <!-- 자주하는 캐릭-->
+                <div id="mostCharDiv" class="mostCharDiv">
+                    <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP8</div>
+                    <div id="mostCharDetailDiv" class="mostCharDetailDivV2">
+                        <div id="cardTemp" class="card floatLeft" hidden="">
+                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                            </div>
+                        </div>
+                        <div class="card floatLeft">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">67% <br> <small class="text-muted">20승<br> 10패</small></p>
+                            </div>
+                        </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/cf6008394ebfb5d0de83fa05834018db">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">63% <br> <small class="text-muted">12승<br> 7패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">85% <br> <small class="text-muted">11승<br> 2패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/627db8b10d95ba73f0d2765130430454">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">33% <br> <small class="text-muted">4승<br> 8패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/29863fca436fc32196f3b07b1b80d6eb">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">36% <br> <small class="text-muted">4승<br> 7패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/1e2129fcb1eebba2101ee5de6c4b168a">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">3승<br> 3패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/9a00609cb8b9bb8ee9d36a72e822b839">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">3승<br> 3패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/a4636e5b1ac646c6f320b53004a34e29">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">2승<br> 2패</small></p>
+                        </div>
+                    </div></div>
+                </div>
+                <div id="recentlyDiv" class="width100p recentlyDiv">
+                    <div class="width100p" id="recentlyDivTitle">최근 게임:
+                        <!--최근 10게임 -->
+                        <span class="red">승</span> <span class="blue">패</span> <span class="blue">패</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <a data-toggle="modal" data-target="#pop김치맹_ratingModal">&nbsp;<i class="fa fa-search-plus" style="font-size:15px;color:black"></i></a></div>
+                </div>
+            </div>
+        </div>
+    <div id="con2" class="conUserV2">
+        <div id="con2_2" class="infoLayerV2"><div id="고수달_rating" class="infoDivV3" style="">
+            <div id="defaultDiv">
+                <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
+                <div class="width100p">
+                    <span id="nickNameDiv" class="bold"> 고수달 <a href="javascript:nickHistory(&quot;b8c57e9d94fc8592ccb1f177242b08aa&quot;);"><i class="red fas fas fa-heading"></i></a></span>&nbsp;&nbsp;
+                    <span id="levelDiv">103급 </span>&nbsp;&nbsp;
+                    <span id="clanDiv">골딱이팩토리</span>
+                </div>
+                <div class="width100p">
+                    <div class="width100p">
+                        <span id="tierName" class="GOLD 1ST">GOLD 1ST</span>&nbsp;<span id="currRP" class="bold">1358</span> <span id="maxRP">( 1374 )</span>
+                    </div>
+                    <div id="playGameDiv">승률 : 57% [46전 26승 20패 0중단]</div>
+
+                </div>
+                <div id="playParty" class="playParty width100p">
+                    <b>솔플</b>: 31전 17승 14패, <b>파티</b>: 15전 9승 6패 <br>
+                    2인: 9승 6패
+                    <a data-toggle="collapse" href="#two고수달_rating" role="button" aria-expanded="false" aria-controls="two고수달_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a>
+                    3인: 0승 0패
+                    <a data-toggle="collapse" href="#three고수달_rating" role="button" aria-expanded="false" aria-controls="three고수달_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a>
+                    5인: 0승 0패
+                    <a data-toggle="collapse" href="#five고수달_rating" role="button" aria-expanded="false" aria-controls="five고수달_rating"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a> <br>
+                    <div class="row"></div>
+                    <div class="collapse multi-collapse" id="two고수달_rating">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">파티원</th>
+                                <th scope="col">겜수</th>
+                                <th scope="col">승</th>
+                                <th scope="col">패</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row"><a href="#" onclick="partyUserSearch(this);">찐두몬</a></th>
+                                <td>5</td>
+                                <td>5</td>
+                                <td>0</td>
+                                <td>100%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#" onclick="partyUserSearch(this);">푸른주먹김휴톤</a></th>
+                                <td>4</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>50%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#" onclick="partyUserSearch(this);">김치맹</a></th>
+                                <td>4</td>
+                                <td>1</td>
+                                <td>3</td>
+                                <td>25%</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#" onclick="partyUserSearch(this);">샆쥐</a></th>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>50%</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="collapse multi-collapse" id="three고수달_rating">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">파티원</th>
+                                <th scope="col">겜수</th>
+                                <th scope="col">승</th>
+                                <th scope="col">패</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse multi-collapse" id="five고수달_rating">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">파티원</th>
+                                <th scope="col">겜수</th>
+                                <th scope="col">승</th>
+                                <th scope="col">패</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv">
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">55% <a href="#" data-toggle="modal" data-target="#pop고수달_rating_tanker_modal" onclick="javascript:playGameList('탱커', null, '고수달', 'position', 'pop고수달_rating_tanker_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">12승 10패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">20% <a href="#" data-toggle="modal" data-target="#pop고수달_rating_melee_modal" onclick="javascript:playGameList('근거리딜러', null, '고수달', 'position', 'pop고수달_rating_melee_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">1승 4패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">83% <a href="#" data-toggle="modal" data-target="#pop고수달_rating_ad_modal" onclick="javascript:playGameList('원거리딜러', null, '고수달', 'position', 'pop고수달_rating_ad_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">5승 1패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">62% <a href="#" data-toggle="modal" data-target="#pop고수달_rating_supp_modal" onclick="javascript:playGameList('서포터', null, '고수달', 'position', 'pop고수달_rating_supp_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">8승 5패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div></div>
+
+            <!-- 자주하는 캐릭-->
+            <div id="mostCharDiv" class="mostCharDiv">
+                <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP8</div>
+                <div id="mostCharDetailDiv" class="mostCharDetailDivV2">
+                    <div id="cardTemp" class="card floatLeft" hidden="">
+                        <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                        </div>
+                    </div>
+                    <div class="card floatLeft">
+                        <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40">
+                        <div class="card-body">
+                            <p id="tankerSpan" class="card-text">54% <br> <small class="text-muted">7승<br> 6패</small></p>
+                        </div>
+                    </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/42ba0da0781020231280624071c3574d">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">5승<br> 5패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/7631b259662ceec42aa035e7c331ab32">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">71% <br> <small class="text-muted">5승<br> 2패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/5908c855eab91d27eb6d996517db1b5b">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">100% <br> <small class="text-muted">3승<br> 0패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/052b8ab48199f154cbafc20a8ea7ebcf">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">100% <br> <small class="text-muted">3승<br> 0패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/a4636e5b1ac646c6f320b53004a34e29">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">0% <br> <small class="text-muted">0승<br> 2패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/149913567cfcc642a07e46ad41049da6">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">1승<br> 1패</small></p>
+                    </div>
+                </div><div class="card floatLeft">
+                    <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/796e4f12a5190f0e9ca475db61bb41d0">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">1승<br> 1패</small></p>
+                    </div>
+                </div></div>
+            </div>
+            <div id="recentlyDiv" class="width100p recentlyDiv">
+                <div class="width100p" id="recentlyDivTitle">최근 게임:
+                    <!--최근 10게임 -->
+                    <span class="blue">패</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <span class="blue">패</span> <a data-toggle="modal" data-target="#pop고수달_ratingModal">&nbsp;<i class="fa fa-search-plus" style="font-size:15px;color:black"></i></a></div>
+            </div>
+        </div><div class="infoDivV3Temp"><div class="infoDivV3TempImg"></div></div><div class="infoDivV3Temp"><div class="infoDivV3TempImg"></div></div><div class="infoDivV3Temp"><div class="infoDivV3TempImg"></div></div><div class="infoDivV3Temp"><div class="infoDivV3TempImg"></div></div></div>
+    </div>
+</div>
+
+<div id="template" class="infoDivV2" style="display:none">
+    <div id="defaultDiv">
+        <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
+        <div class="width100p">
+            <span id="nickNameDiv" class="bold"> </span>&nbsp;&nbsp;
+            <span id="levelDiv"></span>&nbsp;&nbsp;
+            <span id="clanDiv"></span>
+        </div>
+        <div class="width100p">
+            <div class="width100p">
+                <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span> <span id="maxRP"></span>
+            </div>
+            <div id="playGameDiv"></div>
+
+        </div>
+        <div id="playParty" class="playParty width100p">
+
+        </div>
+    </div>
+
+    <!-- 포지션별 승률 -->
+    <div id="positionDiv" class="positionDiv">
+        <div id="positionTanker" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionMelee" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionAd" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionSupp" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="suppSpan" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 자주하는 캐릭-->
+    <div id="mostCharDiv" class="mostCharDiv">
+        <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+        <div id="mostCharDetailDiv" class="mostCharDetailDivV2">
+            <div id="cardTemp" class="card floatLeft" hidden="">
+                <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                <div class="card-body">
+                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="recentlyDiv" class="width100p recentlyDiv">
+        <div class="width100p" id="recentlyDivTitle">
+            <!--최근 10게임 -->
+        </div>
+    </div>
+</div>
+
+<div id="modalDiv">
+    <!-- 모달 영역 -->
+    <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-dialog-scrollable">
+                    <table id="templateTable" class="table table-striped table-condensed">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">날짜</th>
+                            <th scope="col">파티</th>
+                            <th scope="col">결과</th>
+                            <th scope="col">P</th>
+                            <th scope="col">Char</th>
+                            <th scope="col">Lv</th>
+                            <th scope="col">KDA</th>
+                            <th scope="col">딜량</th>
+                            <th scope="col">피해량</th>
+                            <th scope="col">소모품%</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="pop김치맹_ratingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pop김치맹_ratingModalLabel">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="pop김치맹_ratingModalLabel">최근 20게임</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-dialog-scrollable">
+                    <table id="templateTable" class="table table-striped table-condensed">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">날짜</th>
+                            <th scope="col">파티</th>
+                            <th scope="col">결과</th>
+                            <th scope="col">P</th>
+                            <th scope="col">Char</th>
+                            <th scope="col">Lv</th>
+                            <th scope="col">KDA</th>
+                            <th scope="col">딜량</th>
+                            <th scope="col">피해량</th>
+                            <th scope="col">소모품%</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody><tr>
+                            <td>2025-02-26 22:07</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>49</td>
+                            <td class="kda">2/6/8</td><td class="kda">9K</td>
+                            <td class="kda">40K</td>
+                            <td class="kda">10%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mf247156c32352097e72ab861ad492f922b04d1a4802d47e9c71a5f15a6cd64bf" onclick="searchMatch(&quot;f247156c32352097e72ab861ad492f922b04d1a4802d47e9c71a5f15a6cd64bf&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mf247156c32352097e72ab861ad492f922b04d1a4802d47e9c71a5f15a6cd64bf"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-26 20:43</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>30</td>
+                            <td class="kda">2/2/2</td><td class="kda">11K</td>
+                            <td class="kda">10K</td>
+                            <td class="kda">5%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mf46e7f2e688fc92c18583657df8e98885fba15569ce6c7aa1048b35e7cc1742f" onclick="searchMatch(&quot;f46e7f2e688fc92c18583657df8e98885fba15569ce6c7aa1048b35e7cc1742f&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mf46e7f2e688fc92c18583657df8e98885fba15569ce6c7aa1048b35e7cc1742f"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-22 20:21</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>28</td>
+                            <td class="kda">0/9/2</td><td class="kda">6K</td>
+                            <td class="kda">41K</td>
+                            <td class="kda">6%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".maa23b035f427ad57bb2b66b62479285ecc54c46d81688e62bdbf5ae87cb1c82e" onclick="searchMatch(&quot;aa23b035f427ad57bb2b66b62479285ecc54c46d81688e62bdbf5ae87cb1c82e&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse maa23b035f427ad57bb2b66b62479285ecc54c46d81688e62bdbf5ae87cb1c82e"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-22 20:01</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/cf6008394ebfb5d0de83fa05834018db"></td>
+                            <td>60</td>
+                            <td class="kda">14/3/4</td><td class="kda">51K</td>
+                            <td class="kda">21K</td>
+                            <td class="kda">13%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mc3386069f47c0e0c1e48fa536617cc84255a5f11e6940a744764b92f33c58f92" onclick="searchMatch(&quot;c3386069f47c0e0c1e48fa536617cc84255a5f11e6940a744764b92f33c58f92&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mc3386069f47c0e0c1e48fa536617cc84255a5f11e6940a744764b92f33c58f92"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-21 20:43</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/cf6008394ebfb5d0de83fa05834018db"></td>
+                            <td>66</td>
+                            <td class="kda">14/1/16</td><td class="kda">66K</td>
+                            <td class="kda">14K</td>
+                            <td class="kda">13%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m6dc0ef06662e3ba41db11ec3ef00a81eca5885c9e05cc72c32c907ffdff5de33" onclick="searchMatch(&quot;6dc0ef06662e3ba41db11ec3ef00a81eca5885c9e05cc72c32c907ffdff5de33&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m6dc0ef06662e3ba41db11ec3ef00a81eca5885c9e05cc72c32c907ffdff5de33"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-21 20:08</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40"></td>
+                            <td>48</td>
+                            <td class="kda">5/0/11</td><td class="kda">27K</td>
+                            <td class="kda">8K</td>
+                            <td class="kda">9%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m36ced56f6e85ec00af1ac692ada3214c99be74b650678e3101f8be76db08a415" onclick="searchMatch(&quot;36ced56f6e85ec00af1ac692ada3214c99be74b650678e3101f8be76db08a415&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m36ced56f6e85ec00af1ac692ada3214c99be74b650678e3101f8be76db08a415"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-21 19:44</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/29863fca436fc32196f3b07b1b80d6eb"></td>
+                            <td>44</td>
+                            <td class="kda">3/3/5</td><td class="kda">15K</td>
+                            <td class="kda">34K</td>
+                            <td class="kda">10%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m63d2318ffc05a78132d9ce423e0e53c59c61d64985379fffc82e3150faa6dc44" onclick="searchMatch(&quot;63d2318ffc05a78132d9ce423e0e53c59c61d64985379fffc82e3150faa6dc44&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m63d2318ffc05a78132d9ce423e0e53c59c61d64985379fffc82e3150faa6dc44"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-21 19:26</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>46</td>
+                            <td class="kda">2/1/15</td><td class="kda">17K</td>
+                            <td class="kda">21K</td>
+                            <td class="kda">8%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m8c54fd474e83eb0faea7e8572e5d8691185ef6eeada6da8bb128e8ba23bd789a" onclick="searchMatch(&quot;8c54fd474e83eb0faea7e8572e5d8691185ef6eeada6da8bb128e8ba23bd789a&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m8c54fd474e83eb0faea7e8572e5d8691185ef6eeada6da8bb128e8ba23bd789a"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-19 04:02</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/affdeb9a1b0f7185a36db81270ce8c70"></td>
+                            <td>40</td>
+                            <td class="kda">0/5/10</td><td class="kda">11K</td>
+                            <td class="kda">37K</td>
+                            <td class="kda">11%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m5a2e33a461dca91d1c55ed077732d897ab9c63bfbd2d1846fff079934a24bed7" onclick="searchMatch(&quot;5a2e33a461dca91d1c55ed077732d897ab9c63bfbd2d1846fff079934a24bed7&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m5a2e33a461dca91d1c55ed077732d897ab9c63bfbd2d1846fff079934a24bed7"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-19 03:38</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/a4636e5b1ac646c6f320b53004a34e29"></td>
+                            <td>54</td>
+                            <td class="kda">12/1/7</td><td class="kda">42K</td>
+                            <td class="kda">15K</td>
+                            <td class="kda">14%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".med733d336ce843c0df060a01d5f5765ca0516fcf2506fec497cc20fc8726ca0e" onclick="searchMatch(&quot;ed733d336ce843c0df060a01d5f5765ca0516fcf2506fec497cc20fc8726ca0e&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse med733d336ce843c0df060a01d5f5765ca0516fcf2506fec497cc20fc8726ca0e"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-17 22:16</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/cf6008394ebfb5d0de83fa05834018db"></td>
+                            <td>66</td>
+                            <td class="kda">6/4/6</td><td class="kda">41K</td>
+                            <td class="kda">29K</td>
+                            <td class="kda">13%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m68840f0cf8139bc1aeb05cfce859bbcf5eb38e10b0599d55d61c8d12a2d73447" onclick="searchMatch(&quot;68840f0cf8139bc1aeb05cfce859bbcf5eb38e10b0599d55d61c8d12a2d73447&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m68840f0cf8139bc1aeb05cfce859bbcf5eb38e10b0599d55d61c8d12a2d73447"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-14 17:16</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/426d56385cd95f08b550b8de937c1cb3"></td>
+                            <td>67</td>
+                            <td class="kda">19/4/12</td><td class="kda">91K</td>
+                            <td class="kda">34K</td>
+                            <td class="kda">17%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".md43f07f9cef442f7f27485872970f12fbffc96e0239c61c9234740c69ed696f1" onclick="searchMatch(&quot;d43f07f9cef442f7f27485872970f12fbffc96e0239c61c9234740c69ed696f1&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse md43f07f9cef442f7f27485872970f12fbffc96e0239c61c9234740c69ed696f1"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-14 16:54</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/a4636e5b1ac646c6f320b53004a34e29"></td>
+                            <td>53</td>
+                            <td class="kda">12/0/15</td><td class="kda">62K</td>
+                            <td class="kda">11K</td>
+                            <td class="kda">15%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".me90f11c331278565e1de00a491de11197eb3aa74d28ac244ae65e15d491c5837" onclick="searchMatch(&quot;e90f11c331278565e1de00a491de11197eb3aa74d28ac244ae65e15d491c5837&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse me90f11c331278565e1de00a491de11197eb3aa74d28ac244ae65e15d491c5837"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-14 16:25</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/d430ceb55aa87047d92d4cda57e054ca"></td>
+                            <td>59</td>
+                            <td class="kda">4/5/11</td><td class="kda">51K</td>
+                            <td class="kda">31K</td>
+                            <td class="kda">16%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mb88655608314d6dbb228dc5165643cabace33fc956f36669dc7c2a2568ca9a63" onclick="searchMatch(&quot;b88655608314d6dbb228dc5165643cabace33fc956f36669dc7c2a2568ca9a63&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mb88655608314d6dbb228dc5165643cabace33fc956f36669dc7c2a2568ca9a63"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-14 16:00</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/affdeb9a1b0f7185a36db81270ce8c70"></td>
+                            <td>39</td>
+                            <td class="kda">2/5/4</td><td class="kda">16K</td>
+                            <td class="kda">30K</td>
+                            <td class="kda">9%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m322dcf3e4eaa10b8722236ae0d62ed03b161b07e8eaa18e86e268483d7b7d369" onclick="searchMatch(&quot;322dcf3e4eaa10b8722236ae0d62ed03b161b07e8eaa18e86e268483d7b7d369&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m322dcf3e4eaa10b8722236ae0d62ed03b161b07e8eaa18e86e268483d7b7d369"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-14 00:03</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>48</td>
+                            <td class="kda">1/7/10</td><td class="kda">22K</td>
+                            <td class="kda">55K</td>
+                            <td class="kda">19%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mb5289385f2d604615f77ea064858314175a358ffdb52e5686bbe2a0c2d12dfa3" onclick="searchMatch(&quot;b5289385f2d604615f77ea064858314175a358ffdb52e5686bbe2a0c2d12dfa3&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mb5289385f2d604615f77ea064858314175a358ffdb52e5686bbe2a0c2d12dfa3"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-13 21:24</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/6d7db858c4f20adcf4fc2eee21c2c03f"></td>
+                            <td>32</td>
+                            <td class="kda">0/6/3</td><td class="kda">6K</td>
+                            <td class="kda">42K</td>
+                            <td class="kda">11%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m8ae460669f09d844168e246d4a1970c7355d1ca98c249d6f8741efda8ac23a08" onclick="searchMatch(&quot;8ae460669f09d844168e246d4a1970c7355d1ca98c249d6f8741efda8ac23a08&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m8ae460669f09d844168e246d4a1970c7355d1ca98c249d6f8741efda8ac23a08"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-13 20:58</td>
+                            <td>솔로</td>
+                            <td><span class="red">승</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c5d2843bedc74035bf487d8c7ece8d23"></td>
+                            <td>63</td>
+                            <td class="kda">8/2/11</td><td class="kda">55K</td>
+                            <td class="kda">13K</td>
+                            <td class="kda">16%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mb0aa740e64abb6ca41d82b30a9149c777e8be862ab63d41957b0832c71456814" onclick="searchMatch(&quot;b0aa740e64abb6ca41d82b30a9149c777e8be862ab63d41957b0832c71456814&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mb0aa740e64abb6ca41d82b30a9149c777e8be862ab63d41957b0832c71456814"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-12 21:59</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/29863fca436fc32196f3b07b1b80d6eb"></td>
+                            <td>41</td>
+                            <td class="kda">1/3/7</td><td class="kda">11K</td>
+                            <td class="kda">28K</td>
+                            <td class="kda">6%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mc7c9983b77a67620221ed3a09e40481eedb184155320e96de1c9f2f6035acb33" onclick="searchMatch(&quot;c7c9983b77a67620221ed3a09e40481eedb184155320e96de1c9f2f6035acb33&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse mc7c9983b77a67620221ed3a09e40481eedb184155320e96de1c9f2f6035acb33"></div>
+                            </td>
+                        </tr><tr>
+                            <td>2025-02-11 23:07</td>
+                            <td>솔로</td>
+                            <td><span class="blue">패</span> </td>
+                            <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"></td>
+                            <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652"></td>
+                            <td>41</td>
+                            <td class="kda">1/6/1</td><td class="kda">11K</td>
+                            <td class="kda">28K</td>
+                            <td class="kda">8%</td>
+                            <td>
+                                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m8046174f24083c7b0ff1337203e44506863b936a352f4d5d5437fda9eea265c4" onclick="searchMatch(&quot;8046174f24083c7b0ff1337203e44506863b936a352f4d5d5437fda9eea265c4&quot;)">
+                                </i></td>
+                        </tr>
+                        <tr>
+                            <td class="hiddenRow" colspan="15">
+                                <div class="collapse m8046174f24083c7b0ff1337203e44506863b936a352f4d5d5437fda9eea265c4"></div>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><div id="pop고수달_ratingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pop고수달_ratingModalLabel">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="pop고수달_ratingModalLabel">최근 20게임</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body modal-dialog-scrollable">
+                <table id="templateTable" class="table table-striped table-condensed">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">날짜</th>
+                        <th scope="col">파티</th>
+                        <th scope="col">결과</th>
+                        <th scope="col">P</th>
+                        <th scope="col">Char</th>
+                        <th scope="col">Lv</th>
+                        <th scope="col">KDA</th>
+                        <th scope="col">딜량</th>
+                        <th scope="col">피해량</th>
+                        <th scope="col">소모품%</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody><tr>
+                        <td>2025-02-28 00:26</td>
+                        <td>솔로</td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40"></td>
+                        <td>43</td>
+                        <td class="kda">1/6/13</td><td class="kda">23K</td>
+                        <td class="kda">41K</td>
+                        <td class="kda">19%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m6297a01b19342e447778be266d24d69322e06d52b74d8ecf4589b5831c2bc4cc" onclick="searchMatch(&quot;6297a01b19342e447778be266d24d69322e06d52b74d8ecf4589b5831c2bc4cc&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m6297a01b19342e447778be266d24d69322e06d52b74d8ecf4589b5831c2bc4cc"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-28 00:04</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c5d2843bedc74035bf487d8c7ece8d23"></td>
+                        <td>52</td>
+                        <td class="kda">7/1/3</td><td class="kda">22K</td>
+                        <td class="kda">4K</td>
+                        <td class="kda">7%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".me132a2b60174bc8ca55411fbd9ddfaa4832de69d9e492d0f4c0fb608c8607213" onclick="searchMatch(&quot;e132a2b60174bc8ca55411fbd9ddfaa4832de69d9e492d0f4c0fb608c8607213&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse me132a2b60174bc8ca55411fbd9ddfaa4832de69d9e492d0f4c0fb608c8607213"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-14 02:26</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40"></td>
+                        <td>61</td>
+                        <td class="kda">11/3/8</td><td class="kda">52K</td>
+                        <td class="kda">17K</td>
+                        <td class="kda">17%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m09621c924d5c5b0c016e7eb4fa87318422f233a525a1ac228ad900541197fd6e" onclick="searchMatch(&quot;09621c924d5c5b0c016e7eb4fa87318422f233a525a1ac228ad900541197fd6e&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m09621c924d5c5b0c016e7eb4fa87318422f233a525a1ac228ad900541197fd6e"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-12 16:29</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/5908c855eab91d27eb6d996517db1b5b"></td>
+                        <td>54</td>
+                        <td class="kda">6/5/14</td><td class="kda">41K</td>
+                        <td class="kda">24K</td>
+                        <td class="kda">18%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m4e2b4137516eba51d19e54ae55df549db9dcb8ba49bfcd023a3a86b7a535742c" onclick="searchMatch(&quot;4e2b4137516eba51d19e54ae55df549db9dcb8ba49bfcd023a3a86b7a535742c&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m4e2b4137516eba51d19e54ae55df549db9dcb8ba49bfcd023a3a86b7a535742c"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-01 21:17</td>
+                        <td><span title="푸른주먹김휴톤"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/7631b259662ceec42aa035e7c331ab32"></td>
+                        <td>64</td>
+                        <td class="kda">10/4/11</td><td class="kda">38K</td>
+                        <td class="kda">53K</td>
+                        <td class="kda">22%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m44620e4f6a2a6d15ca51026d288deb43f012ddce2b3f6de8d8a210e4751e201f" onclick="searchMatch(&quot;44620e4f6a2a6d15ca51026d288deb43f012ddce2b3f6de8d8a210e4751e201f&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m44620e4f6a2a6d15ca51026d288deb43f012ddce2b3f6de8d8a210e4751e201f"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-01 20:52</td>
+                        <td><span title="푸른주먹김휴톤"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/a4636e5b1ac646c6f320b53004a34e29"></td>
+                        <td>43</td>
+                        <td class="kda">5/5/2</td><td class="kda">20K</td>
+                        <td class="kda">19K</td>
+                        <td class="kda">16%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mf661dcc99c9eaf0d89680ab78bc4d6ae47ec9336ed6b0b28c059ebfe56a760ac" onclick="searchMatch(&quot;f661dcc99c9eaf0d89680ab78bc4d6ae47ec9336ed6b0b28c059ebfe56a760ac&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse mf661dcc99c9eaf0d89680ab78bc4d6ae47ec9336ed6b0b28c059ebfe56a760ac"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-01 20:23</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position4.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/052b8ab48199f154cbafc20a8ea7ebcf"></td>
+                        <td>49</td>
+                        <td class="kda">0/3/25</td><td class="kda">13K</td>
+                        <td class="kda">21K</td>
+                        <td class="kda">13%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mf5abc319ba6278008b0397eba6d07208ced75e93ad5e40a2c3e2e87b75daff7d" onclick="searchMatch(&quot;f5abc319ba6278008b0397eba6d07208ced75e93ad5e40a2c3e2e87b75daff7d&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse mf5abc319ba6278008b0397eba6d07208ced75e93ad5e40a2c3e2e87b75daff7d"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-01 19:55</td>
+                        <td><span title="푸른주먹김휴톤"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position2.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40"></td>
+                        <td>66</td>
+                        <td class="kda">21/4/11</td><td class="kda">90K</td>
+                        <td class="kda">33K</td>
+                        <td class="kda">22%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m91652e73083578abdb8eb8d094780f3a3a3521853b95764895969ecb554594d4" onclick="searchMatch(&quot;91652e73083578abdb8eb8d094780f3a3a3521853b95764895969ecb554594d4&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m91652e73083578abdb8eb8d094780f3a3a3521853b95764895969ecb554594d4"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2025-02-01 19:29</td>
+                        <td><span title="푸른주먹김휴톤"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/5908c855eab91d27eb6d996517db1b5b"></td>
+                        <td>55</td>
+                        <td class="kda">6/2/15</td><td class="kda">41K</td>
+                        <td class="kda">12K</td>
+                        <td class="kda">11%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m950024c727cffa8ae37129417d2ddf8bbd8a99b9e585e55bbbcba763db2c5f47" onclick="searchMatch(&quot;950024c727cffa8ae37129417d2ddf8bbd8a99b9e585e55bbbcba763db2c5f47&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m950024c727cffa8ae37129417d2ddf8bbd8a99b9e585e55bbbcba763db2c5f47"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-11-16 20:42</td>
+                        <td><span title="김치맹"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/149913567cfcc642a07e46ad41049da6"></td>
+                        <td>38</td>
+                        <td class="kda">0/5/8</td><td class="kda">9K</td>
+                        <td class="kda">43K</td>
+                        <td class="kda">25%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m418e4183f56e16a958329923f051b9fbc0f2e88ec222dd94790385fc35acea35" onclick="searchMatch(&quot;418e4183f56e16a958329923f051b9fbc0f2e88ec222dd94790385fc35acea35&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m418e4183f56e16a958329923f051b9fbc0f2e88ec222dd94790385fc35acea35"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-11-16 20:25</td>
+                        <td><span title="김치맹"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/149913567cfcc642a07e46ad41049da6"></td>
+                        <td>35</td>
+                        <td class="kda">0/1/16</td><td class="kda">14K</td>
+                        <td class="kda">15K</td>
+                        <td class="kda">17%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".me450031ccb5b8b28812e2707246bd2ad5b90daf78ae1ead647862a7d5ecb60fa" onclick="searchMatch(&quot;e450031ccb5b8b28812e2707246bd2ad5b90daf78ae1ead647862a7d5ecb60fa&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse me450031ccb5b8b28812e2707246bd2ad5b90daf78ae1ead647862a7d5ecb60fa"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-11-12 18:35</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/5908c855eab91d27eb6d996517db1b5b"></td>
+                        <td>66</td>
+                        <td class="kda">18/3/11</td><td class="kda">93K</td>
+                        <td class="kda">18K</td>
+                        <td class="kda">18%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m607ac0ede301afb5d384d43616f1d46632ccdcaeb32231c7f57182488c57d314" onclick="searchMatch(&quot;607ac0ede301afb5d384d43616f1d46632ccdcaeb32231c7f57182488c57d314&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m607ac0ede301afb5d384d43616f1d46632ccdcaeb32231c7f57182488c57d314"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-27 23:46</td>
+                        <td><span title="샆쥐"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/7631b259662ceec42aa035e7c331ab32"></td>
+                        <td>38</td>
+                        <td class="kda">1/2/12</td><td class="kda">26K</td>
+                        <td class="kda">20K</td>
+                        <td class="kda">30%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m09e5824b7be8efd13b4bda39381cef5ed4698a51c0b5bf55348962af521f41b9" onclick="searchMatch(&quot;09e5824b7be8efd13b4bda39381cef5ed4698a51c0b5bf55348962af521f41b9&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m09e5824b7be8efd13b4bda39381cef5ed4698a51c0b5bf55348962af521f41b9"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-27 23:19</td>
+                        <td><span title="샆쥐"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/42ba0da0781020231280624071c3574d"></td>
+                        <td>24</td>
+                        <td class="kda">0/6/3</td><td class="kda">10K</td>
+                        <td class="kda">32K</td>
+                        <td class="kda">18%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mf3c8c56c24541d023a3fce704cc0fdf07c989ae71dd4563ea8cc5f470332b7e4" onclick="searchMatch(&quot;f3c8c56c24541d023a3fce704cc0fdf07c989ae71dd4563ea8cc5f470332b7e4&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse mf3c8c56c24541d023a3fce704cc0fdf07c989ae71dd4563ea8cc5f470332b7e4"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-26 01:11</td>
+                        <td>솔로</td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/796e4f12a5190f0e9ca475db61bb41d0"></td>
+                        <td>66</td>
+                        <td class="kda">16/3/12</td><td class="kda">67K</td>
+                        <td class="kda">13K</td>
+                        <td class="kda">16%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".me8a4d24ef37f45187846b33879c2bb4c4551731b0d35b2a7f41f1d061c7e3a30" onclick="searchMatch(&quot;e8a4d24ef37f45187846b33879c2bb4c4551731b0d35b2a7f41f1d061c7e3a30&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse me8a4d24ef37f45187846b33879c2bb4c4551731b0d35b2a7f41f1d061c7e3a30"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-20 20:45</td>
+                        <td><span title="김치맹"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/9a00609cb8b9bb8ee9d36a72e822b839"></td>
+                        <td>31</td>
+                        <td class="kda">0/9/3</td><td class="kda">11K</td>
+                        <td class="kda">45K</td>
+                        <td class="kda">18%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".maec962f7672fe908364cd27a943eaeca78cbb598de36141bfcdbc362dd2702f9" onclick="searchMatch(&quot;aec962f7672fe908364cd27a943eaeca78cbb598de36141bfcdbc362dd2702f9&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse maec962f7672fe908364cd27a943eaeca78cbb598de36141bfcdbc362dd2702f9"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-20 20:13</td>
+                        <td><span title="김치맹"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="blue">패</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position3.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/796e4f12a5190f0e9ca475db61bb41d0"></td>
+                        <td>59</td>
+                        <td class="kda">7/5/4</td><td class="kda">45K</td>
+                        <td class="kda">20K</td>
+                        <td class="kda">19%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".mcc1db71b5bc1676b0b4396cb7b7e6977970b69ea2e9c1d080d86403d3f5923ef" onclick="searchMatch(&quot;cc1db71b5bc1676b0b4396cb7b7e6977970b69ea2e9c1d080d86403d3f5923ef&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse mcc1db71b5bc1676b0b4396cb7b7e6977970b69ea2e9c1d080d86403d3f5923ef"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-13 21:26</td>
+                        <td><span title="찐두몬"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/42ba0da0781020231280624071c3574d"></td>
+                        <td>40</td>
+                        <td class="kda">5/3/14</td><td class="kda">25K</td>
+                        <td class="kda">28K</td>
+                        <td class="kda">23%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".md852bdf03c8b9f9d662b843babffdffc9c768558dd40035899d87a649f88d20b" onclick="searchMatch(&quot;d852bdf03c8b9f9d662b843babffdffc9c768558dd40035899d87a649f88d20b&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse md852bdf03c8b9f9d662b843babffdffc9c768558dd40035899d87a649f88d20b"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-13 21:10</td>
+                        <td><span title="찐두몬"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/7631b259662ceec42aa035e7c331ab32"></td>
+                        <td>42</td>
+                        <td class="kda">6/1/12</td><td class="kda">28K</td>
+                        <td class="kda">17K</td>
+                        <td class="kda">21%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m2fb6b043b188fa915c62999cb220cc770b24af36e0549a8250ea25cfc263eb83" onclick="searchMatch(&quot;2fb6b043b188fa915c62999cb220cc770b24af36e0549a8250ea25cfc263eb83&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m2fb6b043b188fa915c62999cb220cc770b24af36e0549a8250ea25cfc263eb83"></div>
+                        </td>
+                    </tr><tr>
+                        <td>2024-10-13 20:47</td>
+                        <td><span title="찐두몬"> 듀오<i class="fa fa-info-circle"></i></span></td>
+                        <td><span class="red">승</span> </td>
+                        <td><img class="drawIcon" src="http://static.cyphers.co.kr/img/game_position/position1.jpg"></td>
+                        <td> <img class="drawIcon" src="https://img-api.neople.co.kr/cy/characters/42ba0da0781020231280624071c3574d"></td>
+                        <td>40</td>
+                        <td class="kda">3/2/23</td><td class="kda">28K</td>
+                        <td class="kda">34K</td>
+                        <td class="kda">32%</td>
+                        <td>
+                            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target=".m46be5d8e1351e4df1742a372990ba674c1c83b5f1241342c43f9b64ccf51535d" onclick="searchMatch(&quot;46be5d8e1351e4df1742a372990ba674c1c83b5f1241342c43f9b64ccf51535d&quot;)">
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td class="hiddenRow" colspan="15">
+                            <div class="collapse m46be5d8e1351e4df1742a372990ba674c1c83b5f1241342c43f9b64ccf51535d"></div>
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div></div>
+
+<div style="display:none">
+    <table id="matchInfoTemplate" class="table table-striped table-condensed">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">C</th>
+            <th scope="col">P</th>
+            <th scope="col">buff</th>
+            <th scope="col">닉네임</th>
+            <th scope="col">Lv</th>
+            <th scope="col">KDA</th>
+            <th scope="col">킬</th>
+            <th scope="col">데스</th>
+            <th scope="col">도움</th>
+            <th scope="col">딜량</th>
+            <th scope="col">피해량</th>
+            <th scope="col">코인</th>
+            <th scope="col">소모품(%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+
+</body></html>
