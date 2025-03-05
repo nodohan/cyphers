@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+    <meta property="title" content="마을주민검색기" />
+    <meta property="og:title" content="마을주민검색기" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://doseh.co.kr" />
+    <meta property="og:image" content="http://doseh.co.kr/favicon.ico" />
+    <meta name="keyword" content="마을주민검색기, 마을주민 검색기, 마을주민1검색기, 사이퍼즈">
+    <meta name="naver-site-verification" content="cd47685c13117b024f3dc2b890bb9b4d377b3dfa" /><!-- 네이버 인증 -->
+
+    <title>마을주민검색기</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/menu.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/myLocalStorage.js" crossorigin="anonymous"></script>
+    <script src="/js/common.js" crossorigin="anonymous"></script>
+    <script src="/js/renewal.js" crossorigin="anonymous"></script>
+    <script src="/js/apiCall.js" crossorigin="anonymous"></script>
+    <script src="/js/normalDraw.js" crossorigin="anonymous"></script>
+    <script src="/js/ieChecker.js" crossorigin="anonymous"></script>
+    <script src="/js/positionAttr.js" crossorigin="anonymous"></script>
+    <!-- <script src="/js/utils.js"></script>-->
+
+    <!-- 데이트 피커 -->
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="/js/gijgo-combined-1.9.13/message/messages.kr-ko.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9883938094775799" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        var isMobile = false;
+
+        $(document).ready(function() {
+            $("#mainMenu").addClass("active");
+            $("#userDetailMenu").removeClass("active");
+        });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
+    <script type="text/javascript">
+        pageName = "pcUserSearch_vertical";
+
+        $(document).ready(function() {
+            $("#mainMenu").removeClass("active");
+            $("#userSearch_vertical").addClass("active");
+
+            getCookie();
+            $("#partyShow").on("change", checkVisibility);
+            $("#positionShow").on("change", checkVisibility);
+            $("#mostCharShow").on("change", checkVisibility);
+            $("#recentShow").on("change", checkVisibility);
+
+            resetGameType();
+            $("input[name='gameType']").on("change", resetGameType);
+        });
+
+        function resetGameType() {
+            let val = $("input[name='gameType']:checked").val();
+            clearDivV2('con1_2');
+            clearDivV2('con2_2');
+            $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
+        }
+
+        function clearDivV2(divId) {
+            //'infoDivV3Temp'
+            let className = "infoDivV2Temp";
+            let imgName = 'infoDivV2TempImg';
+            if (divId == 'con2_2') {
+                className = "infoDivV3Temp";
+                imgName = 'infoDivV3TempImg';
+            }
+            let tempInfo = `<div class="${className}"><div class='${imgName}'></div></div>`;
+            $("#" + divId).empty();
+            $("#" + divId).append(tempInfo + tempInfo + tempInfo + tempInfo + tempInfo);
+        }
+
+        function getCookie() {
+            setCheckbox('partyShow', Cookies.get('playParty'));
+            setCheckbox('positionShow', Cookies.get('positionDiv'));
+            setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
+            setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+        }
+
+        function setCheckbox(id, checked) {
+            checked = (checked == null || checked == 'true');
+            $("input:checkbox[id='" + id + "']").attr("checked", checked);
+        }
+
+        function checkVisibility() {
+            setVisible("playParty", $("#partyShow").is(":checked"));
+            setVisible("positionDiv", $("#positionShow").is(":checked"));
+            setVisible("mostCharDiv", $("#mostCharShow").is(":checked"));
+            setVisible("recentlyDiv", $("#recentShow").is(":checked"));
+        }
+
+        function setVisible(classId, isShow) {
+            let div = $("." + classId);
+            if (isShow) {
+                div.show();
+            } else {
+                div.hide();
+            }
+            Cookies.set(classId, isShow, {
+                expires: 7
+            });
+        }
+
+        function setUserInfo(gameType, divName, data) {
+            removeTemp(divName);
+            var userDivId = getUserDivId(gameType, data.nickname);
+            //기본 정보
+            var clone = $("#template").clone();
+            clone.attr("id", userDivId);
+            console.log("divName", divName);
+            if (divName == "con2_2") {
+                clone.removeClass("infoDivV2");
+                clone.addClass("infoDivV3");
+            }
+
+            defaultInfo(gameType, clone, data);
+
+            var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+            //printChar(rows);
+
+            //파티별
+            drawPartyType(userDivId, clone.find("#playParty"), rows);
+
+            //포지션별
+            drawPosition(clone, rows, data.nickname);
+
+            //최근 10경기 결과
+            drawRecently(clone, rows, userDivId);
+
+            //자주하는 캐릭
+            var userChar = extractChar(rows, sortCase);
+            drawOften(clone, userChar, drawCharCardVer);
+
+            clone.show();
+            $("#" + divName).prepend(clone);
+            checkVisibility();
+        }
+
+        function removeTemp(divId) {
+            let tempClass = divId == 'con1_2' ? 'infoDivV2Temp' : 'infoDivV3Temp';
+            $("." + tempClass).get(0).remove();
+        }
+
+        function defaultInfo(gameType, clone, data) {
+            //console.log("data", data);
+            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0 };
+            var pov = ((rating.winCount * 100) / (rating.winCount + rating.loseCount)) || 0;
+
+            $(clone).find("#nickNameDiv").append(data.nickname);
+            $(clone).find("#nickNameDiv").append(" <a href='javascript:nickHistory(\"" + data.playerId + "\");' ><i class='red fas fas fa-heading'></i></a>");
+            $(clone).find("#levelDiv").text(data.grade + "급 ");
+            $(clone).find("#clanDiv").text(data.clanName);
+
+            getTierColerName($(clone).find("#tierName"), data.tierName);
+            if (data.ratingPoint != null) {
+                $(clone).find("#currRP").text(data.ratingPoint);
+                $(clone).find("#maxRP").text("( " + data.maxRatingPoint + " )");
+            }
+
+            let tot = rating.winCount + rating.loseCount + rating.stopCount;
+            $(clone).find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
+        }
+
+        function getTierColerName(span, tierName) {
+            let name = tierName;
+            if (name == null) {
+                name = "Unrank";
+            }
+            span.addClass(name);
+            span.text(name);
+        }
+
+        function nickHistory(nickId) {
+            historyNickname(nickId, showNickHistory);
+        }
+
+        function showNickHistory(data) {
+            if (data.resultCode == -2) {
+                alert("요청자에 의해 비공개 처리되었습니다.");
+                return;
+            }
+            if (data.length == 0 || data.resultCode == -1) {
+                alert("수집된 닉변기록이 없습니다");
+                return;
+            }
+
+            let info = "";
+            for (idx in data) {
+                let row = data[idx];
+                info += row.season + " " + row.nickname + " 체크일:" + row.checkingDate + "\n";
+            }
+
+
+            alert(info);
+        }
+
+        //파티별 승률 (솔로/파티)
+        function drawPartyType(userDivId, clone, row) {
+            let partyJson = extractParty(row);
+
+            let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
+            let partyAllCnt = partyJson.all.win + partyJson.all.lose;
+
+            clone.append("<b>솔플</b>: " + soloAllCnt + "전 " + partyJson.solo.win + "승 " + partyJson.solo.lose + "패, ");
+            clone.append("<b>파티</b>: " + partyAllCnt + "전 " + partyJson.all.win + "승 " + partyJson.all.lose + "패 <br>    ");
+
+            //let moreIcon = '<i class="fa fa-search" style="font-size:15px;color:red"></i>';
+            let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+
+            if (partyJson.two.all != 0) {
+                clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
+                clone.append(`<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `);
+            }
+
+            if (partyJson.three.all != 0) {
+                clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
+                clone.append(`<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `);
+            }
+
+            if (partyJson.five.all != 0) {
+                clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
+                clone.append(`<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `);
+            }
+
+            clone.append("<br><div class='row'>");
+            if (partyJson.two.all != 0) {
+                let partyResult = getEachPartyResult(partyJson.two.party);
+                clone.append("<div class='collapse multi-collapse' id='two" + userDivId + "'>" + partyResult + "</div>");
+            }
+            if (partyJson.three.all != 0) {
+                let partyResult = getEachPartyResult(partyJson.three.party);
+                clone.append("<div class='collapse multi-collapse' id='three" + userDivId + "'>" + partyResult + "</div>");
+            }
+            if (partyJson.five.all != 0) {
+                let partyResult = getEachPartyResult(partyJson.five.party);
+                clone.append("<div class='collapse multi-collapse' id='five" + userDivId + "'>" + partyResult + "</div>");
+            }
+
+            clone.append("</div>");
+        }
+
+        function getEachPartyResult(arr) {
+            let resultTable = "<table class='table'> ";
+            resultTable += "<thead class='thead-dark'><tr>";
+            resultTable += "<th scope='col'>파티원</th>";
+            resultTable += "<th scope='col'>겜수</th>";
+            resultTable += "<th scope='col'>승</th>";
+            resultTable += "<th scope='col'>패</th>";
+            resultTable += "<th scope='col'>승률</th>";
+            resultTable += "</tr></thead><tbody>";
+
+            for (idx in arr) {
+                let row = arr[idx];
+                let total = row.win + row.lose;
+                let rate = ((row.win * 100) / total).toFixed(0) + "%";
+
+                resultTable += "<tr>";
+                resultTable += "<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />" + row.name + "</a></th>";
+                resultTable += "<td>" + total + "</td>";
+                resultTable += "<td>" + row.win + "</td>";
+                resultTable += "<td>" + row.lose + "</td>";
+                resultTable += "<td>" + rate + "</td>";
+                resultTable += "</tr>";
+
+            }
+            resultTable += "</tbody></table>";
+
+            return resultTable;
+        }
+
+        function partyUserSearch(aTagObj) {
+            let aTag = $(aTagObj);
+            let partyUserNames = aTag.text().replace(",", " ");
+            let conId = aTag.closest(".infoLayerV2").attr("id");
+            conId = conId == null ? "con2_2" : conId;
+
+            let inputId = conId == "con1_2" ? 'nickNames' : 'nickNames2';
+            $("#" + inputId).val(partyUserNames);
+            search(inputId, conId);
+        }
+
+        function extractParty(rows) {
+            let partyResult = {
+                solo: {
+                    win: 0,
+                    lose: 0
+                },
+                all: {
+                    count: 0,
+                    win: 0,
+                    lose: 0
+                },
+                two: {
+                    count: 0,
+                    win: 0,
+                    lose: 0,
+                    party: {}
+                },
+                three: {
+                    count: 0,
+                    win: 0,
+                    lose: 0,
+                    party: {}
+                },
+                five: {
+                    count: 0,
+                    win: 0,
+                    lose: 0,
+                    party: {}
+                },
+            };
+
+            let solo = rows.filter(row => row.playInfo.partyInfo == null);
+            partyResult.solo.win = solo.filter(row => row.playInfo.result == 'win').length;
+            partyResult.solo.lose = (solo.length - partyResult.solo.win);
+
+            let party = rows.filter(row => row.playInfo.partyInfo != null);
+            for (let i in party) {
+                let matchId = party[i].matchId;
+                let playInfo = party[i].playInfo;
+                let cnt = playInfo.partyUserCount;
+
+                addPlayResult(partyResult.all, matchId, playInfo, false);
+                if (cnt == 2) {
+                    addPlayResult(partyResult.two, matchId, playInfo, true);
+                } else if (cnt == 3) {
+                    addPlayResult(partyResult.three, matchId, playInfo, true);
+                } else if (cnt == 5) {
+                    addPlayResult(partyResult.five, matchId, playInfo, true);
+                }
+            }
+
+            partyResult.two.party = partySort(partyResult.two.party, sortCase);
+            partyResult.three.party = partySort(partyResult.three.party, sortCase);
+            partyResult.five.party = partySort(partyResult.five.party, sortCase);
+
+            return partyResult;
+        }
+
+        function partySort(party, sort) {
+            let keys = Object.keys(party);
+            var sorted = [];
+            keys.forEach(key => {
+                sorted.push(party[key]);
+            });
+
+            sorted.sort(sort);
+            return sorted;
+        }
+
+        function addPlayResult(subPartyResult, matchId, data, isParty) {
+            subPartyResult[data.result]++;
+            subPartyResult["count"]++;
+
+            if (isParty) {
+                let partyId = data.partyInfo.map(row => row.playerId).sort().join(",");
+                let partyName = data.partyInfo.map(row => row.nickname).sort().join(",");
+
+                if (subPartyResult.party[partyId] == null) {
+                    subPartyResult.party[partyId] = {
+                        matchId: [],
+                        name: "",
+                        count: 0,
+                        win: 0,
+                        lose: 0
+                    };
+                }
+                subPartyResult.party[partyId].count++;
+                subPartyResult.party[partyId][data.result]++;
+                subPartyResult.party[partyId].name = partyName;
+                subPartyResult.party[partyId].matchId.push(matchId);
+            }
+        }
+
+        function drawCharCardVer(div, charInfo) {
+            var card = $(div).find("#cardTemp").clone();
+            card.removeAttr("id");
+            card.removeAttr("hidden");
+            card.find("img").attr('src', `https://img-api.neople.co.kr/cy/characters/${charInfo.characterId}`);
+            var pov = ((charInfo.win * 100) / charInfo.count) || 0;
+            card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승<br> " + charInfo.lose + "패</small>");
+            div.append(card);
+        }
+    </script>
+</head>
+
+<body class="body">
+<script type="text/javascript">
+    function notOpper() {
+        alert("이전시즌의 데이터로 당분간 제공하지 않습니다.");
+    }
+</script>
+
+<header>
+    <h1>
+        <a href="/">
+            <img src="/image/titleIcon.png" class="mainIcon" alt="">
+        </a>
+    </h1>
+    <nav>
+        <ul>
+            <li>
+                <a href="/user/userSearch">전적 검색</a>
+                <ul>
+                    <li>
+                        <a href="/user/userSearch">세로</a>
+                    </li>
+                    <li id="userSearch_vertical">
+                        <a href="/user/userSearch_vertical">가로</a>
+                    </li>
+                    <li id="userDetailMenu">
+                        <a href="/user/userDetail">상세</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/user/userVs">특수</a>
+                <ul>
+                    <li id="userVsMenu">
+                        <a href="/user/userVs">갈등을 빚자</a>
+                    </li>
+                    <li id="userCounterMenu">
+                        <a href="/userDetail/userCounter">인간상성</a>
+                    </li>
+                    <li id="userHistory">
+                        <a href="/history/nicknameHistory">닉변이력</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/position/positionAttr">통계</a>
+                <ul>
+                    <li id="positionAttr">
+                        <a href="/position/positionAttr">특성통계</a>
+                    </li>
+                    <li id="userChart">
+                        <a href="/rankChart/userChart">랭킹 차트</a>
+                    </li>
+                    <li id="stats2024h">
+                        <a href="/stats/stats2024h">결산</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="https://blog.naver.com/dododosa">기타</a>
+                <ul>
+                    <li id="notice">
+                        <a href="https://blog.naver.com/dododosa">공지</a>
+                    </li>
+                    <li id="teamDiv">
+                        <a href="http://teamDiv.doseh.co.kr">팀나눠</a>
+                    </li>
+                    <li id="clan">
+                        <a href="http://clan.doseh.co.kr" target="_blank">마주클</a>
+                    </li>
+                    <li id="androidApp">
+                        <a href="http://doseh.co.kr/image/cyphers_%EB%A7%88%EC%9D%84%EC%A3%BC%EB%AF%BC%EA%B2%80%EC%83%89%EA%B8%B0.apk">android</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div id="bi" style="position: fixed;right: 15px;bottom: 5px;">
+    <a href="http://developers.neople.co.kr" target="_blank">
+        <img style="width:132px;height:37px" alt="Neople 오픈 API" src="/image/bi_color.png" />
+    </a>
+</div>
+
+<div id="mainV2">
+    <div class="width100p">
+        <div class="head">
+            <div>
+                <input type="radio" name="gameType" id="gameType_rating" value="rating" checked />&nbsp;<label for="gameType_rating"> 공식 </label>&nbsp;&nbsp;
+                <input type="radio" name="gameType" id="gameType_normal" value="normal" />&nbsp;<label for="gameType_normal"> 일반 </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="positionShow" checked>
+                    <label class="form-check-label" for="positionShow">포지션 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="partyShow" checked>
+                    <label class="form-check-label" for="partyShow">파티 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
+                    <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="recentShow" checked>
+                    <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                </div>
+            </div>
+        </div>
+        <div class="head2flow">
+            <div class="width50p floatLeft">
+                <div class="input-group">
+                    <input type="text" id="nickNames" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onClick="clearDivV2('con1_2');">초기화</button>
+                    </div>
+                </div>
+            </div>
+            <div class="width50p floatLeft">
+                <div class="input-group">
+                    <input type="text" id="nickNames2" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
+                    <div class="input-group-append" id="searchButton">
+                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames2', 'con2_2');">검색</button>
+                        <button class="btn btn-outline-secondary" type="button" onClick="clearDivV2('con2_2');">초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="con1" class="conUserV2">
+        <div id="con1_2" class="infoLayerV2">
+        </div>
+    </div>
+    <div id="con2" class="conUserV2">
+        <div id="con2_2" class="infoLayerV2"></div>
+    </div>
+</div>
+
+<div id="template" class="infoDivV2" style="display:none">
+    <div id="defaultDiv">
+        <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
+        <div class="width100p">
+            <span id="nickNameDiv" class="bold"> </span>&nbsp;&nbsp;
+            <span id="levelDiv"></span>&nbsp;&nbsp;
+            <span id="clanDiv"></span>
+        </div>
+        <div class="width100p">
+            <div class="width100p">
+                <span id="tierName"></span>&nbsp;<span id="currRP" class="bold"></span> <span id="maxRP"></span>
+            </div>
+            <div id="playGameDiv"></div>
+
+        </div>
+        <div id="playParty" class="playParty width100p">
+
+        </div>
+    </div>
+
+    <!-- 포지션별 승률 -->
+    <div id="positionDiv" class="positionDiv">
+        <div id="positionTanker" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionMelee" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionAd" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="positionSupp" class="card width50p floatLeft">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <p id="suppSpan" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 자주하는 캐릭-->
+    <div id="mostCharDiv" class="mostCharDiv">
+        <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+        <div id="mostCharDetailDiv" class="mostCharDetailDivV2">
+            <div id="cardTemp" class="card floatLeft" hidden>
+                <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                <div class="card-body">
+                    <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="recentlyDiv" class="width100p recentlyDiv">
+        <div class="width100p" id="recentlyDivTitle">
+            <!--최근 10게임 -->
+        </div>
+    </div>
+</div>
+
+<div id="modalDiv">
+    <!-- 모달 영역 -->
+    <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-dialog-scrollable">
+                    <table id="templateTable" class="table table-striped table-condensed">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">날짜</th>
+                            <th scope="col">파티</th>
+                            <th scope="col">결과</th>
+                            <th scope="col">P</th>
+                            <th scope="col">Char</th>
+                            <th scope="col">Lv</th>
+                            <th scope="col">KDA</th>
+                            <th scope="col">딜량</th>
+                            <th scope="col">피해량</th>
+                            <th scope="col">소모품%</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <table id="matchInfoTemplate" class="table table-striped table-condensed">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">C</th>
+            <th scope="col">P</th>
+            <th scope="col">buff</th>
+            <th scope="col">닉네임</th>
+            <th scope="col">Lv</th>
+            <th scope="col">KDA</th>
+            <th scope="col">킬</th>
+            <th scope="col">데스</th>
+            <th scope="col">도움</th>
+            <th scope="col">딜량</th>
+            <th scope="col">피해량</th>
+            <th scope="col">코인</th>
+            <th scope="col">소모품(%)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+</body>
+
+</html>
