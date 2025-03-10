@@ -6,14 +6,18 @@
     z-index: 1;
     background: #fff;
     height: calc(100vh - 80px);
-    padding: 40px 20px;
+    padding: 40px 16px;
     color: #343a40
 }
 .sideNav h2 {
     color: #343a40;
     font-size: 18px;
     font-weight: bold;
-    margin: 8px 0;
+    margin: 16px 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 .sideNavToggleBtn {
     display: block;
@@ -59,19 +63,64 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin: 16px 0 0 0;
+    margin: 32px 0 0 0;
 }
 .searchInputWrap {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin: 16px 0 0 0;
+    height: 84px;
+}
+.searchInputWrap > div {
+    display: flex;
+    height: 40px;
+    position: relative;
+}
+.searchInputWrap > div > .searchBtn {
+    width: 56px;
+    height: 40px;
+    border-radius: 8px;
+    position: relative;
+    cursor: auto;
+    display: none;
+}
+.searchInputWrap > div > .searchBtn::before {
+    content: "";
+    position: absolute;
+    background: url("/image/searchIcon_small.svg");
+    background-size: cover;
+    width: 24px;
+    height: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    filter: invert(25%);
+}
+.searchInputWrap > div:has(.searchInput#nickNames) .searchBtn{
+    background: rgba(224, 237, 255, 0.8);
+}
+.searchInputWrap > div:has(.searchInput#nickNames2) .searchBtn{
+    background: rgba(255, 235, 235, 0.8);
 }
 .searchInput {
     height: 40px;
     border: 0;
     border-radius: 8px;
-    padding: 0 0 0 48px;
+    padding: 0 0 0 56px;
+    font-size: 14px;
+    position: relative;
+}
+.searchInput::before {
+    content: "";
+    position: absolute;
+    background: red;
+    background-size: cover;
+    width: 24px;
+    height: 24px;
+    left: 50%;
+    top: 50%;
+    transform : translate(-50%, -50%);
+    filter: invert(25%);
 }
 .searchInput#nickNames {
     background: rgba(224, 237, 255, 0.8);
@@ -79,98 +128,136 @@
 .searchInput#nickNames2 {
     background: rgba(255, 235, 235, 0.8);
 }
-div:has(> .searchInput) {
-    position: relative;
-}
-.searchInput + button {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-image: url("/image/searchIcon_small.svg");
-    background-size: cover;
-    filter: invert(25%);
-    width: 22px;
-    height: 22px;
-    border: 0;
-    background-color: transparent;
-}
+/*.searchInput + button {*/
+/*    position: absolute;*/
+/*    left: 14px;*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    background-image: url("/image/searchIcon_small.svg");*/
+/*    background-size: cover;*/
+/*    filter: invert(25%);*/
+/*    width: 22px;*/
+/*    height: 22px;*/
+/*    border: 0;*/
+/*    background-color: transparent;*/
+/*}*/
 .gameModeCheck {
     display: flex;
     gap: 8px;
     border-radius: 8px;
-    padding: 0 0 0 48px;
-    margin: 0 0 8px 0;
+    padding: 0 0 0 56px;
     position: relative;
-}
-/* 공식 - 일반 체크에 따라 바뀌는 요소 */
-.gameModeCheck::before {
-    content: "";
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 8px;
-    border-radius: 8px;
-    background: #e4e4e4;
-}
-.gameModeCheck:has(.officialGameCheck:checked)::after {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #343a40;
-    border-radius: 50%;
-}
-.gameModeCheck:has(.normalGameCheck:checked)::after {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    left: 26px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #343a40;
-    border-radius: 50%;
+    height: 40px;
 }
 .gameModeCheck > input {
-    display: none;
-}
-.gameModeCheck > input + label {
-    background: transparent;
-    padding: 0;
-    justify-content: center;
+    appearance: none;
+    position: absolute;
+    width: 56px;
+    height: 40px;
+    left: 0;
+    cursor: pointer;
 }
 .gameModeCheck > input:checked + label {
     background: #343a40;
     color: #fff;
 }
-.searchSettingCheck {
-    display: none;
-}
-.input + label::before {
+.gameModeCheck input.officialGameCheck::after {
     content: "";
     position: absolute;
-    width: 36px;
-    height: 36px;
-    background-image: url("/image/deleteIcon.svg");
-    background-size: cover;
-    filter: invert(0);
-    left: 16px;
+    width: 11px;
+    height: 11px;
+    left: 36px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background: #343a40;
 }
-.searchSettingCheck:checked + label {
+.gameModeCheck input.officialGameCheck::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 6px;
+    border-radius: 2px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #e4e4e4;
+}
+.gameModeCheck input.normalGameCheck::after {
+    content: "";
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    left: 22px;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background: #343a40;
+}
+.gameModeCheck input.normalGameCheck::before {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 6px;
+    border-radius: 4px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #e4e4e4;
+}
+.gameModeCheck:has(.officialGameCheck:checked) .officialGameCheck {
+    display: none;
+}
+.gameModeCheck:has(.normalGameCheck:checked) .normalGameCheck {
+    display: none;
+}
+.gameModeCheck > label {
+    position: relative;
+    background: #fff;
+    color: #343a40;
+    font-size: 14px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.5s ease;
+    border-radius: 8px;
+}
+.searchSettingCheck {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+}
+.searchSettingCheck > input {
+    appearance: none;
+    position: relative;
+    width: 56px;
+    height: 40px;
+    aspect-ratio: 56 / 40;
+    cursor: pointer;
+    transition: 0.5s;
+    border-radius: 8px 0 0 8px;
+}
+.searchSettingCheck > input::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    filter: invert(0.25);
+}
+.searchSettingCheck > input:checked::before {
+    filter: invert(1);
+}
+.searchSettingCheck > input:checked {
     background: #343a40;
     color: #fff;
 }
-input:checked + label::before {
-    filter: invert(1);
-    transition: 0.5s;
+.searchSettingCheck > input:checked + label {
+    background: #343a40;
+    color: #fff;
 }
 .iconBtn {
     position: relative;
@@ -181,47 +268,71 @@ input:checked + label::before {
     display: flex;
     align-items: center;
     justify-content: start;
-    border-radius: 8px;
-    padding-left: 48px;
+    border-radius: 0 8px 8px 0;
     cursor: pointer;
     width: 100%;
     transition: 0.5s ease;
 }
-.iconBtn::before {
-    content: "";
-    position: absolute;
-    background-size: cover;
-    width: 36px;
-    height: 36px;
-    left: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    filter: invert(0);
-}
 .recentBtn::before {
     background-image: url("/image/recentIcon.svg");
-    width: 22px;
-    height: 22px;
-    left: 10px;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
 }
 .mostBtn::before {
     background-image: url("/image/mostIcon.svg");
+    background-size: cover;
     width: 24px;
     height: 24px;
-    left: 9px;
 }
 .positionBtn::before {
     background-image: url("/image/fistIcon.svg");
+    background-size: cover;
     width: 19px;
     height: 19px;
-    left: 13px;
 }
 .partyBtn::before {
     background-image: url("/image/partyIcon.svg");
-    width: 20px;
-    height: 20px;
-    left: 12px;
+    background-size: cover;
+    width: 19px;
+    height: 19px;
 }
-.resetBtn::before {
-    background-image: url("/image/deleteIcon.svg");
+/*사이드바 토글*/
+.sideNav.slim {
+
+}
+.sideNav.slim .sideNavToggleBtn::before {
+    transform: rotate(90deg);
+}
+.sideNav.slim h2 {
+    width: 56px;
+    opacity: 0;
+}
+.sideNav.slim .searchInput {
+    position: absolute;
+    left: 80px;
+    width: 144px;
+    padding: 0 0 0 8px;
+}
+.sideNav.slim .gameModeCheck > label {
+    position: absolute;
+    left: 80px;
+    width: 120px;
+}
+.sideNav.slim .searchSettingCheck > label {
+    position: absolute;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sideNav.slim .iconBtn {
+    border-radius: 8px;
+    width: 120px;
+}
+.sideNav.slim .searchSettingCheck > input {
+    border-radius: 8px;
+}
+.sideNav.slim .searchInputWrap > div > .searchBtn {
+    display: block;
 }
