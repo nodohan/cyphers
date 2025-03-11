@@ -354,6 +354,20 @@
                 card.find(".card-text").empty().append(pov.toFixed(0) + "% <br/> <small class='text-muted'>" + charInfo.win + "승<br> " + charInfo.lose + "패</small>");
                 div.append(card);
             }
+
+            function sideNavToggle() {
+                document.querySelector('.sideNav').classList.toggle('slim');
+            }
+            function searchInputToggle(e) {
+                const parentDiv = e.target.closest('div'); // 클릭된 버튼의 부모 div 찾기
+                const searchInput = parentDiv.querySelector('.searchInput'); // 해당 div 내의 input 찾기
+
+                searchInput.classList.toggle('active');
+
+                if (searchInput.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            }
         </script>
 </head>
 
@@ -361,13 +375,13 @@
     <%- include  ("../layout/menu") %>
 
         <div id="mainV2">
-            <div class="sideNav slim">
-                <button type="button" class="sideNavToggleBtn">
+            <div class="sideNav">
+                <button type="button" class="sideNavToggleBtn" onclick="sideNavToggle()">
                 </button>
                 <h2>전적검색 (가로)</h2>
                 <div class="searchInputWrap">
                     <div>
-                        <button type="button" class="searchBtn"></button>
+                        <button type="button" class="searchBtn" onclick="searchInputToggle(event)"></button>
                         <input type="text" id="nickNames" class="searchInput" placeholder="아군으로 검색" aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
 <!--                        <button type="button" onClick="search('nickNames', 'con1_2');"></button>-->
                     </div>
@@ -375,7 +389,7 @@
 <!--                    <button class="iconBtn resetBtn" type="button" onClick="clearDivV2('con1_2');">초기화</button>-->
 <!--                </div>-->
                     <div>
-                        <button type="button" class="searchBtn"></button>
+                        <button type="button" class="searchBtn" onclick="searchInputToggle(event)"></button>
                         <input type="text" id="nickNames2" class="searchInput" placeholder="적팀으로 검색" aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
 <!--                        <button type="button" onClick="search('nickNames2', 'con2_2');"></button>-->
                     </div>

@@ -7,7 +7,8 @@
     background: #fff;
     height: calc(100vh - 80px);
     padding: 40px 16px;
-    color: #343a40
+    color: #343a40;
+    width: 247px;
 }
 .sideNav h2 {
     color: #343a40;
@@ -18,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: start;
+    width: 120px;
 }
 .sideNavToggleBtn {
     display: block;
@@ -41,6 +43,7 @@
     filter: invert(25%);
     top: 0;
     left: 0;
+    transition: 0.5s;
 }
 /*.closeSideNav span {*/
 /*    position: absolute;*/
@@ -125,8 +128,14 @@
 .searchInput#nickNames {
     background: rgba(224, 237, 255, 0.8);
 }
+.searchInput#nickNames:focus {
+    outline: 2px solid rgba(103, 150, 217, 0.8);
+}
 .searchInput#nickNames2 {
     background: rgba(255, 235, 235, 0.8);
+}
+.searchInput#nickNames2:focus {
+    outline: 2px solid rgba(236, 158, 158, 0.8);
 }
 /*.searchInput + button {*/
 /*    position: absolute;*/
@@ -175,7 +184,7 @@
 .gameModeCheck input.officialGameCheck::before {
     content: "";
     position: absolute;
-    width: 20px;
+    width: 22px;
     height: 6px;
     border-radius: 2px;
     left: 50%;
@@ -188,7 +197,7 @@
     position: absolute;
     width: 11px;
     height: 11px;
-    left: 22px;
+    left: 20px;
     top: 50%;
     transform: translate(-50%,-50%);
     border-radius: 50%;
@@ -237,7 +246,7 @@
     height: 40px;
     aspect-ratio: 56 / 40;
     cursor: pointer;
-    transition: 0.5s;
+    transition: background-color 0.5s;
     border-radius: 8px 0 0 8px;
 }
 .searchSettingCheck > input::before {
@@ -299,7 +308,8 @@
 }
 /*사이드바 토글*/
 .sideNav.slim {
-
+    width: 88px;
+    transition: width 0.5s;
 }
 .sideNav.slim .sideNavToggleBtn::before {
     transform: rotate(90deg);
@@ -308,31 +318,46 @@
     width: 56px;
     opacity: 0;
 }
+.sideNav.slim .searchBtn {
+    cursor: pointer;
+}
 .sideNav.slim .searchInput {
     position: absolute;
     left: 80px;
-    width: 144px;
+    width: 160px;
     padding: 0 0 0 8px;
+    display: none;
+}
+.sideNav.slim .searchInput.active {
+    display: block;
 }
 .sideNav.slim .gameModeCheck > label {
     position: absolute;
     left: 80px;
     width: 120px;
+    display: none;
+}
+.sideNav.slim .gameModeCheck:hover > label {
+    display: flex;
 }
 .sideNav.slim .searchSettingCheck > label {
     position: absolute;
     left: 80px;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }
-.sideNav.slim .iconBtn {
-    border-radius: 8px;
-    width: 120px;
+.sideNav.slim .searchSettingCheck:hover > label {
+    display: flex;
 }
 .sideNav.slim .searchSettingCheck > input {
     border-radius: 8px;
 }
 .sideNav.slim .searchInputWrap > div > .searchBtn {
     display: block;
+}
+.sideNav.slim .iconBtn {
+    border-radius: 8px;
+    width: 120px;
+    display: none;
 }

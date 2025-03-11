@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navListAll.forEach(item => {item.addEventListener('mousedown', navListClick);})
 
     // 4. 사이드메뉴 토글 (전적검색 - 가로 사용중)
-    function sideNavControl() {
-
+    function sideNavToggle() {
+        document.querySelector('.sideNav').classList.toggle('slim');
     }
 });
