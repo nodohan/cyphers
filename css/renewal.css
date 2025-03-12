@@ -3,12 +3,12 @@
 }
 .sideNav {
     position: absolute;
-    z-index: 1;
     background: #fff;
     height: calc(100vh - 80px);
     padding: 40px 16px;
     color: #343a40;
     width: 247px;
+    z-index: 1;
 }
 .sideNav h2 {
     color: #343a40;
@@ -72,7 +72,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    height: 84px;
 }
 .searchInputWrap > div {
     display: flex;
@@ -101,9 +100,25 @@
 }
 .searchInputWrap > div:has(.searchInput#nickNames) .searchBtn{
     background: rgba(224, 237, 255, 0.8);
+    z-index: 10;
 }
 .searchInputWrap > div:has(.searchInput#nickNames2) .searchBtn{
     background: rgba(255, 235, 235, 0.8);
+    z-index: 10;
+}
+.searchInputWrap > div:has(.searchInput)::before {
+    content: "";
+    position: absolute;
+    background-image: url("/image/searchIcon_small.svg");
+    background-size: cover;
+    width: 24px;
+    height: 24px;
+    left: 28px;
+    top: 50%;
+    transform : translate(-50%, -50%);
+    filter: invert(50%);
+    z-index: 1;
+    pointer-events : none;
 }
 .searchInput {
     height: 40px;
@@ -112,18 +127,6 @@
     padding: 0 0 0 56px;
     font-size: 14px;
     position: relative;
-}
-.searchInput::before {
-    content: "";
-    position: absolute;
-    background: red;
-    background-size: cover;
-    width: 24px;
-    height: 24px;
-    left: 50%;
-    top: 50%;
-    transform : translate(-50%, -50%);
-    filter: invert(25%);
 }
 .searchInput#nickNames {
     background: rgba(224, 237, 255, 0.8);
@@ -231,7 +234,7 @@
     justify-content: center;
     cursor: pointer;
     width: 100%;
-    transition: 0.5s ease;
+    transition: 0.5s;
     border-radius: 8px;
 }
 .searchSettingCheck {
@@ -316,7 +319,7 @@
 }
 .sideNav.slim h2 {
     width: 56px;
-    opacity: 0;
+    visibility: hidden;
 }
 .sideNav.slim .searchBtn {
     cursor: pointer;
@@ -324,7 +327,7 @@
 .sideNav.slim .searchInput {
     position: absolute;
     left: 80px;
-    width: 160px;
+    width: 180px;
     padding: 0 0 0 8px;
     display: none;
 }
@@ -334,7 +337,7 @@
 .sideNav.slim .gameModeCheck > label {
     position: absolute;
     left: 80px;
-    width: 120px;
+    width: 144px;
     display: none;
 }
 .sideNav.slim .gameModeCheck:hover > label {
@@ -358,6 +361,12 @@
 }
 .sideNav.slim .iconBtn {
     border-radius: 8px;
-    width: 120px;
+    width: 144px;
+    display: none;
+}
+.sideNav.slim .gameModeCheck:has(.officialGameCheck:checked) .normalGameCheck + label {
+    display: none;
+}
+.sideNav.slim .gameModeCheck:has(.normalGameCheck:checked) .officialGameCheck + label {
     display: none;
 }

@@ -358,14 +358,33 @@
             function sideNavToggle() {
                 document.querySelector('.sideNav').classList.toggle('slim');
             }
+
             function searchInputToggle(e) {
                 const parentDiv = e.target.closest('div'); // 클릭된 버튼의 부모 div 찾기
                 const searchInput = parentDiv.querySelector('.searchInput'); // 해당 div 내의 input 찾기
 
+                // 모든 활성화된 입력 필드를 닫음
+                document.querySelectorAll('.searchInput.active').forEach(input => {
+                    input.classList.remove('active');
+                });
+
+                // 현재 클릭한 버튼의 input만 토글 (닫힌 상태라면 다시 활성화)
                 searchInput.classList.toggle('active');
 
                 if (searchInput.classList.contains('active')) {
                     searchInput.focus();
+                    document.addEventListener('click', outsideClickListener);
+                }
+            }
+
+            function outsideClickListener(e) {
+                // 클릭한 요소가 검색 버튼이나 입력 필드가 아니라면 모든 입력 필드를 닫음
+                if (!e.target.classList.contains('searchBtn') && !e.target.classList.contains('searchInput')) {
+                    document.querySelectorAll('.searchInput.active').forEach(input => {
+                        input.classList.remove('active');
+                    });
+
+                    document.removeEventListener('click', outsideClickListener); // 이벤트 제거
                 }
             }
         </script>
