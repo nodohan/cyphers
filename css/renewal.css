@@ -1,3 +1,6 @@
+.renewalBody {
+    background: #f4f6f7;
+}
 .mainV2 {
     position: relative;
 }
@@ -19,7 +22,6 @@
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 120px;
 }
 .sideNavToggleBtn {
     display: block;
