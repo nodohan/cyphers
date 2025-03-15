@@ -29,12 +29,11 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-
     //  url = "/user/userSearch_vertical"
     app.get('/userSearch_vertical', function(req, res) {
         //모바일은 지원하지 않음
         commonUtil.getIp(req);
-        res.render('./pc/userSearch_vertical', { 'searchNickname': req.query.nickname });
+        res.render('./pc/userSearch_vertical', { 'searchNickname': req.query.nickname, 'bootRemove' : true });
     });
 
     //  url = "/user/userDetail"
