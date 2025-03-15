@@ -95,7 +95,7 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션별 
-                drawPosition(clone, rows, data.nickname);
+                drawPosition(clone, rows, data.nickname, drawCard2025);
 
                 //최근 10경기 결과
                 drawRecently(clone, rows, userDivId);
@@ -387,6 +387,53 @@
                     document.removeEventListener('click', outsideClickListener); // 이벤트 제거
                 }
             }
+
+            const drawCard2025 = (div, type, typeId, positionName, nickname) => {
+                let isMap = div.parent().hasClass("mapCard");
+                let mapName = div.parent().data("mapname");
+
+                let imgUrl = "http://static.cyphers.co.kr/img/game_position/";
+                switch(typeId){
+                    case "tanker" : imgUrl += "position1.jpg";  break;
+                    case "melee" : imgUrl += "position2.jpg";  break;
+                    case "ad" : imgUrl += "position3.jpg";  break;
+                    case "supp" : imgUrl += "position4.jpg";  break;
+                }
+
+                let infoStr = "0% <br><small class='text-muted'> 0승 0패</small>";
+
+                if (type != null) {
+                    const gameType = $("input[name='gameType']:checked").val();
+                    const modalId = `pop${nickname}_${gameType}_${typeId}_modal`;
+                    const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
+                    let moreAlink;
+                    if(isMap) {
+                        moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
+                    } else {
+                        moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+                    }
+                    
+                    infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br><small class='text-muted'>${type.rateInfo}</small>`;
+                }
+
+                $(div).append(`
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-md-5">
+                                <img src="${imgUrl}">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <p id="tankerSpan" class="card-text">${infoStr}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+            }
+
+
+
+
         </script>
 </head>
 

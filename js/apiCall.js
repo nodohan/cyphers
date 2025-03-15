@@ -175,7 +175,7 @@ function asyncUserInfo(gameType, nickName) {
     return result;
 }
 
-function drawPosition(div, rows, nickname) {
+function drawPosition(div, rows, nickname, drawFuncCall) {
     let tanker = extractPlayType(rows, "탱커");
     let ad = extractPlayType(rows, "원거리딜러");
     let melee = extractPlayType(rows, "근거리딜러");
@@ -184,10 +184,12 @@ function drawPosition(div, rows, nickname) {
     //포지션별 승률
     const positionDiv = $(div).find("#positionDiv");
     positionDiv.empty();
-    appendPlayTypeInfo(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
-    appendPlayTypeInfo(positionDiv, melee, "melee", "근거리딜러", nickname);
-    appendPlayTypeInfo(positionDiv, ad, "ad", "원거리딜러", nickname);
-    appendPlayTypeInfo(positionDiv, supp, "supp", "서포터", nickname);
+
+    const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
+    drawFunc(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
+    drawFunc(positionDiv, melee, "melee", "근거리딜러", nickname);
+    drawFunc(positionDiv, ad, "ad", "원거리딜러", nickname);
+    drawFunc(positionDiv, supp, "supp", "서포터", nickname);
 }
 
 function isDuplicate(gameType, nickName) {
