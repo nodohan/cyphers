@@ -420,5 +420,11 @@
     grid-template-columns: 1fr 1fr;
     padding: 8px;
 }
+.positionWrap {
+    display: flex;
+}
+.mostWrap > div {
+    display: flex;
+}
 /*grid-column-start: 1;*/
 /*grid-column-end: 3;*/

@@ -185,7 +185,8 @@ function drawPosition(div, rows, nickname, drawFuncCall) {
     const positionDiv = $(div).find("#positionDiv");
     positionDiv.empty();
 
-    const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
+    // const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
+    const drawFunc = drawFuncCall;
     drawFunc(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
     drawFunc(positionDiv, melee, "melee", "근거리딜러", nickname);
     drawFunc(positionDiv, ad, "ad", "원거리딜러", nickname);

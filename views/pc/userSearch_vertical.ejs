@@ -429,18 +429,16 @@
             }
 
             $(div).append(`
-                    <div class="">
-                        <div class="">
+                        <div class="positionWrap">
                             <div class="">
-                                <img src="${imgUrl}">
+                                <img src="${imgUrl}" alt="">
                             </div>
                             <div class="">
                                 <div class="">
                                     <p id="tankerSpan" class="">${infoStr}</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>`);
+                        </div>`);
         }
 
 
@@ -537,7 +535,7 @@
 
     <!-- 포지션별 승률 -->
     <div id="positionDiv" class="positionDiv">
-        <div id="positionTanker" class="width50p floatLeft">
+        <div id="positionTanker" class="width50p">
             <div class="">
                 <div class="">
                     <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
@@ -550,7 +548,7 @@
             </div>
         </div>
 
-        <div id="positionMelee" class="width50p floatLeft">
+        <div id="positionMelee" class="width50p">
             <div class="">
                 <div class="">
                     <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
@@ -563,7 +561,7 @@
             </div>
         </div>
 
-        <div id="positionAd" class="width50p floatLeft">
+        <div id="positionAd" class="width50p">
             <div class="">
                 <div class="">
                     <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
@@ -576,7 +574,7 @@
             </div>
         </div>
 
-        <div id="positionSupp" class="width50p floatLeft">
+        <div id="positionSupp" class="width50p">
             <div class="">
                 <div class="">
                     <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
@@ -591,12 +589,12 @@
     </div>
 
     <!-- 자주하는 캐릭-->
-    <div id="mostCharDiv" class="mostCharDiv">
-        <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+    <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+    <div id="mostCharDiv" class="mostCharDiv mostWrap">
         <div id="mostCharDetailDiv" class="mostCharDetailDivV2">
-            <div id="cardTemp" class="card floatLeft" hidden>
+            <div id="cardTemp" class="" hidden>
                 <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                <div class="card-body">
+                <div class="">
                     <p id="tankerSpan" class="">57% <br> <small class="">79승 60패</small></p>
                 </div>
             </div>
