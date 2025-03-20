@@ -372,3 +372,53 @@
 .sideNav.slim .gameModeCheck:has(.normalGameCheck:checked) .officialGameCheck + label {
     display: none;
 }
+.cardLayout {
+    display: grid;
+}
+.cardLayout > #defaultDiv {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    display: grid;
+    margin: 8px;
+    gap: 4px;
+}
+.cardLayout > #defaultDiv > div {
+    border: 1px solid;
+}
+.cardLayout .cardNameWrap {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+.cardLayout .playParty {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+.cardLayout .cardNameWrap > span {
+
+}
+.fullFr {
+    grid-column: span 12 !important;
+    border: 1px solid;
+}
+.halfFr {
+    grid-column: span 6 !important;
+    border: 1px solid;
+}
+.quarterFr {
+    grid-column: span 3 !important;
+    border: 1px solid;
+}
+.doubleFr {
+    grid-column: span 2 !important;
+    border: 1px solid;
+}
+.positionDiv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 8px;
+}
+/*grid-column-start: 1;*/
+/*grid-column-end: 3;*/
