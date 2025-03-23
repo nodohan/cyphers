@@ -374,15 +374,15 @@
 }
 .cardLayout {
     display: grid;
+    padding: 8px;
+    font-size: 12px;
 }
 .cardLayout > #defaultDiv {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     display: grid;
-    margin: 8px;
     gap: 4px;
 }
 .cardLayout > #defaultDiv > div {
-    border: 1px solid;
 }
 .cardLayout .cardNameWrap {
     display: grid;
@@ -401,30 +401,33 @@
 }
 .fullFr {
     grid-column: span 12 !important;
-    border: 1px solid;
 }
 .halfFr {
     grid-column: span 6 !important;
-    border: 1px solid;
 }
 .quarterFr {
     grid-column: span 3 !important;
-    border: 1px solid;
 }
 .doubleFr {
     grid-column: span 2 !important;
-    border: 1px solid;
 }
 .positionDiv {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 8px;
+    padding: 4px 0;
 }
 .positionWrap {
     display: flex;
 }
 .mostWrap > div {
     display: flex;
+    margin: 4px 0 0 0;
+}
+.mostTitle {
+}
+.mostCharItem {
+    display: flex;
+    gap: 4px;
 }
 /*grid-column-start: 1;*/
 /*grid-column-end: 3;*/

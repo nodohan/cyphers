@@ -467,7 +467,7 @@ function winLoseKo(result) {
 
 function drawOften(div, info, drawCharFunc, nickname) {
     let count = Math.min(isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8, info.length);
-    let rowCount = isMobile ? 6 : 8;
+    let rowCount = isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8;
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (let i = 0; i < count; i++) {
