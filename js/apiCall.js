@@ -814,6 +814,7 @@ function playGameList(findId, div, nickname, showType, modalId) {
     } else if (findId != 'all') {
         rows = rows.filter(row => row.playInfo.characterId == findId);
     }
+    rows.sort(sortDate);
 
     let clone = $("#templateModal").clone();
     const kindNmae = showType == 'position' ? findId : rows[0].playInfo.characterName;
