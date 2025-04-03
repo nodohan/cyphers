@@ -12,7 +12,7 @@ header a {
 
 /* header */
 header {
-    height: 80px;
+    height: 64px;
     display: flex;
     border-bottom: 1px solid #fff;
     background: #343a40;
@@ -34,7 +34,7 @@ header::before {
     overflow: hidden;
 }
 header.active::before {
-    height: 240px;
+    height: 200px;
     opacity: 1;
 }
 header h1 {
@@ -67,9 +67,9 @@ header nav > ul > li:not(:last-of-type)::before {
 header nav > ul > li > a {
     position: relative;
     display: block;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
-    line-height: 80px;
+    line-height: 64px;
     padding: 0 20px;
     transition: 0.5s;
     margin: 0 auto;
@@ -108,15 +108,15 @@ header nav > ul > li > ul {
     opacity: 0;
 }
 header.active nav > ul > li > ul {
-    height: 240px;
-    padding: 20px 0;
+    height: 200px;
+    padding: 12px 0;
     opacity: 1;
 }
 header nav > ul > li > ul > li {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
+    height: 44px;
     position: relative;
 }
 header nav > ul > li > ul > li > a {
