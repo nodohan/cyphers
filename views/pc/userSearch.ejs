@@ -398,45 +398,45 @@
     <%- include  ("../layout/leftBanner") %>
 
         <div id="mainUserSearch">
-            <div class="top" >
-            
-                <div class="btn-group btn-group-toggle floatLeft" data-bs-toggle="buttons">
-                    <label class="btn btn-light active">
-                      <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
-                    </label>
-                    <label class="btn btn-light">
-                        <input type="radio" name="gameType" id="gameType_normal" value="normal" /> 일반
-                    </label>
+            <div class="divContainer" >
+                <div class="topUserSearch box box1">
+                    <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                        <label class="btn btn-light active">
+                          <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
+                        </label>
+                        <label class="btn btn-light">
+                            <input type="radio" name="gameType" id="gameType_normal" value="normal" /> 일반
+                        </label>
+                    </div>
+    
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="positionShow" checked>
+                            <label class="form-check-label" for="positionShow">포지션 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="partyShow" checked>
+                            <label class="form-check-label" for="partyShow">파티 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
+                            <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="recentShow" checked>
+                            <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="tackShow" checked>
+                            <label class="form-check-label" for="tackShow">고정탭 노출</label>
+                        </div>                    
+                    </div>
                 </div>
-
-                <div class="width85">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="positionShow" checked>
-                        <label class="form-check-label" for="positionShow">포지션 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="partyShow" checked>
-                        <label class="form-check-label" for="partyShow">파티 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="mostCharShow" checked>
-                        <label class="form-check-label" for="mostCharShow">자주하는 캐릭 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="recentShow" checked>
-                        <label class="form-check-label" for="recentShow">최근 10게임 노출</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="tackShow" checked>
-                        <label class="form-check-label" for="tackShow">고정탭 노출</label>
-                    </div>
-                </div>
-            </div>
 
                 <div id="topHistory" class="box box2 topHistory" ></div>
 
                 <div id="drop-zone" class="box box3">이미지를 이곳에 <br> 드래그 앤 드롭하세요</div>
-            </div>            
+            </div>               
 
             <div id="con1" class="con">
                 <h3>우리팀<span class="red gameTypeText"></span></h3>
