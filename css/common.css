@@ -38,13 +38,29 @@ img {
     border-radius: 7px;
 }
 
+
+
+.topUserSearch {
+    margin-top: 10px;
+    float: left;
+    margin-left: 20px;
+    padding: 15px;
+    position: relative;
+    width: 1120px;
+    height: 52px;
+    /* background-color: white; */
+    background-color: #fff4e7;    
+    border-radius: 7px;
+}
+
 .topHistory {
     margin-top: 10px;
     float: left;
     margin-left: 20px;
     padding: 15px;
     position: relative;
-    width: 77%;
+    /* width: 77%; */
+    width: 1120px;
     min-height: 52px;
     background-color: #fff4e7;    
     border-radius: 7px;
@@ -724,3 +740,40 @@ table td {
     width: 32px;
     height: 35px;
 }
+
+
+  #drop-zone {
+    width: 300px;    
+    border: 3px dashed #999;
+    border-radius: 10px;    
+    text-align: center;    
+    font-size: 18px;
+    color: #444;
+    background: #f9f9f9;
+  }
+  #drop-zone.dragover {
+    background-color: #def;
+  }
+
+  .divContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px; /* 박스 사이 간격 (선택 사항) */    
+  }
+  
+  .box1 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  .box2 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  
+  .box3 {
+    grid-column: 2;
+    grid-row: 1 / span 2; /* 1~2행을 병합해서 세로로 긴 박스 */
+  }
+  
