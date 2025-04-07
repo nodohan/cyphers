@@ -77,12 +77,12 @@
 
             const visibleTackDiv = () => {
                 if ($("#tackShow").is(":checked")) {
-                    $("#mainUserSearch").css("width", "88%");
-                    $(".top").css("width", "88%");
+                    //$("#mainUserSearch").css("width", "88%");
+                    //$(".top").css("width", "88%");
                     $("#con3").show();
                 } else {
-                    $("#mainUserSearch").css("width", "77%");
-                    $(".top").css("width", "77%");
+                    // $("#mainUserSearch").css("width", "77%");
+                    // $(".top").css("width", "77%");
                     $("#con3").hide();
                 }
             }
@@ -331,6 +331,63 @@
                 alert(info);
             }
 
+            $(function () {
+                const $dropZone = $('#drop-zone');
+                const $result = $('#result');
+
+                // 드래그 오버
+                $dropZone.on('dragover', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).addClass('dragover');
+                });
+
+                // 드래그 리브
+                $dropZone.on('dragleave', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).removeClass('dragover');
+                });
+
+                // 드롭
+                $dropZone.on('drop', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).removeClass('dragover');
+
+                    const file = e.originalEvent.dataTransfer.files[0];
+                    if (!file) return;
+
+                    // 미리보기 또는 업로드 처리
+                    uploadImage(file);
+                });
+
+                function uploadImage(file) {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                $result.text('업로드 중...');
+
+                $.ajax({
+                    url: '/user/getOcrNames',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                    if (data.nicknames && data.nicknames.length > 0) {
+                        $result.html('<b>추출된 닉네임:</b><br>' + data.nicknames.map(n => '- ' + n).join('<br>'));
+                    } else {
+                        $result.text('닉네임을 찾을 수 없습니다.');
+                    }
+                    },
+                    error: function (xhr, status, err) {
+                    console.error(err);
+                    $result.text('업로드 실패 😥');
+                    }
+                });
+                }
+            });
         </script>
 </head>
 
@@ -343,7 +400,7 @@
         <div id="mainUserSearch">
             <div class="top" >
             
-                <div class="btn-group btn-group-toggle floatLeft" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle floatLeft" data-bs-toggle="buttons">
                     <label class="btn btn-light active">
                       <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
                     </label>
@@ -376,7 +433,10 @@
                 </div>
             </div>
 
-            <div id="topHistory" class="topHistory" ></div>
+                <div id="topHistory" class="box box2 topHistory" ></div>
+
+                <div id="drop-zone" class="box box3">이미지를 이곳에 <br> 드래그 앤 드롭하세요</div>
+            </div>            
 
             <div id="con1" class="con">
                 <h3>우리팀<span class="red gameTypeText"></span></h3>

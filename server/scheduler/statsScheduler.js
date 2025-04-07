@@ -53,7 +53,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let todayStr = commonUtil.getYYYYMMDD(statsDate, false);
         let startDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(statsDate, statsType == "W" ? -7 : -30), false);
         let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";
-        let totalCount = combiType == "ATTACK" ? 15 : 30;
+        let totalCount = combiType == "ATTACK" ? 10 : 30;
 
         let query = ` INSERT INTO match_stats  
                         SELECT 
