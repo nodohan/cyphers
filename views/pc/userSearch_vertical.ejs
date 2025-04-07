@@ -29,18 +29,18 @@
             $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
         }
 
-        function clearDivV2(divId) {
-            //'infoDivV3Temp'
-            let className = "infoDivV2Temp";
-            let imgName = 'infoDivV2TempImg';
-            if (divId == 'con2_2') {
-                className = "infoDivV3Temp";
-                imgName = 'infoDivV3TempImg';
-            }
-            let tempInfo = `<div class="${className}"><div class='${imgName}'></div></div>`;
-            $("#" + divId).empty();
-            $("#" + divId).append(tempInfo + tempInfo + tempInfo + tempInfo + tempInfo);
-        }
+        // function clearDivV2(divId) {
+        //     //'infoDivV3Temp'
+        //     let className = "infoDivV2Temp";
+        //     let imgName = 'infoDivV2TempImg';
+        //     if (divId == 'con2_2') {
+        //         className = "infoDivV3Temp";
+        //         imgName = 'infoDivV3TempImg';
+        //     }
+        //     let tempInfo = `<div class="${className}"><div class='${imgName}'></div></div>`;
+        //     $("#" + divId).empty();
+        //     $("#" + divId).append(tempInfo + tempInfo + tempInfo + tempInfo + tempInfo);
+        // }
 
         function getCookie() {
             setCheckbox('partyShow', Cookies.get('playParty'));
@@ -449,7 +449,7 @@
 <%- include ("../layout/menu") %>
 
 <div id="mainV2">
-    <div class="sideNav">
+    <div class="sideNav slim">
         <button type="button" class="sideNavToggleBtn" onclick="sideNavToggle()">
         </button>
         <h2>전적검색 (가로)</h2>
@@ -504,7 +504,128 @@
             </div>
         </div>
     </div>
+    <div id="con1" class="conUserV2">
+        <div id="con1_2" class="infoLayerV2"><div id="김치맹_rating" class="infoDivV2 cardLayout" style=""> <!--grid 12column-->
+                <div id="defaultDiv">
+                    <div class="cardHeaderWrap">
+                        <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
+                        <div class="width100p cardNameWrap halfFr"> <!--6fr-->
+                            <div class="halfFr">
+                                <span id="levelDiv" class="cardUserLevel ">77급 </span>
+                                <span id="clanDiv" class="cardUserClan">누비누비</span>
+                            </div>
+                            <span id="nickNameDiv" class="cardUserName halfFr">김치맹 <a href="javascript:nickHistory(&quot;4a44d0ebb7e97aa8885f3ed4c1e0c245&quot;);"><i class="red fas fas fa-heading"></i></a></span>
+                            <span id="tierName" class="halfFr JOKER 3RD">JOKER 3RD</span>
+                            <div class="halfFr">
+                                <span id="currRP" class="bold">1746</span>
+                                <span id="maxRP" class="">(1797)</span>
+                            </div>
+                        </div>
+                        <div id="playParty" class="playParty width100p halfFr">
+                            <b class="halfFr">솔플</b>
+                            <div class="halfFr"><b class="">122전</b><b class="">71승</b><b class="">51패</b></div>
+                            <b class="halfFr">파티</b><div class="halfFr"><b class="doubleFr">4전</b><b class="doubleFr">1승</b><b class="doubleFr">3패</b></div>
+                            <div class="row" style="display: none"></div><div class="collapse multi-collapse" id="two김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody><tr><th scope="row"> <a href="#" onclick="partyUserSearch(this);">고수달</a></th><td>4</td><td>1</td><td>3</td><td>25%</td></tr></tbody></table></div><div class="collapse multi-collapse" id="three김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div><div class="collapse multi-collapse" id="five김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div>
+                        </div>
+                    </div>
 
+                    <div class="width100p fullFr">
+                        <div id="playGameDiv">승률 : 57% [128전 72승 55패 1중단]</div>
+                    </div>
+                </div>
+
+                <!-- 포지션별 승률 -->
+                <div id="positionDiv" class="positionDiv">
+                    <div class="positionWrap halfFr">
+                        <div class="positionWrapImg doubleFr">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg" alt="">
+                        </div>
+                        <div class="positionWrapText quadrupleFr">
+                            <div class="">
+                                <p id="tankerSpan" class="">51% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_tanker_modal" onclick="javascript:playGameList('탱커', null, '김치맹', 'position', 'pop김치맹_rating_tanker_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">34승 33패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="positionWrap halfFr">
+                        <div class="positionWrapImg doubleFr">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg" alt="">
+                        </div>
+                        <div class="positionWrapText quadrupleFr">
+                            <div class="">
+                                <p id="tankerSpan" class="">59% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_melee_modal" onclick="javascript:playGameList('근거리딜러', null, '김치맹', 'position', 'pop김치맹_rating_melee_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">26승 18패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="positionWrap halfFr">
+                        <div class="positionWrapImg doubleFr">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg" alt="">
+                        </div>
+                        <div class="positionWrapText quadrupleFr">
+                            <div class="">
+                                <p id="tankerSpan" class="">50% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_ad_modal" onclick="javascript:playGameList('원거리딜러', null, '김치맹', 'position', 'pop김치맹_rating_ad_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">1승 1패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="positionWrap halfFr">
+                        <div class="positionWrapImg doubleFr">
+                            <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg" alt="">
+                        </div>
+                        <div class="positionWrapText quadrupleFr">
+                            <div class="">
+                                <p id="tankerSpan" class="">85% <a href="#" data-toggle="modal" data-target="#pop김치맹_rating_supp_modal" onclick="javascript:playGameList('서포터', null, '김치맹', 'position', 'pop김치맹_rating_supp_modal' );"><i class="fa fa-search-plus" style="font-size:15px;color:black;"></i></a><br><small class="text-muted">11승 2패</small></p>
+                            </div>
+                        </div>
+                    </div></div>
+
+                <!-- 자주하는 캐릭-->
+                <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP6</div>
+                <div id="mostCharDiv" class="mostCharDiv mostWrap">
+                    <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
+                        <div id="cardTemp" class="" hidden="">
+                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">57% <br> <small class="">79승 60패</small></p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/f3f7129ae7ea788755fc16f938523652">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">67% <br> <small class="text-muted">20승<br> 10패</small></p>
+                            </div>
+                        </div><div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/cf6008394ebfb5d0de83fa05834018db">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">63% <br> <small class="text-muted">12승<br> 7패</small></p>
+                            </div>
+                        </div><div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/c603a74ba02374026a535dc53e5b8d40">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">85% <br> <small class="text-muted">11승<br> 2패</small></p>
+                            </div>
+                        </div><div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/627db8b10d95ba73f0d2765130430454">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">33% <br> <small class="text-muted">4승<br> 8패</small></p>
+                            </div>
+                        </div><div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/29863fca436fc32196f3b07b1b80d6eb">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">36% <br> <small class="text-muted">4승<br> 7패</small></p>
+                            </div>
+                        </div><div class="">
+                            <img class="card-img-top" src="https://img-api.neople.co.kr/cy/characters/1e2129fcb1eebba2101ee5de6c4b168a">
+                            <div class="">
+                                <p id="tankerSpan" class="card-text">50% <br> <small class="text-muted">3승<br> 3패</small></p>
+                            </div>
+                        </div></div>
+                </div>
+                <div id="recentlyDiv" class="width100p recentlyDiv">
+                    <div class="width100p recentGame" id="recentlyDivTitle">최근 게임:
+                        <!--최근 10게임 -->
+                        <span class="red">승</span> <span class="blue">패</span> <span class="blue">패</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <span class="blue">패</span> <span class="red">승</span> <a data-toggle="modal" data-target="#pop김치맹_ratingModal">&nbsp;<i class="fa fa-search-plus" style="font-size:15px;color:black"></i></a></div>
+                </div>
+            </div><div class="infoDivV2Temp"><div class="infoDivV2TempImg"></div></div><div class="infoDivV2Temp"><div class="infoDivV2TempImg"></div></div><div class="infoDivV2Temp"><div class="infoDivV2TempImg"></div></div><div class="infoDivV2Temp"><div class="infoDivV2TempImg"></div></div></div>
+    </div>
     <div id="con1" class="conUserV2">
         <div id="con1_2" class="infoLayerV2">
 
@@ -518,20 +639,22 @@
 <div id="template" class="infoDivV2 cardLayout" style="display:none"> <!--grid 12column-->
     <div id="defaultDiv">
         <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
-        <div class="width100p cardNameWrap halfFr"> <!--6fr-->
-            <div class="halfFr">
-                <span id="levelDiv" class="cardUserLevel "></span>
-                <span id="clanDiv" class="cardUserClan"></span>
+        <div class="cardHeaderWrap">
+            <div class="width100p cardNameWrap halfFr"> <!--6fr-->
+                <div class="halfFr">
+                    <span id="levelDiv" class="cardUserLevel "></span>
+                    <span id="clanDiv" class="cardUserClan"></span>
+                </div>
+                <span id="nickNameDiv" class="cardUserName halfFr"></span>
+                <span id="tierName" class="halfFr"></span>
+                <div class="halfFr">
+                    <span id="currRP" class="bold"></span>
+                    <span id="maxRP" class=""></span>
+                </div>
             </div>
-            <span id="nickNameDiv" class="cardUserName halfFr"></span>
-            <span id="tierName" class="halfFr"></span>
-            <div class="halfFr">
-                <span id="currRP" class="bold"></span>
-                <span id="maxRP" class=""></span>
-            </div>
-        </div>
-        <div id="playParty" class="playParty width100p halfFr">
+            <div id="playParty" class="playParty width100p halfFr">
 
+            </div>
         </div>
         <div class="width100p fullFr">
             <div id="playGameDiv"></div>
@@ -606,7 +729,7 @@
         </div>
     </div>
     <div id="recentlyDiv" class="width100p recentlyDiv">
-        <div class="width100p" id="recentlyDivTitle">
+        <div class="width100p recentGame" id="recentlyDivTitle">
             <!--최근 10게임 -->
         </div>
     </div>

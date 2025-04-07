@@ -373,29 +373,20 @@
     display: none;
 }
 .cardLayout {
-    display: grid;
     padding: 8px;
     font-size: 12px;
     background: #fff;
 }
 .cardLayout > #defaultDiv {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    display: grid;
-    gap: 4px;
 }
 .cardLayout > #defaultDiv > div {
 }
 .cardLayout .cardNameWrap {
-    display: grid;
-    gap: 4px;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+.cardLayout .cardHeaderWrap {
+    display: flex;
 }
 .cardLayout .playParty {
-    display: grid;
-    gap: 4px;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 .cardLayout .cardNameWrap > span {
 
@@ -423,6 +414,7 @@
     display: grid;
     gap: 4px;
     margin: 4px 0;
+    float: none;
 }
 .positionWrap {
     display: grid;
@@ -436,15 +428,27 @@
 .positionWrap .positionWrapText {
 
 }
+.mostWrap {
+    margin: 4px 0
+}
 .mostWrap > div {
-    display: flex;
+    display: grid;
     margin: 4px 0 0 0;
+    gap: 4px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.mostWrap img {
+    width: 100%;
+    border-radius: 0;
 }
 .mostTitle {
 }
 .mostCharItem {
-    display: flex;
-    gap: 4px;
 }
-/*grid-column-start: 1;*/
-/*grid-column-end: 3;*/
+.recentGame {
+    display: flex;
+    justify-content: space-between;
+}
+.recentGame > span {
+    margin: 0;
+}
