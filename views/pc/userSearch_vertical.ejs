@@ -135,7 +135,7 @@
             }
 
             let tot = rating.winCount + rating.loseCount + rating.stopCount;
-            $(clone).find("#playGameDiv").text(`승률 : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);
+            $(clone).find("#playGameDiv").append(`<p>전체 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단</p>`);
         }
 
         function getTierColerName(span, tierName) {
@@ -178,8 +178,8 @@
             let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
             let partyAllCnt = partyJson.all.win + partyJson.all.lose;
 
-            clone.append(`<b class='halfFr'>솔플</b><div class="halfFr"><b class="">${soloAllCnt}전</b><b class="">${partyJson.solo.win}승</b><b class="">${partyJson.solo.lose}패</b></div>`);
-            clone.append(`<b class='halfFr'>파티</b><div class="halfFr"><b class="doubleFr">${partyAllCnt}전</b><b class="doubleFr">${partyJson.all.win}승</b><b class="doubleFr">${partyJson.all.lose}패</b></div>`);
+            clone.append(`<b>솔플</b><div><b>${partyJson.solo.win}승</b><b>${partyJson.solo.lose}패</b></div>`);
+            clone.append(`<b>파티</b><div><b>${partyJson.all.win}승</b><b>${partyJson.all.lose}패</b></div>`);
 
             //let moreIcon = '<i class="fa fa-search" style="font-size:15px;color:red"></i>';
             let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
@@ -506,31 +506,48 @@
     </div>
     <div id="con1" class="conUserV2">
         <div id="con1_2" class="infoLayerV2"><div id="김치맹_rating" class="infoDivV2 cardLayout" style=""> <!--grid 12column-->
+                <div class="overlay"></div>
                 <div id="defaultDiv">
-                    <div class="cardHeaderWrap">
-                        <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
-                        <div class="width100p cardNameWrap halfFr"> <!--6fr-->
-                            <div class="halfFr">
-                                <span id="levelDiv" class="cardUserLevel ">77급 </span>
-                                <span id="clanDiv" class="cardUserClan">누비누비</span>
+                    <div class="cardHeader joker">
+                        <div class="infoDefalut">
+                            <section>
+                                <div class="cardGrade">
+                                    <span id="levelDiv" class="cardUserLevel ">77급 </span>
+                                    <span id="clanDiv" class="cardUserClan">누비누비</span>
+                                </div>
+                                <div class="cardNick">
+                                    <span id="nickNameDiv" class="cardUserName">김치맹 <a href="javascript:nickHistory(&quot;4a44d0ebb7e97aa8885f3ed4c1e0c245&quot;);"><i class="red fas fas fa-heading"></i></a></span>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="cardTier">
+                                    <span id="tierName" class="JOKER 3RD">JOKER 3RD</span>
+                                </div>
+                                <div class="cardRp">
+                                    <span id="currRP">1746</span>
+                                    <span id="maxRP">(1797)</span>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="infoWinrate">
+                            <div id="playGameDiv" class="">
+                                <div>
+                                    <p>승률 57%</p>
+                                    <b>72승 55패 1중단</b>
+                                </div>
                             </div>
-                            <span id="nickNameDiv" class="cardUserName halfFr">김치맹 <a href="javascript:nickHistory(&quot;4a44d0ebb7e97aa8885f3ed4c1e0c245&quot;);"><i class="red fas fas fa-heading"></i></a></span>
-                            <span id="tierName" class="halfFr JOKER 3RD">JOKER 3RD</span>
-                            <div class="halfFr">
-                                <span id="currRP" class="bold">1746</span>
-                                <span id="maxRP" class="">(1797)</span>
+                            <div id="playParty" class="playParty">
+                                <div>
+                                    <p>솔플 57%</p>
+                                    <b>71승</b><b>51패</b>
+                                </div>
+                                <div>
+                                    <p>파티 57%</p>
+                                    <b>1승</b><b>3패</b>
+                                </div>
+                                <div class="row" style="display: none"></div><div class="collapse multi-collapse" id="two김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody><tr><th scope="row"> <a href="#" onclick="partyUserSearch(this);">고수달</a></th><td>4</td><td>1</td><td>3</td><td>25%</td></tr></tbody></table></div><div class="collapse multi-collapse" id="three김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div><div class="collapse multi-collapse" id="five김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div>
                             </div>
                         </div>
-                        <div id="playParty" class="playParty width100p halfFr">
-                            <b class="halfFr">솔플</b>
-                            <div class="halfFr"><b class="">122전</b><b class="">71승</b><b class="">51패</b></div>
-                            <b class="halfFr">파티</b><div class="halfFr"><b class="doubleFr">4전</b><b class="doubleFr">1승</b><b class="doubleFr">3패</b></div>
-                            <div class="row" style="display: none"></div><div class="collapse multi-collapse" id="two김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody><tr><th scope="row"> <a href="#" onclick="partyUserSearch(this);">고수달</a></th><td>4</td><td>1</td><td>3</td><td>25%</td></tr></tbody></table></div><div class="collapse multi-collapse" id="three김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div><div class="collapse multi-collapse" id="five김치맹_rating"><table class="table"> <thead class="thead-dark"><tr><th scope="col">파티원</th><th scope="col">겜수</th><th scope="col">승</th><th scope="col">패</th><th scope="col">승률</th></tr></thead><tbody></tbody></table></div>
-                        </div>
-                    </div>
-
-                    <div class="width100p fullFr">
-                        <div id="playGameDiv">승률 : 57% [128전 72승 55패 1중단]</div>
                     </div>
                 </div>
 

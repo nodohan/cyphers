@@ -34,3 +34,21 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+.fullFr {
+    grid-column: span 12 !important;
+}
+.halfFr {
+    grid-column: span 6 !important;
+}
+.quarterFr {
+    grid-column: span 3 !important;
+}
+.quadrupleFr {
+    grid-column: span 4 !important;
+}
+.doubleFr {
+    grid-column: span 2 !important;
+}
+.singleFr {
+    grid-column: span 1 !important;
+}

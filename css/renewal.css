@@ -374,41 +374,43 @@
 }
 .cardLayout {
     padding: 8px;
-    font-size: 12px;
-    background: #fff;
+    font-size: 14px;
+    background: #fff4e7;
+    position: relative;
 }
-.cardLayout > #defaultDiv {
+.cardLayout .overlay {
+    position: absolute;
+    background-image: url('/image/mostIcon.svg');
+    background-size: 30px 30px;
+    background-position: 15px 15px;
+    mix-blend-mode: overlay;
+    filter: hue-rotate(120deg) saturate(200%);
+    pointer-events: none;
+    width: 50%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid;
+    border-radius: 50%;
 }
-.cardLayout > #defaultDiv > div {
-}
-.cardLayout .cardNameWrap {
-}
-.cardLayout .cardHeaderWrap {
+.cardLayout .cardHeader {
     display: flex;
 }
-.cardLayout .playParty {
+.cardLayout .cardHeader > div {
+    flex: 1;
+ }
+.cardLayout .cardHeader .infoDefalut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
-.cardLayout .cardNameWrap > span {
-
+.cardLayout .cardHeader .cardUserName {
+    font-size: 20px;
 }
-.fullFr {
-    grid-column: span 12 !important;
+.cardLayout .cardHeader .cardTier {
+    font-size: 18px;
 }
-.halfFr {
-    grid-column: span 6 !important;
-}
-.quarterFr {
-    grid-column: span 3 !important;
-}
-.quadrupleFr {
-    grid-column: span 4 !important;
-}
-.doubleFr {
-    grid-column: span 2 !important;
-}
-.singleFr {
-    grid-column: span 1 !important;
-}
+.cardLayout .cardHeader .cardparty {}
 .positionDiv {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     display: grid;
