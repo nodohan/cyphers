@@ -375,21 +375,24 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                    if (data.nicknames && data.nicknames.length > 0) {
-                        const nicknames = data.nicknames.join(" ");
-                        $("#nickNames").val(nicknames);
-                        search('nickNames', 'con1_2');
-                    } else {
-                        alert('닉네임을 찾을 수 없습니다.');
-                    }
+                        inferSearch(data.teamA.join(" "), 'con1_2');
+                        inferSearch(data.teamB.join(" "), 'con2_2');
                     },
                     error: function (xhr, status, err) {
-                    console.error(err);
-                    $result.text('업로드 실패 😥');
+                        console.error(err);
+                        $result.text('업로드 실패 😥');
                     }
                 });
                 }
             });
+
+            const inferSearch = (nicknames, divId)  => {
+                if (nicknames && nicknames != "") {
+                    $("#nickNames").val(nicknames);
+                    search('nickNames', divId);
+                }
+            }
+
         </script>
 </head>
 
@@ -402,7 +405,7 @@
         <div id="mainUserSearch">
             <div class="divContainer" >
                 <div class="topUserSearch box box1">
-                    <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+                    <div class="btn-group btn-group-toggle floatLeft" data-bs-toggle="buttons">
                         <label class="btn btn-light active">
                           <input type="radio" name="gameType" id="gameType_rating" value="rating" checked /> 공식
                         </label>
@@ -437,7 +440,7 @@
 
                 <div id="topHistory" class="box box2 topHistory" ></div>
 
-                <div id="drop-zone" class="box box3">이미지를 이곳에 <br> 드래그 앤 드롭하세요</div>
+                <div id="drop-zone" class="box box3">매칭스크린샷 이미지를 <br>이곳에 드래그 앤 드롭하세요 <br>(베타입니다.)</div>
             </div>               
 
             <div id="con1" class="con">

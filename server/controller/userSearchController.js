@@ -180,7 +180,7 @@ module.exports = (scheduler, maria, acclogger) => {
                 headers: { 'Content-Type': 'application/octet-stream' }
             });
     
-            res.json({ nicknames: ocrRes.data.nicknames });
+            res.json({ ... ocrRes.data });
         } catch (err) {
             console.error(err);
             res.status(500).send('OCR failed');
