@@ -2,6 +2,9 @@ const commonUtil = require('../util/commonUtil');
 const multer = require('multer');
 const api = require('../util/api');
 const repository = require('../repository/userRepository');
+const fs = require('fs');
+const axios = require('axios');
+
 
 const upload = multer({ dest: 'uploads/' });
 
