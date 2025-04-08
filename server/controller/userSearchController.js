@@ -1,6 +1,12 @@
 const commonUtil = require('../util/commonUtil');
+const multer = require('multer');
 const api = require('../util/api');
 const repository = require('../repository/userRepository');
+const fs = require('fs');
+const axios = require('axios');
+
+
+const upload = multer({ dest: 'uploads/' });
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
@@ -160,6 +166,25 @@ module.exports = (scheduler, maria, acclogger) => {
                 .send('오류 발생')
                 .end();
             // [END_EXCLUDE]
+        }
+    });
+
+
+    app.post('/getOcrNames', upload.single('image'), async (req, res) => {
+        const imagePath = req.file.path;
+    
+        try {
+            // OCR 서버(Python)로 이미지 전달
+            const ocrRes = await axios.post('http://localhost:5000/ocr', fs.createReadStream(imagePath), {
+                headers: { 'Content-Type': 'application/octet-stream' }
+            });
+    
+            res.json({ nicknames: ocrRes.data.nicknames });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('OCR failed');
+        } finally {
+            fs.unlinkSync(imagePath); // 업로드된 이미지 삭제
         }
     });
 
