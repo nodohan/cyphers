@@ -375,7 +375,7 @@
 .cardLayout {
     padding: 8px;
     font-size: 14px;
-    background: #fff4e7;
+    background: transparent;
     position: relative;
 }
 .cardLayout .overlay {
@@ -390,6 +390,7 @@
     aspect-ratio: 1 / 1;
     border: 1px solid;
     border-radius: 50%;
+    top: 0;
 }
 .cardLayout .cardHeader {
     display: flex;
@@ -415,7 +416,7 @@
     grid-template-columns: repeat(12, minmax(0, 1fr));
     display: grid;
     gap: 4px;
-    margin: 4px 0;
+    margin: 12px 0;
     float: none;
 }
 .positionWrap {
