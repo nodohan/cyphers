@@ -52,7 +52,7 @@ class nodoRepository {
             insert into nickNames 
                 (playerId, nickname , checkingDate, season, privateYn, privateDate)
             values 
-                ( ? , ? , ?, '2024U', 'Y', now()) `;
+                ( ? , ? , ?, '2025H', 'Y', now()) `;
 
         return await this.maria.doQuery(addNickNameQuery, [ playerId, addNickname, todayYYYYMMDD]);
     }
