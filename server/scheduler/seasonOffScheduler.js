@@ -14,14 +14,15 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         try {
-            //2024-03-21  ~  2024-09-25
+            //2024-09-25 ~ 2025-04-10
             //데이터 많으니 분할처리
-            await collectCharRate('2023-03-21', '2023-04-20');
-            await collectCharRate('2024-04-21', '2023-05-20');
-            await collectCharRate('2024-05-21', '2023-06-20');
-            await collectCharRate('2024-06-21', '2024-07-20');
-            await collectCharRate('2024-07-21', '2024-08-20');
-            await collectCharRate('2024-08-21', '2024-09-25');
+            await collectCharRate('2024-09-25', '2024-10-10');
+            await collectCharRate('2024-10-11', '2024-11-10');
+            await collectCharRate('2024-11-11', '2024-12-10');
+            await collectCharRate('2024-12-11', '2025-01-10');
+            await collectCharRate('2025-01-11', '2025-02-10');
+            await collectCharRate('2025-02-11', '2025-03-10');
+            await collectCharRate('2025-03-11', '2025-04-10');
         } catch (err) {
             res.send(err);
         }
