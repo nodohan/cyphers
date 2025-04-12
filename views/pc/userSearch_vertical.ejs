@@ -8,6 +8,8 @@
     <script type="text/javascript">
         pageName = "pcUserSearch_vertical";
 
+        var userData = {};
+
         $(document).ready(function () {
             $("#mainMenu").removeClass("active");
             $("#userSearch_vertical").addClass("active");
@@ -74,6 +76,11 @@
         }
 
         function setUserInfo(gameType, divName, data) {
+            const nickname = data.nickname;
+            if (userData[nickname] == null) {
+                userData[nickname] = data;
+            }
+
             removeTemp(divName);
             var userDivId = getUserDivId(gameType, data.nickname);
             //기본 정보
