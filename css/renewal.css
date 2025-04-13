@@ -373,10 +373,11 @@
     display: none;
 }
 .cardLayout {
-    padding: 8px;
+    /*padding: 8px;*/
     font-size: 14px;
-    background: transparent;
     position: relative;
+    background: #fff;
+    border: 1px solid #e4e4e4;
 }
 .cardLayout .overlay {
     position: absolute;
@@ -424,12 +425,18 @@
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 4px;
 }
+.positionWrap .positionWrapImg {
+    aspect-ratio: 1;
+}
 .positionWrap .positionWrapImg img{
     width: 100%;
     height: 100%;
+    display: block;
 }
 .positionWrap .positionWrapText {
-
+    display: flex;
+    align-items: center;
+    padding: 4px;
 }
 .mostWrap {
     margin: 4px 0
@@ -448,10 +455,25 @@
 }
 .mostCharItem {
 }
+.mostCharItem > div {
+    background: #eee;
+}
 .recentGame {
     display: flex;
     justify-content: space-between;
 }
 .recentGame > span {
     margin: 0;
+}
+.cardBackground {
+    background: #fff;
+}
+.cardHeaderWrap {
+    display: flex;
+}
+.cardNameWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
