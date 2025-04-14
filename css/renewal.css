@@ -2,6 +2,8 @@
 
 .renewalBody {
     background: #f4f6f7;
+}
+.renewalBody main {
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .mainV2 {
@@ -400,20 +402,20 @@
     position: absolute;
     transform: rotate(25deg) translateY(-50%);
     mix-blend-mode: overlay;
-    filter: blur(25px);
+    filter: blur(15px);
     pointer-events: none;
-    width: 30%;
+    width: 40%;
     height: 200%;
     border: 1px solid;
     top: 50%;
-    animation: light-flow 5s infinite;
+    animation: light-flow 4s infinite;
     z-index: -1;
 }
 @keyframes light-flow {
     0% {
         left: -175%;
     }
-    80% {
+    60% {
         left: 125%;
     }
     100% {
@@ -509,6 +511,7 @@
 }
 .cardHeaderWrap {
     display: flex;
+    flex-direction: column;
 }
 .cardNameWrap {
     display: flex;
@@ -520,9 +523,19 @@
     display: flex;
     gap: 8px;
 }
+.playPartyWrap {
+    display: flex;
+}
 .playParty {
     padding: 4px;
+    text-align: center;
 }
 .playWinRate {
     margin: 0 0 4px 0;
+}
+.winrateWrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
 }

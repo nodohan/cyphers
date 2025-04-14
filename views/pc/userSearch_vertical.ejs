@@ -143,7 +143,8 @@
             }
 
             let tot = rating.winCount + rating.loseCount + rating.stopCount;
-            $(clone).find("#playGameDiv").append(`<p><b>승률 ${pov.toFixed(0)}%</b></p><div><span>${rating.winCount}승</span> <span>${rating.loseCount}패</span> <span>${rating.stopCount}중단</span></div>`);
+            $(clone).find("#playGameDiv").append(`<p><b>승률</b></p><p><b>${pov.toFixed(0)}%</b></p>`);
+            // <p><span>${rating.winCount}승</span> <span>${rating.loseCount}패</span> <span>${rating.stopCount}중단</span></p>
         }
 
         function getTierColerName(span, tierName) {
@@ -185,9 +186,11 @@
 
             let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
             let partyAllCnt = partyJson.all.win + partyJson.all.lose;
+            let sum = soloAllCnt + partyAllCnt
 
-            clone.append(`<b>솔플</b><div><span>${partyJson.solo.win}승</span> <span>${partyJson.solo.lose}패</span></div>`);
-            clone.append(`<b>파티</b><div><span>${partyJson.all.win}승</span> <span>${partyJson.all.lose}패</span></div>`);
+            clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span> <span>${partyJson.solo.lose}패</span></div>`);
+            clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span> <span>${partyJson.solo.lose}패</span></div>`);
+            clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span> <span>${partyJson.all.lose}패</span></div>`);
 
             //let moreIcon = '<i class="fa fa-search" style="font-size:15px;color:red"></i>';
             let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
@@ -527,21 +530,21 @@
             <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
             <div class="cardHeaderWrap">
                 <div class="width100p cardNameWrap halfFr"> <!--6fr-->
-                    <div class="halfFr">
+                    <div>
                         <span id="levelDiv" class="cardUserLevel "></span>
                         <span id="clanDiv" class="cardUserClan"></span>
+                        <span id="tierName"></span>
                     </div>
-                    <span id="nickNameDiv" class="cardUserName halfFr"></span>
-                    <span id="tierName" class="halfFr"></span>
-                    <div class="halfFr">
+                    <div>
+                        <span id="nickNameDiv" class="cardUserName"></span>
                         <span id="currRP" class="bold"></span>
                         <span id="maxRP" class=""></span>
                     </div>
                 </div>
-                <div id="playParty" class="playParty width100p halfFr">
-                    <div class="width100p playWinRate">
-                        <div id="playGameDiv"></div>
-                    </div>
+                <div class="playPartyWrap">
+                    <div id="playGameDiv" class="winrateWrap"></div>
+                    <div id="playParty" class="playParty">
+                </div>
                 </div>
             </div>
         </div>
