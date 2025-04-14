@@ -16,7 +16,7 @@ module.exports = (scheduler, maria, acclogger) => {
         try {
             //2024-09-25 ~ 2025-04-10
             //데이터 많으니 분할처리
-            await collectCharRate('2024-09-25', '2024-10-10');
+            await collectCharRate('2024-09-26', '2024-10-10');
             await collectCharRate('2024-10-11', '2024-11-10');
             await collectCharRate('2024-11-11', '2024-12-10');
             await collectCharRate('2024-12-11', '2025-01-10');
