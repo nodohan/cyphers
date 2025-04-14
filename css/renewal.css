@@ -408,7 +408,7 @@
     height: 200%;
     border: 1px solid;
     top: 50%;
-    animation: light-flow 4s infinite;
+    animation: light-flow 3s infinite;
     z-index: -1;
 }
 @keyframes light-flow {
@@ -416,7 +416,7 @@
         left: -175%;
     }
     60% {
-        left: 125%;
+        left: 75%;
     }
     100% {
         left: 125%; /* 그대로 멈추는 정지 구간 */
@@ -525,10 +525,14 @@
 }
 .playPartyWrap {
     display: flex;
+    justify-content: center;
 }
 .playParty {
-    padding: 4px;
-    text-align: center;
+    flex: 1;
+}
+.playParty > div {
+    display: flex;
+    justify-content: center;
 }
 .playWinRate {
     margin: 0 0 4px 0;
@@ -537,5 +541,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    text-align: center;
+    flex: 1;
+}
+.winrateWrap .winrate {
+    font-size: 28px;
 }
