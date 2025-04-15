@@ -525,31 +525,33 @@
         </div>
     </div>
 
-    <div id="template" class="infoDivV2 cardLayout" style="display:none"> <!--grid 12column-->
+    <div id="template" class="infoDivV2 cardLayout" style="display:none">
         <div id="defaultDiv">
-            <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
             <div class="cardHeaderWrap">
-                <div class="width100p cardNameWrap halfFr"> <!--6fr-->
-                    <div>
-                        <span id="levelDiv" class="cardUserLevel "></span>
-                        <span id="clanDiv" class="cardUserClan"></span>
-                        <span id="tierName"></span>
-                    </div>
-                    <div>
-                        <span id="nickNameDiv" class="cardUserName"></span>
-                        <span id="currRP" class="bold"></span>
-                        <span id="maxRP" class=""></span>
-                    </div>
+                <div>
+                    <span id="levelDiv" class="cardUserLevel "></span>
+                    <span id="clanDiv" class="cardUserClan"></span>
                 </div>
-                <hr>
-                <div class="playPartyWrap">
-                    <div id="playGameDiv" class="winrateWrap"></div>
-                    <div id="playParty" class="playParty">
+                <div>
+                    <span id="nickNameDiv" class="cardUserName"></span>
                 </div>
+            </div>
+
+            <div class="cardGrade">
+                <span id="tierName" class="tierName"></span>
+                <span id="currRP" class="bold"></span>
+                <span id="maxRP" class=""></span>
+            </div>
+            <hr>
+
+            <div class="playPartyWrap">
+                <div id="playGameDiv" class="winrateWrap"></div>
+                <div id="playParty" class="playParty"></div>
             </div>
         </div>
 
         <hr>
+
         <!-- 포지션별 승률 -->
         <div id="positionDiv" class="positionDiv">
             <div id="positionTanker" class="width50p">
@@ -608,8 +610,8 @@
         <hr>
 
         <!-- 자주하는 캐릭-->
-        <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
         <div id="mostCharDiv" class="mostCharDiv mostWrap">
+            <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
             <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
                 <div id="cardTemp" class="" hidden>
                     <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
