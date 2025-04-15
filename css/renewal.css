@@ -402,7 +402,6 @@
 }
 .cardLayout:has(.JOKER) {
     box-shadow: 0 0 4px rgb(129, 0, 184);
-    background-image: url("/image/aceEmblem.svg");
 }
 .cardLayout:has(.DIAMOND) {
     box-shadow: 0 0 4px rgb(35, 185, 255);
@@ -461,7 +460,7 @@
 .cardUserName {
     font-size: 22px;
     font-weight: 700;
-    line-height: 24px;
+    line-height: 28px;
 }
 .cardLayout .cardHeader .cardTier {
     font-size: 18px;
@@ -499,7 +498,7 @@
 }
 .mostCharItem {
     display: grid;
-    margin: 4px 0 0 0;
+    margin: 8px 0 0 0;
     gap: 4px;
     grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -518,6 +517,9 @@
     align-items: center;
     text-align: center;
     padding: 4px 0;
+}
+.mostWinrate small {
+    margin: 4px 0 0 0;
 }
 .mostCharItem > div {
     background: #eee;
@@ -583,8 +585,18 @@
     top: 0;
     left: 0;
     font-size: 16px;
-    line-height: 28px;
+    line-height: 24px;
+    gap: 4px;
+}
+.cardGrade > div {
+    flex: 1;
+}
+.cardGrade > div:first-of-type {
+    text-align: right;
+}
+.cardGrade > div:last-of-type {
+    text-align: left;
 }
 .tierName {
-    margin: 0 4px 0 0;
+    margin-left: auto;
 }

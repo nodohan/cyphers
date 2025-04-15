@@ -140,6 +140,10 @@
             if (data.ratingPoint != null) {
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
+            } else {
+                $(clone).find("#tierName").closest("div").css("text-align", "center");
+                $(clone).find("#currRP").closest("div").remove();
+                $(clone).find("#maxRP").closest("div").remove();
             }
 
             let tot = rating.winCount + rating.loseCount + rating.stopCount;
@@ -538,9 +542,12 @@
             </div>
 
             <div class="cardGrade">
-                <span id="tierName" class="tierName"></span>
-                <span id="currRP" class="bold"></span>
-                <span id="maxRP" class=""></span>
+                <div>
+                    <span id="tierName" class="tierName"></span>
+                </div>
+                <div>
+                    <span id="currRP" class="bold"></span><span id="maxRP" class=""></span>
+                </div>
             </div>
             <hr>
 
