@@ -379,6 +379,11 @@ table td {
     font-weight: bold;
 }
 
+.DIAMOND {
+    color: rgb(35, 185, 255);
+    font-weight: bold;
+}
+
 .shortInput {
     width: 60px;
 }
