@@ -4,10 +4,12 @@
     background: #f4f6f7;
 }
 .renewalBody main {
+    position: relative;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
-.mainV2 {
-    position: relative;
+.mainInner {
+    width: 80% !important;
+    max-width: 1920px;
 }
 .sideNav {
     position: absolute;
@@ -379,7 +381,7 @@
     display: none;
 }
 .cardLayout {
-    width: auto;
+    width: 20%;
     min-width: 312px;
     padding: 8px;
     font-size: 14px;
@@ -483,10 +485,10 @@
 }
 .positionWrap .positionWrapImg img{
     width: 100%;
-    height: auto;
+    height: 100%;
     aspect-ratio: 1;
-    max-width: 46px;
-    max-height: 46px;
+    min-width: 46px;
+    min-height: 46px;
     display: block;
 }
 .positionWrap .positionWrapText {
@@ -505,9 +507,9 @@
 .mostWrap img {
     display: block;
     width: 100%;
-    height: auto;
-    max-width: 46px;
-    max-height: 46px;
+    height: 100%;
+    min-width: 46px;
+    min-height: 46px;
     aspect-ratio: 1;
     border-radius: 0;
 }
@@ -534,6 +536,7 @@
 }
 .cardBackground {
     background: #fff;
+    max-width: none;
 }
 .cardHeaderWrap {
     display: flex;
@@ -548,6 +551,7 @@
     display: flex;
     gap: 8px;
     padding: 20px 0;
+    width: 100%;
 }
 .playPartyWrap {
     display: flex;
