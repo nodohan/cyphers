@@ -436,15 +436,15 @@
     height: 100%;
     border: 1px solid;
     top: 50%;
-    animation: light-flow 4s infinite;
+    animation: light-flow 3s infinite;
     z-index: -1;
 }
 @keyframes light-flow {
     0% {
-        left: -125%;
+        left: -100%;
     }
     60% {
-        left: 125%;
+        left: 100%;
     }
     100% {
         left: 125%; /* 그대로 멈추는 정지 구간 */
