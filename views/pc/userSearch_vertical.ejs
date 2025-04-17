@@ -124,7 +124,7 @@
 
         function defaultInfo(gameType, clone, data) {
             //console.log("data", data);
-            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || {
+            var rating = data.records.filter(game => game.gameTypeId == gameType)[1] || {
                 loseCount: 0,
                 stopCount: 0,
                 winCount: 0
