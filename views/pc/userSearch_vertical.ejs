@@ -124,7 +124,7 @@
 
         function defaultInfo(gameType, clone, data) {
             //console.log("data", data);
-            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || {
+            var rating = data.records.filter(game => game.gameTypeId == gameType)[1] || {
                 loseCount: 0,
                 stopCount: 0,
                 winCount: 0
@@ -625,7 +625,7 @@
                         <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
                     </div>
                     <div>
-                        <p id="tankerSpan" class="card-text mostWinrate">57% <br> <small class="">79승 60패</small></p>
+                        <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
                     </div>
                 </div>
             </div>

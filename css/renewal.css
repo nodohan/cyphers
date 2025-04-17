@@ -5,20 +5,24 @@
 }
 .renewalBody main {
     position: relative;
+    height: calc(100vh - 80px);
+    padding: 0 100px;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .mainInner {
-    width: 80% !important;
+    width: 85% !important;
     max-width: 1920px;
+    min-width: 1280px;
 }
 .sideNav {
     position: absolute;
     background: #fff;
-    height: calc(100vh - 80px);
+    width: 216px;
+    height: 100%;
     padding: 40px 16px;
     color: #343a40;
-    width: 247px;
     z-index: 1;
+    left: 0;
 }
 .sideNav h2 {
     color: #343a40;
@@ -130,13 +134,14 @@
     pointer-events : none;
 }
 .searchInput {
+    position: relative;
+    width: 100%;
+    max-width: 215px;
     height: 40px;
     border: 0;
     border-radius: 8px;
     padding: 0 0 0 56px;
     font-size: 14px;
-    position: relative;
-    max-width: 215px;
 }
 .searchInput#nickNames {
     background: rgba(224, 237, 255, 0.8);
@@ -337,7 +342,7 @@
 .sideNav.slim .searchInput {
     position: absolute;
     left: 80px;
-    width: 240px;
+    width: 184px;
     padding: 0 0 0 8px;
     display: none;
 }
@@ -381,8 +386,7 @@
     display: none;
 }
 .cardLayout {
-    width: 20%;
-    min-width: 312px;
+    width: 21%;
     padding: 8px;
     font-size: 14px;
     position: relative;
@@ -460,14 +464,18 @@
     text-align: center;
 }
 .cardUserName {
+    position: relative;
     font-size: 22px;
     font-weight: 700;
     line-height: 28px;
 }
+.cardUserName a {
+    position: absolute;
+    scale: 0.7;
+}
 .cardLayout .cardHeader .cardTier {
     font-size: 18px;
 }
-.cardLayout .cardHeader .cardparty {}
 .positionDiv {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     display: grid;
@@ -487,8 +495,6 @@
     width: 100%;
     height: 100%;
     aspect-ratio: 1;
-    min-width: 46px;
-    min-height: 46px;
     display: block;
 }
 .positionWrap .positionWrapText {
@@ -508,8 +514,6 @@
     display: block;
     width: 100%;
     height: 100%;
-    min-width: 46px;
-    min-height: 46px;
     aspect-ratio: 1;
     border-radius: 0;
 }
@@ -526,13 +530,34 @@
 .mostCharItem > div {
     background: #eee;
 }
+.mostCharItem > div.empty {
+    position: relative;
+    color: transparent;
+    opacity: 1;
+    pointer-events: none;
+    user-select: none;
+}
+.mostCharItem > div.empty::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit; /* 배경색 유지 */
+    z-index: 1;
+}
 .recentGame {
     display: flex;
     justify-content: start;
     gap: 4px;
 }
+.recentGame:has(> span:nth-of-type(10)) {
+ justify-content: space-between;
+}
 .recentGame > span {
-    margin: 0;
+    margin: 0 !important;
+}
+.recentGame > a {
+    display: block;
+    margin: 0 0 0 -4px;
 }
 .cardBackground {
     background: #fff;
@@ -565,7 +590,11 @@
     padding: 0 0 0 4px;
 }
 .playParty > div > b {
-    margin: 0 4px 0 0;
+    margin: 0 8px 0 0;
+}
+.playParty > div > span {
+    display: inline-block;
+    text-align: right;
 }
 .playWinRate {
     margin: 0 0 4px 0;

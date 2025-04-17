@@ -486,17 +486,25 @@ function drawOften(div, info, drawCharFunc, nickname) {
 }
 
 function drawEmptyChar(div) {
-    let height = (pageName == "pcUserSearch_vertical") ? 96.5 : 45;
-    if (isMobile) {
-        height = 51;
-    }
-    let card = $(div).find("#cardTemp").clone();
-    card.attr("style", `height:${height}px;`);
+    if (pageName == "pcUserSearch_vertical") {
+        let card = $(div).find("#cardTemp").clone();
+        card.removeAttr("id");
+        card.removeAttr("hidden");
+        card.addClass("empty");
+        div.append(card);
+    } else {
+        let height = (pageName == "pcUserSearch_vertical") ? 96.5 : 45;
+        if (isMobile) {
+            height = 51;
+        }
+        let card = $(div).find("#cardTemp").clone();
+        card.attr("style", `height:${height}px;`);
 
-    card.removeAttr("id");
-    card.removeAttr("hidden");
-    card.empty();
-    div.append(card);
+        card.removeAttr("id");
+        card.removeAttr("hidden");
+        card.empty();
+        div.append(card);
+    }
 }
 
 function drawChar(div, charInfo) {
