@@ -2,17 +2,23 @@
 
 .renewalBody {
     background: #f4f6f7;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    min-height: calc(100vh - 80px);
 }
 .renewalBody main {
     position: relative;
-    min-height: calc(100vh - 80px);
     padding: 0 100px;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    margin: 40px 0 0 0;
 }
 .mainInner {
     width: 85% !important;
     max-width: 1920px;
-    min-width: 1280px;
+    min-width: 1320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #fff;
 }
 .sideNav {
     position: absolute;
@@ -23,12 +29,14 @@
     color: #343a40;
     z-index: 1;
     left: 0;
+
 }
 .sideNav h2 {
     color: #343a40;
     font-size: 18px;
+    line-height: 40px;
     font-weight: bold;
-    margin: 16px 0;
+    margin: 8px 0;
     height: 40px;
     display: flex;
     align-items: center;
@@ -75,11 +83,13 @@
 .closeSideNav span:nth-of-type(3) {
     top: 65%;
 }
+div:has(> .inputWrap) {
+    margin: 56px 0 0 0;
+}
 .inputWrap {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin: 32px 0 0 0;
 }
 .searchInputWrap {
     display: flex;
@@ -386,7 +396,7 @@
     display: none;
 }
 .cardLayout {
-    width: 21%;
+    flex: 1 1 auto;
     padding: 8px 8px 12px 8px;
     font-size: 14px;
     position: relative;
@@ -404,9 +414,11 @@
 .cardLayout:has(.ACE) {
     box-shadow: 0 0 4px rgb(255, 0, 174);
     background-image: url("/image/aceEmblem.svg");
+
 }
 .cardLayout:has(.JOKER) {
     box-shadow: 0 0 4px rgb(129, 0, 184);
+    background-image: url("/image/cuteJokerIcon.png");
 }
 .cardLayout:has(.DIAMOND) {
     box-shadow: 0 0 4px rgb(35, 185, 255);
@@ -423,9 +435,6 @@
 .cardLayout hr {
     margin: 8px 0;
 }
-.cardLayout hr + hr {
-    display: none;
-}
 .cardLayout .overlay {
     background: #333;
     opacity: 0.8;
@@ -438,8 +447,11 @@
     height: 100%;
     border: 1px solid;
     top: 50%;
-    animation: light-flow 4s infinite;
+    left: -100%;
     z-index: -1;
+}
+.cardLayout:has(.ACE) .overlay {
+    animation: light-flow 4s infinite;
 }
 @keyframes light-flow {
     0% {
@@ -577,7 +589,6 @@
 .cardWrapper {
     display: flex;
     gap: 8px;
-    padding: 20px 0;
     width: 100%;
 }
 .playPartyWrap {
@@ -634,4 +645,15 @@
 }
 .tierName {
     margin-left: auto;
+}
+.defaultSlotWrapper {
+    flex: 1 1 auto;
+    margin: 0;
+    border: none;
+    /*height: 100%;*/
+    min-height: 406px;
+    float: none;
+}
+.defaultSlot {
+    height: 100%;
 }
