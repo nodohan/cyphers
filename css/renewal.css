@@ -3,13 +3,13 @@
 .renewalBody {
     background: #f4f6f7;
     position: relative;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     min-height: calc(100vh - 80px);
 }
 .renewalBody main {
     position: relative;
     padding: 0 100px;
     margin: 40px 0 0 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .mainInner {
     width: 85% !important;
@@ -29,7 +29,7 @@
     color: #343a40;
     z-index: 1;
     left: 0;
-
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .sideNav h2 {
     color: #343a40;
@@ -490,7 +490,7 @@ div:has(> .inputWrap) {
 .cardLayout .cardHeader .cardTier {
     font-size: 18px;
 }
-.positionDiv {
+.positionWinrate {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     display: grid;
     gap: 4px;
@@ -595,17 +595,17 @@ div:has(> .inputWrap) {
     display: flex;
     justify-content: center;
 }
-.playParty {
+.playPartyLayer {
     flex: 1;
     flex-direction: column;
     display: flex;
     justify-content: center;
     padding: 0 0 0 4px;
 }
-.playParty > div > b {
+.playPartyLayer > div > b {
     margin: 0 8px 0 0;
 }
-.playParty > div > span {
+.playPartyLayer > div > span {
     display: inline-block;
     text-align: right;
 }
@@ -663,11 +663,15 @@ div:has(> .inputWrap) {
     margin: 0 0 0 4px;
 }
 .beforeSeason a {
+    color: #343a40;
     display: block;
     width: 16px;
     height: 16px;
-    background: url("/image/chartIcon6.svg") center;
+    /*background: url("/image/chartIcon6.svg") center;*/
     background-size: cover;
+}
+.beforeSeason a i {
+    display: block;
 }
 div:has(> .beforeSeason) {
     display: flex;
