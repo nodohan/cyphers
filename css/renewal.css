@@ -657,3 +657,18 @@ div:has(> .inputWrap) {
 .defaultSlot {
     height: 100%;
 }
+.beforeSeason {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 4px;
+}
+.beforeSeason a {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url("/image/chartIcon6.svg") center;
+    background-size: cover;
+}
+div:has(> .beforeSeason) {
+    display: flex;
+}
