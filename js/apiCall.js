@@ -175,7 +175,7 @@ function asyncUserInfo(gameType, nickName) {
     return result;
 }
 
-function drawPosition(div, rows, nickname) {
+function drawPosition(div, rows, nickname, drawFuncCall) {
     let tanker = extractPlayType(rows, "탱커");
     let ad = extractPlayType(rows, "원거리딜러");
     let melee = extractPlayType(rows, "근거리딜러");
@@ -184,10 +184,13 @@ function drawPosition(div, rows, nickname) {
     //포지션별 승률
     const positionDiv = $(div).find("#positionDiv");
     positionDiv.empty();
-    appendPlayTypeInfo(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
-    appendPlayTypeInfo(positionDiv, melee, "melee", "근거리딜러", nickname);
-    appendPlayTypeInfo(positionDiv, ad, "ad", "원거리딜러", nickname);
-    appendPlayTypeInfo(positionDiv, supp, "supp", "서포터", nickname);
+
+    // const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
+    const drawFunc = drawFuncCall;
+    drawFunc(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
+    drawFunc(positionDiv, melee, "melee", "근거리딜러", nickname);
+    drawFunc(positionDiv, ad, "ad", "원거리딜러", nickname);
+    drawFunc(positionDiv, supp, "supp", "서포터", nickname);
 }
 
 function isDuplicate(gameType, nickName) {
@@ -463,8 +466,8 @@ function winLoseKo(result) {
 }
 
 function drawOften(div, info, drawCharFunc, nickname) {
-    let count = Math.min(isMobile ? 6 : 8, info.length);
-    let rowCount = isMobile ? 6 : 8;
+    let count = Math.min(isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8, info.length);
+    let rowCount = isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8;
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (let i = 0; i < count; i++) {
@@ -483,17 +486,25 @@ function drawOften(div, info, drawCharFunc, nickname) {
 }
 
 function drawEmptyChar(div) {
-    let height = (pageName == "pcUserSearch_vertical") ? 102 : 45;
-    if (isMobile) {
-        height = 51;
-    }
-    let card = $(div).find("#cardTemp").clone();
-    card.attr("style", `height:${height}px;`);
+    if (pageName == "pcUserSearch_vertical") {
+        let card = $(div).find("#cardTemp").clone();
+        card.removeAttr("id");
+        card.removeAttr("hidden");
+        card.addClass("empty");
+        div.append(card);
+    } else {
+        let height = (pageName == "pcUserSearch_vertical") ? 96.5 : 45;
+        if (isMobile) {
+            height = 51;
+        }
+        let card = $(div).find("#cardTemp").clone();
+        card.attr("style", `height:${height}px;`);
 
-    card.removeAttr("id");
-    card.removeAttr("hidden");
-    card.empty();
-    div.append(card);
+        card.removeAttr("id");
+        card.removeAttr("hidden");
+        card.empty();
+        div.append(card);
+    }
 }
 
 function drawChar(div, charInfo) {

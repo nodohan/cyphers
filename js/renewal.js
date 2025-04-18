@@ -40,4 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         this.style.setProperty('--animation', 'bubble 0.4s');
     }
     navListAll.forEach(item => {item.addEventListener('mousedown', navListClick);})
+
+    // 4. 사이드메뉴 토글 (전적검색 - 가로 사용중)
+    function sideNavToggle() {
+        document.querySelector('.sideNav').classList.toggle('slim');
+    }
 });

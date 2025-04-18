@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    
+    tools {
+       nodejs "Node20"
+    }
+    
+    stages {
+        stage('Environment Info') {
+            steps {
+                sh '''
+                    echo "Current User: $(whoami)"
+                    echo "Home Directory: $HOME"
+                    echo "Path: $PATH"
+                    node -v
+                '''
+            }
+        }
+
+        stage('env create') {  // react를 빌드하는 코드 적기
+            steps {
+                sh 'if [ -f .env ]; then rm .env; fi'
+                script {
+                    // .env 파일 생성
+                    writeFile file: '.env', text: """
+                        API_KEY=${env.CLAN_API_KEY}
+                        DB_SERVER=${env.CLAN_DB_SERVER}
+                        DB_USER=${env.CLAN_DB_USER}
+                        DB_PASSWORD=${env.CLAN_DB_PASSWORD}                        
+                        SCHEDULER_RUN=false
+                        SERVER_PORT=8082
+                    """
+                }
+            }
+        }
+
+        stage('bulid') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Dockerimage build') {
+            steps {                
+				sh 'docker build -t cyphers-image:0.0.1 .'
+            }
+        }
+        stage('Deploy-1') {
+            steps {
+                sh 'docker stop clan-1'
+                sh 'docker rm clan-1'
+                sh 'docker run -d -p 8082:8082  --restart always --name clan-1 -v /home/nodo/cyphersTest:/src/logs cyphers-image:0.0.1'
+            }
+        }
+    }
+}
