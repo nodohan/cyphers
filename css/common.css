@@ -209,8 +209,8 @@ table td {
 }
 
 #mainUserSearch {
-    width: 1850px;
-    margin: 0px auto;
+    width: 1850px;    
+    margin: 30px auto 0px auto;
 }
 
 #mainUserDetail {
