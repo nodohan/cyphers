@@ -5,7 +5,7 @@
 }
 .renewalBody main {
     position: relative;
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
     padding: 0 100px;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
@@ -387,7 +387,7 @@
 }
 .cardLayout {
     width: 21%;
-    padding: 8px 8px 16px 8px;
+    padding: 8px 8px 12px 8px;
     font-size: 14px;
     position: relative;
     background-color: #fff;
@@ -443,13 +443,13 @@
 }
 @keyframes light-flow {
     0% {
-        left: -125%;
+        left: -100%;
     }
     60% {
-        left: 125%;
+        left: 100%;
     }
     100% {
-        left: 125%; /* 그대로 멈추는 정지 구간 */
+        left: 100%;
     }
 }
 .cardLayout .cardHeader {
