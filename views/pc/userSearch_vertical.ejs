@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" as="style" crossorigin href="/css/renewal.css" />
 
     <%- include ("../layout/head") %>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
@@ -140,6 +141,7 @@
             if (data.ratingPoint != null) {
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
+                $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ></a>`);
             } else {
                 $(clone).find("#tierName").closest("div").css("text-align", "center");
                 $(clone).find("#currRP").closest("div").remove();
@@ -149,6 +151,15 @@
             let tot = rating.winCount + rating.loseCount + rating.stopCount;
             $(clone).find("#playGameDiv").append(`<p><b>승률</b></p><p><b class="winrate">${pov.toFixed(0)}%</b></p>`);
             // <p><span>${rating.winCount}승</span> <span>${rating.loseCount}패</span> <span>${rating.stopCount}중단</span></p>
+        }
+
+        const drawSeasonRank = (data) => {
+            if (data.length == 0) {
+                alert("전시즌 언랭");
+            } else {
+                let rankText = data.map(row => `${row.season} ${row.rankNumber == '몰?루?' ? '몰?루?' : row.rankNumber}위 `).join("\n");
+                alert(rankText);
+            }
         }
 
         function getTierColerName(span, tierName) {
@@ -550,7 +561,10 @@
                     <span id="tierName" class="tierName"></span>
                 </div>
                 <div>
-                    <span id="currRP" class="bold"></span><span id="maxRP" class=""></span><span id="beforeSeason" class="beforeSeason"><a href="javascript:userSeasonRank(&quot;1826e7c7f0becbc1e65ee644c28f0072&quot;, drawSeasonRank);"></a></span>
+                    <span id="currRP" class="bold"></span>
+                    <span id="maxRP" class=""></span>
+                    <span id="beforeSeason" class="beforeSeason">
+                    </span>
                 </div>
             </div>
             <hr>
