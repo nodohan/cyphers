@@ -577,6 +577,8 @@ div:has(> .inputWrap) {
 .cardBackground {
     background: #fff;
     max-width: none;
+    display: flex;
+    align-items: center;
 }
 .cardHeaderWrap {
     display: flex;
