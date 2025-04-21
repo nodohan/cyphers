@@ -418,7 +418,7 @@ div:has(> .inputWrap) {
 }
 .cardLayout:has(.JOKER) {
     box-shadow: 0 0 4px rgb(129, 0, 184);
-    background-image: url("/image/cuteJokerIcon.png");
+    /*background-image: url("/image/cuteJokerIcon.png");*/
 }
 .cardLayout:has(.DIAMOND) {
     box-shadow: 0 0 4px rgb(35, 185, 255);
