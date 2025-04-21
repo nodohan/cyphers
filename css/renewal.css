@@ -559,9 +559,9 @@ div:has(> .inputWrap) {
     z-index: 1;
 }
 .recentGame {
-    display: flex;
-    justify-content: start;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 60px repeat(11, minmax(0, 1fr));
+    margin: 8px 0 0 0;
 }
 .recentGame:has(> span:nth-of-type(10)) {
  justify-content: space-between;
