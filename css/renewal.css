@@ -449,6 +449,7 @@ div:has(> .inputWrap) {
     top: 50%;
     left: -100%;
     z-index: -1;
+    transform-origin: top;
 }
 .cardLayout:has(.ACE) .overlay {
     animation: light-flow 4s infinite;
@@ -677,13 +678,14 @@ div:has(> .beforeSeason) {
     display: flex;
 }
 .renewalTopHistory {
-    display: grid;
-    grid-template-columns: repeat(10, auto);
+    display: flex;
+    width: max-content;
     height: 32px;
     align-items: center;
     background: #fff;
     border-radius: 5px;
-    padding: 0 8px;
+    padding: 0 16px;
+    gap: 8px;
 }
 .renewalTopHistory > span {
     text-align: center;
