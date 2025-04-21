@@ -16,6 +16,7 @@
             $("#userSearch_vertical").addClass("active");
 
             getCookie();
+            showSearchHistory();
             $("#partyShow").on("change", checkVisibility);
             $("#positionShow").on("change", checkVisibility);
             $("#mostCharShow").on("change", checkVisibility);
@@ -124,7 +125,7 @@
 
         function defaultInfo(gameType, clone, data) {
             //console.log("data", data);
-            var rating = data.records.filter(game => game.gameTypeId == gameType)[1] || {
+            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || {
                 loseCount: 0,
                 stopCount: 0,
                 winCount: 0
@@ -475,7 +476,7 @@
 
 <body class="renewalBody">
 <%- include ("../layout/menu") %>
-<div class="sideNav slim">
+<div class="sideNav">
     <button type="button" class="sideNavToggleBtn" onclick="sideNavToggle()">
     </button>
     <h2>전적검색 (가로)</h2>
@@ -532,6 +533,7 @@
 </div>
 <main>
     <div id="mainV2" class="mainInner">
+        <div id="topHistory" class="renewalTopHistory" ></div>
         <div id="con1" class="conUserV2 cardBackground">
             <div id="con1_2" class="infoLayerV2 cardWrapper">
 
@@ -568,7 +570,7 @@
 
             <div class="playPartyWrap">
                 <div id="playGameDiv" class="winrateWrap"></div>
-                <div id="playParty" class="playPartyLayer"></div>
+                <div id="playParty" class="playParty playPartyLayer"></div>
             </div>
         </div>
 

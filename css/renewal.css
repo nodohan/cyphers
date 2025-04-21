@@ -3,7 +3,7 @@
 .renewalBody {
     background: #f4f6f7;
     position: relative;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh);
 }
 .renewalBody main {
     position: relative;
@@ -17,17 +17,17 @@
     min-width: 1320px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    background: #fff;
+    gap: 16px;
 }
 .sideNav {
     position: absolute;
     background: #fff;
     width: 216px;
     height: 100%;
-    padding: 40px 16px;
+    padding: 120px 16px 40px 16px;
     color: #343a40;
     z-index: 1;
+    top: 0;
     left: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
@@ -675,4 +675,15 @@ div:has(> .inputWrap) {
 }
 div:has(> .beforeSeason) {
     display: flex;
+}
+.renewalTopHistory {
+    display: flex;
+    height: 32px;
+    align-items: center;
+    justify-content: space-evenly;
+    background: #fff;
+    border-radius: 5px;
+    padding: 0 8px;
+}
+.renewalTopHistory a {
 }
