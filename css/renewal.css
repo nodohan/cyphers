@@ -677,13 +677,14 @@ div:has(> .beforeSeason) {
     display: flex;
 }
 .renewalTopHistory {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(10, auto);
     height: 32px;
     align-items: center;
-    justify-content: space-evenly;
     background: #fff;
     border-radius: 5px;
     padding: 0 8px;
 }
-.renewalTopHistory a {
+.renewalTopHistory > span {
+    text-align: center;
 }
