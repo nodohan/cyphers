@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector('header > nav');
 
     function headerActive() {
-        header.classList.add('active');
+        setTimeout(function () {
+            header.classList.add('active');
+        }, 200);
     }
     function headerInactive() {
         header.classList.remove('active');
