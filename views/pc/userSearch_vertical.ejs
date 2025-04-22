@@ -140,14 +140,16 @@
             getTierColerName($(clone).find("#tierName"), data.tierName);
             if (data.ratingPoint != null) {
                 $(clone).find("#currRP").text(data.ratingPoint);
-                $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");                
+                $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
+                $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ><i class="fa fa-line-chart"></i></a>`);
+
             } else {
                 $(clone).find("#tierName").closest("div").css("text-align", "center");
-                $(clone).find("#currRP").remove();
-                $(clone).find("#maxRP").remove();
+                $(clone).find("#currRP").parent().remove();
+                $(clone).find("#tierName").closest("div").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ><i class="fa fa-line-chart"></i></a>`);
+
             }
-            $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ><i class="fa fa-line-chart"></i></a>`);
- 
+
             let tot = rating.winCount + rating.loseCount + rating.stopCount;
             $(clone).find("#playGameDiv").append(`<p><b>승률</b></p><p><b class="winrate">${pov.toFixed(0)}%</b></p>`);
             // <p><span>${rating.winCount}승</span> <span>${rating.loseCount}패</span> <span>${rating.stopCount}중단</span></p>

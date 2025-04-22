@@ -435,6 +435,11 @@ div:has(> .inputWrap) {
 .cardLayout hr {
     margin: 8px 0;
 }
+.cardLayout a {
+    color: #343a40;
+    position: absolute;
+    margin: 0 0 0 4px;
+}
 .cardLayout .overlay {
     background: #333;
     opacity: 0.8;
@@ -663,10 +668,8 @@ div:has(> .inputWrap) {
 .beforeSeason {
     display: flex;
     align-items: center;
-    margin: 0 0 0 4px;
 }
 .beforeSeason a {
-    color: #343a40;
     display: block;
     width: 16px;
     height: 16px;
