@@ -435,7 +435,7 @@ div:has(> .inputWrap) {
 .cardLayout hr {
     margin: 8px 0;
 }
-.cardLayout a {
+.cardLayout .cardGrade a {
     color: #343a40;
     position: absolute;
     margin: 0 0 0 4px;
