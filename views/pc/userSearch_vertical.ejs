@@ -204,44 +204,99 @@
             let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
             let partyAllCnt = partyJson.all.win + partyJson.all.lose;
             let sum = partyJson.solo.win + partyJson.solo.lose + partyJson.all.win + partyJson.all.lose;
+            // let moreIcon = '<i class="fa fa-search" style="font-size:15px;color:red"></i>';
+            let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
 
             clone.append(`<div class="sumPlay"><b>전체</b><span>${partyJson.solo.win + partyJson.all.win}승</span> <span>${partyJson.solo.lose + partyJson.all.lose}패</span></div>`);
             clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span> <span>${partyJson.solo.lose}패</span></div>`);
-            clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span> <span>${partyJson.all.lose}패</span></div>`);
+            clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span> <span>${partyJson.all.lose}패</span><button type="button" onclick="partyModalShow()">${moreIcon}파티팝업</button></div>`);
+            let partyPopupHtml = `<dialog id="partyModal">`;
 
-            //let moreIcon = '<i class="fa fa-search" style="font-size:15px;color:red"></i>';
-            let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-
-            // if (partyJson.two.all != 0) {
-            //     clone.append("2인: " + partyJson.two.win + "승 " + partyJson.two.lose + "패 ");
-            //     clone.append(`<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  `);
-            // }
-            //
-            // if (partyJson.three.all != 0) {
-            //     clone.append("3인: " + partyJson.three.win + "승 " + partyJson.three.lose + "패 ");
-            //     clone.append(`<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  `);
-            // }
-            //
-            // if (partyJson.five.all != 0) {
-            //     clone.append("5인: " + partyJson.five.win + "승 " + partyJson.five.lose + "패 ");
-            //     clone.append(`<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  `);
-            // }
-
-            clone.append("<div class='row' style='display: none'>");
-            if (partyJson.two.all != 0) {
-                let partyResult = getEachPartyResult(partyJson.two.party);
-                clone.append("<div class='collapse multi-collapse' id='two" + userDivId + "'>" + partyResult + "</div>");
-            }
-            if (partyJson.three.all != 0) {
-                let partyResult = getEachPartyResult(partyJson.three.party);
-                clone.append("<div class='collapse multi-collapse' id='three" + userDivId + "'>" + partyResult + "</div>");
-            }
-            if (partyJson.five.all != 0) {
-                let partyResult = getEachPartyResult(partyJson.five.party);
-                clone.append("<div class='collapse multi-collapse' id='five" + userDivId + "'>" + partyResult + "</div>");
+            if (partyJson.two.all !== 0) {
+                partyPopupHtml += `2인: ${partyJson.two.win}승 ${partyJson.two.lose}패 `;
+                partyPopupHtml += `<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}'>${moreIcon}</a> `;
             }
 
-            clone.append("</div>");
+            if (partyJson.three.all !== 0) {
+                partyPopupHtml += `3인: ${partyJson.three.win}승 ${partyJson.three.lose}패 `;
+                partyPopupHtml += `<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}'>${moreIcon}</a> `;
+            }
+
+            if (partyJson.five.all !== 0) {
+                partyPopupHtml += `5인: ${partyJson.five.win}승 ${partyJson.five.lose}패 `;
+                partyPopupHtml += `<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}'>${moreIcon}</a> `;
+            }
+
+            partyPopupHtml += `<div class='row' style='display: none'>`;
+
+            if (partyJson.two.all !== 0) {
+                const partyResult = getEachPartyResult(partyJson.two.party);
+                partyPopupHtml += `<div class='collapse multi-collapse' id='two${userDivId}'>${partyResult}</div>`;
+            }
+
+            if (partyJson.three.all !== 0) {
+                const partyResult = getEachPartyResult(partyJson.three.party);
+                partyPopupHtml += `<div class='collapse multi-collapse' id='three${userDivId}'>${partyResult}</div>`;
+            }
+
+            if (partyJson.five.all !== 0) {
+                const partyResult = getEachPartyResult(partyJson.five.party);
+                partyPopupHtml += `<div class='collapse multi-collapse' id='five${userDivId}'>${partyResult}</div>`;
+            }
+
+            partyPopupHtml += `
+              </div>
+              <div style="text-align:right; margin-top:10px;">
+                <button onclick="document.getElementById('partyModal').close()">닫기</button>
+              </div>
+            </dialog>`;
+
+            clone.append(partyPopupHtml);
+        }
+
+        function partyModalShow() {
+            const dialog = document.getElementById('partyModal');
+            enableBackdropClose(dialog);
+            dialog.showModal();
+        }
+
+        function partyModalClose() {
+            const dialog = document.getElementById('partyModal');
+            dialog.close();
+        }
+
+        function enableBackdropClose(dialog) {
+            if (!dialog.hasAttribute('data-backdrop-enabled')) {
+                dialog.addEventListener('click', function (e) {
+                    const rect = dialog.getBoundingClientRect();
+                    const isInDialog =
+                        rect.top <= e.clientY &&
+                        e.clientY <= rect.top + rect.height &&
+                        rect.left <= e.clientX &&
+                        e.clientX <= rect.left + rect.width;
+
+                    if (!isInDialog) {
+                        partyModalClose(); // 별도로 분리된 닫기 함수 사용
+                    }
+                });
+
+                dialog.setAttribute('data-backdrop-enabled', 'true');
+            }
+        }
+
+        function enableBackdropClose() {
+            const dialog = document.getElementById('partyModal');
+
+            if (!dialog.hasAttribute('data-backdrop-enabled')) {
+                dialog.addEventListener('click', function (e) {
+                    // dialog 자체를 클릭한 경우 = 백드롭 클릭
+                    if (e.target === dialog) {
+                        dialog.close();
+                    }
+                });
+
+                dialog.setAttribute('data-backdrop-enabled', 'true');
+            }
         }
 
         function getEachPartyResult(arr) {
@@ -471,8 +526,6 @@
                             </div>
                         </div>`);
         }
-
-
     </script>
 </head>
 
