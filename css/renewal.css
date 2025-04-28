@@ -695,6 +695,9 @@ div:has(> .inputWrap) {
     display: inline-block;
     text-align: right;
 }
+.playPartyLayer dialog {
+    border: 1px solid;
+}
 .playWinRate {
     margin: 0 0 4px 0;
 }
