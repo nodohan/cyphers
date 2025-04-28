@@ -516,7 +516,7 @@
 
             clone.append(`<div class="sumPlay"><b>전체</b><span>${partyJson.solo.win + partyJson.all.win}승</span> <span>${partyJson.solo.lose + partyJson.all.lose}패</span></div>`);
             clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span> <span>${partyJson.solo.lose}패</span></div>`);
-            clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span><span>${partyJson.all.lose}패</span>&nbsp;<button type="button" onclick="partyModalShow('partyModal_${userDivId}')">${moreIcon}</button></div>`);
+            clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span><span>${partyJson.all.lose}패</span>&nbsp;<button type="button" onclick="partyModalShow('partyModal_${userDivId}')" class="partyInfoButton">${moreIcon}</button></div>`);
 
             let partyPopupHtml = `<dialog id="partyModal_${userDivId}">`;
 
