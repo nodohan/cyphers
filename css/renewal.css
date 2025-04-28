@@ -18,6 +18,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding: 0 0 20px 0;
 }
 .mainInner .leftBanner {
     position: absolute;
@@ -403,52 +404,109 @@ div:has(> .inputWrap) {
     display: none;
 }
 .cardLayout {
-    flex: 1 1 auto;
-    padding: 8px 8px 12px 8px;
-    font-size: 14px;
     position: relative;
-    background-color: #fff;
+    border: 0;
+    margin: 0;
+    height: auto;
+    perspective: 2000px;
+    background: transparent;
+}
+.cardLayout .cardFront {
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+    overflow: hidden;
+    flex: 1 1 auto;
+    padding: 12px;
+    font-size: 14px;
+    background-color: transparent;
     background-size: 70%;
     background-position: center;
     background-repeat: no-repeat;
-    overflow: hidden;
     isolation: isolate;
     margin: 0;
     border-radius: 4px;
     border: 0;
     box-shadow: 0 0 4px #888;
-    perspective: 1000px;
-}
-.cardLayout.isFlipped {
-
 }
 .cardLayout .cardBack {
     position: absolute;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden; /* 뒷면 숨기기 */
-    transition: transform 0.8s ease-in-out; /* 뒤집는 애니메이션 효과 */
+    backface-visibility: hidden;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-radius: 4px;
+    transform: rotateY(180deg);
+    transition: transform 0.6s;
+    box-shadow: 0 0 4px #ccc;
+}
+.cardLayout .cardBack::before {
+    content: "";
+    position: absolute;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #ccc; /* 하늘색 + 약간의 투명도 */
+    background-image:
+            linear-gradient(45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+#con1_2 .cardLayout .cardBack::before {
+    background-color: #86b1ff80; /* 하늘색 + 약간의 투명도 */
+    background-image:
+            linear-gradient(45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+#con2_2 .cardLayout .cardBack::before {
+    background-color: #ffe5e5; /* 밝은 핑크색 배경 */
+    background-image:
+            linear-gradient(45deg, rgba(255, 200, 200, 0.8) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(255, 200, 200, 0.8) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(255, 200, 200, 0.8) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(255, 200, 200, 0.8) 75%);
+    background-size: 20px 20px; /* 체크 사이즈는 그대로 20px 유지 */
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0; /* 원래의 체크 위치 유지 */
+}
+.cardLayout.isFlipped {
+    /*transform: rotateY(180deg);*/
+}
+.cardLayout.isFlipped .cardFront {
+    transform: rotateY(180deg);
+}
+.cardLayout.isFlipped .cardBack {
+    transform: rotateY(360deg);
 }
 
-.cardLayout:has(.ACE) {
+.cardLayout:has(.ACE) .cardFront{
     box-shadow: 0 0 4px rgb(255, 0, 174);
     background-image: url("/image/aceEmblem.svg");
 
 }
-.cardLayout:has(.JOKER) {
+.cardLayout:has(.JOKER) .cardFront{
     box-shadow: 0 0 4px rgb(129, 0, 184);
     /*background-image: url("/image/cuteJokerIcon.png");*/
 }
-.cardLayout:has(.DIAMOND) {
+.cardLayout:has(.DIAMOND) .cardFront{
     box-shadow: 0 0 4px rgb(35, 185, 255);
 }
-.cardLayout:has(.GOLD) {
+.cardLayout:has(.GOLD) .cardFront{
     box-shadow: 0 0 4px rgb(211, 144, 0);
 }
-.cardLayout:has(.SILVER) {
+.cardLayout:has(.SILVER) .cardFront{
     box-shadow: 0 0 4px rgb(159 159 159);
 }
-.cardLayout:has(.BRONZE) {
+.cardLayout:has(.BRONZE) .cardFront{
     box-shadow: 0 0 4px rgb(129, 80, 24);
 }
 .cardLayout hr {
@@ -474,6 +532,7 @@ div:has(> .inputWrap) {
     left: -100%;
     z-index: -1;
     transform-origin: top;
+    display: none;
 }
 .cardLayout:has(.ACE) .overlay {
     animation: light-flow 4s infinite;
@@ -599,7 +658,7 @@ div:has(> .inputWrap) {
     margin: 0 0 0 -4px;
 }
 .cardBackground {
-    background: #fff;
+    background: transparent;
     max-width: none;
     display: flex;
     align-items: center;
