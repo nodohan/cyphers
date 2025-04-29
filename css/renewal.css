@@ -410,6 +410,7 @@ div:has(> .inputWrap) {
     height: auto;
     perspective: 2000px;
     background: transparent;
+    width: auto;
 }
 .cardLayout .cardFront {
     backface-visibility: hidden;
@@ -424,9 +425,10 @@ div:has(> .inputWrap) {
     background-repeat: no-repeat;
     isolation: isolate;
     margin: 0;
-    border-radius: 4px;
+    border-radius: 5px;
     border: 0;
     box-shadow: 0 0 4px #888;
+    position: relative;
 }
 .cardLayout .cardBack {
     position: absolute;
@@ -436,7 +438,7 @@ div:has(> .inputWrap) {
     top: 0;
     left: 0;
     background: #fff;
-    border-radius: 4px;
+    border-radius: 5px;
     transform: rotateY(180deg);
     transition: transform 0.6s;
     box-shadow: 0 0 4px #ccc;
@@ -673,7 +675,8 @@ div:has(> .inputWrap) {
 .cardNameWrap {
 }
 .cardWrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
     width: 100%;
 }
@@ -778,4 +781,33 @@ div:has(> .beforeSeason) {
 }
 .partyInfoButton {
     background: transparent;
+}
+.cardModal {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translate(-50%, 0);
+    left: 50%;
+    top: 12px;
+    z-index: 2;
+    border-radius: 5px;
+    padding: 4px;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px); /* Safari */
+    background-color: rgba(255, 255, 255, 0.3)
+}
+.cardModalInner {
+    position: absolute;
+    background: #fff;
+    width: calc(100% - 24px);
+    top: 50%;
+    left: 50%;
+    border: 2px solid;
+    transform: translate(-50%, -50%);
+}
+.cardModalInner .row {
+    margin: 0;
+}
+.cardModalInner .row > div {
+    width: 100%;
 }

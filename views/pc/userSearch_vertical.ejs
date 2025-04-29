@@ -221,7 +221,7 @@
             clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span>&nbsp;<span>${partyJson.solo.lose}패</span></div>`);
             clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span>&nbsp;<span>${partyJson.all.lose}패</span>&nbsp;<button type="button" onclick="partyModalShow('partyModal_${userDivId}')" class="partyInfoButton">${moreIcon}</button></div>`);
 
-            let partyPopupHtml = `<dialog id="partyModal_${userDivId}">`;
+            let partyPopupHtml = `<div id="partyModal_${userDivId}" class="cardModal"><div class="cardModalInner">`;
 
             if (partyJson.two.all !== 0) {
                 partyPopupHtml += `2인: ${partyJson.two.win}승 ${partyJson.two.lose}패 `;
@@ -260,45 +260,17 @@
               <div style="text-align:right; margin-top:10px;">
                 <button onclick="partyModalClose('partyModal_${userDivId}')">닫기</button>
               </div>
-            </dialog>`;
+            </div>
+</div>`;
 
             clone.append(partyPopupHtml);
-        }
-
-        function partyModalShow(id) {
-            const dialog = document.getElementById(id);
-            if (dialog) {
-                dialog.showModal();
-                bgClose(dialog);
-            }
-        }
-
-        function partyModalClose(id) {
-            const dialog = document.getElementById(id);
-            if (dialog) {
-                dialog.close(); // 모달 닫기
-            }
-        }
-
-        function bgClose(dialog) {
-            function clickOut(e) {
-                const r = dialog.getBoundingClientRect();
-                const inside = r.top <= e.clientY && e.clientY <= r.bottom &&
-                    r.left <= e.clientX && e.clientX <= r.right;
-                if (!inside) {
-                    dialog.close();
-                    dialog.removeEventListener('click', clickOut);
-                }
-            }
-
-            dialog.addEventListener('click', clickOut);
         }
 
         function getEachPartyResult(arr) {
             let resultTable = "<table class='table'> ";
             resultTable += "<thead class='thead-dark'><tr>";
             resultTable += "<th scope='col'>파티원</th>";
-            resultTable += "<th scope='col'>겜수</th>";
+            // resultTable += "<th scope='col'>겜수</th>";
             resultTable += "<th scope='col'>승</th>";
             resultTable += "<th scope='col'>패</th>";
             resultTable += "<th scope='col'>승률</th>";
@@ -311,7 +283,7 @@
 
                 resultTable += "<tr>";
                 resultTable += "<th scope='row'> <a href='#' onClick='partyUserSearch(this);' />" + row.name + "</a></th>";
-                resultTable += "<td>" + total + "</td>";
+                // resultTable += "<td>" + total + "</td>";
                 resultTable += "<td>" + row.win + "</td>";
                 resultTable += "<td>" + row.lose + "</td>";
                 resultTable += "<td>" + rate + "</td>";
