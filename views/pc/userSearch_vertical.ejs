@@ -211,9 +211,6 @@
 
         function drawPartyType(userDivId, clone, row) {
             let partyJson = extractParty(row);
-            let soloAllCnt = partyJson.solo.win + partyJson.solo.lose;
-            let partyAllCnt = partyJson.all.win + partyJson.all.lose;
-            let sum = soloAllCnt + partyAllCnt;
 
             let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
 
@@ -221,49 +218,80 @@
             clone.append(`<div class="solo"><b>솔플</b><span>${partyJson.solo.win}승</span>&nbsp;<span>${partyJson.solo.lose}패</span></div>`);
             clone.append(`<div class="party"><b>파티</b><span>${partyJson.all.win}승</span>&nbsp;<span>${partyJson.all.lose}패</span>&nbsp;<button type="button" onclick="partyModalShow('partyModal_${userDivId}')" class="partyInfoButton">${moreIcon}</button></div>`);
 
-            let partyPopupHtml = `<div id="partyModal_${userDivId}" class="cardModal"><div class="cardModalInner">`;
+            let partyPopupHtml = `<div id="partyModal_${userDivId}" class="cardModal"><div class="cardModalInner"><div class="partyButtonWrap">`;
 
-            if (partyJson.two.all !== 0) {
-                partyPopupHtml += `2인: ${partyJson.two.win}승 ${partyJson.two.lose}패 `;
-                partyPopupHtml += `<a data-toggle='collapse' href='#two${userDivId}' role='button' aria-expanded='false' aria-controls='two${userDivId}'>${moreIcon}</a> `;
-            }
+            const partyTypes = ['two', 'three', 'five'];
 
-            if (partyJson.three.all !== 0) {
-                partyPopupHtml += `3인: ${partyJson.three.win}승 ${partyJson.three.lose}패 `;
-                partyPopupHtml += `<a data-toggle='collapse' href='#three${userDivId}' role='button' aria-expanded='false' aria-controls='three${userDivId}'>${moreIcon}</a> `;
-            }
+            partyTypes.forEach(type => {
+                if (partyJson[type].all !== 0) {
+                    partyPopupHtml += `<button type="button" class="partyButton ${type === 'two' ? 'active' : ''}"
+                id="partyButton_${type}_${userDivId}"
+                onclick="partyMemberShow('${userDivId}', '${type}')">${type === 'two' ? '2인' : type === 'three' ? '3인' : '5인'}</button>`;
+                }
+            });
 
-            if (partyJson.five.all !== 0) {
-                partyPopupHtml += `5인: ${partyJson.five.win}승 ${partyJson.five.lose}패 `;
-                partyPopupHtml += `<a data-toggle='collapse' href='#five${userDivId}' role='button' aria-expanded='false' aria-controls='five${userDivId}'>${moreIcon}</a> `;
-            }
+            partyPopupHtml += `</div><hr><div class='row'>`;
 
-            partyPopupHtml += `<div class='row'>`;
+            partyTypes.forEach(type => {
+                if (partyJson[type].all !== 0) {
+                    const partyResult = getEachPartyResult(partyJson[type].party);
+                    const win = partyJson[type].win;
+                    const lose = partyJson[type].lose;
+                    const total = win + lose;
+                    const rate = total > 0 ? Math.round((win / total) * 100) + '%' : '0%';
 
-            if (partyJson.two.all !== 0) {
-                const partyResult = getEachPartyResult(partyJson.two.party);
-                partyPopupHtml += `<div class='collapse multi-collapse' id='two${userDivId}'>${partyResult}</div>`;
-            }
-
-            if (partyJson.three.all !== 0) {
-                const partyResult = getEachPartyResult(partyJson.three.party);
-                partyPopupHtml += `<div class='collapse multi-collapse' id='three${userDivId}'>${partyResult}</div>`;
-            }
-
-            if (partyJson.five.all !== 0) {
-                const partyResult = getEachPartyResult(partyJson.five.party);
-                partyPopupHtml += `<div class='collapse multi-collapse' id='five${userDivId}'>${partyResult}</div>`;
-            }
+                    partyPopupHtml += `
+            <div class='collapse multi-collapse partyTable ${type === 'two' ? 'active' : ''}' id='party_${type}_${userDivId}'>
+                <div class="modalPartyInfo">
+                    <div class="partyWinRate">
+                        <p><b>승률</b></p>
+                        <p class="winRate"><b>${rate}</b></p>
+                    </div>
+                    <div><p><b>전체</b> ${win}승 ${lose}패</p></div>
+                </div>
+                <hr>
+                ${partyResult}
+            </div>`;
+                }
+            });
 
             partyPopupHtml += `
-              </div>
-              <div style="text-align:right; margin-top:10px;">
-                <button onclick="partyModalClose('partyModal_${userDivId}')">닫기</button>
-              </div>
             </div>
-</div>`;
+            <hr>
+            <button type="button" class="cardModalClose" onclick="partyModalClose('partyModal_${userDivId}')">닫기</button>
+            </div>
+        </div>`;
 
             clone.append(partyPopupHtml);
+        }
+
+        function partyModalShow(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = "block";
+            }
+        }
+
+        function partyModalClose(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function partyMemberShow(userDivId, typeToShow) {
+            const types = ['two', 'three', 'five'];
+            types.forEach(type => {
+                const table = document.getElementById(`party_${type}_${userDivId}`);
+                const button = document.getElementById(`partyButton_${type}_${userDivId}`);
+                if (table) table.classList.remove('active');
+                if (button) button.classList.remove('active');
+            });
+
+            const targetTable = document.getElementById(`party_${typeToShow}_${userDivId}`);
+            const targetButton = document.getElementById(`partyButton_${typeToShow}_${userDivId}`);
+            if (targetTable) targetTable.classList.add('active');
+            if (targetButton) targetButton.classList.add('active');
         }
 
         function getEachPartyResult(arr) {

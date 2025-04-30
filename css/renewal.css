@@ -788,13 +788,14 @@ div:has(> .beforeSeason) {
     position: absolute;
     transform: translate(-50%, 0);
     left: 50%;
-    top: 12px;
+    top: 0px;
     z-index: 2;
     border-radius: 5px;
     padding: 4px;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px); /* Safari */
-    background-color: rgba(255, 255, 255, 0.3)
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px); /* Safari */
+    background-color: rgba(25, 25, 25, 0.3);
+    display: none;
 }
 .cardModalInner {
     position: absolute;
@@ -802,12 +803,83 @@ div:has(> .beforeSeason) {
     width: calc(100% - 24px);
     top: 50%;
     left: 50%;
-    border: 2px solid;
     transform: translate(-50%, -50%);
+}
+.cardModalInner table {
+    margin: 0;
+}
+.cardModalInner table thead th{
+    background-color: #eee !important;
+    color: #343a40 !important;
+    border: 0;
 }
 .cardModalInner .row {
     margin: 0;
 }
 .cardModalInner .row > div {
     width: 100%;
+}
+.cardModalClose {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    top: 100%;
+    left: 0;
+    background: #343a40;
+    color: #fff;
+    border: 0;
+}
+.partyButtonWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.partyButtonWrap > button {
+    flex: 1;
+    min-height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    color: #343a40;
+    position: relative;
+}
+.partyButtonWrap > button:not(:last-of-type):not(.active)::before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 40%;
+    background: #ccc;
+    right: 0;
+    top: 30%;
+}
+.partyButtonWrap > button.active {
+    background: #343a40;
+    color: #fff;
+}
+.partyTable.active {
+    display: block;
+}
+.modalPartyInfo {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+.modalPartyInfo > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modalPartyInfo > div:nth-of-type(1) {
+    flex-direction: column;
+    text-align: center;
+}
+.modalPartyInfo > div:nth-of-type(1) .winRate{
+    font-size: 20px;
+}
+.modalPartyInfo > div:nth-of-type(2) {
+    justify-content: start;
 }
