@@ -42,14 +42,14 @@ pipeline {
 
         stage('Dockerimage build') {
             steps {                
-				sh 'docker build -t cyphers-image:0.0.1 .'
+				sh 'docker build -t cyphers-test-image:0.0.1 .'
             }
         }
         stage('Deploy-1') {
             steps {
-                sh 'docker stop clan-1'
-                sh 'docker rm clan-1'
-                sh 'docker run -d -p 8082:8082  --restart always --name clan-1 -v /home/nodo/cyphersTest:/src/logs cyphers-image:0.0.1'
+                sh 'docker stop cyphers-test-1'
+                sh 'docker rm cyphers-test-1'
+                sh 'docker run -d -p 8082:8082  --restart always --name clan-1 -v /home/nodo/cyphersTest:/src/logs cyphers-test-image:0.0.1'
             }
         }
     }
