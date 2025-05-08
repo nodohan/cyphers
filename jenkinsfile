@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh 'docker stop cyphers-test-1'
                 sh 'docker rm cyphers-test-1'
-                sh 'docker run -d -p 8082:8082  --restart always --name clan-1 -v /home/nodo/cyphersTest:/src/logs cyphers-test-image:0.0.1'
+                sh 'docker run -d -p 8082:8082  --restart always --name cyphers-test-1 -v /home/nodo/cyphersTest:/src/logs cyphers-test-image:0.0.1'
             }
         }
     }
