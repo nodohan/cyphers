@@ -274,7 +274,6 @@ function drawInGameList(data) {
              <td>${date.substr(5)}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
              <td>${winLoseKo(playInfo.result)}</td>
-             <td>${getPositionIcon(data.position.name)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>`;
 
         score +=
@@ -313,9 +312,6 @@ function drawInGameDetail(matchId, data, trClass) {
                 ${winLoseKo(playInfo.result)}
             </td>
             <td>
-                ${getPositionIcon(data.position.name)}
-            </td>
-            <td>
                 ${isSecond? secondIcon : "" }
             </td>
             <td>
@@ -323,13 +319,11 @@ function drawInGameDetail(matchId, data, trClass) {
             </td>
             <td>
                 <div class='fontSmall'>
-                    ${getBuffIcon(data.position.attribute, buffDefaultUrl)}<br> 
                     <a href='#' onClick='javascript:partyUserSearch(this, true);' >${data.nickname}</a>
                     ${partyCnt}<br> 
                     &nbsp;<span class=${gradeTrId}></span> <span class=${rpTrId}></span>
                 </div>
             </td>
-            <!--<td>${playInfo.level}</td>-->
             <td class='kda'>
                 ${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}
                 <br>${(playInfo.attackPoint / 1000).toFixed(0)}K/${(playInfo.damagePoint / 1000).toFixed(0)}K

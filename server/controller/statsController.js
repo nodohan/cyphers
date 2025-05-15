@@ -52,10 +52,10 @@ module.exports = (scheduler, maria, acclogger) => {
         pool = await maria.getPool();
 
         try {
-            let query = ` SELECT * FROM match_stats WHERE statsDate = '${todayStr}' `;
+            let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
             logger.debug(query);
 
-            let row = await pool.query(query);
+            let row = await pool.execute(query, [todayStr]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);

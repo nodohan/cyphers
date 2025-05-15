@@ -277,7 +277,6 @@ function drawInGameList(data) {
              <td>${data.date}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
              <td>${winLoseKo(playInfo.result)}</td>
-             <td>${getPositionIcon(data.position.name)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>
              <td>${playInfo.level}</td>
              <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
@@ -308,11 +307,9 @@ function drawInGameDetail(matchId, data, trClass) {
     const isSecond = items.some(item => item.itemName.endsWith("SU"));
     const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
 
-    score += `<td>${winLoseKo(playInfo.result)}</td>";
+    score += `<td>${winLoseKo(playInfo.result)}</td>
                 <td>${isSecond? secondIcon : ""}</td>
-                <td>${drawCharicter(playInfo.characterId)}</td>";
-                <td>${getPositionIcon(data.position.name)}</td>";
-                <td>${getBuffIcon(data.position.attribute, buffDefaultUrl)}</td>`;
+                <td>${drawCharicter(playInfo.characterId)}</td>`;
     if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
         score +=
             ` <td>

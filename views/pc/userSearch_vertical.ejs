@@ -116,7 +116,7 @@
             drawPartyType(userDivId, clone.find("#playParty"), rows);
 
             //포지션별
-            drawPosition(clone, rows, data.nickname, drawCard2025);
+            //drawPosition(clone, rows, data.nickname, drawCard2025);
 
             //최근 10경기 결과
             drawRecently(clone, rows, userDivId);
@@ -596,10 +596,43 @@
         </div>
     </div>
 
-    <div id="template" class="infoDivV2 cardLayout isFlipped" style="display:none">
-        <div class="cardFront">
-            <div id="defaultDiv">
-                <div class="cardHeaderWrap">
+    <div id="template" class="infoDivV2 cardLayout" style="display:none">
+        <div id="defaultDiv">
+            <div class="cardHeaderWrap">
+                <div>
+                    <span id="levelDiv" class="cardUserLevel "></span>
+                    <span id="clanDiv" class="cardUserClan"></span>
+                </div>
+                <div>
+                    <span id="nickNameDiv" class="cardUserName"></span>
+                </div>
+            </div>
+
+            <div class="cardGrade">
+                <div>
+                    <span id="tierName" class="tierName"></span>
+                </div>
+                <div>
+                    <span id="currRP" class="bold"></span>
+                    <span id="maxRP" class=""></span>
+                    <span id="beforeSeason" class="beforeSeason"></span>
+                </div>
+            </div>
+            <hr>
+
+            <div class="playPartyWrap">
+                <div id="playGameDiv" class="winrateWrap"></div>
+                <div id="playParty" class="playPartyLayer"></div>
+            </div>
+        </div>
+
+        <hr class="mostCharDiv">
+
+        <!-- 자주하는 캐릭-->
+        <div id="mostCharDiv" class="mostCharDiv mostWrap">
+            <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
+            <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
+                <div id="cardTemp" class="" hidden>
                     <div>
                         <span id="levelDiv" class="cardUserLevel ">누비누비</span>
                         <span id="clanDiv" class="cardUserClan"></span>
