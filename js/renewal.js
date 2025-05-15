@@ -3,12 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('header');
     const nav = document.querySelector('header > nav');
 
+    let activateTimeout; // 타이머를 저장할 변수
+
     function headerActive() {
-        header.classList.add('active');
+        activateTimeout = setTimeout(function () {
+            header.classList.add('active');
+        }, 200);
     }
+
     function headerInactive() {
+        clearTimeout(activateTimeout); // 타이머 취소
         header.classList.remove('active');
     }
+
     nav.addEventListener('mouseenter', headerActive);
     nav.addEventListener('mouseleave', headerInactive);
 

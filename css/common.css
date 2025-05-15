@@ -517,7 +517,7 @@ table td {
 }
 
 .floatLeft {
-    /*float: left*/
+    float: left
 }
 
 .mostCharDetailDivV2 {
@@ -618,12 +618,17 @@ table td {
 }
 
 .charImgDiv {
+    display: flex;
+    align-items: center;
     width: 24%;
     background-color: white;
     margin-top: 2px;
     margin-right: 5px;
     margin-bottom: 2px;
     height: 60px;
+}
+.charImgDiv .charImg {
+    margin: 0 7px;
 }
 
 .charList {

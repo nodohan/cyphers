@@ -3,7 +3,7 @@
 .renewalBody {
     background: #f4f6f7;
     position: relative;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh);
 }
 .renewalBody main {
     position: relative;
@@ -17,17 +17,25 @@
     min-width: 1320px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    background: #fff;
+    gap: 16px;
+    padding: 0 0 20px 0;
+}
+.mainInner .leftBanner {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin: 0 0 0 12px;
+    float: none;
 }
 .sideNav {
     position: absolute;
     background: #fff;
     width: 216px;
     height: 100%;
-    padding: 40px 16px;
+    padding: 120px 16px 40px 16px;
     color: #343a40;
     z-index: 1;
+    top: 0;
     left: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
@@ -396,44 +404,120 @@ div:has(> .inputWrap) {
     display: none;
 }
 .cardLayout {
-    flex: 1 1 auto;
-    padding: 8px 8px 12px 8px;
-    font-size: 14px;
     position: relative;
+    border: 0;
+    margin: 0;
+    height: auto;
+    perspective: 2000px;
+    background: transparent;
+    width: auto;
+}
+.cardLayout .cardFront {
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+    overflow: hidden;
+    flex: 1 1 auto;
+    padding: 12px;
+    font-size: 14px;
     background-color: #fff;
     background-size: 70%;
     background-position: center;
     background-repeat: no-repeat;
-    overflow: hidden;
     isolation: isolate;
     margin: 0;
-    border-radius: 4px;
+    border-radius: 5px;
     border: 0;
     box-shadow: 0 0 4px #888;
+    position: relative;
 }
-.cardLayout:has(.ACE) {
+.cardLayout .cardBack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-radius: 5px;
+    transform: rotateY(180deg);
+    transition: transform 0.6s;
+    box-shadow: 0 0 4px #ccc;
+}
+.cardLayout .cardBack::before {
+    content: "";
+    position: absolute;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #ccc; /* 하늘색 + 약간의 투명도 */
+    background-image:
+            linear-gradient(45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+#con1_2 .cardLayout .cardBack::before {
+    background-color: #86b1ff80; /* 하늘색 + 약간의 투명도 */
+    background-image:
+            linear-gradient(45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(134, 177, 255, 0.5) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(134, 177, 255, 0.5) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+#con2_2 .cardLayout .cardBack::before {
+    background-color: #ffe5e5; /* 밝은 핑크색 배경 */
+    background-image:
+            linear-gradient(45deg, rgba(255, 200, 200, 0.8) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(255, 200, 200, 0.8) 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, rgba(255, 200, 200, 0.8) 75%),
+            linear-gradient(-45deg, transparent 75%, rgba(255, 200, 200, 0.8) 75%);
+    background-size: 20px 20px; /* 체크 사이즈는 그대로 20px 유지 */
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0; /* 원래의 체크 위치 유지 */
+}
+.cardLayout.isFlipped {
+    /*transform: rotateY(180deg);*/
+}
+.cardLayout.isFlipped .cardFront {
+    transform: rotateY(180deg);
+}
+.cardLayout.isFlipped .cardBack {
+    transform: rotateY(360deg);
+}
+
+.cardLayout:has(.ACE) .cardFront{
     box-shadow: 0 0 4px rgb(255, 0, 174);
     background-image: url("/image/aceEmblem.svg");
 
 }
-.cardLayout:has(.JOKER) {
+.cardLayout:has(.JOKER) .cardFront{
     box-shadow: 0 0 4px rgb(129, 0, 184);
-    background-image: url("/image/cuteJokerIcon.png");
+    /*background-image: url("/image/cuteJokerIcon.png");*/
 }
-.cardLayout:has(.DIAMOND) {
+.cardLayout:has(.DIAMOND) .cardFront{
     box-shadow: 0 0 4px rgb(35, 185, 255);
 }
-.cardLayout:has(.GOLD) {
+.cardLayout:has(.GOLD) .cardFront{
     box-shadow: 0 0 4px rgb(211, 144, 0);
 }
-.cardLayout:has(.SILVER) {
+.cardLayout:has(.SILVER) .cardFront{
     box-shadow: 0 0 4px rgb(159 159 159);
 }
-.cardLayout:has(.BRONZE) {
+.cardLayout:has(.BRONZE) .cardFront{
     box-shadow: 0 0 4px rgb(129, 80, 24);
 }
 .cardLayout hr {
     margin: 8px 0;
+}
+.cardLayout .cardGrade a {
+    color: #343a40;
+    position: absolute;
+    margin: 0 0 0 4px;
 }
 .cardLayout .overlay {
     background: #333;
@@ -449,6 +533,8 @@ div:has(> .inputWrap) {
     top: 50%;
     left: -100%;
     z-index: -1;
+    transform-origin: top;
+    display: none;
 }
 .cardLayout:has(.ACE) .overlay {
     animation: light-flow 4s infinite;
@@ -559,9 +645,9 @@ div:has(> .inputWrap) {
     z-index: 1;
 }
 .recentGame {
-    display: flex;
-    justify-content: start;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 60px repeat(11, minmax(0, 1fr));
+    margin: 8px 0 0 0;
 }
 .recentGame:has(> span:nth-of-type(10)) {
  justify-content: space-between;
@@ -574,8 +660,10 @@ div:has(> .inputWrap) {
     margin: 0 0 0 -4px;
 }
 .cardBackground {
-    background: #fff;
+    background: transparent;
     max-width: none;
+    display: flex;
+    align-items: center;
 }
 .cardHeaderWrap {
     display: flex;
@@ -587,7 +675,8 @@ div:has(> .inputWrap) {
 .cardNameWrap {
 }
 .cardWrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
     width: 100%;
 }
@@ -608,6 +697,9 @@ div:has(> .inputWrap) {
 .playPartyLayer > div > span {
     display: inline-block;
     text-align: right;
+}
+.playPartyLayer dialog {
+    border: 1px solid;
 }
 .playWinRate {
     margin: 0 0 4px 0;
@@ -660,10 +752,8 @@ div:has(> .inputWrap) {
 .beforeSeason {
     display: flex;
     align-items: center;
-    margin: 0 0 0 4px;
 }
 .beforeSeason a {
-    color: #343a40;
     display: block;
     width: 16px;
     height: 16px;
@@ -675,4 +765,121 @@ div:has(> .inputWrap) {
 }
 div:has(> .beforeSeason) {
     display: flex;
+}
+.renewalTopHistory {
+    display: flex;
+    width: max-content;
+    height: 32px;
+    align-items: center;
+    background: #fff;
+    border-radius: 5px;
+    padding: 0 16px;
+    gap: 8px;
+}
+.renewalTopHistory > span {
+    text-align: center;
+}
+.partyInfoButton {
+    background: transparent;
+}
+.cardModal {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translate(-50%, 0);
+    left: 50%;
+    top: 0px;
+    z-index: 2;
+    border-radius: 5px;
+    padding: 4px;
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px); /* Safari */
+    background-color: rgba(25, 25, 25, 0.3);
+    display: none;
+}
+.cardModalInner {
+    position: absolute;
+    background: #fff;
+    width: calc(100% - 24px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.cardModalInner table {
+    margin: 0;
+}
+.cardModalInner table thead th{
+    background-color: #eee !important;
+    color: #343a40 !important;
+    border: 0;
+}
+.cardModalInner .row {
+    margin: 0;
+}
+.cardModalInner .row > div {
+    width: 100%;
+}
+.cardModalClose {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    top: 100%;
+    left: 0;
+    background: #343a40;
+    color: #fff;
+    border: 0;
+}
+.partyButtonWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.partyButtonWrap > button {
+    flex: 1;
+    min-height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    color: #343a40;
+    position: relative;
+}
+.partyButtonWrap > button:not(:last-of-type):not(.active)::before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 40%;
+    background: #ccc;
+    right: 0;
+    top: 30%;
+}
+.partyButtonWrap > button.active {
+    background: #343a40;
+    color: #fff;
+}
+.partyTable.active {
+    display: block;
+}
+.modalPartyInfo {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+.modalPartyInfo > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modalPartyInfo > div:nth-of-type(1) {
+    flex-direction: column;
+    text-align: center;
+}
+.modalPartyInfo > div:nth-of-type(1) .winRate{
+    font-size: 20px;
+}
+.modalPartyInfo > div:nth-of-type(2) {
+    justify-content: start;
 }
