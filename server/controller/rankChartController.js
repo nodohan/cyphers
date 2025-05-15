@@ -25,17 +25,23 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/userRank', async function(req, res) {
         const { nickname, season } = req.query;
 
-        let userRankList = await searchUserRank(nickname, season);
+        try {
+            let userRankList = await searchUserRank(nickname, season);
 
-        if (userRankList == null) {
-            res.send({ resultCode: -1 });
+            if (userRankList == null) {
+                res.send({ resultCode: -1 });
+            }
+    
+            let result = userRankList.map(row => {
+                return [row.rankDateStr, row.rankNumber]
+            });
+    
+            res.send(result);    
+        } catch(err) {
+            logger.error(err);
+            return res.send({ "resultCode": "400", "resultMsg": "뭐여 ㅡㅡ" });
         }
-
-        let result = userRankList.map(row => {
-            return [row.rankDateStr, row.rankNumber]
-        });
-
-        res.send(result);
+        
     });
 
     async function chartDate(season = '2022H') {
@@ -69,18 +75,18 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = `SELECT 
 		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
                     FROM userRank 
-                    WHERE season = '${season}' 
+                    WHERE season = ?
                     and playerId = ( 
                         SELECT 
                             playerId 
-                        FROM nickNames WHERE nickname= '${userName}' 
+                        FROM nickNames WHERE nickname= ?
                         ORDER BY checkingDate DESC LIMIT 1
                     ) order by rankDate asc `;
 
         let pool = await maria.getPool();
 
         try {
-            let rows = await pool.query(query);
+            let rows = await pool.execute(query, [season, userName]);
             return rows;
         } catch (err) {
             logger.error(err);
