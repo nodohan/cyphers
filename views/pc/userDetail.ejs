@@ -64,7 +64,7 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션 별 승률
-                drawPosition(clone, rows, nickname, appendPlayTypeInfo);
+                // drawPosition(clone, rows, nickname, appendPlayTypeInfo);
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
@@ -115,7 +115,7 @@
                 drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
 
                 //포지션 별 승률
-                drawPositionNormal(clone, rows, nickname);
+                // drawPositionNormal(clone, rows, nickname);
 
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
@@ -284,7 +284,7 @@
                 //포지션별 승률
                 let mapRow = extractMap(rows, mapName);
                 showMapRate(div.find(divId).find(".mapRate"), mapRow);
-                drawPosition(div.find(divId), mapRow, nickname, appendPlayTypeInfo);
+                // drawPosition(div.find(divId), mapRow, nickname, appendPlayTypeInfo);
                 let userMapChar = extractChar(mapRow, highScore);
                 
                 drawOften(div.find(divId).find("#often"), userMapChar, drawCharCardVer, nickname);

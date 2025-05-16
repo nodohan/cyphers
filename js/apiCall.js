@@ -175,23 +175,23 @@ function asyncUserInfo(gameType, nickName) {
     return result;
 }
 
-function drawPosition(div, rows, nickname, drawFuncCall) {
-    let tanker = extractPlayType(rows, "탱커");
-    let ad = extractPlayType(rows, "원거리딜러");
-    let melee = extractPlayType(rows, "근거리딜러");
-    let supp = extractPlayType(rows, "서포터");
-
-    //포지션별 승률
-    const positionDiv = $(div).find("#positionDiv");
-    positionDiv.empty();
-
-    // const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
-    const drawFunc = drawFuncCall;
-    drawFunc(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
-    drawFunc(positionDiv, melee, "melee", "근거리딜러", nickname);
-    drawFunc(positionDiv, ad, "ad", "원거리딜러", nickname);
-    drawFunc(positionDiv, supp, "supp", "서포터", nickname);
-}
+// function drawPosition(div, rows, nickname, drawFuncCall) {
+//     let tanker = extractPlayType(rows, "탱커");
+//     let ad = extractPlayType(rows, "원거리딜러");
+//     let melee = extractPlayType(rows, "근거리딜러");
+//     let supp = extractPlayType(rows, "서포터");
+//
+//     //포지션별 승률
+//     const positionDiv = $(div).find("#positionDiv");
+//     positionDiv.empty();
+//
+//     // const drawFunc = typeof drawCharFunc == 'function' ? drawFuncCall : appendPlayTypeInfo;
+//     const drawFunc = drawFuncCall;
+//     drawFunc(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
+//     drawFunc(positionDiv, melee, "melee", "근거리딜러", nickname);
+//     drawFunc(positionDiv, ad, "ad", "원거리딜러", nickname);
+//     drawFunc(positionDiv, supp, "supp", "서포터", nickname);
+// }
 
 function isDuplicate(gameType, nickName) {
     return $("#" + getUserDivId(gameType, nickName)).length != 0;
