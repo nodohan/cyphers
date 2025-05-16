@@ -225,8 +225,8 @@
             partyTypes.forEach(type => {
                 if (partyJson[type].all !== 0) {
                     partyPopupHtml += `<button type="button" class="partyButton ${type === 'two' ? 'active' : ''}"
-                id="partyButton_${type}_${userDivId}"
-                onclick="partyMemberShow('${userDivId}', '${type}')">${type === 'two' ? '2인' : type === 'three' ? '3인' : '5인'}</button>`;
+                                        id="partyButton_${type}_${userDivId}"
+                                        onclick="partyMemberShow('${userDivId}', '${type}')">${type === 'two' ? '2인' : type === 'three' ? '3인' : '5인'}</button>`;
                 }
             });
 
@@ -241,17 +241,17 @@
                     const rate = total > 0 ? Math.round((win / total) * 100) + '%' : '0%';
 
                     partyPopupHtml += `
-            <div class='collapse multi-collapse partyTable ${type === 'two' ? 'active' : ''}' id='party_${type}_${userDivId}'>
-                <div class="modalPartyInfo">
-                    <div class="partyWinRate">
-                        <p><b>승률</b></p>
-                        <p class="winRate"><b>${rate}</b></p>
-                    </div>
-                    <div><p><b>전체</b> ${win}승 ${lose}패</p></div>
-                </div>
-                <hr>
-                ${partyResult}
-            </div>`;
+                        <div class='collapse multi-collapse partyTable ${type === 'two' ? 'active' : ''}' id='party_${type}_${userDivId}'>
+                            <div class="modalPartyInfo">
+                                <div class="partyWinRate">
+                                    <p><b>승률</b></p>
+                                    <p class="winRate"><b>${rate}</b></p>
+                                </div>
+                                <div><p><b>전체</b> ${win}승 ${lose}패</p></div>
+                            </div>
+                            <hr>
+                            ${partyResult}
+                        </div>`;
                 }
             });
 
@@ -770,7 +770,6 @@
                                 <th scope="col">날짜</th>
                                 <th scope="col">파티</th>
                                 <th scope="col">결과</th>
-                                <th scope="col">P</th>
                                 <th scope="col">Char</th>
                                 <th scope="col">Lv</th>
                                 <th scope="col">KDA</th>
@@ -795,8 +794,6 @@
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col">C</th>
-                    <th scope="col">P</th>
-                    <th scope="col">buff</th>
                     <th scope="col">닉네임</th>
                     <th scope="col">급</th>
                     <th scope="col">rp</th>
