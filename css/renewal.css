@@ -555,7 +555,7 @@ div:has(> .inputWrap) {
 }
 .cardLayout .cardHeader > div {
     flex: 1;
- }
+}
 .cardLayout .cardHeader .infoDefalut {
     display: flex;
     flex-direction: column;
@@ -650,7 +650,7 @@ div:has(> .inputWrap) {
     margin: 8px 0 0 0;
 }
 .recentGame:has(> span:nth-of-type(10)) {
- justify-content: space-between;
+    justify-content: space-between;
 }
 .recentGame > span {
     margin: 0 !important;

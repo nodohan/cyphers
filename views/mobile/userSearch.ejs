@@ -93,9 +93,6 @@
                 //파티 별?
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
-                //포지션별 승률
-                drawPosition(clone, rows, nickname);
-
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
                 drawOften(clone, userChar, drawCharCardVer);
@@ -280,63 +277,6 @@
                 <div id="playParty" class="width100p playParty"></div>
             </div>
 
-            <!-- 포지션별 승률 -->
-            <div id="positionDiv" class="positionDiv">
-                <div id="positionTanker" class="card">
-                    <div class="row no-gutters">
-                        <div>
-                            <img src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                        </div>
-                        <div>
-                            <div class="card-body">
-                                <p id="tankerSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionMelee" class="card">
-                    <div class="row no-gutters">
-                        <div>
-                            <img src="http://static.cyphers.co.kr/img/game_position/position2.jpg">
-                        </div>
-                        <div>
-                            <div class="card-body">
-                                <p id="meleeSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionAd" class="card">
-                    <div class="row no-gutters">
-                        <div>
-                            <img src="http://static.cyphers.co.kr/img/game_position/position3.jpg">
-                        </div>
-                        <div>
-                            <div class="card-body">
-                                <p id="adSpan" class="card-text">57% <br> <small class="text-muted">79승 60패</small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="positionSupp" class="card">
-                    <div class="row no-gutters">
-                        <div>
-                            <img src="http://static.cyphers.co.kr/img/game_position/position4.jpg">
-                        </div>
-                        <div>
-                            <div class="card-body">
-                                <p id="suppSpan" class="card-text"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- 자주하는 캐릭-->
             <div id="mostCharDiv" class="mostCharDiv">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
@@ -380,7 +320,6 @@
                                         <th scope="col">날짜</th>
                                         <th scope="col">파티</th>
                                         <th scope="col">결과</th>
-                                        <th scope="col">P</th>
                                         <th scope="col">캐릭</th>
                                         <th scope="col">KDA</th>
                                         <th scope="col"></th>
@@ -399,10 +338,9 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">r</th>
-                        <th scope="col">p</th>
                         <th scope="col">2</th>
                         <th scope="col">c</th>
-                        <th scope="col">buff/닉네임</th>
+                        <th scope="col">닉네임</th>
                         <th scope="col">KDA<br>딜/피해</th>
                         <th scope="col">코인<br>소모품(%)</th>
                         <th scope="col">[+]</th>

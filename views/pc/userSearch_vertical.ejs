@@ -16,6 +16,7 @@
             $("#userSearch_vertical").addClass("active");
 
             getCookie();
+            loadSideNavState();
             showSearchHistory();
             $("#partyShow").on("change", checkVisibility);
             $("#positionShow").on("change", checkVisibility);
@@ -225,8 +226,8 @@
             partyTypes.forEach(type => {
                 if (partyJson[type].all !== 0) {
                     partyPopupHtml += `<button type="button" class="partyButton ${type === 'two' ? 'active' : ''}"
-                id="partyButton_${type}_${userDivId}"
-                onclick="partyMemberShow('${userDivId}', '${type}')">${type === 'two' ? '2인' : type === 'three' ? '3인' : '5인'}</button>`;
+                                        id="partyButton_${type}_${userDivId}"
+                                        onclick="partyMemberShow('${userDivId}', '${type}')">${type === 'two' ? '2인' : type === 'three' ? '3인' : '5인'}</button>`;
                 }
             });
 
@@ -241,17 +242,17 @@
                     const rate = total > 0 ? Math.round((win / total) * 100) + '%' : '0%';
 
                     partyPopupHtml += `
-            <div class='collapse multi-collapse partyTable ${type === 'two' ? 'active' : ''}' id='party_${type}_${userDivId}'>
-                <div class="modalPartyInfo">
-                    <div class="partyWinRate">
-                        <p><b>승률</b></p>
-                        <p class="winRate"><b>${rate}</b></p>
-                    </div>
-                    <div><p><b>전체</b> ${win}승 ${lose}패</p></div>
-                </div>
-                <hr>
-                ${partyResult}
-            </div>`;
+                        <div class='collapse multi-collapse partyTable ${type === 'two' ? 'active' : ''}' id='party_${type}_${userDivId}'>
+                            <div class="modalPartyInfo">
+                                <div class="partyWinRate">
+                                    <p><b>승률</b></p>
+                                    <p class="winRate"><b>${rate}</b></p>
+                                </div>
+                                <div><p><b>전체</b> ${win}승 ${lose}패</p></div>
+                            </div>
+                            <hr>
+                            ${partyResult}
+                        </div>`;
                 }
             });
 
@@ -437,7 +438,18 @@
         }
 
         function sideNavToggle() {
-            document.querySelector('.sideNav').classList.toggle('slim');
+            const nav = document.querySelector('.sideNav');
+            if (!nav) return;
+
+            const isSlim = nav.classList.toggle('slim');
+            localStorage.setItem('sideNavSlim', isSlim);
+        }
+
+        function loadSideNavState() {
+            const nav = document.querySelector('.sideNav');
+            if (!nav) return;
+
+            nav.classList.toggle('slim', localStorage.getItem('sideNavSlim') === 'true');
         }
 
         function searchInputToggle(e) {
@@ -526,7 +538,7 @@
 
 <body class="renewalBody">
 <%- include ("../layout/menu") %>
-<div class="sideNav">
+<div class="sideNav slim">
     <button type="button" class="sideNavToggleBtn" onclick="sideNavToggle()">
     </button>
     <h2>전적검색 (가로)</h2>
@@ -548,16 +560,15 @@
     <div class="head">
         <div class="inputWrap">
             <div class="gameModeCheck">
-                <input class="officialGameCheck" type="radio" name="gameType" id="gameType_rating" value="rating"
-                       checked/>
+                <input class="officialGameCheck" type="radio" name="gameType" id="gameType_rating" value="rating" checked/>
                 <label class="" for="gameType_rating"> 공식 </label>
                 <input class="normalGameCheck" type="radio" name="gameType" id="gameType_normal" value="normal"/>
                 <label class="" for="gameType_normal"> 일반 </label>
             </div>
-            <div class="searchSettingCheck">
-                <input class="checkPosition positionBtn" type="checkbox" id="positionShow" checked>
-                <label class="iconBtn" for="positionShow">포지션 노출</label>
-            </div>
+<!--            <div class="searchSettingCheck">-->
+<!--                <input class="checkPosition positionBtn" type="checkbox" id="positionShow" checked>-->
+<!--                <label class="iconBtn" for="positionShow">포지션 노출</label>-->
+<!--            </div>-->
             <div class="searchSettingCheck">
                 <input class="checkParty partyBtn" type="checkbox" id="partyShow" checked>
                 <label class="iconBtn" for="partyShow">파티 노출</label>
@@ -588,62 +599,64 @@
         </div>
     </div>
 
-    <div id="template" class="infoDivV2 cardLayout" style="display:none">
-        <div id="defaultDiv">
-            <div class="cardHeaderWrap">
-                <div>
-                    <span id="levelDiv" class="cardUserLevel "></span>
-                    <span id="clanDiv" class="cardUserClan"></span>
-                </div>
-                <div>
-                    <span id="nickNameDiv" class="cardUserName"></span>
-                </div>
-            </div>
-
-            <div class="cardGrade">
-                <div>
-                    <span id="tierName" class="tierName"></span>
-                </div>
-                <div>
-                    <span id="currRP" class="bold"></span>
-                    <span id="maxRP" class=""></span>
-                    <span id="beforeSeason" class="beforeSeason"></span>
-                </div>
-            </div>
-            <hr>
-
-            <div class="playPartyWrap">
-                <div id="playGameDiv" class="winrateWrap"></div>
-                <div id="playParty" class="playPartyLayer"></div>
-            </div>
-        </div>
-
-        <hr class="mostCharDiv">
-
-        <!-- 자주하는 캐릭-->
-        <div id="mostCharDiv" class="mostCharDiv mostWrap">
-            <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
-            <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
-                <div id="cardTemp" class="" hidden>
+    <div id="template" class="infoDivV2 cardLayout isFlipped" style="display:none">
+        <div class="cardFront">
+            <div id="defaultDiv">
+                <div class="cardHeaderWrap">
                     <div>
-                        <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                        <span id="levelDiv" class="cardUserLevel "></span>
+                        <span id="clanDiv" class="cardUserClan"></span>
                     </div>
                     <div>
-                        <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
+                        <span id="nickNameDiv" class="cardUserName"></span>
+                    </div>
+                </div>
+
+                <div class="cardGrade">
+                    <div>
+                        <span id="tierName" class="tierName"></span>
+                    </div>
+                    <div>
+                        <span id="currRP" class="bold"></span>
+                        <span id="maxRP" class=""></span>
+                        <span id="beforeSeason" class="beforeSeason"></span>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="playPartyWrap">
+                    <div id="playGameDiv" class="winrateWrap"></div>
+                    <div id="playParty" class="playParty playPartyLayer"></div>
+                </div>
+            </div>
+
+            <hr class="mostCharDiv">
+
+            <!-- 자주하는 캐릭-->
+            <div id="mostCharDiv" class="mostCharDiv mostWrap">
+                <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
+                    <div id="cardTemp" class="" hidden>
+                        <div>
+                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                        </div>
+                        <div>
+                            <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <hr class="recentlyDiv">
-        <div id="recentlyDiv" class="width100p recentlyDiv">
-            <div class="width100p recentGame" id="recentlyDivTitle">
-                <!--최근 10게임 -->
+            <hr class="recentlyDiv">
+            <div id="recentlyDiv" class="width100p recentlyDiv">
+                <div class="width100p recentGame" id="recentlyDivTitle">
+                    <!--최근 10게임 -->
+                </div>
             </div>
+            <div class="overlay"></div>
         </div>
-        <div class="overlay"></div>
+        <div class="cardBack"></div>
     </div>
-    <div class="cardBack"></div>    
 
     <div id="placedTemplate" class="infoDivV2 cardLayout isFlipped" style="display:none">
         <div class="cardFront">
@@ -770,7 +783,6 @@
                                 <th scope="col">날짜</th>
                                 <th scope="col">파티</th>
                                 <th scope="col">결과</th>
-                                <th scope="col">P</th>
                                 <th scope="col">Char</th>
                                 <th scope="col">Lv</th>
                                 <th scope="col">KDA</th>
@@ -795,8 +807,6 @@
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col">C</th>
-                    <th scope="col">P</th>
-                    <th scope="col">buff</th>
                     <th scope="col">닉네임</th>
                     <th scope="col">급</th>
                     <th scope="col">rp</th>
