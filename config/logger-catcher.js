@@ -67,6 +67,11 @@ module.exports = () => {
     }
     
     return (req, res, next) => {
+        const url = req.url;
+        if(url.length > 128) {
+          return;
+        }
+
         const blocked = insertHistory(req, res);
         if (!blocked){
             next();  // 공격 감지된 경우 next() 호출하지 않음
