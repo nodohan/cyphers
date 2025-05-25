@@ -4,12 +4,13 @@
     background: #f4f6f7;
     position: relative;
     min-height: calc(100vh);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .renewalBody main {
     position: relative;
     padding: 0 100px;
     margin: 40px 0 0 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
 }
 .mainInner {
     width: 85% !important;
@@ -19,6 +20,7 @@
     flex-direction: column;
     gap: 16px;
     padding: 0 0 20px 0;
+    position: relative;
 }
 .mainInner .leftBanner {
     position: absolute;
@@ -37,7 +39,6 @@
     z-index: 1;
     top: 0;
     left: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .sideNav h2 {
     color: #343a40;
@@ -555,7 +556,7 @@ div:has(> .inputWrap) {
 }
 .cardLayout .cardHeader > div {
     flex: 1;
- }
+}
 .cardLayout .cardHeader .infoDefalut {
     display: flex;
     flex-direction: column;
@@ -650,7 +651,7 @@ div:has(> .inputWrap) {
     margin: 8px 0 0 0;
 }
 .recentGame:has(> span:nth-of-type(10)) {
- justify-content: space-between;
+    justify-content: space-between;
 }
 .recentGame > span {
     margin: 0 !important;
@@ -773,11 +774,10 @@ div:has(> .beforeSeason) {
     align-items: center;
     background: #fff;
     border-radius: 5px;
-    padding: 0 16px;
-    gap: 8px;
 }
 .renewalTopHistory > span {
     text-align: center;
+    margin: 0 16px;
 }
 .partyInfoButton {
     background: transparent;
@@ -882,4 +882,51 @@ div:has(> .beforeSeason) {
 }
 .modalPartyInfo > div:nth-of-type(2) {
     justify-content: start;
+}
+
+.renewalMainUserDetail {
+    max-width: 1920px;
+    min-width: 1320px;
+}
+.renewalDetailSearch {
+    width: 1120px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gameTypeWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    background: #fff;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-left: 1px solid #ced4da;
+    border-radius: 40px 0 0 40px !important;
+}
+.detailSearchInput > input[type="text"] {
+    height: 48px;
+    border-radius: 0 40px 40px 0 !important;
+    display: block;
+    position: relative;
+    padding: 0 24px;
+}
+.mainDetail {
+    background: #fff;
+}
+.searchButtonWrap {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+}
+.searchButton {
+    width: 32px;
+    height: 32px;
+    background-image: url("/image/searchIcon_small.svg");
+}
+.userDetailBody .renewalTopHistory {
+    margin: 0 auto;
 }
