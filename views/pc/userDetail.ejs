@@ -307,27 +307,33 @@
         <%- include  ("../layout/leftBanner") %>
 
         <div class="renewalDetailSearch">
-            <div class="gameTypeWrap">
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
-                    <label class="custom-control-label" for="gameType_rating">공식</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
-                  <label class="custom-control-label" for="gameType_normal">일반</label>
+            <div id="gameTypeWrap" class="gameTypeWrap">
+                <div id="gameTypeShow" class="gameTypeShow">공식전</div>
+                <div id="gameTypeSelect" class="gameTypeSelect" style="display: none">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
+                        <label class="custom-control-label game-type-option" for="gameType_rating" data-type="공식">공식</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
+                        <label class="custom-control- game-type-option" for="gameType_normal" data-type="일반">일반</label>
+                    </div>
                 </div>
             </div>
 
-            <div class="input-group detailSearchInput">
-                <input type="text" id="nickNames" class="form-control" placeholder="닉네임 검색" aria-label="닉네임 검색" aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchDetail(); } ">
-                <div class="input-group-append searchButtonWrap" id="searchButton">
+            <div class="input-group detailSearchInputWrap">
+                <input type="text" id="nickNames" class="form-control detailSearchInput" placeholder="닉네임 검색" aria-label="닉네임 검색" aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " autocomplete="off">
+                <div class="input-group-append" id="searchButton">
                     <button class="searchButton" type="button" onClick="searchDetail();" title="검색"></button>
 <!--                    <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');clearDiv('con2_2');">초기화</button>-->
                 </div>
+                <div id="renewalDetailHistory" class="renewalDetailHistory" style="display: none">
+                    <p class="recentSearch">최근검색</p>
+                    <ul id="topHistory" class="detailHistory">
+                    </ul>
+                </div>
             </div>
         </div>
-
-        <div id="topHistory" class="renewalTopHistory" ></div>
 
         <div class="conDetailWrap">
             <div id="con1" class="conDetail">

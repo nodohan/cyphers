@@ -117,6 +117,14 @@ function searchUser(inputId, divName, nickName, callback) {
         return;
     }
 
+    if (pageName === 'pcDetail') {
+        console.log('gd');
+        const history = document.getElementById("renewalDetailHistory");
+        if (history) {
+            history.style.display = "none";
+        }
+    }
+
     $.ajax({
         url: "/user/getUserInfo",
         data: {

@@ -22,6 +22,9 @@
     padding: 0 0 20px 0;
     position: relative;
 }
+.renewalBody .mainInner {
+    min-width: 0;
+}
 .mainInner .leftBanner {
     position: absolute;
     left: 100%;
@@ -889,13 +892,15 @@ div:has(> .beforeSeason) {
     min-width: 1320px;
 }
 .renewalDetailSearch {
-    width: 1120px;
+    width: 80%;
+    max-width: 1120px;
     margin: 20px auto;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .gameTypeWrap {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -905,13 +910,93 @@ div:has(> .beforeSeason) {
     border-bottom: 1px solid #ced4da;
     border-left: 1px solid #ced4da;
     border-radius: 40px 0 0 40px !important;
+    flex: 1;
+    padding: 0 0 0 24px;
 }
-.detailSearchInput > input[type="text"] {
+.gameTypeWrap::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 40%;
+    background: #ced4da;
+}
+.gameTypeShow {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gameTypeShow::before {
+    content: "";
+    position: absolute;
+    left: calc(100% - 48px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #343a40; /* 아래 방향 화살표 */
+}
+.gameTypeSelect {
+    position: absolute;
+    top: calc(100% + 1px);
+    right: 0;
+    width: calc(100% - 24px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.gameTypeSelect > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.gameTypeSelect > div > input {
+    display: none;
+}
+.gameTypeSelect > div > label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 12px 0;
+    background: #fff;
+    cursor: pointer;
+}
+.gameTypeSelect > div > input:checked + label {
+    background: #343a40;
+    color: #fff;
+}
+.gameTypeSelect > div > label::before {
+    display: none;
+}
+.detailSearchInputWrap > input[type="text"] {
+    position: relative;
     height: 48px;
     border-radius: 0 40px 40px 0 !important;
     display: block;
-    position: relative;
     padding: 0 24px;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    border-left: 0;
+}
+.detailSearchInputWrap {
+    flex: 6;
+}
+.detailSearchInputWrap > input[type="text"]:focus {
+    box-shadow: none;
 }
 .mainDetail {
     background: #fff;
@@ -923,10 +1008,56 @@ div:has(> .beforeSeason) {
     transform: translateY(-50%);
 }
 .searchButton {
-    width: 32px;
-    height: 32px;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
     background-image: url("/image/searchIcon_small.svg");
+    z-index: 10;
+    opacity: 0.75;
 }
 .userDetailBody .renewalTopHistory {
     margin: 0 auto;
+}
+.renewalDetailHistory {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    width: calc(100% - 48px);
+    z-index: 1;
+}
+.deleteHistroyButton {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url("/image/deleteIcon.svg");
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(0.25);
+}
+.recentSearch {
+    background: #343a40;
+    color: #fff;
+    padding: 12px 24px;
+}
+.detailHistory {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    gap: 4px;
+    padding: 8px 0;
+}
+.historyItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 24px;
+    color: #343a40;
+}
+.historyItem a {
+    color: #343a40;
 }
