@@ -932,10 +932,13 @@ div:has(> .beforeSeason) {
     align-items: center;
     justify-content: center;
 }
-.gameTypeShow::before {
+.gameTypeShow > p {
+    position: relative;
+}
+.gameTypeShow > p::before {
     content: "";
     position: absolute;
-    left: calc(100% - 48px);
+    left: calc(100% + 4px);
     top: 50%;
     transform: translateY(-50%);
     width: 0;
@@ -947,11 +950,12 @@ div:has(> .beforeSeason) {
 .gameTypeSelect {
     position: absolute;
     top: calc(100% + 1px);
-    right: 0;
-    width: calc(100% - 24px);
+    left: 40px;
+    width: calc(80% - 24px);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow: 0 0 3px #ced4da;
 }
 .gameTypeSelect > div {
     display: flex;
@@ -1029,6 +1033,7 @@ div:has(> .beforeSeason) {
     background-color: #fff;
     width: calc(100% - 48px);
     z-index: 1;
+    box-shadow: 0 0 3px #ced4da;
 }
 .deleteHistroyButton {
     display: block;
@@ -1049,13 +1054,12 @@ div:has(> .beforeSeason) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     gap: 4px;
-    padding: 8px 0;
 }
 .historyItem {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 24px;
+    padding: 8px 24px;
     color: #343a40;
 }
 .historyItem a {
