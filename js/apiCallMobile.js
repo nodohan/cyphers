@@ -826,7 +826,6 @@ function playGameList(findId, div, nickname, showType, modalId) {
                 <td> ${row.date.substr(5)} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
                 <td><b>${winLoseKo(result)}</b></td>
-                <td>${getPositionIcon(row.position.name)}</td>
                 <td>${drawCharicter(characterId)}</td>
                 <!-- <td>${level}</td>-->
                 <td class='kda'>${killCount}/${deathCount}/${assistCount}</td>

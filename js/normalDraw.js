@@ -346,7 +346,6 @@ const playGameListNormal = (findId, div, nickname, showType, modalId) => {
             `<tr>
                 <td> ${row.date} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
-                <td>${getPositionIcon(row.position.name)}</td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td>
