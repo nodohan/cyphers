@@ -1065,3 +1065,19 @@ div:has(> .beforeSeason) {
 .historyItem a {
     color: #343a40;
 }
+.voiceOfCustomer {
+    position: fixed;
+    left: 100%;
+    top: 100%;
+    transform: translate(-100%, -100%);
+    padding: 0 16px 60px 0;
+}
+.voiceOfCustomer__toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #343a40;
+}
+.voiceOfCustomer__list {
+    display: none;
+}
