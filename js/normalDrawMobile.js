@@ -480,7 +480,6 @@ const drawMatchNormal = (matchId, result, divId) => {
                     <th scope="col"></th>
                     <th scope="col">C</th>
                     <th scope="col">P</th>
-                    <th scope="col">buff</th>
                     <th scope="col">닉네임</th>
                     <th scope="col">급</th>
                     <th scope="col">rp</th>
