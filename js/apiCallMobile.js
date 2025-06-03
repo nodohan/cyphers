@@ -74,7 +74,6 @@ function getPlayInfo(info) {
     return {
         "charId": playInfo.characterId,
         "charName": playInfo.characterName,
-        "position": info.position.name,
         "kill": playInfo.killCount,
         "death": playInfo.deathCount,
         "assist": playInfo.assistCount,
