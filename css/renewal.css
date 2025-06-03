@@ -1054,6 +1054,7 @@ div:has(> .beforeSeason) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, auto));
     gap: 4px;
+    min-height: 40px;
 }
 .historyItem {
     display: flex;
@@ -1072,12 +1073,61 @@ div:has(> .beforeSeason) {
     transform: translate(-100%, -100%);
     padding: 0 16px 60px 0;
 }
-.voiceOfCustomer__toggle {
+.voiceOfCustomer > button {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #343a40;
+    background-color: #343a40;
+    background-image: url("/image/letterIcon.svg");
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
-.voiceOfCustomer__list {
+.VOCBody {
+    position: absolute;
+    left: calc(100% - 16px);
+    top: -16px;
+    width: 320px;
+    background: #fff;
+    transform: translate(-100%, -100%);
+    padding: 20px 16px;
+    transition: opacity 0.3s ease;
     display: none;
+    opacity: 0;
+}
+.VOCBody.show {
+    display: block;
+    opacity: 1;
+}
+.VOCHeading {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 4px 0;
+}
+.VOCField {
+    text-align: left;
+    margin: 20px 0;
+}
+.VOCInput {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin: 8px 0 0 0;
+    padding: 8px;
+}
+.VOCTextarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin: 8px 0 0 0;
+    padding: 8px;
+    resize: none;
+}
+.VOCSubmit {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    background: #343a40;
+    color: #fff;
 }

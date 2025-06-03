@@ -52,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById("nickNames");
         const history = document.getElementById("renewalDetailHistory");
 
+        if (!input || !history) {
+            console.warn("nickNames 또는 renewalDetailHistory 요소를 찾을 수 없습니다.");
+            return;
+        }
+
         // input 클릭 시 히스토리 토글
         input.addEventListener("click", (e) => {
             e.stopPropagation(); // 외부 클릭 이벤트 방지
@@ -98,4 +103,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setupGameTypeToggle();
+
+    const button = document.getElementById('VOCButton');
+    const vocBody = document.querySelector('.VOCBody');
+
+    function toggleVOC() {
+        if (vocBody.classList.contains('show')) {
+            vocBody.classList.remove('show');
+            setTimeout(() => vocBody.style.display = 'none', 300);
+        } else {
+            vocBody.style.display = 'block';
+            setTimeout(() => vocBody.classList.add('show'), 10);
+        }
+    }
+
+    function closeVOCIfOutside(event) {
+        if (!vocBody.contains(event.target) && !button.contains(event.target)) {
+            vocBody.classList.remove('show');
+            setTimeout(() => vocBody.style.display = 'none', 300);
+        }
+    }
+
+    button.addEventListener('click', toggleVOC);
+    document.addEventListener('click', closeVOCIfOutside);
 });

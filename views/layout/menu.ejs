@@ -76,21 +76,24 @@
         </ul>
     </nav>
     <div class="voiceOfCustomer">
-        <button type="button" class="voiceOfCustomer__toggle">문의하기</button>
-        <ul class="voiceOfCustomer__list">
-            <li>
-                <button type="button" class="voiceOfCustomer__item normal">문의하기(일반)</button>
-            </li>
-            <li>
-                <button type="button" class="voiceOfCustomer__item bug">버그제보</button>
-            </li>
-            <li>
-                <button type="button" class="voiceOfCustomer__item want">개선요청</button>
-            </li>
-            <li>
-                <button type="button" class="voiceOfCustomer__item spon">후원하기</button>
-            </li>
-        </ul>
+        <button type="button" id="VOCButton" title="문의하기" class="VOCButton"></button>
+        <div class="VOCBody">
+            <p class="VOCHeading">문의하기</p>
+            <hr>
+            <div class="VOCForm">
+                <div class="VOCField">
+                    <label for="vocSubject">제목</label>
+                    <input type="text" id="vocSubject" name="vocSubject" class="VOCInput" placeholder="">
+                </div>
+                <hr>
+                <div class="VOCField">
+                    <label for="vocContent">문의사항</label>
+                    <textarea id="vocContent" name="vocContent" class="VOCTextarea" rows="5" placeholder=""></textarea>
+                </div>
+
+                <button type="submit" class="VOCSubmit">보내기</button>
+            </div>
+        </div>
     </div>
 </header>
 
