@@ -106,21 +106,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const button = document.getElementById('VOCButton');
     const vocBody = document.querySelector('.VOCBody');
+    let isAnimating = false; // 애니메이션 상태 플래그
 
     function toggleVOC() {
+        if (isAnimating) return; // 애니메이션 중이면 중단
+
         if (vocBody.classList.contains('show')) {
+            isAnimating = true;
             vocBody.classList.remove('show');
-            setTimeout(() => vocBody.style.display = 'none', 300);
+            setTimeout(() => {
+                vocBody.style.display = 'none';
+                isAnimating = false;
+            }, 300);
         } else {
+            isAnimating = true;
             vocBody.style.display = 'block';
-            setTimeout(() => vocBody.classList.add('show'), 10);
+            setTimeout(() => {
+                vocBody.classList.add('show');
+                isAnimating = false;
+            }, 10); // show 클래스 추가로 트리거 발생
         }
     }
 
     function closeVOCIfOutside(event) {
-        if (!vocBody.contains(event.target) && !button.contains(event.target)) {
+        if (
+            !vocBody.contains(event.target) &&
+            !button.contains(event.target) &&
+            vocBody.classList.contains('show') &&
+            !isAnimating
+        ) {
+            isAnimating = true;
             vocBody.classList.remove('show');
-            setTimeout(() => vocBody.style.display = 'none', 300);
+            setTimeout(() => {
+                vocBody.style.display = 'none';
+                isAnimating = false;
+            }, 300);
         }
     }
 

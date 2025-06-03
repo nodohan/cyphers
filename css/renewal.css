@@ -1090,10 +1090,14 @@ div:has(> .beforeSeason) {
     width: 320px;
     background: #fff;
     transform: translate(-100%, -100%);
-    padding: 20px 16px;
+    padding: 16px;
     transition: opacity 0.3s ease;
     display: none;
     opacity: 0;
+    border-radius: 8px;
+}
+.VOCBody hr {
+    margin: 12px 0;
 }
 .VOCBody.show {
     display: block;
@@ -1102,11 +1106,11 @@ div:has(> .beforeSeason) {
 .VOCHeading {
     font-size: 20px;
     font-weight: 600;
-    padding: 4px 0;
+    padding: 8px 0;
 }
 .VOCField {
     text-align: left;
-    margin: 20px 0;
+    margin: 16px 0;
 }
 .VOCInput {
     width: 100%;
