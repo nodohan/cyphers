@@ -5,11 +5,21 @@ class MailSendService {
         this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'your_email@gmail.com',
-                pass: 'your_app_password', // 앱 비밀번호 사용
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PW, // 앱 비밀번호 사용
             },
         });
     }
+    /*
+    
+    const mailOptions = {
+        from: 'your_email@gmail.com',
+        to: 'receiver@example.com',
+        subject: '테스트 메일',
+        text: 'Node.js에서 보낸 메일입니다!',`
+    };
+    
+    */
 
     async sendMail(mailOptions) {
         try {
