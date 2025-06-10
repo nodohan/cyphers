@@ -305,7 +305,7 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    const { playInfo, items }  = data;
+    const { playInfo, items, itemPurchase }  = data;
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
@@ -355,15 +355,16 @@ function drawInGameDetail(matchId, data, trClass) {
             </td>
         </tr>
         <tr class='${trClass}'>
-            <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
-                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
+            <td class='hiddenRow' colspan='18'>
+                <div class='collapse ${itemInfoId}'>착용아이템: ${getItemIcon(items, itemDefaultUrl, "&nbsp;")}</div>
+                <div class='collapse ${itemInfoId}'>템구매순서: ${getItemBuyIcon(itemPurchase, itemDefaultUrl, " - ")}</div>
             </td>
         </tr>`;
 
     return score;
 }
 
-const getUserGradeRp = (gradeTrId, rpTrId, nickname) => { 
+const getUserGradeRp = (gradeTrId, rpTrId, nickname) => {
     $.ajax({
         async: true,
         url: "/user/userInfoSimple",
@@ -391,10 +392,16 @@ function getBuffIcon(buffArr, url) {
         .join("&nbsp;");
 }
 
-function getItemIcon(buffArr, url) {
+const getItemIcon = (buffArr, url, joinStr) => {
     return buffArr
-        .map(row => `<img class='${isMobile ? 'drawIcon' : ''}' title='${row.itemName}' src='${url+row.itemId}' />`)
-        .join("&nbsp;");
+        .map(row => `<img title='${row.itemName}' src='${url+row.itemId}' />`)
+        .join(joinStr);
+}
+
+const getItemBuyIcon = (buffArr, url, joinStr) => {
+    return buffArr
+        .map(row => `<img src='${url+row}' />`)
+        .join(joinStr);
 }
 
 function getPartyInfoText(partyInfo) {

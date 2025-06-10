@@ -339,13 +339,13 @@ function drawInGameDetail(matchId, data, trClass) {
         </tr>
         <tr class='${trClass}'>
             <td class='hiddenRow' colspan='7'>
-                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
+                <div class='collapse ${itemInfoId}'>착용아이템: ${getItemIcon(items, itemDefaultUrl, "&nbsp;")}</div>
+                <div class='collapse ${itemInfoId}'>템구매순서: ${getItemBuyIcon(itemPurchase, itemDefaultUrl, " - ")}</div>
             </td>
         </tr>`;    
 
     return score;
 }
-
 
 const getUserGradeRp = (gradeTrId, rpTrId, nickname) => { 
     $.ajax({
@@ -376,14 +376,22 @@ function getBuffIcon(buffArr, url) {
         .join("&nbsp;");
 }
 
-function getItemIcon(itemArr, url) {
+function getItemIcon(itemArr, url, joinStr) {
     return itemArr
         .map((row, index ) => {
             const img = `<img class='drawIcon35' title='${row.itemName}' src='${url+row.itemId}' />`;
             return index == 8 ? "<br>" + img : img;
         }  )
-        .join("&nbsp;");
+        .join(joinStr);
 }
+
+const getItemBuyIcon = (buffArr, url, joinStr) => {
+    return buffArr
+        .map(row => `<img src='${url+row}' />`)
+        .join(joinStr);
+}
+
+
 
 function getPartyInfoText(partyInfo) {
     let icon = isMobile ? "" : `<i class="fa fa-info-circle"></i>`;
