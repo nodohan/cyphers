@@ -146,4 +146,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     button.addEventListener('click', toggleVOC);
     document.addEventListener('click', closeVOCIfOutside);
+
+    const submitBtn = document.querySelector(".VOCSubmit");
+
+    submitBtn.addEventListener("click", function () {
+        const title = document.getElementById("vocSubject").value.trim();
+        const content = document.getElementById("vocContent").value.trim();
+        const from = document.getElementById("vocEmail").value.trim();
+
+        if (!title || !content || !from) {
+            alert("모든 항목을 입력해주세요.");
+            return;
+        }
+
+        // URL 인코딩을 안전하게 하기 위해 URLSearchParams 사용
+        const params = new URLSearchParams({
+            title,
+            content,
+            from
+        });
+
+        // 요청 보내기
+        fetch(`/email/sendMail?${params.toString()}`)
+            .then(res => {
+                if (!res.ok) throw new Error("전송 실패");
+                return res.text(); // 백엔드 응답이 JSON이면 .json()으로 변경
+            })
+            .then(data => {
+                alert("문의가 성공적으로 전송되었습니다.");
+                // 입력값 초기화
+                document.getElementById("vocSubject").value = "";
+                document.getElementById("vocContent").value = "";
+                document.getElementById("vocEmail").value = "";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("전송 중 오류가 발생했습니다.");
+            });
+    });
 });
