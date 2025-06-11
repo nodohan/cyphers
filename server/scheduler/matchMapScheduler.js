@@ -44,6 +44,35 @@ module.exports = (scheduler, maria) => {
         updatePositionBatch();
     });
 
+    
+    //test  ( "/matchesMap/getMatchesMap" )
+    app.get('/getMatchesMap', async function(req, res) {        
+        
+        const playerId = req.query.playerId;
+        if(playerId == null) {
+            res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
+            return ;
+        }
+        res.send(await getUserMatchesMap(req.query.playerId));
+    });
+
+    getUserMatchesMap =  async (playerId) => {
+        const query = `
+            SELECT 
+                playerId,
+                POSITION,
+                SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) AS win_count,
+                SUM(CASE WHEN result = 'lose' THEN 1 ELSE 0 END) AS lose_count,
+                COUNT(*) AS total_games
+            FROM matches_map
+            WHERE POSITION IS NOT NULL
+            and playerId = ? 
+            GROUP BY playerId, POSITION
+            `;
+       
+        let pool = await maria.getPool();
+        return await pool.execute(query, [ playerId ]);
+    }
 
     selectMatches = async (day = new Date()) => {
         //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
