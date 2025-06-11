@@ -104,52 +104,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupGameTypeToggle();
 
-    const button = document.getElementById('VOCButton');
-    const vocBody = document.querySelector('.VOCBody');
-    let isAnimating = false; // 애니메이션 상태 플래그
+    // 문의버튼 클릭 시 팝업 show (toggle)
+    function toggleVOC(vocBody) {
+        if (toggleVOC.isAnimating) return;
 
-    function toggleVOC() {
-        if (isAnimating) return; // 애니메이션 중이면 중단
+        toggleVOC.isAnimating = true;
 
         if (vocBody.classList.contains('show')) {
-            isAnimating = true;
             vocBody.classList.remove('show');
             setTimeout(() => {
                 vocBody.style.display = 'none';
-                isAnimating = false;
+                toggleVOC.isAnimating = false;
             }, 300);
         } else {
-            isAnimating = true;
             vocBody.style.display = 'block';
             setTimeout(() => {
                 vocBody.classList.add('show');
-                isAnimating = false;
-            }, 10); // show 클래스 추가로 트리거 발생
+                toggleVOC.isAnimating = false;
+            }, 10);
         }
     }
+    toggleVOC.isAnimating = false;
 
-    function closeVOCIfOutside(event) {
-        if (
-            !vocBody.contains(event.target) &&
-            !button.contains(event.target) &&
-            vocBody.classList.contains('show') &&
-            !isAnimating
-        ) {
-            isAnimating = true;
-            vocBody.classList.remove('show');
-            setTimeout(() => {
-                vocBody.style.display = 'none';
-                isAnimating = false;
-            }, 300);
-        }
-    }
-
-    button.addEventListener('click', toggleVOC);
-    document.addEventListener('click', closeVOCIfOutside);
-
-    const submitBtn = document.querySelector(".VOCSubmit");
-
-    submitBtn.addEventListener("click", function () {
+    // 문의 제출하기
+    function handleVOCSubmit() {
         const title = document.getElementById("vocSubject").value.trim();
         const content = document.getElementById("vocContent").value.trim();
         const from = document.getElementById("vocEmail").value.trim();
@@ -159,22 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // URL 인코딩을 안전하게 하기 위해 URLSearchParams 사용
-        const params = new URLSearchParams({
-            title,
-            content,
-            from
-        });
+        if (!confirm("문의를 보내시겠습니까?")) return;
 
-        // 요청 보내기
+        const params = new URLSearchParams({ title, content, from });
+
         fetch(`/email/sendMail?${params.toString()}`)
             .then(res => {
                 if (!res.ok) throw new Error("전송 실패");
-                return res.text(); // 백엔드 응답이 JSON이면 .json()으로 변경
+                return res.text();
             })
             .then(data => {
                 alert("문의가 성공적으로 전송되었습니다.");
-                // 입력값 초기화
                 document.getElementById("vocSubject").value = "";
                 document.getElementById("vocContent").value = "";
                 document.getElementById("vocEmail").value = "";
@@ -183,5 +156,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(err);
                 alert("전송 중 오류가 발생했습니다.");
             });
-    });
+    }
+
+    // 내용을 드래그중 외부에서 mouseup 될 경우 팝업닫히는 것 방지
+    function handleOutsideDrag(vocBody, button) {
+        let isMouseDownOutside = false;
+
+        document.addEventListener('mousedown', (e) => {
+            const isOutside = !vocBody.contains(e.target) && !button.contains(e.target);
+            isMouseDownOutside = isOutside;
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            const isOutside = !vocBody.contains(e.target) && !button.contains(e.target);
+            if (
+                isMouseDownOutside &&
+                isOutside &&
+                vocBody.classList.contains('show') &&
+                !toggleVOC.isAnimating
+            ) {
+                toggleVOC.isAnimating = true;
+                vocBody.classList.remove('show');
+                setTimeout(() => {
+                    vocBody.style.display = 'none';
+                    toggleVOC.isAnimating = false;
+                }, 300);
+            }
+        });
+    }
+
+    function initVOC() {
+        const button = document.getElementById('VOCButton');
+        const vocBody = document.querySelector('.VOCBody');
+        const submitBtn = document.querySelector(".VOCSubmit");
+
+        button.addEventListener('click', () => toggleVOC(vocBody));
+        submitBtn.addEventListener('click', handleVOCSubmit);
+
+        handleOutsideDrag(vocBody, button);
+    }
+
+    initVOC();
+
 });
