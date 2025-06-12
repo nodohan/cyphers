@@ -126,6 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     toggleVOC.isAnimating = false;
 
+    // 이메일 유효성 검사
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
     // 문의 제출하기
     function handleVOCSubmit() {
         const title = document.getElementById("vocSubject").value.trim();
@@ -134,6 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!title || !content || !from) {
             alert("모든 항목을 입력해주세요.");
+            return;
+        }
+
+        if (!validateEmail(from)) {
+            alert("올바른 이메일 주소를 입력해주세요.");
             return;
         }
 
