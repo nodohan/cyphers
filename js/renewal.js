@@ -162,11 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleOutsideDrag(vocBody, button) {
         let isMouseDownOutside = false;
 
-        document.addEventListener('mousedown', (e) => {
-            const isOutside = !vocBody.contains(e.target) && !button.contains(e.target);
-            isMouseDownOutside = isOutside;
-        });
-
         document.addEventListener('mouseup', (e) => {
             const isOutside = !vocBody.contains(e.target) && !button.contains(e.target);
             if (
@@ -188,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initVOC() {
         const button = document.getElementById('VOCButton');
         const vocBody = document.querySelector('.VOCBody');
-        const submitBtn = document.querySelector(".VOCSubmit");
+        const submitBtn = document.querySelector('.VOCSubmit');
 
         button.addEventListener('click', () => toggleVOC(vocBody));
         submitBtn.addEventListener('click', handleVOCSubmit);
