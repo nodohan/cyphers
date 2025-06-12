@@ -162,11 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleOutsideDrag(vocBody, button) {
         let isMouseDownOutside = false;
 
-        document.addEventListener('mouseup', (e) => {
-            const isOutside = !vocBody.contains(e.target) && !button.contains(e.target);
+        function onMouseDown(e) {
+            isMouseDownOutside = !vocBody.contains(e.target) && !button.contains(e.target);
+        }
+
+        function onMouseUp(e) {
+            const isMouseUpOutside = !vocBody.contains(e.target) && !button.contains(e.target);
             if (
                 isMouseDownOutside &&
-                isOutside &&
+                isMouseUpOutside &&
                 vocBody.classList.contains('show') &&
                 !toggleVOC.isAnimating
             ) {
@@ -177,13 +181,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     toggleVOC.isAnimating = false;
                 }, 300);
             }
-        });
+            isMouseDownOutside = false;  // 상태 초기화
+        }
+
+        document.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mouseup', onMouseUp);
+
+        // 함수 반환해서 나중에 이벤트 제거 가능하게도 할 수 있음
+        return () => {
+            document.removeEventListener('mousedown', onMouseDown);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
     }
 
     function initVOC() {
         const button = document.getElementById('VOCButton');
         const vocBody = document.querySelector('.VOCBody');
-        const submitBtn = document.querySelector('.VOCSubmit');
+        const submitBtn = document.querySelector(".VOCSubmit");
 
         button.addEventListener('click', () => toggleVOC(vocBody));
         submitBtn.addEventListener('click', handleVOCSubmit);
