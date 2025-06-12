@@ -117,6 +117,7 @@
             drawPartyType(userDivId, clone.find("#playParty"), rows);
 
             //포지션별
+            getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
             //drawPosition(clone, rows, data.nickname, drawCard2025);
 
             //최근 10경기 결과
@@ -130,6 +131,72 @@
             $("#" + divName).prepend(clone);
             checkVisibility();
         }
+
+        
+        const getUserPositionInfo = (playerId, div) => {
+            var result;
+            $.ajax({
+                async: true,
+                url: "/matchesMap/getMatchesMap",
+                data: {"playerId" : playerId},
+                success: function(data) {
+                    try {
+                        callLoadingBar(false);
+                    } catch (e) {
+
+                    }
+                    setUserPosition(div, data);
+                },
+                error: function(data) {
+                    if (typeof callLoadingBar == 'function') {
+                        callLoadingBar(false);
+                    }
+                    return;
+                }
+            }).done(function() {
+                if (typeof callLoadingBar == 'function') {
+                    callLoadingBar(false);
+                }
+            });
+        }
+
+        const setUserPosition = (div, data) => {
+            const emptyObj = { "win_count" : 0, "lose_count" : 0};
+            drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj); 
+            drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);                 
+            drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj); 
+            drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj); 
+        }
+
+        const drawUserPosition = (div, type, data) => {
+            let imgUrl = "/image/position/";
+            switch(type){
+                case "극방" : imgUrl += "defence.png";  break;
+                case "방벨" : imgUrl += "defenceBal.png";  break;
+                case "공벨" : imgUrl += "attackBal.png";  break;
+                case "극공" : imgUrl += "attack.png";  break;
+            }
+
+            const {win_count, lose_count, total_games} = data;
+            const winRate = (win_count / total_games) * 100;
+            const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
+
+            $(div).append(`
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="${imgUrl}">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">${infoStr}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+        }
+
+
 
         function removeTemp(divId) {
             let tempClass = divId == 'con1_2' ? 'infoDivV2Temp' : 'infoDivV3Temp';
