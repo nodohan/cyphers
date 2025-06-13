@@ -115,10 +115,10 @@ module.exports = (scheduler, maria, acclogger) => {
 
         //logger.debug("%s", query);
 
-        pool = await maria.getPool();
+        
         // [START cloud_sql_mysql_mysql_connection]
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
 
             if (rows == null) {
                 res.send({ resultCode: -1 });
@@ -150,9 +150,9 @@ module.exports = (scheduler, maria, acclogger) => {
 			LEFT JOIN player pl ON pl.playerId = ur.playerId 
 			WHERE rankDate in ( '2022-02-17', '2022-08-18', '2023-02-23', '2023-09-14', '2024-03-21', '2024-09-26', '2025-04-10' ) AND pl.playerId = '${playerId}' `;
 
-        pool = await maria.getPool();
+        
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
 
             if (rows == null) {
                 res.send({ resultCode: -1 });

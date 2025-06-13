@@ -15,7 +15,7 @@ class userRepository {
 
         let pool = await this.maria.getPool();
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             return rows;
         } catch (err) {
             console.log("에러1",err);

@@ -70,8 +70,7 @@ module.exports = (scheduler, maria) => {
             GROUP BY playerId, POSITION
             `;
        
-        let pool = await maria.getPool();
-        return await pool.execute(query, [ playerId ]);
+        return await maria.doQuery(query, [ playerId ]);
     }
 
     selectMatches = async (day = new Date()) => {
@@ -92,9 +91,9 @@ module.exports = (scheduler, maria) => {
         logger.debug(query);
         let matchMap = [];
 
-        let pool = await maria.getPool();
+        let 
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             matchMap = extractPlayerId(rows);
             await insertMatchId(matchMap);
         } catch (err) {
@@ -149,7 +148,6 @@ module.exports = (scheduler, maria) => {
     }
     
     async function insertMatchId(rows) {
-        let pool = await maria.getPool();
         let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result) VALUES ( ?, ?, ?, ? ) `;
         logger.debug(query);
 
@@ -161,12 +159,9 @@ module.exports = (scheduler, maria) => {
     }
     
     const updatePositionBatch = async() => {
-        const batchSize = 1000;
-
-        const pool = await maria.getPool();
-        
+        const batchSize = 1000;        
         while (true) {
-            const rows = await pool.execute(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
+            const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
 
             if (rows.length === 0) break;
         
@@ -180,7 +175,7 @@ module.exports = (scheduler, maria) => {
             
                     const position = classifyBuild(itemPurchase, items);
             
-                    await pool.execute(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
+                    await maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
                 } catch (err) {
                     console.error(`❌ ID ${row.id} 처리 실패:`, err.message);
                     // 실패했어도 진행

@@ -51,9 +51,9 @@ module.exports = (scheduler, maria) => {
                      FROM matches where matchDate > '${searchDateStr}' 
                      AND jsonData IS NOT NULL and positionCollect = 'N' LIMIT ${pageSize}`;
 
-        let pool = await maria.getPool();
+        let 
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             for (i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 const jsonData = JSON.parse(row.jsonData);
@@ -148,7 +148,7 @@ module.exports = (scheduler, maria) => {
             });
 
             let updateQuery = `update matches set positionCollect = 'Y' where matchId = '${matchId}' `;
-            await pool.query(updateQuery);
+            await maria.doQuery(updateQuery);
 
         } catch (err) {
             logger.error(err.message);
@@ -173,7 +173,7 @@ module.exports = (scheduler, maria) => {
 
         logger.info("positionStats collect start");
 
-        let pool = await maria.getPool();
+        let 
         try {
 
             //###### 데이터 집계 [START] ################
@@ -243,7 +243,7 @@ module.exports = (scheduler, maria) => {
              ORDER BY charName, POSITION, total DESC `;
 
         //logger.debug('insertPositionAttrResult %s', query);
-        await pool.query(query);
+        await maria.doQuery(query);
     }
 
     async function insertPositionAttrStats(pool, checkDate, checkType, rankNum) {
@@ -262,7 +262,7 @@ module.exports = (scheduler, maria) => {
 
         //logger.debug('insertPositionAttrStats %s', query);
 
-        await pool.query(query);
+        await maria.doQuery(query);
     }
 
     // ------- 포지션 특성 통계 저장 [end] ------------------------

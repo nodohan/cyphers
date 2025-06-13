@@ -21,7 +21,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&day=2024-12-11" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2025-05-24" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -41,9 +41,9 @@ module.exports = (scheduler, maria) => {
         }
         logger.debug(query);
 
-        let pool = await maria.getPool();
+        let 
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             let uniqMatchList = await getMatchListByAPI(matchType, rows, day);
             let result = await insertMatchId(matchType, uniqMatchList);
             if (res) {
@@ -101,10 +101,9 @@ module.exports = (scheduler, maria) => {
     }
 
     async function insertMatchId(matchType, rows) {
-        let pool = await maria.getPool();
         let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
 
-        await pool.query("DELETE FROM matchId_temp");
+        await maria.doQuery("DELETE FROM matchId_temp");
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025H' ) `;
         logger.debug(query);
 
@@ -122,7 +121,7 @@ module.exports = (scheduler, maria) => {
                           )`;
 
         logger.debug(mergeQuery);
-        let result = await pool.query(mergeQuery);
+        let result = await maria.doQuery(mergeQuery);
 
         logger.debug("insert MatchId End ");
 

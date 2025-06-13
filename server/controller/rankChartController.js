@@ -54,10 +54,8 @@ module.exports = (scheduler, maria, acclogger) => {
             GROUP BY rankDate
             ORDER BY rankDate asc`;
 
-        let pool = await maria.getPool();
-
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             return rows;
         } catch (err) {
             logger.error(err);
@@ -83,10 +81,8 @@ module.exports = (scheduler, maria, acclogger) => {
                         ORDER BY checkingDate DESC LIMIT 1
                     ) order by rankDate asc `;
 
-        let pool = await maria.getPool();
-
         try {
-            let rows = await pool.execute(query, [season, userName]);
+            let rows = await maria.doQuery(query, [season, userName]);
             return rows;
         } catch (err) {
             logger.error(err);

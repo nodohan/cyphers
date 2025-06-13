@@ -12,9 +12,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
-    app.get('/statsCountList', async function(req, res) {
-        let todayStr = commonUtil.getYYYYMMDD(new Date(), false);
-        pool = await maria.getPool();
+    app.get('/statsCountList', async function(req, res) {        
 
         try {
             let query = ` SELECT dates, COUNT(dates) cnt FROM ( 
@@ -24,7 +22,7 @@ module.exports = (scheduler, maria, acclogger) => {
              ORDER BY dates DESC 
              LIMIT 30 `;
 
-            let row = await pool.query({ bigNumberStrings: true, sql: query });
+            let row = await maria.doQuery({ bigNumberStrings: true, sql: query });
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -49,13 +47,11 @@ module.exports = (scheduler, maria, acclogger) => {
             todayStr = commonUtil.getYYYYMMDD(today, false);
         }
 
-        pool = await maria.getPool();
-
         try {
             let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
             logger.debug(query);
 
-            let row = await pool.execute(query, [todayStr]);
+            let row = await maria.doQuery(query, [todayStr]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -94,13 +90,11 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/statsSeasonList', async function(req, res) {
         let season = req.query.season
 
-        pool = await maria.getPool();
-
         try {
             let query = ` SELECT * FROM match_stats WHERE statsDate = '${season}' `;
             logger.debug(query);
 
-            let row = await pool.query(query);
+            let row = await maria.doQuery(query);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -117,13 +111,11 @@ module.exports = (scheduler, maria, acclogger) => {
             season = '2023U';
         }
 
-        pool = await maria.getPool();
-
         try {
             let query = ` SELECT * FROM char_stats where season = '${season}' ORDER BY rate DESC `;
             logger.debug(query);
 
-            let row = await pool.query(query);
+            let row = await maria.doQuery(query);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
