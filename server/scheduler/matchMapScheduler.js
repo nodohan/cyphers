@@ -141,7 +141,7 @@ module.exports = (scheduler, maria) => {
         if (glovesCount === 0) return "극방";
         if (glovesCount === 1) return "방벨";
         if (glovesCount >= 2) {
-            if (!chestExists && helmetCount < 2) return "극공";
+            if (!chestExists && helmetCount >= 2) return "극공";
             return "공벨";
         }
         return "기타";
