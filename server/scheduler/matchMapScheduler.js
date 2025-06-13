@@ -20,7 +20,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matchesMap/insertMatchesMap" )
+    //test  ( "/matchesMap/insertMatchesMap?day=2025-06-10" )
     app.get('/insertMatchesMap', async function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -29,9 +29,49 @@ module.exports = (scheduler, maria) => {
         res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
         let isRun = true;
         while(isRun) {
-            isRun = await selectMatches('2024-09-27');
+            isRun = await selectMatches(day);
         }
     });
+
+    
+    //test  ( "/matchesMap/updateMatchesMap" )
+    app.get('/updateMatchesMap', async function(req, res) {
+        if (!commonUtil.isMe(req)) {
+            return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
+        }
+
+        res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
+        updatePositionBatch();
+    });
+
+    
+    //test  ( "/matchesMap/getMatchesMap" )
+    app.get('/getMatchesMap', async function(req, res) {        
+        
+        const playerId = req.query.playerId;
+        if(playerId == null) {
+            res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
+            return ;
+        }
+        res.send(await getUserMatchesMap(req.query.playerId));
+    });
+
+    getUserMatchesMap =  async (playerId) => {
+        const query = `
+            SELECT 
+                playerId,
+                POSITION,
+                SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) AS win_count,
+                SUM(CASE WHEN result = 'lose' THEN 1 ELSE 0 END) AS lose_count,
+                COUNT(*) AS total_games
+            FROM matches_map
+            WHERE POSITION IS NOT NULL
+            and playerId = ? 
+            GROUP BY playerId, POSITION
+            `;
+       
+        return await maria.doQuery(query, [ playerId ]);
+    }
 
     selectMatches = async (day = new Date()) => {
         //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
@@ -51,9 +91,9 @@ module.exports = (scheduler, maria) => {
         logger.debug(query);
         let matchMap = [];
 
-        let pool = await maria.getPool();
+        let 
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             matchMap = extractPlayerId(rows);
             await insertMatchId(matchMap);
         } catch (err) {
@@ -63,29 +103,52 @@ module.exports = (scheduler, maria) => {
         return matchMap.length > 0;
     }
 
-    function extractPlayerId(rows) {
+    const extractPlayerId = (rows) => {
         logger.debug("extract players");
 
         //사용자 매칭 데이터 검색 
-        let items = [];
+        let matchMap = [];
         rows.forEach(row => {
-            const { matchId, jsonData, matchDate } = row;
+            const { matchId, jsonData, matchDate} = row;
             let json = JSON.parse(jsonData);
             const teams = json.teams;
             json.players.forEach(row2 => {
+                const { itemPurchase, items, playerId } = row2;
                 row2["matchId"] = matchId;
                 row2["date"] = matchDate;
                 row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
-                items.push([matchId, row2.playerId, row2 ]);
+                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, classifyBuild(itemPurchase, items) ]);
             });
         });
 
-        return items;
+        return matchMap;
     }
 
+    function classifyBuild(itemPurchase, items) {
+        const itemMap = new Map();
+        for (const item of items) {
+            itemMap.set(item.itemId, item);
+        }
+    
+        const firstFiveItems = itemPurchase.slice(0, 8)
+            .map(id => itemMap.get(id))
+            .filter(Boolean);
+    
+        const glovesCount = firstFiveItems.filter(item => item.slotName === "손(공격)").length;
+        const chestExists = firstFiveItems.some(item => item.slotName === "가슴(체력)");
+        const helmetCount = firstFiveItems.filter(item => item.slotName === "머리(치명)").length;
+    
+        if (glovesCount === 0) return "극방";
+        if (glovesCount === 1) return "방벨";
+        if (glovesCount >= 2) {
+            if (!chestExists && helmetCount >= 2) return "극공";
+            return "공벨";
+        }
+        return "기타";
+    }
+    
     async function insertMatchId(rows) {
-        let pool = await maria.getPool();        
-        let query = `INSERT INTO matches_map (matchId, playerId, jsonData) VALUES ( ?, ?, ? ) `;
+        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result) VALUES ( ?, ?, ?, ? ) `;
         logger.debug(query);
 
         await pool.batch(query, rows, function(err) {
@@ -94,6 +157,34 @@ module.exports = (scheduler, maria) => {
             if (err) throw err;
         });
     }
+    
+    const updatePositionBatch = async() => {
+        const batchSize = 1000;        
+        while (true) {
+            const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
+
+            if (rows.length === 0) break;
+        
+            for (const row of rows) {
+                try {
+                    const jsonData = JSON.parse(row.jsonData);
+                    const {playerId, matchId } = jsonData;
+                    const result = jsonData.playInfo?.result ?? null;
+                    const itemPurchase = jsonData.itemPurchase ?? [];
+                    const items = jsonData.items ?? [];
+            
+                    const position = classifyBuild(itemPurchase, items);
+            
+                    await maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
+                } catch (err) {
+                    console.error(`❌ ID ${row.id} 처리 실패:`, err.message);
+                    // 실패했어도 진행
+                }
+            }
+        }
+    
+        await pool.end();
+    }      
 
     return app;
 }

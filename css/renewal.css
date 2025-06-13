@@ -4,12 +4,13 @@
     background: #f4f6f7;
     position: relative;
     min-height: calc(100vh);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .renewalBody main {
     position: relative;
     padding: 0 100px;
     margin: 40px 0 0 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
 }
 .mainInner {
     width: 85% !important;
@@ -19,6 +20,10 @@
     flex-direction: column;
     gap: 16px;
     padding: 0 0 20px 0;
+    position: relative;
+}
+.renewalBody .mainInner {
+    min-width: 0;
 }
 .mainInner .leftBanner {
     position: absolute;
@@ -37,7 +42,6 @@
     z-index: 1;
     top: 0;
     left: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 .sideNav h2 {
     color: #343a40;
@@ -773,11 +777,10 @@ div:has(> .beforeSeason) {
     align-items: center;
     background: #fff;
     border-radius: 5px;
-    padding: 0 16px;
-    gap: 8px;
 }
 .renewalTopHistory > span {
     text-align: center;
+    margin: 0 16px;
 }
 .partyInfoButton {
     background: transparent;
@@ -882,4 +885,253 @@ div:has(> .beforeSeason) {
 }
 .modalPartyInfo > div:nth-of-type(2) {
     justify-content: start;
+}
+
+.renewalMainUserDetail {
+    max-width: 1920px;
+    min-width: 1320px;
+}
+.renewalDetailSearch {
+    width: 80%;
+    max-width: 1120px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gameTypeWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    background: #fff;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-left: 1px solid #ced4da;
+    border-radius: 40px 0 0 40px !important;
+    flex: 1;
+    padding: 0 0 0 24px;
+}
+.gameTypeWrap::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 40%;
+    background: #ced4da;
+}
+.gameTypeShow {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gameTypeShow > p {
+    position: relative;
+}
+.gameTypeShow > p::before {
+    content: "";
+    position: absolute;
+    left: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #343a40; /* 아래 방향 화살표 */
+}
+.gameTypeSelect {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 40px;
+    width: calc(80% - 24px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 3px #ced4da;
+}
+.gameTypeSelect > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.gameTypeSelect > div > input {
+    display: none;
+}
+.gameTypeSelect > div > label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 12px 0;
+    background: #fff;
+    cursor: pointer;
+}
+.gameTypeSelect > div > input:checked + label {
+    background: #343a40;
+    color: #fff;
+}
+.gameTypeSelect > div > label::before {
+    display: none;
+}
+.detailSearchInputWrap > input[type="text"] {
+    position: relative;
+    height: 48px;
+    border-radius: 0 40px 40px 0 !important;
+    display: block;
+    padding: 0 24px;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    border-left: 0;
+}
+.detailSearchInputWrap {
+    flex: 6;
+}
+.detailSearchInputWrap > input[type="text"]:focus {
+    box-shadow: none;
+}
+.mainDetail {
+    background: #fff;
+}
+.searchButtonWrap {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+}
+.searchButton {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    background-image: url("/image/searchIcon_small.svg");
+    z-index: 10;
+    opacity: 0.75;
+}
+.userDetailBody .renewalTopHistory {
+    margin: 0 auto;
+}
+.renewalDetailHistory {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    width: calc(100% - 48px);
+    z-index: 1;
+    box-shadow: 0 0 3px #ced4da;
+}
+.deleteHistroyButton {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url("/image/deleteIcon.svg");
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(0.25);
+}
+.recentSearch {
+    background: #343a40;
+    color: #fff;
+    padding: 12px 24px;
+}
+.detailHistory {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+    gap: 4px;
+    min-height: 40px;
+}
+.historyItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    color: #343a40;
+}
+.historyItem a {
+    color: #343a40;
+}
+.voiceOfCustomer {
+    position: fixed;
+    left: 100%;
+    top: 100%;
+    transform: translate(-100%, -100%);
+    padding: 0 16px 60px 0;
+}
+.voiceOfCustomer > button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #343a40;
+    background-image: url("/image/letterIcon.svg");
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.VOCBody {
+    position: absolute;
+    left: calc(100% - 16px);
+    top: -16px;
+    width: 320px;
+    background: #fff;
+    transform: translate(-100%, -100%);
+    padding: 16px;
+    transition: opacity 0.3s ease;
+    display: none;
+    opacity: 0;
+    border-radius: 8px;
+}
+.VOCBody hr {
+    margin: 12px 0;
+}
+.VOCBody.show {
+    display: block;
+    opacity: 1;
+}
+.VOCHeading {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px 0;
+}
+.VOCField {
+    text-align: left;
+    margin: 16px 0;
+}
+.VOCInput {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin: 8px 0 0 0;
+    padding: 8px;
+}
+.VOCTextarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin: 8px 0 0 0;
+    padding: 8px;
+    resize: none;
+}
+.VOCSubmit {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    background: #343a40;
+    color: #fff;
 }

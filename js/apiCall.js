@@ -5,6 +5,14 @@ const suppIcon = "<img class='drawIcon' src='http://static.cyphers.co.kr/img/gam
 const buffDefaultUrl = "https://img-api.neople.co.kr/cy/position-attributes/";
 const itemDefaultUrl = "https://img-api.neople.co.kr/cy/items/";
 
+
+const itemKeys = ["손(공격)", "머리(치명)", "가슴(체력)", "허리(회피)", "다리(방어)", "발(이동)", "장신구1", "장신구2", "목", "장신구3", "장신구4"];
+const itemValues = ["손", "모", "티", "허", "바", "신", "링1", "링2", "목", "링3", "궁"];
+
+// key-value 쌍을 생성하여 객체로 변환
+const itemImageMap = Object.fromEntries(itemKeys.map((key, index) => [key, itemValues[index]]));
+
+
 var pageName = "";
 
 function getRandomInt(min, max) {
@@ -114,6 +122,14 @@ function searchUser(inputId, divName, nickName, callback) {
         let input = $("#" + inputId);
         input.val(input.val().replace(nickName, ''));
         return;
+    }
+
+    if (pageName === 'pcDetail') {
+        console.log('gd');
+        const history = document.getElementById("renewalDetailHistory");
+        if (history) {
+            history.style.display = "none";
+        }
     }
 
     $.ajax({
@@ -297,7 +313,7 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    const { playInfo, items }  = data;
+    const { playInfo, items, itemPurchase }  = data;
     let partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
 
     let score = `<tr class='${trClass}'>`;
@@ -339,7 +355,13 @@ function drawInGameDetail(matchId, data, trClass) {
 
     getUserGradeRp(gradeTrId, rpTrId, data.playerId);
 
+    // itemId를 slotName으로 매핑하는 객체 생성
+    const itemMap = Object.fromEntries(items.map(item => [item.itemId, item.slotName]));
+    // itemPurchase 배열을 slotName으로 변환
+    const slotNames = itemPurchase.map(itemId => itemMap[itemId] || itemId);
+
     let itemInfoId = `m${matchId}_${data.playerId}`;
+    //const itemInfoId = `m${matchId}_items`;
     score += `<td>
                 <i class="fas fa-angle-double-down" data-toggle="collapse" 
                     data-target=".${itemInfoId}" aria-expanded="true">
@@ -347,15 +369,16 @@ function drawInGameDetail(matchId, data, trClass) {
             </td>
         </tr>
         <tr class='${trClass}'>
-            <td class='hiddenRow' colspan='${isMobile ? 7 : 15}'>
-                <div class='collapse ${itemInfoId}'>${getItemIcon(data.items, itemDefaultUrl)}</div>
+            <td class='hiddenRow' colspan='18'>
+                <div class='collapse ${itemInfoId}'>착용아이템: ${getItemIcon(items, itemDefaultUrl, "&nbsp;")}</div>
+                <div class='collapse ${itemInfoId}'>템구매순서: ${getItemBuyIcon(slotNames)}</div>
             </td>
         </tr>`;
 
     return score;
 }
 
-const getUserGradeRp = (gradeTrId, rpTrId, nickname) => { 
+const getUserGradeRp = (gradeTrId, rpTrId, nickname) => {
     $.ajax({
         async: true,
         url: "/user/userInfoSimple",
@@ -383,10 +406,18 @@ function getBuffIcon(buffArr, url) {
         .join("&nbsp;");
 }
 
-function getItemIcon(buffArr, url) {
+const getItemIcon = (buffArr, url, joinStr) => {
     return buffArr
-        .map(row => `<img class='${isMobile ? 'drawIcon' : ''}' title='${row.itemName}' src='${url+row.itemId}' />`)
-        .join("&nbsp;");
+        .map(row => `<img title='${row.itemName}' src='${url+row.itemId}' />`)
+        .join(joinStr);
+}
+
+const getItemBuyIcon = (slotNames) => {
+    return slotNames
+        .map((row, index) => {
+            const br = (((index+1) % 15 == 0 ) ? "<br>" + index : "" );
+            return br + `<img class="itemBuy" src="/image/item/${itemImageMap[row] || "알수없음"}.jpg" />`;
+        }).join(" - ");
 }
 
 function getPartyInfoText(partyInfo) {
@@ -843,7 +874,6 @@ function playGameList(findId, div, nickname, showType, modalId) {
                 <td> ${row.date} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
                 <td><b>${winLoseKo(result)}</b></td>
-                <td>${getPositionIcon(row.position.name)}</td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td class='kda'>${killCount}/${deathCount}/${assistCount}</td>

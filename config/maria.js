@@ -43,18 +43,19 @@ class maria {
             return POOL || this.createPoolAndEnsureSchema();
         };
 
-        this.doQuery =  async(query, params) => {
-            //logger.info("### doQuery ###\n%s\n%s", query, params);
-
+        this.doQuery = async (query, params) => {
             let pool = await this.getPool();
-            let result = null;
+            let conn;
             try {
-                result = await pool.query(query, params);
+                conn = await pool.getConnection();
+                const result = await conn.query(query, params);
+                return result;
             } catch (err) {
-                result = -1;
                 logger.error(err.message);
+                return -1;
+            } finally {
+                if (conn) conn.release();  // 커넥션 반납!!
             }
-            return result;
         }
     }
 }

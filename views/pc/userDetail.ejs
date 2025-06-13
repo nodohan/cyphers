@@ -299,256 +299,264 @@
         </script>
 </head>
 
-<body class="body">
+<body class="renewalBody userDetailBody">
     <%- include  ("../layout/menu") %>
 
-        <div id="mainUserDetail">
-            <div class="top" >
-                <div class="floatLeft width15p">
+    <div id="mainUserDetail" class="mainInner">
+        <!-- 카카오 광고 -->
+        <%- include  ("../layout/leftBanner") %>
+
+        <div class="renewalDetailSearch">
+            <div id="gameTypeWrap" class="gameTypeWrap">
+                <div id="gameTypeShow" class="gameTypeShow"><p>공식전</p></div>
+                <div id="gameTypeSelect" class="gameTypeSelect" style="display: none">
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="gameType_rating" name="gameType" class="custom-control-input" value="rating" checked>
-                        <label class="custom-control-label" for="gameType_rating">공식</label>
+                        <label class="custom-control-label game-type-option" for="gameType_rating" data-type="공식">공식</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                      <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
-                      <label class="custom-control-label" for="gameType_normal">일반</label>
+                        <input type="radio" id="gameType_normal" name="gameType" class="custom-control-input" value="normal" >
+                        <label class="custom-control- game-type-option" for="gameType_normal" data-type="일반">일반</label>
                     </div>
                 </div>
-
-                <div class="input-group width50p">
-                    <input type="text" id="nickNames" class="form-control" placeholder="마을주민1" aria-label="마을주민1" aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchDetail(); } ">
-                    <div class="input-group-append" id="searchButton">
-                        <button class="btn btn-outline-secondary" type="button" onClick="searchDetail();">검색</button>
-                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');clearDiv('con2_2');">초기화</button>
-                    </div>
-                </div>                
             </div>
 
-            <div id="topHistory" class="topHistory" ></div>
+            <div class="input-group detailSearchInputWrap">
+                <input type="text" id="nickNames" class="form-control detailSearchInput" placeholder="닉네임 검색" aria-label="닉네임 검색" aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { searchDetail(); } " autocomplete="off">
+                <div class="input-group-append" id="searchButton">
+                    <button class="searchButton" type="button" onClick="searchDetail();" title="검색"></button>
+<!--                    <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');clearDiv('con2_2');">초기화</button>-->
+                </div>
+                <div id="renewalDetailHistory" class="renewalDetailHistory" style="display: none">
+                    <p class="recentSearch">최근검색</p>
+                    <ul id="topHistory" class="detailHistory">
+                    </ul>
+                </div>
+            </div>
+        </div>
 
+        <div class="conDetailWrap">
             <div id="con1" class="conDetail">
                 <div id="con1_2" class="infoLayer2">
 
                 </div>
             </div>
             <div id="con2" class="conDetail">
-                <div id="con2_2" class="infoLayer2"> </div>
-            </div>
+                <div id="con2_2" class="infoLayer2">
 
-            <!-- 카카오 광고 -->
-            <%- include  ("../layout/rightBanner") %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="template" class="infoDiv mainDetail" style="display:none">
+        <div id="defaultDiv">
+            <div id="gameTypeDiv" class="red bold width100p"></div>
+            <div class="width100p">
+                <div id="nickNameDiv" class="width25p bold"></div>
+                <div id="levelDiv" class="width25p"></div>
+                <div id="clanDiv" class="width33p"></div>
+            </div>
+            <div class="width100p">
+                <div class="width25p">현재 rp : <span id="currRP" class="bold red"></span></div>
+                <div class="width25p">최고 rp : <span id="maxRP"></span></div>
+                <div id="playGameDiv">
+                    <!-- 승률 : 50% [100승 101패 2중단]-->
+                </div>
+            </div>
+            <div id="playParty" class="playParty width100p">
+
+            </div>
         </div>
 
-        <div id="template" class="infoDiv" style="display:none">
-            <div id="defaultDiv">
-                <div id="gameTypeDiv" class="red bold width100p"></div>
-                <div class="width100p">
-                    <div id="nickNameDiv" class="width25p bold"></div>
-                    <div id="levelDiv" class="width25p"></div>
-                    <div id="clanDiv" class="width33p"></div>
-                </div>
-                <div class="width100p">
-                    <div class="width25p">현재 rp : <span id="currRP" class="bold red"></span></div>
-                    <div class="width25p">최고 rp : <span id="maxRP"></span></div>
-                    <div id="playGameDiv">
-                        <!-- 승률 : 50% [100승 101패 2중단]-->
-                    </div>
-                </div>
-                <div id="playParty" class="playParty width100p">
+        <!-- 포지션별 승률 -->
+        <div id="positionDiv" class="positionDiv"></div>
 
-                </div>
+        <div id="mostCharDiv">
+            <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
+            <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
+        </div>
+        <div id="recentlyDiv" class="width100p">
+            <div class="width100p bold" id="recentlyDivTitle">
+                <!--최근 10게임 -->
             </div>
+        </div>
 
+        <label><b>일별 승패</b>
+            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
+        </label>
+
+        <div id="dailyResult" class="dailyResult"></div>
+        <div id="moreDailyResult" class="collapse"></div>
+        <div id="playGameList" class="playGameList">
+
+        </div>
+    </div>
+
+    <div style="display:none">
+        <table id="templateTable" class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">날짜</th>
+                    <th scope="col">결과</th>
+                    <th scope="col">나</th>
+                    <th scope="col">KDA</th>
+                    <th scope="col">딜량</th>
+                    <th scope="col">피해량</th>
+                    <th scope="col">+</th>
+                </tr>
+            </thead>
+            <tbody> </tbody>
+        </table>
+    </div>
+
+    <div id="template2" style="display:none">
+        <div id="river" data-mapName="리버포드" class="mapCard">
+            <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
-
-            <div id="mostCharDiv">
-                <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
-            </div>
-            <div id="recentlyDiv" class="width100p">
-                <div class="width100p bold" id="recentlyDivTitle">
-                    <!--최근 10게임 -->
-                </div>
-            </div>
-
-            <label><b>일별 승패</b>
-                <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
-            </label>
-
-            <div id="dailyResult" class="dailyResult"></div>
-            <div id="moreDailyResult" class="collapse"></div>
-            <div id="playGameList" class="playGameList">
-
-            </div>
-        </div>
-
-        <div style="display:none">
-            <table id="templateTable" class="table table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">날짜</th>
-                        <th scope="col">결과</th>
-                        <th scope="col">나</th>
-                        <th scope="col">KDA</th>
-                        <th scope="col">딜량</th>
-                        <th scope="col">피해량</th>
-                        <th scope="col">+</th>
-                    </tr>
-                </thead>
-                <tbody> </tbody>
-            </table>
-        </div>
-
-        <div id="template2" style="display:none">
-            <div id="river" data-mapName="리버포드" class="mapCard">
-                <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div>
-            </div>
-            <div id="metro" data-mapName="메트로폴리스" class="mapCard">
-                <div class="bold width100p">메트로폴리스 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div>
-            </div>
-            <div id="bristol" data-mapName="브리스톨" class="mapCard">
-                <div class="bold width100p">브리스톨 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div>
-            </div>
-            <div id="spring" data-mapName="스프링필드" class="mapCard">
-                <div class="bold width100p">스프링필드 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div> 
-            </div>
-            <div id="asia" data-mapName="그랑플람 아시아 지부" class="mapCard">
-                <div class="bold width100p">그랑플람 아시아 지부 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div>
-            </div>
-            <div id="atDawn" data-mapName="리버포드 앳 던" class="mapCard">
-                <div class="bold width100p">리버포드 앳 던 <span class="mapRate"></span></div>
-                <!-- 포지션별 승률 -->
-                <div id="positionDiv" class="positionDiv"></div>
-                <div id="often" class="width100p">
-                    <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                    <div id="mostCharDetailDiv">
-                        <!-- 자주하는 캐릭 top3 -->
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="modalDiv">
-            <!-- 모달 영역 -->
-            <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
-                <div class="modal-dialog modal-2xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="templateTable" class="table table-striped">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">날짜</th>
-                                        <th scope="col">파티</th>
-                                        <th scope="col">결과</th>
-                                        <th scope="col">P</th>
-                                        <th scope="col">Char</th>
-                                        <th scope="col">Lv</th>
-                                        <th scope="col">KDA</th>
-                                        <th scope="col">딜량</th>
-                                        <th scope="col">피해량</th>
-                                        <th scope="col">소모품%</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="templateDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateDetailModalLabel">
-                <div class="modal-dialog modal-2xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="templateDetailModalLabel"></h6>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="matchInfoTemplate" class="table table-striped table-condensed">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col"></th>
-                                        <th scope="col">C</th>
-                                        <th scope="col">P</th>
-                                        <th scope="col">닉네임</th>
-                                        <th scope="col">급</th>
-                                        <th scope="col">rp</th>
-                                        <th scope="col">Lv</th>
-                                        <th scope="col">킬</th>
-                                        <th scope="col">데스</th>
-                                        <th scope="col">도움</th>
-                                        <th scope="col">딜량</th>
-                                        <th scope="col">피해량</th>
-                                        <th scope="col">치유</th>
-                                        <th scope="col">철거반</th>
-                                        <th scope="col">센티넬</th>
-                                        <th scope="col">코인</th>
-                                        <th scope="col">소모품(%)</th>
-                                        <th scope="col"> </th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div hide>
-                    <a id="matchBtn" data-toggle='modal' data-target=''></a>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
+        <div id="metro" data-mapName="메트로폴리스" class="mapCard">
+            <div class="bold width100p">메트로폴리스 <span class="mapRate"></span></div>
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+        <div id="bristol" data-mapName="브리스톨" class="mapCard">
+            <div class="bold width100p">브리스톨 <span class="mapRate"></span></div>
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+        <div id="spring" data-mapName="스프링필드" class="mapCard">
+            <div class="bold width100p">스프링필드 <span class="mapRate"></span></div>
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+        <div id="asia" data-mapName="그랑플람 아시아 지부" class="mapCard">
+            <div class="bold width100p">그랑플람 아시아 지부 <span class="mapRate"></span></div>
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+        <div id="atDawn" data-mapName="리버포드 앳 던" class="mapCard">
+            <div class="bold width100p">리버포드 앳 던 <span class="mapRate"></span></div>
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+            <div id="often" class="width100p">
+                <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
+                <div id="mostCharDetailDiv">
+                    <!-- 자주하는 캐릭 top3 -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modalDiv">
+        <!-- 모달 영역 -->
+        <div id="templateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateModalLabel">
+            <div class="modal-dialog modal-2xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="templateTable" class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">날짜</th>
+                                    <th scope="col">파티</th>
+                                    <th scope="col">결과</th>
+                                    <th scope="col">Char</th>
+                                    <th scope="col">Lv</th>
+                                    <th scope="col">KDA</th>
+                                    <th scope="col">딜량</th>
+                                    <th scope="col">피해량</th>
+                                    <th scope="col">소모품%</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="templateDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="templateDetailModalLabel">
+            <div class="modal-dialog modal-2xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="templateDetailModalLabel"></h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="matchInfoTemplate" class="table table-striped table-condensed">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col">C</th>
+                                    <th scope="col">닉네임</th>
+                                    <th scope="col">급</th>
+                                    <th scope="col">rp</th>
+                                    <th scope="col">Lv</th>
+                                    <th scope="col">킬</th>
+                                    <th scope="col">데스</th>
+                                    <th scope="col">도움</th>
+                                    <th scope="col">딜량</th>
+                                    <th scope="col">피해량</th>
+                                    <th scope="col">치유</th>
+                                    <th scope="col">철거반</th>
+                                    <th scope="col">센티넬</th>
+                                    <th scope="col">코인</th>
+                                    <th scope="col">소모품(%)</th>
+                                    <th scope="col"> </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div hide>
+                <a id="matchBtn" data-toggle='modal' data-target=''></a>
+            </div>
+        </div>
+    </div>
 
 </body>
 

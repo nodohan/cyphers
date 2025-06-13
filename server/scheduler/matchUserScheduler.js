@@ -24,10 +24,9 @@ module.exports = (scheduler, maria) => {
                      where matchDate > '2025-04-10'
                      and jsonData IS NOT NULL and userCollect = 'N' LIMIT ${pageSize}`;
 
-        let pool = await maria.getPool();
         let arr = [];
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             for (i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 const jsonData = JSON.parse(row.jsonData);
@@ -69,7 +68,7 @@ module.exports = (scheduler, maria) => {
             UPDATE matches mc
             INNER JOIN (SELECT matchId FROM matches_users GROUP BY matchId) usr ON usr.matchId = mc.matchId
             SET userCollect = 'Y' `
-        await pool.query(query);
+        await maria.doQuery(query);
     }
 
 

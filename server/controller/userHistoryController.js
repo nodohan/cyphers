@@ -52,12 +52,10 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     async function insertSearchNickname(username, ip) {
-        let pool = await maria.getPool();
-
         try {
             let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', '${ip}' ) `;
             logger.debug(query);
-            await pool.query(query);
+            await maria.doQuery(query);
         } catch (err) {
             logger.error(err);
         }
@@ -82,13 +80,12 @@ module.exports = (scheduler, maria, acclogger) => {
                     ORDER BY checkingDate DESC 
                     limit 1; `;
 
-        let pool = await maria.getPool();
         try {
-            let result = await pool.query(query);
+            let result = await maria.doQuery(query);
             if(result.length != 0) {
                 return result;
             } 
-            return await pool.query(query2);
+            return await maria.doQuery(query2);
         } catch (err) {
             logger.error(err);
         }
@@ -120,10 +117,9 @@ module.exports = (scheduler, maria, acclogger) => {
                     ORDER BY cnt DESC
                     LIMIT 15 `;
         //logger.debug(query);
-
-        pool = await maria.getPool();
+        
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
 
             if (rows == null) {
                 res.send({ resultCode: -1 });
@@ -168,10 +164,10 @@ module.exports = (scheduler, maria, acclogger) => {
         logger.debug("닉변검색: " + userName);
         //logger.debug("쿼리: %s", query);
 
-        let pool = await maria.getPool();
+        let 
 
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             return rows;
         } catch (err) {
             logger.error(err);

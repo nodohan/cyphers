@@ -37,9 +37,9 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = ` SELECT matchId, matchDate, matchResult, allJoin 
                       FROM matchdetail WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' `;
 
-        pool = await maria.getPool();
+        
         try {
-            let rows = await pool.query(query);
+            let rows = await maria.doQuery(query);
             const splitSize = 1000;
 
             if (rows != null && rows.length > 0) {
@@ -50,7 +50,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         insertQuery = getInsertQuery(rows.slice(j * splitSize, (j + 1) * splitSize));
                         logger.debug(insertQuery);
                         logger.debug("\n\n\n\n\n\n\n\n\n\n");
-                        await pool.query(insertQuery);
+                        await maria.doQuery(insertQuery);
                     } catch (err) {
                         console.log(err);
                     }

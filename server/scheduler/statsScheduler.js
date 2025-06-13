@@ -78,9 +78,9 @@ module.exports = (scheduler, maria, acclogger) => {
 
         logger.debug(query);
 
-        pool = await maria.getPool();
+        
         try {
-            await pool.query(query);
+            await maria.doQuery(query);
         } catch (err) {
             logger.error(err);
             throw err;

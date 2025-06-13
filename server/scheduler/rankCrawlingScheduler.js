@@ -89,13 +89,11 @@ module.exports = (scheduler, maria) => {
             ) sy  ON sy.nickname = ln.nickname`
         logger.debug(emtpyBefore);
 
-        let pool = await maria.getPool();
-
         //어제 랭킹이 존재하는사람
-        await pool.query(hasBefore);
+        await maria.doQuery(hasBefore);
 
         //어제 랭킹이 존재하지 않는사람 ( ranknumberbefore = 0)
-        await pool.query(emtpyBefore);
+        await maria.doQuery(emtpyBefore);
 
         // 이렇게 해도 닉변후에 랭킹이 사라진 후 다시 랭킹에 들어오게 되면 누락될 수 있음.
         // 이런 건은 차후 해결 하기로 함. 
@@ -154,8 +152,7 @@ module.exports = (scheduler, maria) => {
     async function insertRankSync(arrList) {
         logger.debug("insert ranking length = " + arrList.length);
 
-        let pool = await maria.getPool();
-        let conn = await pool.getConnection();
+        let conn = await maria.getPool().getConnection();
 
         try {
             await conn.beginTransaction();
@@ -176,6 +173,8 @@ module.exports = (scheduler, maria) => {
             }
         } catch (err2) {
             logger.error(err2.message);
+        } finally {
+            if (conn) conn.release();  // 커넥션 반납!!
         }
         logger.debug("insert ranking end");
 

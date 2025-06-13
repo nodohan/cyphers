@@ -44,18 +44,25 @@ const IsDetailPage = () => {
 }
 
 const drawSearchHistory = (nickName) => {
-    return `
-    <span class="red" id="spanSearch_${nickName}">
-        <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a>
-        <a href='javascript:delSearchHistory("${nickName}")'>[x]</a>
-        &nbsp; 
-    <span>`
+    if (pageName === "pcDetail") {
+        return `
+            <li class="red historyItem" id="spanSearch_${nickName}">
+                <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a>
+                <a href='javascript:delSearchHistory("${nickName}")' class="deleteHistroyButton"></a>
+            </li>`
+    } else {
+        return `
+            <span class="red" id="spanSearch_${nickName}">
+                <a href='javascript:searchUser("nickNames", "con1_2", "${nickName}");'>${nickName}</a>
+                <a href='javascript:delSearchHistory("${nickName}")'>[x]</a>
+            </span>`
+    }
 }
 
 const drawSearchHistoryDetail = (nickName) => {
     return `
-    <span class="red" id="spanSearch_${nickName}">
-        <a href='javascript:searchUser("nickNames", null, "${nickName}", setUserDetailInfo);'>${nickName}</a> 
-        <a href='javascript:delSearchHistory("${nickName}")'>[x]</a>
-    <span>`
+            <li class="red historyItem" id="spanSearch_${nickName}">
+                <a href='javascript:searchUser("nickNames", null, "${nickName}", setUserDetailInfo);'>${nickName}</a> 
+                <a href='javascript:delSearchHistory("${nickName}")' class="deleteHistroyButton"></a>
+            </li>`
 }

@@ -62,6 +62,8 @@ const provider = require('./server/controller/providerController')(null, maria, 
 
 const matchMapScehduler = require('./server/scheduler/matchMapScheduler')(scheduler, maria, loggerCatcher);
 
+const email = require('./server/controller/emailController')(scheduler, maria, loggerCatcher);
+
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -90,6 +92,7 @@ app.use('/userDetail', userDetail);
 app.use('/matchUser', matchUserScheduler);
 app.use('/provide', provider);
 app.use('/statsSeasonSche', statsSeasonSche);
+app.use('/email', email);
 
 
 app.use(loggerCatcher());
