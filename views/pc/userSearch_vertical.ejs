@@ -632,10 +632,10 @@
                 <input class="normalGameCheck" type="radio" name="gameType" id="gameType_normal" value="normal"/>
                 <label class="" for="gameType_normal"> 일반 </label>
             </div>
-<!--            <div class="searchSettingCheck">-->
-<!--                <input class="checkPosition positionBtn" type="checkbox" id="positionShow" checked>-->
-<!--                <label class="iconBtn" for="positionShow">포지션 노출</label>-->
-<!--            </div>-->
+            <div class="searchSettingCheck">
+                <input class="checkPosition positionBtn" type="checkbox" id="positionShow" checked>
+                <label class="iconBtn" for="positionShow">포지션 노출</label>
+            </div>
             <div class="searchSettingCheck">
                 <input class="checkParty partyBtn" type="checkbox" id="partyShow" checked>
                 <label class="iconBtn" for="partyShow">파티 노출</label>
@@ -695,6 +695,12 @@
                     <div id="playGameDiv" class="winrateWrap"></div>
                     <div id="playParty" class="playParty playPartyLayer"></div>
                 </div>
+            </div>
+
+            <hr class="positionDiv">
+
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv positionWinrate">
             </div>
 
             <hr class="mostCharDiv">
@@ -759,6 +765,60 @@
                     </div>
                 </div>
             </div>
+
+            <hr class="positionDiv1">
+
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv2" class="positionDiv positionWinrate">
+
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="/image/position/defence.png">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">66.67% <br><small class="text-muted">2승 1패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="/image/position/defenceBal.png">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">66.67% <br><small class="text-muted">10승 5패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="/image/position/attackBal.png">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">100.00% <br><small class="text-muted">2승 0패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="/image/position/attack.png">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">66.67% <br><small class="text-muted">8승 4패</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div></div>
 
             <hr class="mostCharDiv">
 
