@@ -161,7 +161,7 @@
         }
 
         const setUserPosition = (div, data) => {
-            const emptyObj = { "win_count" : 0, "lose_count" : 0};
+            const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
             drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj); 
             drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);                 
             drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj); 
