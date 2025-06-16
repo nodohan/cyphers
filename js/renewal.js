@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function headerActive() {
         activateTimeout = setTimeout(function () {
             header.classList.add('active');
-        }, 200);
+        }, 120);
     }
 
     function headerInactive() {
