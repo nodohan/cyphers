@@ -350,56 +350,57 @@
     </div>
 
     <div id="template" class="infoDiv mainDetail" style="display:none">
-        <div id="defaultDiv">
-            <div id="gameTypeDiv" class="red bold width100p"></div>
-            <div class="width100p">
-                <div id="nickNameDiv" class="width25p bold"></div>
-                <div id="levelDiv" class="width25p"></div>
-                <div id="clanDiv" class="width33p"></div>
-            </div>
-            <div class="width100p">
-                <div class="width25p">현재 rp : <span id="currRP" class="bold red"></span></div>
-                <div class="width25p">최고 rp : <span id="maxRP"></span></div>
-                <div id="playGameDiv">
-                    <!-- 승률 : 50% [100승 101패 2중단]-->
+        <section>
+            <div id="defaultDiv" class="defaultDiv">
+                <!--            <div id="gameTypeDiv" class="red bold width100p"></div>-->
+                <div class="width100p">
+                    <h3 id="nickNameDiv" class=""></h3>
+                    <div id="levelDiv" class=""></div>
+                    <div id="clanDiv" class=""></div>
+                </div>
+                <div class="width100p">
+                    <div class="">현재 rp : <span id="currRP" class="bold red"></span></div>
+                    <div class="">최고 rp : <span id="maxRP"></span></div>
+                    <div id="playGameDiv">
+                        <!-- 승률 : 50% [100승 101패 2중단]-->
+                    </div>
+                </div>
+                <div id="playParty" class="playParty">
+
                 </div>
             </div>
-            <div id="playParty" class="playParty width100p">
 
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv"></div>
+
+            <div id="mostCharDiv" class="mostCharDiv">
+                <h3 id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</h3>
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
             </div>
-        </div>
-
-        <!-- 포지션별 승률 -->
-        <div id="positionDiv" class="positionDiv"></div>
-
-        <div id="mostCharDiv">
-            <div id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</div>
-            <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
-        </div>
-        <div id="recentlyDiv" class="width100p">
-            <div class="width100p bold" id="recentlyDivTitle">
-                <!--최근 10게임 -->
+            <div id="recentlyDiv" class="">
+                <div class="width100p bold" id="recentlyDivTitle">
+                    <!--최근 10게임 -->
+                </div>
             </div>
-        </div>
 
-        <label><b>일별 승패</b>
-            <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i>
-        </label>
-
-        <div id="dailyResult" class="dailyResult"></div>
-        <div id="moreDailyResult" class="collapse"></div>
-        <div id="playGameList" class="playGameList">
-
-        </div>
+            <div class="moreDailyResultWrap">
+                <p><b>일별 승패</b><i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i></p>
+                <div id="dailyResult" class="dailyResult"></div>
+                <div id="moreDailyResult" class="collapse"></div>
+            </div>
+        </section>
+        <section>
+            <div id="playGameList" class="playGameList"></div>
+        </section>
     </div>
 
     <div style="display:none">
         <table id="templateTable" class="table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">날짜</th>
+                    <th scope="col">일시</th>
                     <th scope="col">결과</th>
-                    <th scope="col">나</th>
+                    <th scope="col">PICK</th>
                     <th scope="col">KDA</th>
                     <th scope="col">딜량</th>
                     <th scope="col">피해량</th>
@@ -410,7 +411,7 @@
         </table>
     </div>
 
-    <div id="template2" style="display:none">
+    <div id="template2" class="mainDetail2" style="display:none">
         <div id="river" data-mapName="리버포드" class="mapCard">
             <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
