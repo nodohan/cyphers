@@ -23,7 +23,7 @@
     position: relative;
 }
 .renewalBody .mainInner {
-    min-width: 0;
+    /*min-width: 0;*/
 }
 .mainInner .leftBanner {
     position: absolute;
