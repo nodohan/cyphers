@@ -64,6 +64,7 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션 별 승률
+                getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
                 // drawPosition(clone, rows, nickname, appendPlayTypeInfo);
 
                 //자주하는 캐릭
@@ -81,6 +82,69 @@
 
                 clone.show();
                 $("#con1_2").prepend(clone);
+            }
+
+            const getUserPositionInfo = (playerId, div) => {
+                var result;
+                $.ajax({
+                    async: true,
+                    url: "/matchesMap/getMatchesMap",
+                    data: {"playerId" : playerId},
+                    success: function(data) {
+                        try {
+                            callLoadingBar(false);
+                        } catch (e) {
+
+                        }
+                        setUserPosition(div, data);
+                    },
+                    error: function(data) {
+                        if (typeof callLoadingBar == 'function') {
+                            callLoadingBar(false);
+                        }
+                        return;
+                    }
+                }).done(function() {
+                    if (typeof callLoadingBar == 'function') {
+                        callLoadingBar(false);
+                    }
+                });
+            }
+
+            const setUserPosition = (div, data) => {
+                const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
+                drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+                drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+                drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+                drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
+            }
+
+            const drawUserPosition = (div, type, data) => {
+                let imgUrl = "/image/position/";
+                switch(type){
+                    case "극방" : imgUrl += "defence.png";  break;
+                    case "방벨" : imgUrl += "defenceBal.png";  break;
+                    case "공벨" : imgUrl += "attackBal.png";  break;
+                    case "극공" : imgUrl += "attack.png";  break;
+                }
+
+                const {win_count, lose_count, total_games} = data;
+                const winRate = ((win_count / total_games) * 100) || 0;
+                const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
+
+                $(div).append(`
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="${imgUrl}">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">${infoStr}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
             }
             
             const drawRightInfo = (data) => {
@@ -162,7 +226,7 @@
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
                 //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
-                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                $(clone).find("#playGameDiv").text(pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
             
             const playDetailGameList = (charId, div) => {
@@ -353,35 +417,35 @@
         <section>
             <div id="defaultDiv" class="defaultDiv">
                 <!--            <div id="gameTypeDiv" class="red bold width100p"></div>-->
-                <div class="width100p">
+                <div class="nickNameWrap">
                     <h3 id="nickNameDiv" class=""></h3>
-                    <div id="levelDiv" class=""></div>
-                    <div id="clanDiv" class=""></div>
                 </div>
-                <div class="width100p">
-                    <div class="">현재 rp : <span id="currRP" class="bold red"></span></div>
-                    <div class="">최고 rp : <span id="maxRP"></span></div>
-                    <div id="playGameDiv">
+                <div class="infoWrap">
+                    <div id="clanDiv" class="clanWrap"></div>
+                    <div id="levelDiv" class="levelWrap"></div>
+                    <div class="RPWrap">
+                        <div class=""><span id="currRP" class="bold red"></span></div>/
+                        <div class=""><span id="maxRP"></span></div>
+                    </div>
+                    <div id="playGameDiv" class="playGameWrap">
                         <!-- 승률 : 50% [100승 101패 2중단]-->
                     </div>
                 </div>
-                <div id="playParty" class="playParty">
-
-                </div>
+<!--                <div id="playParty" class="playParty"></div>-->
             </div>
 
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
 
             <div id="mostCharDiv" class="mostCharDiv">
-                <h3 id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</h3>
+<!--                <p id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</p>-->
                 <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
             </div>
-            <div id="recentlyDiv" class="">
-                <div class="width100p bold" id="recentlyDivTitle">
-                    <!--최근 10게임 -->
-                </div>
-            </div>
+<!--            <div id="recentlyDiv" class="">-->
+<!--                <div class="width100p bold" id="recentlyDivTitle">-->
+<!--                    &lt;!&ndash;최근 10게임 &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div class="moreDailyResultWrap">
                 <p><b>일별 승패</b><i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i></p>
@@ -400,7 +464,7 @@
                 <tr>
                     <th scope="col">일시</th>
                     <th scope="col">결과</th>
-                    <th scope="col">PICK</th>
+                    <th scope="col">Char</th>
                     <th scope="col">KDA</th>
                     <th scope="col">딜량</th>
                     <th scope="col">피해량</th>
