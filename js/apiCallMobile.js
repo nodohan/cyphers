@@ -174,20 +174,20 @@ function asyncUserInfo(gameType, nickName) {
     return result;
 }
 
-function drawPosition(div, rows, nickname) {
-    let tanker = extractPlayType(rows, "탱커");
-    let ad = extractPlayType(rows, "원거리딜러");
-    let melee = extractPlayType(rows, "근거리딜러");
-    let supp = extractPlayType(rows, "서포터");
-
-    $(div).find("#positionDiv").empty();
-
-    //포지션별 승률
-    appendPlayTypeInfo(div, tanker, "tanker", "탱커", nickname); //탱커
-    appendPlayTypeInfo(div, melee, "melee", "근거리딜러", nickname);
-    appendPlayTypeInfo(div, ad, "ad", "원거리딜러", nickname);
-    appendPlayTypeInfo(div, supp, "supp", "서포터", nickname);
-}
+// function drawPosition(div, rows, nickname) {
+//     let tanker = extractPlayType(rows, "탱커");
+//     let ad = extractPlayType(rows, "원거리딜러");
+//     let melee = extractPlayType(rows, "근거리딜러");
+//     let supp = extractPlayType(rows, "서포터");
+//
+//     $(div).find("#positionDiv").empty();
+//
+//     //포지션별 승률
+//     appendPlayTypeInfo(div, tanker, "tanker", "탱커", nickname); //탱커
+//     appendPlayTypeInfo(div, melee, "melee", "근거리딜러", nickname);
+//     appendPlayTypeInfo(div, ad, "ad", "원거리딜러", nickname);
+//     appendPlayTypeInfo(div, supp, "supp", "서포터", nickname);
+// }
 
 function isDuplicate(gameType, nickName) {
     return $("#" + getUserDivId(gameType, nickName)).length != 0;
@@ -553,18 +553,18 @@ function clearDiv(divId) {
     $("#" + divId).empty();
 }
 
-function extractPlayType(rows, type) {
-    let item = { "rate" : 0, "rateInfo" : "0승 0패"};
-    let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
-    if (result.length == 0) {
-        return item;
-    }
-    let win = result.filter(row => row.playInfo.result == "win");
-    item["rate"] = (win.length * 100 / result.length);
-    item["rateInfo"] = win.length + "승 " + (result.length - win.length) + "패";
+// function extractPlayType(rows, type) {
+//     let item = { "rate" : 0, "rateInfo" : "0승 0패"};
+    // let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
+    // if (result.length == 0) {
+    //     return item;
+    // }
+    // let win = result.filter(row => row.playInfo.result == "win");
+    // item["rate"] = (win.length * 100 / result.length);
+    // item["rateInfo"] = win.length + "승 " + (result.length - win.length) + "패";
 
-    return item;
-}
+//     return item;
+// }
 
 function drawCharInfo(div, info, title) {
     if(info.length == 0) {

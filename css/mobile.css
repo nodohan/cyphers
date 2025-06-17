@@ -193,8 +193,29 @@ table, td, th {
 #positionDiv {
     float: left;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 0 4px 0 0;
 }
-
+#positionDiv img {
+    max-width: 100%;
+}
+#positionDiv > div {
+    width: auto;
+}
+#positionDiv > div > div {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 0;
+}
+#positionDiv > div > div > div:first-of-type {
+    flex: 2;
+}
+#positionDiv > div > div > div:last-of-type {
+    flex: 5;
+}
 .mapCard .card {
     width: 50%;
 }
