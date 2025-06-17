@@ -273,7 +273,7 @@
                 }
 
                 const {win_count, lose_count, total_games} = data;
-                const winRate = (win_count / total_games) * 100;
+                const winRate = ((win_count / total_games) * 100) || 0;
                 const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
 
                 $(div).append(`
