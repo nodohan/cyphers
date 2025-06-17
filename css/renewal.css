@@ -894,12 +894,12 @@ div:has(> .beforeSeason) {
 
 .renewalMainUserDetail {
     max-width: 1920px;
-    min-width: 1320px;
+    min-width: 1440px;
 }
 .renewalDetailSearch {
     width: 80%;
     max-width: 1120px;
-    margin: 20px auto;
+    margin: 20px auto 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -961,6 +961,7 @@ div:has(> .beforeSeason) {
     flex-direction: column;
     justify-content: center;
     box-shadow: 0 0 3px #ced4da;
+    z-index: 10;
 }
 .gameTypeSelect > div {
     display: flex;
@@ -1008,7 +1009,7 @@ div:has(> .beforeSeason) {
     box-shadow: none;
 }
 .mainDetail {
-    background: #fff;
+    background: transparent;
 }
 .searchButtonWrap {
     position: absolute;
@@ -1037,7 +1038,7 @@ div:has(> .beforeSeason) {
     left: 0;
     background-color: #fff;
     width: calc(100% - 48px);
-    z-index: 1;
+    z-index: 10;
     box-shadow: 0 0 3px #ced4da;
 }
 .deleteHistroyButton {
@@ -1145,62 +1146,93 @@ div:has(> .beforeSeason) {
     display: flex;
     gap: 20px;
     border: 0;
+    align-items: stretch;
+    width: 100%;
+}
+.mainDetail > section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
 }
 .mainDetail > section:first-of-type {
-    flex: 1;
+    flex: 1
 }
 .mainDetail > section:last-of-type {
     flex: 6;
+    position: relative;
+}
+.mainDetail > section table {
+    margin: 0;
 }
 .mainDetail .defaultDiv {
     float: none;
     width: 100%;
     min-height: 240px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
 }
-.conDetail {
+.userDetailBody .conDetail {
     float: none;
     width: auto;
     margin: 0;
 }
-.mostCharDiv {
+.userDetailBody .conDetail > div {
+    min-height: auto;
+    max-height: none;
+}
+.userDetailBody .mostCharDiv {
     float: none;
 }
-.mostCharDiv > .mostCharDetailDiv {
+.userDetailBody .mostCharDiv > .mostCharDetailDiv {
     display: grid;
-    grid-template-columns: repeat(2, minmax(200px, auto));
+    grid-template-columns: repeat(2, minmax(100px, auto));
 }
-.mostCharDiv > .mostCharDetailDiv > div {
+.userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
     width: 100%;
 }
-.playGameList {
-    height: 80vh;
+.userDetailBody .playGameList {
+    right: 16px;
+    top: 16px;
+    position: absolute;
+    width: calc(100% - 32px);
+    height: calc(100% - 32px);
+    padding: 0;
+    float: none;
+    background-color: white; /* 또는 원하시는 색 */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
 }
-.playGameList > table > tbody > tr:has(.blue) > td:first-of-type {
+.userDetailBody .playGameList > table > thead {
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+}
+.userDetailBody .playGameList > table > tbody {}
+.userDetailBody .playGameList > table > tbody tr:nth-of-type(odd) {
+    background: transparent;
+}
+.userDetailBody .playGameList > table > tbody > tr:has(.blue) > td:first-of-type {
     position: relative;
 }
-.playGameList > table > tbody > tr:has(.blue)> td:first-of-type::before {
+.userDetailBody .playGameList > table > tbody > tr:has(.blue)> td:first-of-type::before {
     content: "";
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 8px;
     height: 100%;
-    /*background: linear-gradient(to right, blue 20%, transparent);*/
+    background: linear-gradient(to left, cornflowerblue, blue);
 }
-.playGameList > table > tbody > tr:has(.red) > td:first-of-type {
+.userDetailBody .playGameList > table > tbody > tr:has(.red) > td:first-of-type {
     position: relative;
 }
-.playGameList > table > tbody > tr:has(.red)> td:first-of-type::before {
+.userDetailBody .playGameList > table > tbody > tr:has(.red)> td:first-of-type::before {
     content: "";
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 8px;
     height: 100%;
-    /*background: linear-gradient(to right, red 20%, transparent);*/
+    background: linear-gradient(to left, indianred, red);
 }
 
+.mainDetail2 > div {
+    width: 100%;
+}

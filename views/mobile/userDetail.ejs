@@ -70,7 +70,8 @@
                 var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 //포지션 별 승률
-                drawPosition(clone, rows, nickname);
+                getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
+                // drawPosition(clone, rows, nickname);
 
                 //최근 5경기 결과
                 drawRecently(clone, rows);
@@ -85,6 +86,69 @@
 
                 clone.show();
                 $("#con1_2").prepend(clone);
+            }
+
+            const getUserPositionInfo = (playerId, div) => {
+                var result;
+                $.ajax({
+                    async: true,
+                    url: "/matchesMap/getMatchesMap",
+                    data: {"playerId" : playerId},
+                    success: function(data) {
+                        try {
+                            callLoadingBar(false);
+                        } catch (e) {
+
+                        }
+                        setUserPosition(div, data);
+                    },
+                    error: function(data) {
+                        if (typeof callLoadingBar == 'function') {
+                            callLoadingBar(false);
+                        }
+                        return;
+                    }
+                }).done(function() {
+                    if (typeof callLoadingBar == 'function') {
+                        callLoadingBar(false);
+                    }
+                });
+            }
+
+            const setUserPosition = (div, data) => {
+                const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
+                drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+                drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+                drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+                drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
+            }
+
+            const drawUserPosition = (div, type, data) => {
+                let imgUrl = "/image/position/";
+                switch(type){
+                    case "극방" : imgUrl += "defence.png";  break;
+                    case "방벨" : imgUrl += "defenceBal.png";  break;
+                    case "공벨" : imgUrl += "attackBal.png";  break;
+                    case "극공" : imgUrl += "attack.png";  break;
+                }
+
+                const {win_count, lose_count, total_games} = data;
+                const winRate = ((win_count / total_games) * 100) || 0;
+                const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
+
+                $(div).append(`
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="${imgUrl}">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">${infoStr}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
             }
 
             //캐릭터 승률
@@ -111,9 +175,9 @@
              */
              function drawMapInfo(rows, div, mapId, mapName, divId) {
                 //포지션별 승률
-                let mapRow = extractMap(rows, mapName);                
-                showMapRate(div.find(divId).find(".mapRate"), mapRow);                
-                drawPosition(div.find(divId), mapRow, nickname);
+                let mapRow = extractMap(rows, mapName);
+                showMapRate(div.find(divId).find(".mapRate"), mapRow);
+                // drawPosition(div.find(divId), mapRow, nickname);
                 let userMapChar = extractChar(mapRow, highScore);
                 drawOften(div.find(divId).find("#often"), userMapChar, drawCharCardVer, nickname);
             }
@@ -173,6 +237,11 @@
                 <div id="playParty" class="width100p playParty"></div>
             </div>
 
+            <!-- 포지션별 승률 -->
+            <div id="positionDiv" class="positionDiv">
+                
+            </div>
+
             <!-- 자주하는 캐릭-->
             <div id="mostCharDiv" class="mostCharDiv">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
@@ -203,6 +272,7 @@
         <div id="template2" style="display:none">
             <div id="river" class="mapCard">
                 <div class="title bold width100p">리버포드</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>
@@ -210,13 +280,15 @@
             </div>
             <div id="metro" class="mapCard">
                 <div class="title bold width100p">메트로폴리스</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>
                 </div>
             </div>
             <div id="bristol" class="mapCard">
-                <div class="title bold width100p">브리스톨</div>                
+                <div class="title bold width100p">브리스톨</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>
@@ -224,13 +296,15 @@
             </div>
             <div id="spring" class="mapCard">
                 <div class="title bold width100p">스프링필드</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>
                 </div>
             </div>
             <div id="asia" class="mapCard">
-                <div class="title bold width100p">그랑플람 아시아지부</div>                
+                <div class="title bold width100p">그랑플람 아시아지부</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>
@@ -238,6 +312,7 @@
             </div>
             <div id="atDawn" class="mapCard">
                 <div class="title bold width100p">리버포드 앳 던</div>
+                <div id="positionDiv" class="positionDiv"></div>
                 <div id="often" class="width100p mostCharDiv">
                     <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
                     <div id="mostCharDetailDiv"></div>

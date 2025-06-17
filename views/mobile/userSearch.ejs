@@ -93,6 +93,9 @@
                 //파티 별?
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
+                //포지션별
+                getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
+
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
                 drawOften(clone, userChar, drawCharCardVer);
@@ -102,6 +105,69 @@
 
                 clone.show();
                 $("#" + divName).append(clone);
+            }
+
+            const getUserPositionInfo = (playerId, div) => {
+                var result;
+                $.ajax({
+                    async: true,
+                    url: "/matchesMap/getMatchesMap",
+                    data: {"playerId" : playerId},
+                    success: function(data) {
+                        try {
+                            callLoadingBar(false);
+                        } catch (e) {
+
+                        }
+                        setUserPosition(div, data);
+                    },
+                    error: function(data) {
+                        if (typeof callLoadingBar == 'function') {
+                            callLoadingBar(false);
+                        }
+                        return;
+                    }
+                }).done(function() {
+                    if (typeof callLoadingBar == 'function') {
+                        callLoadingBar(false);
+                    }
+                });
+            }
+
+            const setUserPosition = (div, data) => {
+                const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
+                drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+                drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+                drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+                drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
+            }
+
+            const drawUserPosition = (div, type, data) => {
+                let imgUrl = "/image/position/";
+                switch(type){
+                    case "극방" : imgUrl += "defence.png";  break;
+                    case "방벨" : imgUrl += "defenceBal.png";  break;
+                    case "공벨" : imgUrl += "attackBal.png";  break;
+                    case "극공" : imgUrl += "attack.png";  break;
+                }
+
+                const {win_count, lose_count, total_games} = data;
+                const winRate = ((win_count / total_games) * 100) || 0;
+                const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
+
+                $(div).append(`
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-5">
+                            <img src="${imgUrl}">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">${infoStr}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
             }
 
             //기본정보
@@ -276,6 +342,8 @@
                 </div>
                 <div id="playParty" class="width100p playParty"></div>
             </div>
+
+            <div id="positionDiv"></div>
 
             <!-- 자주하는 캐릭-->
             <div id="mostCharDiv" class="mostCharDiv">
