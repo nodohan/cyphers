@@ -125,7 +125,6 @@ function searchUser(inputId, divName, nickName, callback) {
     }
 
     if (pageName === 'pcDetail') {
-        console.log('gd');
         const history = document.getElementById("renewalDetailHistory");
         if (history) {
             history.style.display = "none";
@@ -652,8 +651,13 @@ function drawPartyType(userDivId, clone, row) {
     let partyAllCnt = partyJson.all.win + partyJson.all.lose;
     let appendHtml = "";
 
-    appendHtml += `<b class="red">솔플</b>: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
+    if (pageName == 'pcDetail') {
+        appendHtml += `${partyAllCnt}회`;
+    } else {
+        appendHtml += `<b class="red">솔플</b>: ${soloAllCnt}전 ${partyJson.solo.win}승 ${partyJson.solo.lose}패, 
                    <b class="red">파티</b>: ${partyAllCnt}전 ${partyJson.all.win}승 ${partyJson.all.lose}패 <br>`;
+    }
+
 
     let index = 0;
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
