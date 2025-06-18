@@ -1164,14 +1164,11 @@ div:has(> .beforeSeason) {
 .mainDetail > section div {
     float: none;
 }
-.mainDetail > section img {
-    display: block;
-}
 .mainDetail > section .defaultDiv {}
 .mainDetail > section .defaultDiv h3 {
     font-size: 24px;
     font-weight: bold;
-    background: linear-gradient(to left, #343a40 10%, transparent 70%);
+    /*background: linear-gradient(to left, #343a40 10%, transparent 70%);*/
 }
 .mainDetail > section .defaultDiv .nickNameWrap {
     border-bottom: 1px solid #ced4da;
@@ -1225,6 +1222,7 @@ div:has(> .beforeSeason) {
     grid-template-columns: 1fr 1fr;
     padding: 16px 0;
     border-bottom: 1px solid #ced4da;
+    gap: 4px;
 }
 .mainDetail > section .positionDiv > div {
     width: 100%;
@@ -1242,6 +1240,7 @@ div:has(> .beforeSeason) {
     margin: 16px 0;
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
+    padding: 8px;
 }
 .mainDetail > section .mostCharDiv > div {
     padding: 0;
@@ -1286,11 +1285,36 @@ div:has(> .beforeSeason) {
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div:last-of-type {
     border-bottom: 0;
 }
-.userDetailBody .mostCharDiv > .mostCharDetailDiv img{
+.userDetailBody .mostCharDiv > .mostCharDetailDiv img {
     display: block;
+    width: auto;
+    height: auto;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
-    width: 100%;
+    width: auto;
+    padding: 4px 0;
+}
+.userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+.userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div > div {
+    max-width: none;
+    flex: none;
+    width: auto;
+}
+.userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div > div:last-of-type {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+.userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div > div a {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .userDetailBody .playGameList {
     right: 16px;
@@ -1305,13 +1329,13 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .playGameList > table > thead {
     position: sticky;
-    top: 0px;
+    top: 0;
     z-index: 1;
 }
 .userDetailBody .playGameList > table > tbody tr:nth-of-type(odd) {
     background: transparent;
 }
-.userDetailBody .playGameList > table > tbody > tr:has(.blue) > td:first-of-type {
+.userDetailBody .playGameList > table > tbody > tr > td:first-of-type {
     position: relative;
     overflow: hidden;
 }
@@ -1322,11 +1346,7 @@ div:has(> .beforeSeason) {
     top: 0;
     width: 8px;
     height: 100%;
-    background: linear-gradient(to bottom, #0057B7 0%, #006DD9 100%);
-}
-.userDetailBody .playGameList > table > tbody > tr:has(.red) > td:first-of-type {
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, #0057B7 0%, #006DD9 100%);
 }
 .userDetailBody .playGameList > table > tbody > tr:has(.red)> td:first-of-type::before {
     content: "";
@@ -1335,7 +1355,7 @@ div:has(> .beforeSeason) {
     top: 0;
     width: 8px;
     height: 100%;
-    background: linear-gradient(to bottom, #FF6B6B 0%, #FA8072 100%);
+    background: linear-gradient(135deg, #FF6B6B 0%, #FA8072 100%);
 }
 .mainDetail2 > div {
     width: 100%;
