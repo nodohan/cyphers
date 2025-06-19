@@ -177,7 +177,10 @@
                 isShow ? div.show() : div.hide();
             }
 
-            function setUserInfo(gameType, divName, data) {
+            function setUserInfo(gameType, divName, data) {                
+                const { playerId } = data;
+                callTeamRate(playerId, divName == "con1_2" ? "blue" : "red");
+
                 const nickname = data.nickname;
                 if (userData[nickname] == null) {
                     userData[nickname] = data;

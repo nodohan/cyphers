@@ -56,6 +56,45 @@ module.exports = (scheduler, maria) => {
         res.send(await getUserMatchesMap(req.query.playerId));
     });
 
+
+    //test  ( "/matchesMap/teamRate?playerIds=1826e7c7f0becbc1e65ee644c28f0072&playerIds=b2612be939898da38f08143a09c97412" )
+    app.get('/teamRate', async function(req, res) {        
+        
+        const playerIds = req.query.playerIds;
+        if(playerIds == null || playerIds.length == 0) {
+            res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
+            return ;
+        }
+        res.send(await teamRate(playerIds));
+    });
+
+    teamRate = async (playerIds) => {
+        const cnt = playerIds.length > 2 ? 3 : playerIds.length;
+        const playerStr = playerIds.map(() => '?').join(', ');
+
+        const query = `
+        SELECT
+            CONCAT(ROUND(SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), '%') AS win_rate,
+            COUNT(*) AS total_games
+        FROM (
+            SELECT matchId, result
+            FROM matches_map
+            WHERE playerId IN (${playerStr})
+            GROUP BY matchId, result
+            HAVING COUNT(playerId) >= ${cnt}
+        ) AS sub `;
+
+        logger.info("query: %s", query);
+
+        try {
+            return await maria.doQuery(query, [ ... playerIds ]);
+        } catch (err){
+            logger.err(err);
+        }
+        return null;
+    }
+
+
     getUserMatchesMap =  async (playerId) => {
         const query = `
             SELECT 
