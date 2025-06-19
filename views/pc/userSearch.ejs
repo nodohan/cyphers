@@ -17,7 +17,6 @@
                     search('nickNames', 'con1_2');
                 }
 
-                getCookie();
                 showSearchHistory();
                 $("#partyShow").on("change", () => checkVisibility("partyShow"));
                 $("#positionShow").on("change", () => checkVisibility("positionShow"));
@@ -279,10 +278,10 @@
                 $(div).append(`
                     <div class="card">
                         <div class="row no-gutters">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <img src="${imgUrl}">
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <div class="card-body">
                                     <p id="tankerSpan" class="card-text">${infoStr}</p>
                                 </div>
@@ -579,10 +578,10 @@
                 <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <div id="cardTemp" class="card" hidden>
                         <div class="row no-gutters">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <!-- <img src="https://img-api.neople.co.kr/cy/characters/5f4c4d6d332766ca219af12dfc41f124">-->
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <div class="card-body">
                                     <p class="card-text">
                                         <!-- 57% <br> <small class="text-muted">79승 60패 </small>-->

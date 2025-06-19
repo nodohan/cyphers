@@ -64,6 +64,7 @@
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
 
                 //포지션 별 승률
+                getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
                 // drawPosition(clone, rows, nickname, appendPlayTypeInfo);
 
                 //자주하는 캐릭
@@ -82,6 +83,69 @@
                 clone.show();
                 $("#con1_2").prepend(clone);
             }
+
+            const getUserPositionInfo = (playerId, div) => {
+                var result;
+                $.ajax({
+                    async: true,
+                    url: "/matchesMap/getMatchesMap",
+                    data: {"playerId" : playerId},
+                    success: function(data) {
+                        try {
+                            callLoadingBar(false);
+                        } catch (e) {
+
+                        }
+                        setUserPosition(div, data);
+                    },
+                    error: function(data) {
+                        if (typeof callLoadingBar == 'function') {
+                            callLoadingBar(false);
+                        }
+                        return;
+                    }
+                }).done(function() {
+                    if (typeof callLoadingBar == 'function') {
+                        callLoadingBar(false);
+                    }
+                });
+            }
+
+            const setUserPosition = (div, data) => {
+                const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
+                drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+                drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+                drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+                drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
+            }
+
+            const drawUserPosition = (div, type, data) => {
+                let imgUrl = "/image/position/";
+                switch(type){
+                    case "극방" : imgUrl += "defence.png";  break;
+                    case "방벨" : imgUrl += "defenceBal.png";  break;
+                    case "공벨" : imgUrl += "attackBal.png";  break;
+                    case "극공" : imgUrl += "attack.png";  break;
+                }
+
+                const {win_count, lose_count, total_games} = data;
+                const winRate = ((win_count / total_games) * 100) || 0;
+                const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
+
+                $(div).append(`
+                <div class="card">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="${imgUrl}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <p id="tankerSpan" class="card-text">${infoStr}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+            }
             
             const drawRightInfo = (data) => {
                 var div = $("#template2").clone();
@@ -97,6 +161,7 @@
                 div.show();
 
                 $("#con2_2").empty().append(div);
+                bindMapTabButtonEvents();
             }
 
             const drawLeftInfoNormal = (gameType, data) => {
@@ -162,7 +227,7 @@
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
                 //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
-                $(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
+                $(clone).find("#playGameDiv").text(pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
             }
             
             const playDetailGameList = (charId, div) => {
@@ -296,6 +361,60 @@
                 div.empty().append(`(승률: ${((winCount/totalCount) * 100).toFixed(0)}% / ${totalCount}전 ${winCount}승 ${totalCount - winCount} 패 )`);
             }
 
+            function generateMapTabButtons(containerId = "mapTabButtons", cardClass = "mapCard", btnClass = "mapTabBtn") {
+                const cards = document.querySelectorAll(`.${cardClass}`);
+                const buttonContainer = document.getElementById(containerId);
+
+                if (!buttonContainer || cards.length === 0) return;
+
+                buttonContainer.innerHTML = ""; // 기존 버튼 초기화
+
+                cards.forEach((card, index) => {
+                    const mapName = card.getAttribute("data-mapName");
+                    const mapId = card.id;
+
+                    const btn = document.createElement("button");
+                    btn.textContent = mapName;
+                    btn.className = btnClass;
+                    btn.dataset.targetId = mapId;
+
+                    // 첫 번째 버튼만 active
+                    if (index === 0) btn.classList.add("active");
+
+                    buttonContainer.appendChild(btn);
+                });
+            }
+
+            function bindMapTabButtonEvents(btnClass = "mapTabBtn", cardClass = "mapCard", activeClass = "active") {
+                const buttons = document.querySelectorAll(`.${btnClass}`);
+                const cards = document.querySelectorAll(`.${cardClass}`);
+                console.log('activate')
+
+                buttons.forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const targetId = btn.dataset.targetId;
+
+                        // 모든 카드 숨기고, 해당 카드만 보이기
+                        cards.forEach(c => c.style.display = "none");
+                        const targetCard = document.getElementById(targetId);
+                        if (targetCard) targetCard.style.display = "block";
+
+                        // 버튼 스타일 변경
+                        buttons.forEach(b => b.classList.remove(activeClass));
+                        btn.classList.add(activeClass);
+                    });
+                });
+
+                // 초기 상태 카드 표시
+                if (buttons.length > 0) {
+                    const firstTarget = buttons[0].dataset.targetId;
+                    const firstCard = document.getElementById(firstTarget);
+                    if (firstCard) firstCard.style.display = "block";
+                }
+            }
+
+            generateMapTabButtons();      // 버튼만 생성
+
         </script>
 </head>
 
@@ -341,11 +460,6 @@
 
                 </div>
             </div>
-            <div id="con2" class="conDetail">
-                <div id="con2_2" class="infoLayer2">
-
-                </div>
-            </div>
         </div>
     </div>
 
@@ -353,20 +467,20 @@
         <section>
             <div id="defaultDiv" class="defaultDiv">
                 <!--            <div id="gameTypeDiv" class="red bold width100p"></div>-->
-                <div class="width100p">
+                <div class="nickNameWrap">
                     <h3 id="nickNameDiv" class=""></h3>
-                    <div id="levelDiv" class=""></div>
-                    <div id="clanDiv" class=""></div>
                 </div>
-                <div class="width100p">
-                    <div class="">현재 rp : <span id="currRP" class="bold red"></span></div>
-                    <div class="">최고 rp : <span id="maxRP"></span></div>
-                    <div id="playGameDiv">
+                <div class="infoWrap">
+                    <div id="clanDiv" class="clanWrap"></div>
+                    <div id="levelDiv" class="levelWrap"></div>
+                    <div class="RPWrap">
+                        <div class=""><span id="currRP" class="bold red"></span></div>/
+                        <div class=""><span id="maxRP"></span></div>
+                    </div>
+                    <div id="playGameDiv" class="playGameWrap">
                         <!-- 승률 : 50% [100승 101패 2중단]-->
                     </div>
-                </div>
-                <div id="playParty" class="playParty">
-
+                    <div id="playParty" class="playParty"></div>
                 </div>
             </div>
 
@@ -374,22 +488,27 @@
             <div id="positionDiv" class="positionDiv"></div>
 
             <div id="mostCharDiv" class="mostCharDiv">
-                <h3 id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</h3>
+<!--                <p id="mostCharTitleDiv" class="width100p">자주하는캐릭 TOP3</p>-->
                 <div id="mostCharDetailDiv" class="mostCharDetailDiv"></div>
             </div>
-            <div id="recentlyDiv" class="">
-                <div class="width100p bold" id="recentlyDivTitle">
-                    <!--최근 10게임 -->
-                </div>
-            </div>
+<!--            <div id="recentlyDiv" class="">-->
+<!--                <div class="width100p bold" id="recentlyDivTitle">-->
+<!--                    &lt;!&ndash;최근 10게임 &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div class="moreDailyResultWrap">
-                <p><b>일별 승패</b><i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i></p>
                 <div id="dailyResult" class="dailyResult"></div>
                 <div id="moreDailyResult" class="collapse"></div>
+                <p style="text-align: center"><i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i></p>
             </div>
         </section>
         <section>
+            <div id="con2" class="conDetail">
+                <div id="con2_2" class="infoLayer2">
+
+                </div>
+            </div>
             <div id="playGameList" class="playGameList"></div>
         </section>
     </div>
@@ -400,7 +519,7 @@
                 <tr>
                     <th scope="col">일시</th>
                     <th scope="col">결과</th>
-                    <th scope="col">PICK</th>
+                    <th scope="col">Char</th>
                     <th scope="col">KDA</th>
                     <th scope="col">딜량</th>
                     <th scope="col">피해량</th>
@@ -412,68 +531,69 @@
     </div>
 
     <div id="template2" class="mainDetail2" style="display:none">
+        <div id="mapTabButtons" class="btn-container"></div>
         <div id="river" data-mapName="리버포드" class="mapCard">
             <div class="bold width100p">리버포드 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
-        <div id="metro" data-mapName="메트로폴리스" class="mapCard">
+        <div id="metro" data-mapName="메트로폴리스" class="mapCard" style="display:none">
             <div class="bold width100p">메트로폴리스 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
-        <div id="bristol" data-mapName="브리스톨" class="mapCard">
+        <div id="bristol" data-mapName="브리스톨" class="mapCard" style="display:none">
             <div class="bold width100p">브리스톨 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
-        <div id="spring" data-mapName="스프링필드" class="mapCard">
+        <div id="spring" data-mapName="스프링필드" class="mapCard" style="display:none">
             <div class="bold width100p">스프링필드 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
-        <div id="asia" data-mapName="그랑플람 아시아 지부" class="mapCard">
+        <div id="asia" data-mapName="그랑플람 아시아 지부" class="mapCard" style="display:none">
             <div class="bold width100p">그랑플람 아시아 지부 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>
         </div>
-        <div id="atDawn" data-mapName="리버포드 앳 던" class="mapCard">
+        <div id="atDawn" data-mapName="리버포드 앳 던" class="mapCard" style="display:none">
             <div class="bold width100p">리버포드 앳 던 <span class="mapRate"></span></div>
             <!-- 포지션별 승률 -->
             <div id="positionDiv" class="positionDiv"></div>
             <div id="often" class="width100p">
                 <div id="mostCharTitleDiv" class="width100p bold">자주하는캐릭 TOP3</div>
-                <div id="mostCharDetailDiv">
+                <div id="mostCharDetailDiv" class="mostCharDetailDiv">
                     <!-- 자주하는 캐릭 top3 -->
                 </div>
             </div>

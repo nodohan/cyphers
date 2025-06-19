@@ -294,7 +294,7 @@ function drawInGameList(data) {
 
 function drawInGameDetail(matchId, data, trClass) {
     const { playInfo, items } = data;
-    const partyCnt = playInfo.partyUserCount == 0 ? "(솔플)" : `(${playInfo.partyUserCount}인)`;
+    const partyCnt = playInfo.partyUserCount == 0 ? "()" : `(${playInfo.partyUserCount}인)`;
     const useCoin = playInfo.spendConsumablesCoin.toLocaleString();
     const usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
     const itemInfoId = `m${matchId}_${data.playerId}`;

@@ -526,34 +526,45 @@ const drawInGameDetailNormal = (matchId, data, trClass) => {
 }
 
 const drawDailyResultNormal = (div, dailyMap) => {
-    let table = "<table class='table table-bordered table-striped'>";
-    let tr = "<thead><tr>"; 
-    let tbody = "<tbody><tr>";
-    let endTbody = "</tr></tbody></table>";
+    let columnNum = isMobile ? 4 : 7;
+    let tableStart = "<table class='table table-bordered table-striped'><thead><tr>";
+    let tableMid = "</tr></thead><tbody><tr>";
+    let tableEnd = "</tr></tbody></table>";
 
     let th = "";
     let td = "";
     let trCount = 1;
     let first = true;
-    let columnNum = isMobile ? 4 : 7;
 
     dailyMap.forEach(function(item, key) {
-        th += `<th>${key}</th>
-               <td>${item.win+item.lose}판 </td>`;
-        if (trCount % columnNum == 0) {
-            let newTable = table + tr + th + tbody + td + endTbody;
-            th = "";
-            td = "";
+        th += `<th>${key}</th>`;
+        td += `<td>${item.win + item.lose}판</td>`;
+
+        if (trCount % columnNum === 0) {
+            const newTable = tableStart + th + tableMid + td + tableEnd;
             if (first) {
                 div.find("#dailyResult").empty().append(newTable);
                 first = false;
             } else {
                 div.find("#moreDailyResult").append(newTable);
             }
+            th = "";
+            td = "";
         }
+
         trCount++;
     });
-}
+
+    // 남은 데이터 처리 (columnNum 개수로 안 나누어떨어지는 경우)
+    if (th !== "" && td !== "") {
+        const newTable = tableStart + th + tableMid + td + tableEnd;
+        if (first) {
+            div.find("#dailyResult").empty().append(newTable);
+        } else {
+            div.find("#moreDailyResult").append(newTable);
+        }
+    }
+};
 
 const playDetailGameListNormal = (charId, div) => {
     let rows = playRow;
