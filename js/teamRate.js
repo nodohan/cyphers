@@ -2,9 +2,13 @@ let teamRed = [] ;
 let teamBlue = [] ;
 
 const callTeamRate  =  (playerId, team, callback) => {    
-    callLoadingBar(true);
+    //callLoadingBar(true);
     const teamArr  =  team == "red" ? teamRed : teamBlue;
     teamArr.push(playerId);
+
+    if(teamArr.length == 1) {
+        return ;
+    }
 
     $.ajax({
         async: true,
@@ -12,7 +16,7 @@ const callTeamRate  =  (playerId, team, callback) => {
         data: {"playerIds" : teamArr},
         success: function(data) {
             try {
-                callLoadingBar(false);
+                //callLoadingBar(false);
             } catch (e) {
 
             }
