@@ -24,7 +24,7 @@ class api {
   async call(opt) {
     try {
       const url = (opt.uri || opt.url);
-      logger.debug("url: %s", url);
+      //logger.debug("url: %s", url);
       const response = await axios.get(url, { params: opt.qs} );
 
       if (response.status != 200) {
@@ -138,19 +138,24 @@ class api {
 }
 
 function mergeJson(mergeData, resultJson) {
-  if (mergeData == null) {
-    mergeData = resultJson;
-  } else if (resultJson != null) {
-    mergeData.matches.rows = mergeData.matches.rows.concat(
-      resultJson.matches.rows
-    );
-  }
+  try {
+    if (mergeData == null) {
+        mergeData = resultJson;
+      } else if (resultJson != null) {
+        mergeData.matches.rows = mergeData.matches.rows.concat(
+          resultJson.matches.rows
+        );
+      }
 
-  let rows = mergeData.matches.rows;
-  rows = rows.filter((obj, index, self) =>
-    index === self.findIndex((t) => t.matchId === obj.matchId)
-  ); 
-  mergeData.matches.rows = rows;
+      let rows = mergeData.matches.rows;
+      rows = rows.filter((obj, index, self) =>
+        index === self.findIndex((t) => t.matchId === obj.matchId)
+      ); 
+      mergeData.matches.rows = rows;
+  } catch(err) {
+    console.log(err);
+  }
+  
   return mergeData;
 }
 

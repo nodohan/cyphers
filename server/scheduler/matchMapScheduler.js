@@ -29,7 +29,7 @@ module.exports = (scheduler, maria) => {
         res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
         let isRun = true;
         while(isRun) {
-            isRun = await selectMatches(day);
+            isRun = await selectMatches(req.query.day);
         }
     });
 
@@ -55,6 +55,48 @@ module.exports = (scheduler, maria) => {
         }
         res.send(await getUserMatchesMap(req.query.playerId));
     });
+
+
+    //test  ( "/matchesMap/teamRate?playerIds=1826e7c7f0becbc1e65ee644c28f0072&playerIds=b2612be939898da38f08143a09c97412" )
+    app.get('/teamRate', async function(req, res) {        
+        
+        const playerIds = req.query.playerIds;
+        if(playerIds == null || playerIds.length == 0) {
+            res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
+            return ;
+        }
+        const matchResults = await teamRate(playerIds);
+        res.send({ "rate" :  calculateWinRate(matchResults), "total": matchResults.length, "data" : matchResults });
+    });
+
+    calculateWinRate = (matchResults) => {
+        const total = matchResults.length;
+        const wins = matchResults.filter(r => r.result === 'win').length;
+        const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+        return `${winRate}%`;
+    };
+
+    teamRate = async (playerIds) => {
+        const cnt = playerIds.length <= 3 ? 2 : 3;
+        const playerStr = playerIds.map(() => '?').join(', ');
+
+        const query = `        
+            SELECT matchId, result
+            FROM matches_map
+            WHERE playerId IN (${playerStr})
+            GROUP BY matchId, result
+            HAVING COUNT(playerId) >= ${cnt}
+        `;
+
+        logger.info("query: %s", query);
+
+        try {
+            return await maria.doQuery(query, [ ... playerIds ]);
+        } catch (err){
+            logger.err(err);
+        }
+        return null;
+    }
 
     getUserMatchesMap =  async (playerId) => {
         const query = `
@@ -148,8 +190,11 @@ module.exports = (scheduler, maria) => {
     }
     
     async function insertMatchId(rows) {
-        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result) VALUES ( ?, ?, ?, ? ) `;
+        const pool = maria.getPool();
+
+        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position ) VALUES ( ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);
+        logger.debug(rows);        
 
         await pool.batch(query, rows, function(err) {
             console.log(err);
@@ -159,10 +204,10 @@ module.exports = (scheduler, maria) => {
     }
     
     const updatePositionBatch = async() => {
-        const batchSize = 1000;        
+        const batchSize = 1000;
+        
         while (true) {
             const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
-
             if (rows.length === 0) break;
         
             for (const row of rows) {
@@ -174,16 +219,16 @@ module.exports = (scheduler, maria) => {
                     const items = jsonData.items ?? [];
             
                     const position = classifyBuild(itemPurchase, items);
-            
                     await maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
+
+                    log.info("update matchesMap %s", matchId);
+
                 } catch (err) {
                     console.error(`❌ ID ${row.id} 처리 실패:`, err.message);
                     // 실패했어도 진행
                 }
             }
         }
-    
-        await pool.end();
     }      
 
     return app;
