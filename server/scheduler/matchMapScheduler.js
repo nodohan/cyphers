@@ -72,17 +72,13 @@ module.exports = (scheduler, maria) => {
         const cnt = playerIds.length <= 3 ? 2 : 3;
         const playerStr = playerIds.map(() => '?').join(', ');
 
-        const query = `
-        SELECT
-            CONCAT(ROUND(SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), '%') AS win_rate,
-            COUNT(*) AS total_games
-        FROM (
+        const query = `        
             SELECT matchId, result
             FROM matches_map
             WHERE playerId IN (${playerStr})
             GROUP BY matchId, result
             HAVING COUNT(playerId) >= ${cnt}
-        ) AS sub `;
+        `;
 
         logger.info("query: %s", query);
 
