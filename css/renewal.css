@@ -817,10 +817,13 @@ div:has(> .beforeSeason) {
 .cardModalInner table {
     margin: 0;
 }
-.cardModalInner table thead th{
+.cardModalInner table thead th {
     background-color: #eee !important;
     color: #343a40 !important;
     border: 0;
+}
+.cardModalInner table a {
+    word-break: keep-all;
 }
 .cardModalInner .row {
     margin: 0;
