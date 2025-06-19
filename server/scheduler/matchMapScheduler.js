@@ -29,7 +29,7 @@ module.exports = (scheduler, maria) => {
         res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
         let isRun = true;
         while(isRun) {
-            isRun = await selectMatches(day);
+            isRun = await selectMatches(req.query.day);
         }
     });
 
@@ -190,8 +190,11 @@ module.exports = (scheduler, maria) => {
     }
     
     async function insertMatchId(rows) {
-        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result) VALUES ( ?, ?, ?, ? ) `;
+        const pool = maria.getPool();
+
+        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position ) VALUES ( ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);
+        logger.debug(rows);        
 
         await pool.batch(query, rows, function(err) {
             console.log(err);
@@ -201,10 +204,10 @@ module.exports = (scheduler, maria) => {
     }
     
     const updatePositionBatch = async() => {
-        const batchSize = 1000;        
+        const batchSize = 1000;
+        
         while (true) {
             const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
-
             if (rows.length === 0) break;
         
             for (const row of rows) {
@@ -216,16 +219,16 @@ module.exports = (scheduler, maria) => {
                     const items = jsonData.items ?? [];
             
                     const position = classifyBuild(itemPurchase, items);
-            
                     await maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
+
+                    log.info("update matchesMap %s", matchId);
+
                 } catch (err) {
                     console.error(`❌ ID ${row.id} 처리 실패:`, err.message);
                     // 실패했어도 진행
                 }
             }
         }
-    
-        await pool.end();
     }      
 
     return app;
