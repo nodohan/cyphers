@@ -177,20 +177,24 @@
                 isShow ? div.show() : div.hide();
             }
 
-            function setUserInfo(gameType, divName, data) {                
-                const { playerId } = data;
-                callTeamRate(playerId, divName == "con1_2" ? "blue" : "red");
-
+            function setUserInfo(gameType, divName, data) {
                 const nickname = data.nickname;
                 if (userData[nickname] == null) {
                     userData[nickname] = data;
                 }
 
                 if(gameType == 'rating') {
+                    const { playerId } = data;
+                    callTeamRate(playerId, divName == "con1_2" ? "blue" : "red", drawTeamRate);
+
                     drawRatingUserInfo(gameType, divName, data, nickname);
                 } else {
                     drawNormalUserInfo(gameType, divName, data, nickname);
                 }
+            }
+
+            const drawTeamRate  = (data) => {
+                console.log("data", data);
             }
 
             const drawRatingUserInfo = (gameType, divName, data, nickname) => {
