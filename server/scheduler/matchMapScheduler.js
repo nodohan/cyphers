@@ -65,8 +65,16 @@ module.exports = (scheduler, maria) => {
             res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
             return ;
         }
-        res.send(await teamRate(playerIds));
+        const matchResults = await teamRate(playerIds);
+        res.send({ "rate" :  calculateWinRate(matchResults), "total": matchResults.length, "data" : matchResults });
     });
+
+    calculateWinRate = (matchResults) => {
+        const total = matchResults.length;
+        const wins = matchResults.filter(r => r.result === 'win').length;
+        const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+        return `${winRate}%`;
+    };
 
     teamRate = async (playerIds) => {
         const cnt = playerIds.length <= 3 ? 2 : 3;
