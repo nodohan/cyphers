@@ -69,7 +69,7 @@ module.exports = (scheduler, maria) => {
     });
 
     teamRate = async (playerIds) => {
-        const cnt = playerIds.length > 2 ? 3 : playerIds.length;
+        const cnt = playerIds.length <= 3 ? 2 : 3;
         const playerStr = playerIds.map(() => '?').join(', ');
 
         const query = `
@@ -93,7 +93,6 @@ module.exports = (scheduler, maria) => {
         }
         return null;
     }
-
 
     getUserMatchesMap =  async (playerId) => {
         const query = `
