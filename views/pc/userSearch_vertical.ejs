@@ -86,10 +86,18 @@
         }
 
         function setUserInfo(gameType, divName, data) {
-            console.log('now!')
             const nickname = data.nickname;
             if (userData[nickname] == null) {
                 userData[nickname] = data;
+            }
+
+            if(gameType == 'rating') {
+                const { playerId } = data;
+                callTeamRate(playerId, divName == "con1_2" ? "blue" : "red", drawTeamRate);
+
+                drawRatingUserInfo(gameType, divName, data, nickname);
+            } else {
+                drawNormalUserInfo(gameType, divName, data, nickname);
             }
 
             removeTemp(divName);
@@ -131,6 +139,49 @@
             checkVisibility();
         }
 
+        const drawTeamRate  = (team, data) => {
+            console.log("data", data);
+            const divId  = team == "blue" ? "teamRateBlue" : "teamRateRed" ;
+            const {rate, total} = data;
+            $("."+divId).empty().text(`팀승률: ${total}전 승률:${rate} `);
+        }
+
+        const drawRatingUserInfo = (gameType, divName, data, nickname) => {
+            var userDivId = getUserDivId(gameType, nickname);
+            if ($("#" + userDivId).length != 0) {
+                return;
+            }
+
+            //기본 정보
+            var clone = $("#template").clone();
+            clone.attr("id", userDivId);
+            if (divName == "con2_2") {
+                clone.removeClass("infoDiv");
+                clone.addClass("infoDivRed");
+            }
+
+            defaultInfo(userDivId, gameType, clone, data, divName != "con3_2");
+
+            var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+            //printChar(rows);
+
+            //파티별
+            drawPartyType(userDivId, clone.find("#playParty"), rows);
+
+            //포지션별
+            getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
+            //drawPosition(clone, rows, nickname, appendPlayTypeInfo);
+
+            //최근 10경기 결과
+            drawRecently(clone, rows, userDivId);
+
+            //자주하는 캐릭
+            var userChar = extractChar(rows, sortCase);
+            drawOften(clone, userChar, drawCharCardVer, nickname);
+
+            clone.show();
+            $("#" + divName).prepend(clone);
+        }
         
         const getUserPositionInfo = (playerId, div) => {
             var result;
@@ -204,7 +255,8 @@
 
         function defaultInfo(gameType, clone, data) {
             //console.log("data", data);
-            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || {
+            var records = Array.isArray(data?.records) ? data.records : [];
+            var rating = records.filter(game => game.gameTypeId == gameType)[0] || {
                 loseCount: 0,
                 stopCount: 0,
                 winCount: 0
@@ -652,6 +704,8 @@
 </div>
 <main>
     <div id="mainV2" class="mainInner">
+        <h3>우리팀<span class="red gameTypeText"></span></h3><span class="teamRateBlue red"></span>
+        <h3>적팀<span class="red gameTypeText"></span></h3><span class="teamRateRed red"></span></h3>
         <!-- 카카오 광고 -->
         <%- include  ("../layout/leftBanner") %>
         <div id="topHistory" class="renewalTopHistory" ></div>
