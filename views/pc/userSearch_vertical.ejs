@@ -101,9 +101,9 @@
             }
 
             removeTemp(divName);
-            var userDivId = getUserDivId(gameType, data.nickname);
+            const userDivId = getUserDivId(gameType, data.nickname);
             //기본 정보
-            var clone = $("#template").clone();
+            const clone = $("#template").clone();
             clone.attr("id", userDivId);
 
             if (divName == "con2_2") {
@@ -140,20 +140,19 @@
         }
 
         const drawTeamRate  = (team, data) => {
-            console.log("data", data);
             const divId  = team == "blue" ? "teamRateBlue" : "teamRateRed" ;
             const {rate, total} = data;
             $("."+divId).empty().text(`팀승률: ${total}전 승률:${rate} `);
         }
 
         const drawRatingUserInfo = (gameType, divName, data, nickname) => {
-            var userDivId = getUserDivId(gameType, nickname);
+            const userDivId = getUserDivId(gameType, nickname);
             if ($("#" + userDivId).length != 0) {
                 return;
             }
 
             //기본 정보
-            var clone = $("#template").clone();
+            const clone = $("#template").clone();
             clone.attr("id", userDivId);
             if (divName == "con2_2") {
                 clone.removeClass("infoDiv");
@@ -180,7 +179,6 @@
             drawOften(clone, userChar, drawCharCardVer, nickname);
 
             clone.show();
-            $("#" + divName).prepend(clone);
         }
         
         const getUserPositionInfo = (playerId, div) => {
@@ -704,16 +702,16 @@
 </div>
 <main>
     <div id="mainV2" class="mainInner">
-        <h3>우리팀<span class="red gameTypeText"></span></h3><span class="teamRateBlue red"></span>
-        <h3>적팀<span class="red gameTypeText"></span></h3><span class="teamRateRed red"></span></h3>
         <!-- 카카오 광고 -->
         <%- include  ("../layout/leftBanner") %>
         <div id="topHistory" class="renewalTopHistory" ></div>
+        <span class="teamRateBlue red"></span>
         <div id="con1" class="conUserV2 cardBackground">
             <div id="con1_2" class="infoLayerV2 cardWrapper">
 
             </div>
         </div>
+        <span class="teamRateRed red"></span>
         <div id="con2" class="conUserV2 cardBackground">
             <div id="con2_2" class="infoLayerV2 cardWrapper"></div>
         </div>
