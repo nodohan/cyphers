@@ -86,16 +86,24 @@
         }
 
         function setUserInfo(gameType, divName, data) {
-            console.log('now!')
             const nickname = data.nickname;
             if (userData[nickname] == null) {
                 userData[nickname] = data;
             }
 
+            if(gameType == 'rating') {
+                const { playerId } = data;
+                callTeamRate(playerId, divName == "con1_2" ? "blue" : "red", drawTeamRate);
+
+                drawRatingUserInfo(gameType, divName, data, nickname);
+            } else {
+                drawNormalUserInfo(gameType, divName, data, nickname);
+            }
+
             removeTemp(divName);
-            var userDivId = getUserDivId(gameType, data.nickname);
+            const userDivId = getUserDivId(gameType, data.nickname);
             //기본 정보
-            var clone = $("#template").clone();
+            const clone = $("#template").clone();
             clone.attr("id", userDivId);
 
             if (divName == "con2_2") {
@@ -131,7 +139,49 @@
             checkVisibility();
         }
 
-        
+        const drawTeamRate  = (team, data) => {
+            const divId  = team == "blue" ? "teamRateBlue" : "teamRateRed" ;
+            const {rate, total, win, lose } = data;
+            $("."+divId).empty().text(`팀 승률: ${total}전,  ${win}승 ${lose}패 (${rate}) `);
+            $("." + divId).next().css("display", "flex");
+        }
+
+        const drawRatingUserInfo = (gameType, divName, data, nickname) => {
+            const userDivId = getUserDivId(gameType, nickname);
+            if ($("#" + userDivId).length != 0) {
+                return;
+            }
+
+            //기본 정보
+            const clone = $("#template").clone();
+            clone.attr("id", userDivId);
+            if (divName == "con2_2") {
+                clone.removeClass("infoDiv");
+                clone.addClass("infoDivRed");
+            }
+
+            defaultInfo(userDivId, gameType, clone, data, divName != "con3_2");
+
+            var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+            //printChar(rows);
+
+            //파티별
+            drawPartyType(userDivId, clone.find("#playParty"), rows);
+
+            //포지션별
+            getUserPositionInfo(data.playerId, clone.find("#positionDiv"));
+            //drawPosition(clone, rows, nickname, appendPlayTypeInfo);
+
+            //최근 10경기 결과
+            drawRecently(clone, rows, userDivId);
+
+            //자주하는 캐릭
+            var userChar = extractChar(rows, sortCase);
+            drawOften(clone, userChar, drawCharCardVer, nickname);
+
+            clone.show();
+        }
+
         const getUserPositionInfo = (playerId, div) => {
             var result;
             $.ajax({
@@ -161,10 +211,10 @@
 
         const setUserPosition = (div, data) => {
             const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
-            drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj); 
-            drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);                 
-            drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj); 
-            drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj); 
+            drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+            drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+            drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+            drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
         }
 
         const drawUserPosition = (div, type, data) => {
@@ -204,7 +254,8 @@
 
         function defaultInfo(gameType, clone, data) {
             //console.log("data", data);
-            var rating = data.records.filter(game => game.gameTypeId == gameType)[0] || {
+            var records = Array.isArray(data?.records) ? data.records : [];
+            var rating = records.filter(game => game.gameTypeId == gameType)[0] || {
                 loseCount: 0,
                 stopCount: 0,
                 winCount: 0
@@ -655,9 +706,21 @@
         <!-- 카카오 광고 -->
         <%- include  ("../layout/leftBanner") %>
         <div id="topHistory" class="renewalTopHistory" ></div>
+        <div class="teamRate">
+            <p class="teamRateBlue"></p>
+            <div class="infoWrap">
+                <i class="infoIcon"></i><span class="infoText">1명 / 스킵<br> 2~3명 / 같은팀으로 2명이상된 판수의 승률<br> 4~5명 / 3명이상 같은팀이 된 판의 승률</span>
+            </div>
+        </div>
         <div id="con1" class="conUserV2 cardBackground">
             <div id="con1_2" class="infoLayerV2 cardWrapper">
 
+            </div>
+        </div>
+        <div class="teamRate">
+            <p class="teamRateRed"></p>
+            <div class="infoWrap">
+                <i class="infoIcon"></i><span class="infoText">1명 / 스킵<br> 2~3명 / 같은팀으로 2명이상된 판수의 승률<br> 4~5명 / 3명이상 같은팀이 된 판의 승률</span>
             </div>
         </div>
         <div id="con2" class="conUserV2 cardBackground">

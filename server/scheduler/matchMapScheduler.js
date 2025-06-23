@@ -65,13 +65,13 @@ module.exports = (scheduler, maria) => {
             res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
             return ;
         }
-        const matchResults = await teamRate(playerIds);
-        res.send({ "rate" :  calculateWinRate(matchResults), "total": matchResults.length, "data" : matchResults });
+        const matchResults = await teamRate(playerIds);        
+        const wins = matchResults.filter(r => r.result === 'win').length
+        res.send({ "rate" :  calculateWinRate(matchResults,wins), "total": matchResults.length, "win" : wins, "lose" : matchResults.length-wins, "data" : matchResults });
     });
 
-    calculateWinRate = (matchResults) => {
+    calculateWinRate = (matchResults, wins) => {
         const total = matchResults.length;
-        const wins = matchResults.filter(r => r.result === 'win').length;
         const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
         return `${winRate}%`;
     };

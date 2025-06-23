@@ -8,7 +8,7 @@
 }
 .renewalBody main {
     position: relative;
-    padding: 0 100px;
+    padding: 0 88px;
     margin: 40px 0 0 0;
 
 }
@@ -817,10 +817,13 @@ div:has(> .beforeSeason) {
 .cardModalInner table {
     margin: 0;
 }
-.cardModalInner table thead th{
+.cardModalInner table thead th {
     background-color: #eee !important;
     color: #343a40 !important;
     border: 0;
+}
+.cardModalInner table a {
+    word-break: keep-all;
 }
 .cardModalInner .row {
     margin: 0;
@@ -1377,4 +1380,47 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .mainDetail2 .mostCharDetailDiv > div {
     width: auto;
+}
+.teamRate {
+    position: relative;
+    display: flex;
+}
+.infoWrap {
+    position: relative;
+    display: none;
+}
+.infoIcon {
+    width: 16px;
+    height: 16px;
+    background-image: url("/image/infoIcon.svg");
+    filter: inset(0.5);
+    cursor: pointer;
+    margin: 0 4px;
+}
+.infoIcon:hover + span {
+    display: block;
+}
+.infoText {
+    display: none;
+    position: absolute;
+    top: -8px;
+    left: calc(100% + 8px);
+    width: max-content;
+    padding: 8px;
+    border-radius: 4px;
+    color: #fff;
+    background-color: rgba(52, 58, 64, 0.6);
+    z-index: 1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.infoText::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: -12px; /* 왼쪽에 붙일 때 */
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(52, 58, 64, 0.6) transparent transparent;
 }
