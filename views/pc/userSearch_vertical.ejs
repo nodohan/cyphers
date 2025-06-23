@@ -141,8 +141,9 @@
 
         const drawTeamRate  = (team, data) => {
             const divId  = team == "blue" ? "teamRateBlue" : "teamRateRed" ;
-            const {rate, total} = data;
-            $("."+divId).empty().text(`팀승률: ${total}전 승률:${rate} `);
+            const {rate, total, win, lose } = data;
+            $("."+divId).empty().text(`팀 승률: ${total}전,  ${win}승 ${lose}패 (${rate}) `);
+            $("." + divId).next().css("display", "flex");
         }
 
         const drawRatingUserInfo = (gameType, divName, data, nickname) => {
@@ -180,7 +181,7 @@
 
             clone.show();
         }
-        
+
         const getUserPositionInfo = (playerId, div) => {
             var result;
             $.ajax({
@@ -210,10 +211,10 @@
 
         const setUserPosition = (div, data) => {
             const emptyObj = { "win_count" : 0, "lose_count" : 0, "total_games" : 0};
-            drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj); 
-            drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);                 
-            drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj); 
-            drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj); 
+            drawUserPosition(div, "극방",  data.filter(item => item.POSITION === "극방")[0] || emptyObj);
+            drawUserPosition(div, "방벨",  data.filter(item => item.POSITION === "방벨")[0] || emptyObj);
+            drawUserPosition(div, "공벨",  data.filter(item => item.POSITION === "공벨")[0] || emptyObj);
+            drawUserPosition(div, "극공",  data.filter(item => item.POSITION === "극공")[0] || emptyObj);
         }
 
         const drawUserPosition = (div, type, data) => {
@@ -705,13 +706,23 @@
         <!-- 카카오 광고 -->
         <%- include  ("../layout/leftBanner") %>
         <div id="topHistory" class="renewalTopHistory" ></div>
-        <span class="teamRateBlue red"></span>
+        <div class="teamRate">
+            <p class="teamRateBlue"></p>
+            <div class="infoWrap">
+                <i class="infoIcon"></i><span class="infoText">1명 / 스킵<br> 2~3명 / 같은팀으로 2명이상된 판수의 승률<br> 4~5명 / 3명이상 같은팀이 된 판의 승률</span>
+            </div>
+        </div>
         <div id="con1" class="conUserV2 cardBackground">
             <div id="con1_2" class="infoLayerV2 cardWrapper">
 
             </div>
         </div>
-        <span class="teamRateRed red"></span>
+        <div class="teamRate">
+            <p class="teamRateRed"></p>
+            <div class="infoWrap">
+                <i class="infoIcon"></i><span class="infoText">1명 / 스킵<br> 2~3명 / 같은팀으로 2명이상된 판수의 승률<br> 4~5명 / 3명이상 같은팀이 된 판의 승률</span>
+            </div>
+        </div>
         <div id="con2" class="conUserV2 cardBackground">
             <div id="con2_2" class="infoLayerV2 cardWrapper"></div>
         </div>
