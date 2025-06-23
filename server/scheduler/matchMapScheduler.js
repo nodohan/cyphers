@@ -70,7 +70,7 @@ module.exports = (scheduler, maria) => {
         res.send({ "rate" :  calculateWinRate(matchResults,wins), "total": matchResults.length, "win" : wins, "lose" : matchResults.length-wins, "data" : matchResults });
     });
 
-    calculateWinRate = (matchResults) => {
+    calculateWinRate = (matchResults, wins) => {
         const total = matchResults.length;
         const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
         return `${winRate}%`;
