@@ -133,7 +133,6 @@ module.exports = (scheduler, maria) => {
         logger.debug(query);
         let matchMap = [];
 
-        let 
         try {
             let rows = await maria.doQuery(query);
             matchMap = extractPlayerId(rows);
