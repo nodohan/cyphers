@@ -104,6 +104,7 @@ module.exports = (scheduler, maria) => {
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025H' ) `;
         logger.debug(query);
 
+        const pool = maria.getPool();
         await pool.batch(query, rows.map(id => [id]), function(err) {
             console.log(err);
             logger.error(err);
