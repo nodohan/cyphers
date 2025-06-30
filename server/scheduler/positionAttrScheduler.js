@@ -9,8 +9,8 @@ module.exports = (scheduler, maria) => {
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call position attr collect scheduler");
-            await selectMatchInfo(null);
-            positionStats();
+            //await selectMatchInfo(null);
+            //positionStats();
             logger.info("end position attr collect scheduler");
         }
     });
