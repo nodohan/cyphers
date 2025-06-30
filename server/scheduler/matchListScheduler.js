@@ -19,7 +19,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&day=2025-05-24" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2025-06-30" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -29,7 +29,7 @@ module.exports = (scheduler, maria) => {
         return insertMatches(matchType, res, new Date(day));
     });
 
-    async function insertMatches(matchType, res, day = new Date()) {
+    async function insertMatches(matchType, res, day) {
         let query;
         if (matchType == 'rating') {
             let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -10));
@@ -39,7 +39,6 @@ module.exports = (scheduler, maria) => {
         }
         logger.debug(query);
 
-        let 
         try {
             let rows = await maria.doQuery(query);
             let uniqMatchList = await getMatchListByAPI(matchType, rows, day);
@@ -58,7 +57,7 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    async function getMatchListByAPI(matchType, rows, day = new Date()) {
+    async function getMatchListByAPI(matchType, rows, day) {
         let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
         let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(new Date(), -1)));
 
