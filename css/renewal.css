@@ -1188,7 +1188,7 @@ div:has(> .beforeSeason) {
     flex-direction: column;
     gap: 4px;
     border-bottom: 1px solid #ced4da;
-    padding: 16px 0;
+    padding: 8px 0;
 }
 .mainDetail > section .defaultDiv .infoWrap > div {
     display: flex;
@@ -1228,7 +1228,7 @@ div:has(> .beforeSeason) {
 .mainDetail > section .positionDiv {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 16px 0;
+    padding: 8px 0;
     gap: 4px;
 }
 .mainDetail > section .positionDiv > div {
@@ -1244,10 +1244,9 @@ div:has(> .beforeSeason) {
     align-items: center;
 }
 .mainDetail > section .mostCharDiv {
-    margin: 0 0 16px 0;
+    margin: 0 0 8px 0;
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
-    padding: 8px;
 }
 .mainDetail > section .mostCharDiv > div {
     padding: 0;
@@ -1296,7 +1295,7 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv img {
     display: block;
-    width: auto;
+    width: 90%;
     height: auto;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
