@@ -1272,9 +1272,6 @@ div:has(> .beforeSeason) {
     margin: 0;
     min-height: auto;
 }
-.userDetailBody .conDetail div {
-    padding : 0;
-}
 .userDetailBody .conDetail > div {
     min-height: auto;
     max-height: none;
