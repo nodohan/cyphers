@@ -51,6 +51,8 @@ module.exports = (scheduler, maria) => {
         let 
         try {
             let rows = await maria.doQuery(query);
+            const pool = maria.getPool();
+            
             for (i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 const jsonData = JSON.parse(row.jsonData);

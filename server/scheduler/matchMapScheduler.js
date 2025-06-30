@@ -133,7 +133,9 @@ module.exports = (scheduler, maria) => {
         try {
             let rows = await maria.doQuery(query);
             matchMap = extractPlayerId(rows);
-            await insertMatchId(matchMap);
+            if(matchMap.length > 0 ) {
+                await insertMatchId(matchMap);
+            }
         } catch (err) {
             console.log("에러1",err);
             logger.error(err);

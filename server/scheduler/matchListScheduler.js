@@ -19,7 +19,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&day=2025-06-30" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2025-06-20" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -32,7 +32,7 @@ module.exports = (scheduler, maria) => {
     async function insertMatches(matchType, res, day) {
         let query;
         if (matchType == 'rating') {
-            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -10));
+            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -20));
             query = `SELECT distinct playerId FROM userRank where rankDate > '${searchDateStr}' `;
         } else {
             query = `SELECT playerId FROM player`;
@@ -40,8 +40,8 @@ module.exports = (scheduler, maria) => {
         logger.debug(query);
 
         try {
-            let rows = await maria.doQuery(query);
-            let uniqMatchList = await getMatchListByAPI(matchType, rows, day);
+            let playerIds = await maria.doQuery(query);
+            let uniqMatchList = await getMatchListByAPI(matchType, playerIds, day);
             let result = await insertMatchId(matchType, uniqMatchList);
             if (res) {
                 res.send(result > 0); // rows 를 보내주자
