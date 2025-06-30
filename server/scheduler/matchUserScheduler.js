@@ -6,7 +6,6 @@ module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../util/api');
 
-    //스케쥴러 또는 웹 url call
     var time = "30 03 * * *"; 
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {

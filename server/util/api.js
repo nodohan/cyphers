@@ -39,8 +39,6 @@ class api {
   }
 
   async getUserInfoCall(userId, gameType, startDate, endDate) {
-    logger.info("userId: %s, start: %s, end: %s", userId, startDate, endDate)
-
     let urlInfo = "https://api.neople.co.kr/cy/players/#playerId#/matches?apikey=#apiKey#&gameTypeId=#gameTypeId#&limit=100&startDate=#startDate#&endDate=#endDate#";
     urlInfo = urlInfo.replace("#playerId#", userId)
                      .replace("#apiKey#", myConfig.apiKey)

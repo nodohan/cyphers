@@ -6,9 +6,7 @@ module.exports = (scheduler, maria) => {
     const api = require('../util/api');
 
     //스케쥴러 또는 웹 url call
-    //var time = "40 23 * * *";
-    var time = "00 01 * * *"; // 리얼용
-    //var time = "10 18 * * *"; // 테스트중
+    var time = "00 01 * * *";
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match rating scheduler");
@@ -21,7 +19,7 @@ module.exports = (scheduler, maria) => {
         }
     });
 
-    //test  ( "/matches/insertMatches?matchType=rating&day=2025-05-24" )
+    //test  ( "/matches/insertMatches?matchType=rating&day=2025-06-20" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
@@ -31,20 +29,19 @@ module.exports = (scheduler, maria) => {
         return insertMatches(matchType, res, new Date(day));
     });
 
-    async function insertMatches(matchType, res, day = new Date()) {
+    async function insertMatches(matchType, res, day) {
         let query;
         if (matchType == 'rating') {
-            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -10));
+            let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -20));
             query = `SELECT distinct playerId FROM userRank where rankDate > '${searchDateStr}' `;
         } else {
             query = `SELECT playerId FROM player`;
         }
         logger.debug(query);
 
-        let 
         try {
-            let rows = await maria.doQuery(query);
-            let uniqMatchList = await getMatchListByAPI(matchType, rows, day);
+            let playerIds = await maria.doQuery(query);
+            let uniqMatchList = await getMatchListByAPI(matchType, playerIds, day);
             let result = await insertMatchId(matchType, uniqMatchList);
             if (res) {
                 res.send(result > 0); // rows 를 보내주자
@@ -60,7 +57,7 @@ module.exports = (scheduler, maria) => {
         }
     }
 
-    async function getMatchListByAPI(matchType, rows, day = new Date()) {
+    async function getMatchListByAPI(matchType, rows, day) {
         let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
         let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(new Date(), -1)));
 
@@ -107,6 +104,7 @@ module.exports = (scheduler, maria) => {
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025H' ) `;
         logger.debug(query);
 
+        const pool = maria.getPool();
         await pool.batch(query, rows.map(id => [id]), function(err) {
             console.log(err);
             logger.error(err);
