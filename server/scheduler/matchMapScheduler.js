@@ -163,12 +163,16 @@ module.exports = (scheduler, maria) => {
     }
 
     function classifyBuild(itemPurchase, items) {
+        if(itemPurchase == null) {
+            return "기타";
+        }
+
         const itemMap = new Map();
         for (const item of items) {
             itemMap.set(item.itemId, item);
         }
     
-        const firstFiveItems = itemPurchase.slice(0, 8)
+        const firstFiveItems = itemPurchase.slice(0, Math.min(8,itemPurchase.length))
             .map(id => itemMap.get(id))
             .filter(Boolean);
     
@@ -190,7 +194,7 @@ module.exports = (scheduler, maria) => {
 
         let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position ) VALUES ( ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);
-        logger.debug(rows);        
+        logger.debug(rows);
 
         await pool.batch(query, rows, function(err) {
             console.log(err);
