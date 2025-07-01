@@ -1042,7 +1042,7 @@ div:has(> .beforeSeason) {
     left: 0;
     background-color: #fff;
     width: calc(100% - 48px);
-    z-index: 10;
+    z-index: 1;
     box-shadow: 0 0 3px #ced4da;
 }
 .deleteHistroyButton {
@@ -1371,6 +1371,19 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .moreDailyResultWrap table {
     margin: 0 0 4px 0;
+    border: 0;
+}
+.userDetailBody .moreDailyResultWrap table th {
+    padding: 12px 0;
+    font-size: 12px;
+    background: #343a40;
+    color: #fff;
+    font-weight: 600;
+}
+.userDetailBody .moreDailyResultWrap table td {
+    padding: 10px 0;
+    font-size: 12px;
+    background: #fff;
 }
 .userDetailBody .mainDetail2 .mostCharDetailDiv {
     display: grid;
