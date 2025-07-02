@@ -22,6 +22,11 @@
     padding: 0 20px 20px 20px;
     position: relative;
 }
+.userDetailBody .mainInner {
+    width: 70% !important;
+    max-width: 1920px;
+    min-width: 1200px;
+}
 .renewalBody .mainInner {
     /*min-width: 0;*/
 }
@@ -1149,7 +1154,7 @@ div:has(> .beforeSeason) {
 /* 상세 - 분리 예정 */
 .mainDetail {
     display: grid;
-    grid-template-columns: 2fr 5fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: auto auto;
     gap: 12px;
     border: 0;
@@ -1173,20 +1178,58 @@ div:has(> .beforeSeason) {
 .mainDetail > section .defaultDiv h3 {
     font-size: 24px;
     font-weight: bold;
-    /*background: linear-gradient(to left, rgb(255, 0, 174) 10%, transparent 70%);*/
 }
 .mainDetail > section .defaultDiv .nickNameWrap {
-    border-bottom: 1px solid #ced4da;
-    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    margin: 0 0 8px 0;
 }
-.mainDetail > section .defaultDiv .nickNameWrap h3 {
-    border-left: 4px solid #343a40;
-    padding: 0 0 0 8px;
+.mainDetail > section .defaultDiv .nickNameWrap > div span {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 400;
+}
+.mainDetail > section .defaultDiv:has(.ACE) .nickNameWrap {
+    background: linear-gradient(to left, rgb(255, 0, 174) 10%, transparent 70%);
+    border-left: 4px solid rgb(255, 0, 174);
+}
+
+.mainDetail > section .defaultDiv:has(.JOKER) .nickNameWrap {
+    background: linear-gradient(to left, rgb(129, 0, 184) 10%, transparent 70%);
+    border-left: 4px solid rgb(129, 0, 184);
+}
+
+.mainDetail > section .defaultDiv:has(.DIAMOND) .nickNameWrap {
+    background: linear-gradient(to left, rgb(35, 185, 255) 10%, transparent 70%);
+    border-left: 4px solid rgb(35, 185, 255);
+}
+
+.mainDetail > section .defaultDiv:has(.GOLD) .nickNameWrap {
+    background: linear-gradient(to left, rgb(235, 175, 60) 10%, transparent 70%);
+    border-left: 4px solid rgb(235, 175, 60);
+}
+
+.mainDetail > section .defaultDiv:has(.SILVER) .nickNameWrap {
+    background: linear-gradient(to left, rgb(159, 159, 159) 10%, transparent 70%);
+    border-left: 4px solid rgb(159, 159, 159);
+}
+
+.mainDetail > section .defaultDiv:has(.BRONZE) .nickNameWrap {
+    background: linear-gradient(to left, rgb(129, 80, 24) 10%, transparent 70%);
+    border-left: 4px solid rgb(129, 80, 24);
+}
+
+.mainDetail > section .defaultDiv:has(.UNRANK) .nickNameWrap {
+    background: linear-gradient(to left, rgb(0, 0, 0) 10%, transparent 70%);
+    border-left: 4px solid rgb(0, 0, 0);
 }
 .mainDetail > section .defaultDiv .infoWrap {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
     padding: 8px 0;
 }
@@ -1210,19 +1253,19 @@ div:has(> .beforeSeason) {
     border: 1px solid #ced4da;
     border-radius: 50px;
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(1)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.clanWrap::before {
     content: "클랜";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(2)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.levelWrap::before {
     content: "급수";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(3)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.RPWrap::before {
     content: "RP";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(4)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.playGameWrap::before {
     content: "승률";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(5)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.playParty::before {
     content: "파티";
 }
 .mainDetail > section .positionDiv {
@@ -1245,6 +1288,7 @@ div:has(> .beforeSeason) {
 }
 .mainDetail > section .mostCharDiv {
     margin: 0 0 8px 0;
+    padding: 8px 0;
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
 }
@@ -1280,7 +1324,8 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv {
     display: grid;
-    grid-template-columns: repeat(1, minmax(100px, auto));
+    grid-template-columns: repeat(2, minmax(100px, auto));
+    gap: 4px;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv {
 
@@ -1288,10 +1333,6 @@ div:has(> .beforeSeason) {
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
     border-radius: 0;
     border: 0;
-    border-bottom: 1px solid #ced4da;
-}
-.userDetailBody .mostCharDiv > .mostCharDetailDiv > div:last-of-type {
-    border-bottom: 0;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv img {
     display: block;
@@ -1300,7 +1341,6 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
     width: auto;
-    padding: 4px 0;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div {
     display: flex;
@@ -1339,6 +1379,9 @@ div:has(> .beforeSeason) {
     top: 0;
     z-index: 1;
 }
+.userDetailBody .playGameList > table > thead th {
+    font-weight: 400;
+}
 .userDetailBody .playGameList > table > tbody tr:nth-of-type(odd) {
     background: transparent;
 }
@@ -1370,15 +1413,16 @@ div:has(> .beforeSeason) {
     padding: 0;
 }
 .userDetailBody .moreDailyResultWrap table {
+    table-layout: fixed;
     margin: 0 0 4px 0;
     border: 0;
 }
 .userDetailBody .moreDailyResultWrap table th {
     padding: 12px 0;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 400;
     background: #343a40;
     color: #fff;
-    font-weight: 600;
 }
 .userDetailBody .moreDailyResultWrap table td {
     padding: 10px 0;

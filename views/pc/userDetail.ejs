@@ -226,7 +226,18 @@
                 $(clone).find("#nickNameDiv").text(data.nickname);
                 $(clone).find("#levelDiv").text(data.grade + "급");
                 $(clone).find("#clanDiv").text(data.clanName);
+                getTierColerName($(clone).find("#tierName"), data.tierName);
+                if (data.ratingPoint != null) {
+                    $(clone).find("#currRP").text(data.ratingPoint);
+                    $(clone).find("#maxRP").text("(" + data.maxRatingPoint + ")");
+                    $(clone).find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ><i class="fa fa-line-chart"></i></a>`);
 
+                } else {
+                    $(clone).find("#tierName").closest("div").css("text-align", "center");
+                    $(clone).find("#currRP").parent().remove();
+                    $(clone).find("#tierName").closest("div").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' ><i class="fa fa-line-chart"></i></a>`);
+
+                }
                 $(clone).find("#currRP").text(data.ratingPoint);
                 $(clone).find("#maxRP").text(data.maxRatingPoint);
                 //$(clone).find("#playGameDiv").text("승률 : " + pov.toFixed(0) + "% [" + (rating.winCount + rating.loseCount) + "전 " + rating.winCount + "승 " + rating.loseCount + "패 " + rating.stopCount + "중단]");
@@ -364,8 +375,7 @@
                 div.empty().append(`(승률: ${((winCount/totalCount) * 100).toFixed(0)}% / ${totalCount}전 ${winCount}승 ${totalCount - winCount} 패 )`);
             }
 
-            //맵에 탭메뉴 버튼 생성
-            function generateMapTabButtons() {
+            const generateMapTabButtons = () => {
                 const buttonContainer = document.getElementById("mapTabButtons");
                 if (!buttonContainer) return;
 
@@ -374,7 +384,7 @@
                     { id: "metro", name: "메트로폴리스" },
                     { id: "bristol", name: "브리스톨" },
                     { id: "spring", name: "스프링필드" },
-                    { id: "asia", name: "그랑플람 아시아 지부" },
+                    { id: "asia", name: "아시아 지부" },
                     { id: "atDawn", name: "리버포드 앳 던" }
                 ];
 
@@ -403,17 +413,14 @@
                     const el = document.querySelector(`#${map.id}`);
                     if (el) el.style.display = i === 0 ? "" : "none";
                 });
-            }
+            };
 
-            function tabBtnActive () {
+            const tabBtnActive = () => {
                 const buttons = document.querySelectorAll("#mapTabButtons button");
 
                 buttons.forEach(button => {
                     button.addEventListener("click", () => {
-                        // 기존 active 제거
                         buttons.forEach(btn => btn.classList.remove("active"));
-
-                        // 클릭된 버튼에 active 추가
                         button.classList.add("active");
                     });
                 });
@@ -422,8 +429,13 @@
                 if (buttons.length > 0) {
                     buttons[0].classList.add("active");
                 }
-            }
+            };
 
+            const getTierColerName = (span, tierName) => {
+                const name = tierName ?? "Unrank";
+                span.addClass(name);
+                span.text(name);
+            };
         </script>
 </head>
 
@@ -431,9 +443,6 @@
     <%- include  ("../layout/menu") %>
 
     <div id="mainUserDetail" class="mainInner">
-        <!-- 카카오 광고 -->
-        <%- include  ("../layout/leftBanner") %>
-
         <div class="renewalDetailSearch">
             <div id="gameTypeWrap" class="gameTypeWrap">
                 <div id="gameTypeShow" class="gameTypeShow"><p>공식전</p></div>
@@ -463,7 +472,9 @@
             </div>
         </div>
 
-        <div class="conDetailWrap">
+        <div class="conDetailWrap" style="position: relative">
+            <!-- 카카오 광고 -->
+            <%- include  ("../layout/leftBanner") %>
             <div id="con1" class="conDetail">
                 <div id="con1_2" class="infoLayer2">
 
@@ -477,14 +488,13 @@
             <div id="defaultDiv" class="defaultDiv">
                 <!--            <div id="gameTypeDiv" class="red bold width100p"></div>-->
                 <div class="nickNameWrap">
-                    <h3 id="nickNameDiv" class=""></h3>
+                    <h3 id="nickNameDiv" class=""></h3><div><span id="tierName"></span></div>
                 </div>
                 <div class="infoWrap">
                     <div id="clanDiv" class="clanWrap"></div>
                     <div id="levelDiv" class="levelWrap"></div>
                     <div class="RPWrap">
-                        <div class=""><span id="currRP" class="bold red"></span></div>/
-                        <div class=""><span id="maxRP"></span></div>
+                        <div><span id="currRP" class="bold red"></span>/<span id="maxRP"></span></div>
                     </div>
                     <div id="playGameDiv" class="playGameWrap">
                         <!-- 승률 : 50% [100승 101패 2중단]-->
