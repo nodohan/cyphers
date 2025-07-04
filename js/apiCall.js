@@ -492,7 +492,12 @@ function winLoseKo(result) {
 }
 
 function drawOften(div, info, drawCharFunc, nickname) {
-    let count = Math.min(isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8, info.length);
+    let count = Math.min(
+        pageName === "pcDetail"
+            ? 10
+            : (isMobile || pageName === "pcUserSearch_vertical" ? 6 : 8),
+        info.length
+    );
     let rowCount = isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8;
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
@@ -1101,10 +1106,14 @@ const setMap = (map, isWin, key) => {
 }
 
 const getDay = (yyymmddStr) => {
-    if(yyymmddStr){
-        var dateParts = yyymmddStr.split(" "); // 공백을 기준으로 문자열을 나눕니다.
-        return dateParts[0].slice(2);
+    if (yyymmddStr) {
+        const datePart = yyymmddStr.split(" ")[0]; // 예: "2025-06-27"
+        if (pageName === 'pcDetail') {
+            return datePart.slice(5); // "06-27"
+        } else {
+            return datePart.slice(2); // "25-06-27"
+        }
     } else {
         return "분석중";
-    }    
-}
+    }
+};

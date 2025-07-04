@@ -5,10 +5,7 @@ module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../util/api');
 
-    //스케쥴러 또는 웹 url call
-    //var time = "40 23 * * *";
-    var time = "00 02 * * *"; // 리얼용
-    //var time = "10 18 * * *"; // 테스트중
+    var time = "00 02 * * *";
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match map scheduler");
@@ -133,11 +130,12 @@ module.exports = (scheduler, maria) => {
         logger.debug(query);
         let matchMap = [];
 
-        let 
         try {
             let rows = await maria.doQuery(query);
             matchMap = extractPlayerId(rows);
-            await insertMatchId(matchMap);
+            if(matchMap.length > 0 ) {
+                await insertMatchId(matchMap);
+            }
         } catch (err) {
             console.log("에러1",err);
             logger.error(err);
@@ -167,12 +165,16 @@ module.exports = (scheduler, maria) => {
     }
 
     function classifyBuild(itemPurchase, items) {
+        if(itemPurchase == null) {
+            return "기타";
+        }
+
         const itemMap = new Map();
         for (const item of items) {
             itemMap.set(item.itemId, item);
         }
     
-        const firstFiveItems = itemPurchase.slice(0, 8)
+        const firstFiveItems = itemPurchase.slice(0, Math.min(8,itemPurchase.length))
             .map(id => itemMap.get(id))
             .filter(Boolean);
     
@@ -194,7 +196,7 @@ module.exports = (scheduler, maria) => {
 
         let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position ) VALUES ( ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);
-        logger.debug(rows);        
+        logger.debug(rows);
 
         await pool.batch(query, rows, function(err) {
             console.log(err);

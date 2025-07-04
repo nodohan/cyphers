@@ -12,7 +12,7 @@ module.exports = (scheduler, maria, acclogger) => {
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match stats");
-            await callInsertStats();
+            //await callInsertStats();
             logger.info("end match stats");
         }
     });

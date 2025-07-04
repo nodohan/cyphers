@@ -22,6 +22,11 @@
     padding: 0 20px 20px 20px;
     position: relative;
 }
+.userDetailBody .mainInner {
+    width: 70% !important;
+    max-width: 1920px;
+    min-width: 1200px;
+}
 .renewalBody .mainInner {
     /*min-width: 0;*/
 }
@@ -1042,7 +1047,7 @@ div:has(> .beforeSeason) {
     left: 0;
     background-color: #fff;
     width: calc(100% - 48px);
-    z-index: 10;
+    z-index: 1;
     box-shadow: 0 0 3px #ced4da;
 }
 .deleteHistroyButton {
@@ -1149,9 +1154,9 @@ div:has(> .beforeSeason) {
 /* 상세 - 분리 예정 */
 .mainDetail {
     display: grid;
-    grid-template-columns: 2fr 5fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: auto auto;
-    gap: 20px;
+    gap: 12px;
     border: 0;
     align-items: start;
     width: 100%;
@@ -1173,22 +1178,60 @@ div:has(> .beforeSeason) {
 .mainDetail > section .defaultDiv h3 {
     font-size: 24px;
     font-weight: bold;
-    background: linear-gradient(to left, rgb(255, 0, 174) 10%, transparent 70%);
 }
 .mainDetail > section .defaultDiv .nickNameWrap {
-    border-bottom: 1px solid #ced4da;
-    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    margin: 0 0 8px 0;
 }
-.mainDetail > section .defaultDiv .nickNameWrap h3 {
-    border-left: 4px solid #ced4da;
-    padding: 0 0 0 8px;
+.mainDetail > section .defaultDiv .nickNameWrap > div span {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 400;
+}
+.mainDetail > section .defaultDiv:has(.ACE) .nickNameWrap {
+    background: linear-gradient(to left, rgb(255, 0, 174) 10%, transparent 70%);
+    border-left: 4px solid rgb(255, 0, 174);
+}
+
+.mainDetail > section .defaultDiv:has(.JOKER) .nickNameWrap {
+    background: linear-gradient(to left, rgb(129, 0, 184) 10%, transparent 70%);
+    border-left: 4px solid rgb(129, 0, 184);
+}
+
+.mainDetail > section .defaultDiv:has(.DIAMOND) .nickNameWrap {
+    background: linear-gradient(to left, rgb(35, 185, 255) 10%, transparent 70%);
+    border-left: 4px solid rgb(35, 185, 255);
+}
+
+.mainDetail > section .defaultDiv:has(.GOLD) .nickNameWrap {
+    background: linear-gradient(to left, rgb(235, 175, 60) 10%, transparent 70%);
+    border-left: 4px solid rgb(235, 175, 60);
+}
+
+.mainDetail > section .defaultDiv:has(.SILVER) .nickNameWrap {
+    background: linear-gradient(to left, rgb(159, 159, 159) 10%, transparent 70%);
+    border-left: 4px solid rgb(159, 159, 159);
+}
+
+.mainDetail > section .defaultDiv:has(.BRONZE) .nickNameWrap {
+    background: linear-gradient(to left, rgb(129, 80, 24) 10%, transparent 70%);
+    border-left: 4px solid rgb(129, 80, 24);
+}
+
+.mainDetail > section .defaultDiv:has(.UNRANK) .nickNameWrap {
+    background: linear-gradient(to left, rgb(0, 0, 0) 10%, transparent 70%);
+    border-left: 4px solid rgb(0, 0, 0);
 }
 .mainDetail > section .defaultDiv .infoWrap {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
-    padding: 16px 0;
+    padding: 8px 0;
 }
 .mainDetail > section .defaultDiv .infoWrap > div {
     display: flex;
@@ -1210,25 +1253,25 @@ div:has(> .beforeSeason) {
     border: 1px solid #ced4da;
     border-radius: 50px;
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(1)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.clanWrap::before {
     content: "클랜";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(2)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.levelWrap::before {
     content: "급수";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(3)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.RPWrap::before {
     content: "RP";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(4)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.playGameWrap::before {
     content: "승률";
 }
-.mainDetail > section .defaultDiv .infoWrap > div:nth-of-type(5)::before {
+.mainDetail > section .defaultDiv .infoWrap > div.playParty::before {
     content: "파티";
 }
 .mainDetail > section .positionDiv {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 16px 0;
+    padding: 8px 0;
     gap: 4px;
 }
 .mainDetail > section .positionDiv > div {
@@ -1244,17 +1287,17 @@ div:has(> .beforeSeason) {
     align-items: center;
 }
 .mainDetail > section .mostCharDiv {
-    margin: 0 0 16px 0;
+    margin: 0 0 8px 0;
+    padding: 8px 0;
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
-    padding: 8px;
 }
 .mainDetail > section .mostCharDiv > div {
     padding: 0;
 }
 .mainDetail > section:nth-of-type(1) {
-    /*position: sticky;*/
-    /*top: 12px;*/
+    position: sticky;
+    top: 16px;
     grid-row: span 2
 }
 .mainDetail > section:nth-of-type(2) {
@@ -1281,7 +1324,8 @@ div:has(> .beforeSeason) {
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv {
     display: grid;
-    grid-template-columns: repeat(1, minmax(100px, auto));
+    grid-template-columns: repeat(2, minmax(100px, auto));
+    gap: 4px;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv {
 
@@ -1289,19 +1333,14 @@ div:has(> .beforeSeason) {
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
     border-radius: 0;
     border: 0;
-    border-bottom: 1px solid #ced4da;
-}
-.userDetailBody .mostCharDiv > .mostCharDetailDiv > div:last-of-type {
-    border-bottom: 0;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv img {
     display: block;
-    width: auto;
+    width: 90%;
     height: auto;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div {
     width: auto;
-    padding: 4px 0;
 }
 .userDetailBody .mostCharDiv > .mostCharDetailDiv > div > div {
     display: flex;
@@ -1328,18 +1367,20 @@ div:has(> .beforeSeason) {
 .userDetailBody .playGameList {
     right: 16px;
     top: 16px;
-    width: calc(100% - 32px);
-    height: calc(100% - 32px);
+    height: 100%;
+    max-height: 1200px;
     padding: 0;
     float: none;
     background-color: white;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
-    max-height: 800px;
 }
 .userDetailBody .playGameList > table > thead {
     position: sticky;
     top: 0;
     z-index: 1;
+}
+.userDetailBody .playGameList > table > thead th {
+    font-weight: 400;
 }
 .userDetailBody .playGameList > table > tbody tr:nth-of-type(odd) {
     background: transparent;
@@ -1369,14 +1410,30 @@ div:has(> .beforeSeason) {
 .userDetailBody .mainDetail2 > div {
     width: 100%;
     margin: 0;
+    padding: 0;
 }
 .userDetailBody .moreDailyResultWrap table {
+    table-layout: fixed;
     margin: 0 0 4px 0;
+    border: 0;
+}
+.userDetailBody .moreDailyResultWrap table th {
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 400;
+    background: #343a40;
+    color: #fff;
+}
+.userDetailBody .moreDailyResultWrap table td {
+    padding: 10px 0;
+    font-size: 12px;
+    background: #fff;
 }
 .userDetailBody .mainDetail2 .mostCharDetailDiv {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 4px;
+    margin: 0 0 20px 0;
 }
 .userDetailBody .mainDetail2 .mostCharDetailDiv > div {
     width: auto;
@@ -1409,7 +1466,7 @@ div:has(> .beforeSeason) {
     padding: 8px;
     border-radius: 4px;
     color: #fff;
-    background-color: rgba(52, 58, 64, 0.6);
+    background-color: rgba(52, 58, 64, 0.9);
     z-index: 1;
     font-size: 14px;
     line-height: 1.5;
@@ -1422,5 +1479,45 @@ div:has(> .beforeSeason) {
     transform: translateY(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: transparent rgba(52, 58, 64, 0.6) transparent transparent;
+    border-color: transparent rgba(52, 58, 64, 0.9) transparent transparent;
+}
+.mapTabBtnWrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 4px;
+}
+.mapTabBtnWrap button {
+    line-height: 40px;
+}
+.mapTabBtnWrap button.active {
+    background: #343a40;
+    color: #fff;
+}
+.mapCard .mapName {
+    line-height: 40px;
+}
+.mapCard div {
+    padding: 0;
+}
+.mapCard div img {
+    display: block;
+    width: auto;
+    height: auto;
+}
+.mapCard .mapChar > div > div > div {
+    align-items: center;
+}
+.mapCard .mapChar > div > div > div > div {
+    width: auto;
+    flex: none;
+    justify-content: center;
+    max-width: none;
+}
+.mapCard .mapChar > div > div > div > div:last-of-type {
+    flex: 1;
+    text-align: center;
+}
+.mapCard .mapChar > div > div > div > div:last-of-type a {
+    position: absolute;
+    margin: 0 0 0 4px;
 }

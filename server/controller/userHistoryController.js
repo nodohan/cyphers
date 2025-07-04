@@ -164,8 +164,6 @@ module.exports = (scheduler, maria, acclogger) => {
         logger.debug("닉변검색: " + userName);
         //logger.debug("쿼리: %s", query);
 
-        let 
-
         try {
             let rows = await maria.doQuery(query);
             return rows;
