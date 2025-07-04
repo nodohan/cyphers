@@ -180,9 +180,6 @@
                 //파티별
                 drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
 
-                //포지션 별 승률
-                // drawPositionNormal(clone, rows, nickname);
-
                 //자주하는 캐릭
                 var userChar = extractChar(rows, sortCase);
                 drawOftenNormal(clone, userChar, nickname);
@@ -365,8 +362,9 @@
                 showMapRate(div.find(divId).find(".mapRate"), mapRow);
                 // drawPosition(div.find(divId), mapRow, nickname, appendPlayTypeInfo);
                 let userMapChar = extractChar(mapRow, highScore);
-                
+
                 drawOften(div.find(divId).find("#often"), userMapChar, drawCharCardVer, nickname);
+                div.find(divId).find("#often").find("#mostCharDetailDiv").find(".card").slice(-2).remove(); // 2개 지움
             }
 
             const showMapRate = (div, mapRow) => {
