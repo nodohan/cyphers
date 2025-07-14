@@ -63,6 +63,14 @@ function analyzeGame(matches, myRow, pRow) {
         }
     }
 
+    team["row"].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+    });
+
+    enemy["row"].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+    });
+
     return { "team": team, "enemy": enemy };
 }
 
