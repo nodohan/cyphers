@@ -49,7 +49,7 @@
 
             function getChartDateLabel(season) {
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: "/rankChart/chartDate",
                     data: {
                         "season": season
@@ -71,7 +71,7 @@
             function searchUserRank(nickName) {
                 var result;
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: "/rankChart/userRank",
                     data: {
                         'nickname': nickName,
