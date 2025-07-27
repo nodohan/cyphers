@@ -293,7 +293,7 @@ function drawInGameList(data) {
 }
 
 function drawInGameDetail(matchId, data, trClass) {
-    const { playInfo, items } = data;
+    const { playInfo, items, itemPurchase }  = data;
     const partyCnt = playInfo.partyUserCount == 0 ? "()" : `(${playInfo.partyUserCount}인)`;
     const useCoin = playInfo.spendConsumablesCoin.toLocaleString();
     const usePer = ((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0);
@@ -339,7 +339,7 @@ function drawInGameDetail(matchId, data, trClass) {
         </tr>
         <tr class='${trClass}'>
             <td class='hiddenRow' colspan='7'>
-                <div class='collapse ${itemInfoId}'>착용아이템: ${getItemIcon(items, itemDefaultUrl, "&nbsp;")}</div>
+                <div class='collapse ${itemInfoId}'>${getItemIcon(items, itemDefaultUrl, "&nbsp;")}</div>
                 <div class='collapse ${itemInfoId}'>템구매순서: ${getItemBuyIcon(itemPurchase, itemDefaultUrl, " - ")}</div>
             </td>
         </tr>`;    
@@ -387,8 +387,10 @@ function getItemIcon(itemArr, url, joinStr) {
 
 const getItemBuyIcon = (buffArr, url, joinStr) => {
     return buffArr
-        .map(row => `<img src='${url+row}' />`)
-        .join(joinStr);
+        .map((row, index ) => {
+            const img = `<img class='drawIcon35' src='${url+row}' />`
+            return index % 6 == 0 ? "<br>" + img : img;
+        }).join(joinStr);
 }
 
 
