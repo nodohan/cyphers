@@ -57,6 +57,10 @@ const matchUserScheduler = require('./server/scheduler/matchUserScheduler')(sche
 // 스케줄러6. 시즌오프용
 const statsSeasonSche = require('./server/scheduler/statsSeasonScheduler')(scheduler, maria, loggerCatcher);
 
+// 스케줄러6. 시즌오프용
+const combiSche = require('./server/scheduler/chasrCombiScheduler')(scheduler, maria, loggerCatcher);
+
+
 // 비공개 처리용
 const provider = require('./server/controller/providerController')(null, maria, loggerCatcher);
 
@@ -87,6 +91,7 @@ app.use('/stats', stats);
 app.use('/seasonOff', seasonOff);
 app.use('/position', position);
 app.use('/positionSche', positionSche);
+app.use('/combiSche', combiSche);
 app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
 app.use('/matchUser', matchUserScheduler);

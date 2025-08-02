@@ -22,7 +22,7 @@ const drawNormalUserInfo = (gameType, divName, data, nickname) => {
     drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
 
     //포지션별 
-    drawPositionNormal(clone, rows, data.nickname);
+    // drawPositionNormal(clone, rows, data.nickname);
 
     //자주하는 캐릭
     var userChar = extractChar(rows, sortCase);
@@ -187,30 +187,30 @@ const getEachPartyResultNormal = (arr) => {
     return resultTable;
 }
 
-const drawPositionNormal = (div, rows, nickname) => {
-    let tanker = extractPlayTypeNormal(rows, "탱커");
-    let ad = extractPlayTypeNormal(rows, "원거리딜러");
-    let melee = extractPlayTypeNormal(rows, "근거리딜러");
-    let supp = extractPlayTypeNormal(rows, "서포터");
+// const drawPositionNormal = (div, rows, nickname) => {
+//     let tanker = extractPlayTypeNormal(rows, "탱커");
+//     let ad = extractPlayTypeNormal(rows, "원거리딜러");
+//     let melee = extractPlayTypeNormal(rows, "근거리딜러");
+//     let supp = extractPlayTypeNormal(rows, "서포터");
+//
+//     //포지션별 승률
+//     const positionDiv = $(div).find("#positionDiv");
+//     positionDiv.empty();
+//     appendPlayTypeInfoNormal(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
+//     appendPlayTypeInfoNormal(positionDiv, melee, "melee", "근거리딜러", nickname);
+//     appendPlayTypeInfoNormal(positionDiv, ad, "ad", "원거리딜러", nickname);
+//     appendPlayTypeInfoNormal(positionDiv, supp, "supp", "서포터", nickname);
+// }
 
-    //포지션별 승률
-    const positionDiv = $(div).find("#positionDiv");
-    positionDiv.empty();
-    appendPlayTypeInfoNormal(positionDiv, tanker, "tanker", "탱커", nickname); //탱커
-    appendPlayTypeInfoNormal(positionDiv, melee, "melee", "근거리딜러", nickname);
-    appendPlayTypeInfoNormal(positionDiv, ad, "ad", "원거리딜러", nickname);
-    appendPlayTypeInfoNormal(positionDiv, supp, "supp", "서포터", nickname);
-}
-
-const extractPlayTypeNormal = (rows, type) => {
-    let item = {};
-    let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
-    if (result.length == 0) {
-        return null;
-    }
-    item["count"] = result.length +"전";
-    return item;
-}
+// const extractPlayTypeNormal = (rows, type) => {
+//     let item = {};
+//     let result = rows.filter(row => row.position.name == type && row.playInfo.playTypeName == "정상");
+//     if (result.length == 0) {
+//         return null;
+//     }
+//     item["count"] = result.length +"전";
+//     return item;
+// }
 
 const appendPlayTypeInfoNormal = (div, type, typeId, positionName, nickname) => {
     let isMap = div.parent().hasClass("mapCard");

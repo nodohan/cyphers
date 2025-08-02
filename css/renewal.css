@@ -1047,7 +1047,7 @@ div:has(> .beforeSeason) {
     left: 0;
     background-color: #fff;
     width: calc(100% - 48px);
-    z-index: 1;
+    z-index: 2;
     box-shadow: 0 0 3px #ced4da;
 }
 .deleteHistroyButton {
@@ -1170,6 +1170,11 @@ div:has(> .beforeSeason) {
 }
 .mainDetail > section table {
     margin: 0;
+}
+.mainDetail > section:nth-of-type(1) .playParty table {
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 0 3px #ced4da;
 }
 .mainDetail > section div {
     float: none;
@@ -1298,7 +1303,8 @@ div:has(> .beforeSeason) {
 .mainDetail > section:nth-of-type(1) {
     position: sticky;
     top: 16px;
-    grid-row: span 2
+    grid-row: span 2;
+    z-index: 1;
 }
 .mainDetail > section:nth-of-type(2) {
     position: sticky;
