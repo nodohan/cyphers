@@ -157,7 +157,7 @@ module.exports = (scheduler, maria) => {
                 row2["matchId"] = matchId;
                 row2["date"] = matchDate;
                 row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
-                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, classifyBuild(itemPurchase, items) ]);
+                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, classifyBuild(itemPurchase, items), row2.playInfo.characterName ]);
             });
         });
 
@@ -194,7 +194,7 @@ module.exports = (scheduler, maria) => {
     async function insertMatchId(rows) {
         const pool = maria.getPool();
 
-        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position ) VALUES ( ?, ?, ?, ?, ?, ? ) `;
+        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position, charName ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);
         logger.debug(rows);
 
