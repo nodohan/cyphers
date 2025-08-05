@@ -15,7 +15,7 @@ class charCombiRepository {
                 win_rate_percent
             )
             SELECT
-                '${startDay}' AS stat_date,
+                '${endDay}' AS stat_date,
                 '${type}' AS stats_type,
                 role,
                 char_combo,
