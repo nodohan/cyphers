@@ -41,7 +41,7 @@ class charCombiRepository {
             `;
 
         try {
-            await maria.doQuery(charCombiStatsQuery);
+            await mariadb.doQuery(charCombiStatsQuery);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -73,7 +73,7 @@ class charCombiRepository {
         logger.debug(insertQuery);
     
         try {
-            await maria.doQuery(insertQuery);
+            await mariadb.doQuery(insertQuery);
         } catch (err) {
             logger.error(err);
             throw err;
