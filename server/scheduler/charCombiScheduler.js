@@ -29,7 +29,9 @@ module.exports = (scheduler, maria, acclogger) => {
             await charCombiStatsService.callCombiData(new Date());
             await charCombiStatsService.callInsertStats(new Date());
         } catch (err) {
+            logger.error(err);
             res.send(err);
+            return ;
         }
 
         return res
