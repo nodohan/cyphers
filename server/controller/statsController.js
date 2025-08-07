@@ -34,6 +34,7 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
+    // 메인 (/stats/statsList)
     app.get('/statsList', async function(req, res) {
         let todayStr = '';
 
@@ -41,14 +42,15 @@ module.exports = (scheduler, maria, acclogger) => {
             todayStr = req.query.season;
         } else {
             let today = new Date();
-            if (today.getHours() <= 2) {
+            if (today.getHours() <= 4) {
                 today = commonUtil.addDays(today, -1);
             }
             todayStr = commonUtil.getYYYYMMDD(today, false);
         }
 
         try {
-            let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
+            let query = ` SELECT * FROM char_combi_stats_ranked WHERE stat_date = ? `;
+            // let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
             logger.debug(query);
 
             let row = await maria.doQuery(query, [todayStr]);

@@ -57,27 +57,47 @@
             }
 
             function drawStatsList(data) {
-                let wList = dataFilter(data.row, "W", "TANKER", "DESC");
-                setStatsWDueDate("W", wList[0]);
+                let wList = dataFilter(data.row, "weekly", "탱커", "top");
+                setStatsWDueDate("weekly", wList[0]);
                 drawStatsListDiv("wBestTanker", wList);
-                drawStatsListDiv("wWorstTanker", dataFilter(data.row, "W", "TANKER", "ASC"));
-                drawStatsListDiv("wBestAttack", dataFilter(data.row, "W", "ATTACK", "DESC"));
-                drawStatsListDiv("wWorstAttack", dataFilter(data.row, "W", "ATTACK", "ASC"));
+                drawStatsListDiv("wWorstTanker", dataFilter(data.row, "weekly", "탱커", "bottom"));
+                drawStatsListDiv("wBestAttack", dataFilter(data.row, "weekly", "딜러", "top"));
+                drawStatsListDiv("wWorstAttack", dataFilter(data.row, "weekly", "딜러", "bottom"));
 
-                let mList = dataFilter(data.row, "M", "TANKER", "DESC");
-                setStatsWDueDate("M", mList[0]);
+                let mList = dataFilter(data.row, "monthly", "탱커", "top");
+                setStatsWDueDate("monthly", mList[0]);
                 drawStatsListDiv("mBestTanker", mList);
-                drawStatsListDiv("mWorstTanker", dataFilter(data.row, "M", "TANKER", "ASC"));
-                drawStatsListDiv("mBestAttack", dataFilter(data.row, "M", "ATTACK", "DESC"));
-                drawStatsListDiv("mWorstAttack", dataFilter(data.row, "M", "ATTACK", "ASC"));
+                drawStatsListDiv("mWorstTanker", dataFilter(data.row, "monthly", "탱커", "bottom"));
+                drawStatsListDiv("mBestAttack", dataFilter(data.row, "monthly", "딜러", "top"));
+                drawStatsListDiv("mWorstAttack", dataFilter(data.row, "monthly", "딜러", "bottom"));
             }
 
             function dataFilter(row, statsType, combiType, order) {
-                let list = row.filter(item => item.statsType == statsType)
-                    .filter(item => item.combiType == combiType)
-                    .filter(item => item.order == order)
-                    .sort(order == "DESC" ? lateDesc : lateAsc);
+                let list = row.filter(item => item.stats_type == statsType)
+                    .filter(item => item.role == combiType)
+                    .filter(item => item.rank_type == order)
+                    .sort(order == "top" ? winDesc : winAsc);
                 return list;
+            }
+
+            const winDesc = (a, b) => {
+                if (a.win_rate_percent < b.win_rate_percent) {
+                    return 1;
+                }
+                if (a.win_rate_percent > b.win_rate_percent) {
+                    return -1;
+                }
+                return 0;
+            }
+
+            const winAsc = (a, b) => {
+                if (a.win_rate_percent > b.win_rate_percent) {
+                    return 1;
+                }
+                if (a.win_rate_percent < b.win_rate_percent) {
+                    return -1;
+                }
+                return 0;
             }
 
             function setStatsWDueDate(type, item) {
@@ -85,7 +105,7 @@
                     return;
                 }
 
-                let span = (type == "W") ? $("#wDueSpan") : $("#mDueSpan");
+                let span = (type == "weekly") ? $("#wDueSpan") : $("#mDueSpan");
                 span.empty();
                 span.append(item.statsFromDate + "~" + item.statsToDate);
             }
@@ -105,13 +125,13 @@
                     if (idx >= 5) {
                         break;
                     }
-                    let row = data[idx];
-                    let tr = "<tr>";
-                    tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
-                    tr += "<td>" + row.total + "</td>";
-                    tr += "<td>" + row.win + "</td>";
-                    tr += "<td>" + row.lose + "</td>";
-                    tr += "<td>" + row.late + "%</td>";
+                    const { char_combo: combi, total_matches: total, win_count, win_rate_percent: rate } = data[idx];
+                    let tr = `<tr>
+                        <td>${getChars(combi.split(","))}</td>
+                        <td>${total}</td>
+                        <td>${win_count}</td>
+                        <td>${total - win_count}</td>
+                        <td>${rate}%</td>`;
                     tbody.append(tr);
                 }
 
