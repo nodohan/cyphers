@@ -34,6 +34,22 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
+    app.get('/statsCharList', async function(req, res) {        
+
+        try {
+            const query = `select * from char_daily_stats where stat_date = ? order by rate desc`;
+            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [ req.query.date]);
+            res.send({ 'row': row });
+        } catch (err) {
+            logger.error(err);
+            console.log(err);
+            return res
+                .status(500)
+                .send('오류 발생')
+                .end();
+        }
+    });
+
     // 메인 (/stats/statsList)
     app.get('/statsList', async function(req, res) {
         let todayStr = '';
