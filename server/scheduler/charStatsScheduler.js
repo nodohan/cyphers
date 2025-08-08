@@ -15,7 +15,7 @@ module.exports = (scheduler, maria, acclogger) => {
   scheduler.scheduleJob(time, async function() {
       if (myConfig.schedulerRun) {
         logger.info("call char Rating scheduler");
-        await charRatingStatsService.updateUserDetailState('running', playerId); //
+        await charRatingStatsService.charRanking('running', playerId); //
       }
   });
 
