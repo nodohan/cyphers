@@ -36,7 +36,6 @@
                 $('#fromDt').datepicker({
                     uiLibrary: 'bootstrap4',
                     iconsLibrary: 'fontawesome',
-                    width: 170,
                     locale: 'kr-ko',
                     minDate: '2025-04-10',
                     value: yesterdayStr,
@@ -44,7 +43,6 @@
                     maxDate: yesterday
                 });
 
-                $(".gj-datepicker").css("float", "left");
             }
 
 
@@ -104,7 +102,7 @@
                 const rows = $("#charRate table tbody tr");
 
                 rows.each(function () {
-                    const charName = $(this).find("td:first").text().toLowerCase();
+                    const charName = $(this).find("td:eq(1)").text().toLowerCase();
                     if (charName.includes(keyword)) {
                         $(this).show();
                     } else {
