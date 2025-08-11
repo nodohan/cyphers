@@ -1527,3 +1527,10 @@ div:has(> .beforeSeason) {
     position: absolute;
     margin: 0 0 0 4px;
 }
+#statsMain .datepickerDiv {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+    float: none;
+    width: auto;
+}
