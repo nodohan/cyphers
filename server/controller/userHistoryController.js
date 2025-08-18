@@ -69,7 +69,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
                      FROM nickNames nick 
                      WHERE nick.playerId = '${playerId}' 
-                     and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                     and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                      ORDER BY checkingDate DESC; `;
 
         let query2 = `SELECT 
@@ -154,11 +154,11 @@ module.exports = (scheduler, maria, acclogger) => {
                         FROM nickNames 
                         WHERE nickname = '${userName}' 
                         and privateYn = 'N' 
-                        and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                        and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                         order by checkingDate desc 
                         limit 1
                     )
-                    and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                     ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);
