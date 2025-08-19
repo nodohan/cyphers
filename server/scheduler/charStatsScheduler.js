@@ -3,6 +3,7 @@ const myConfig = require('../../config/config.js');
 const service = require('../service/CharRatingStatsService.js');
 const api = require('../util/api');
 
+//캐릭 랭킹
 module.exports = (scheduler, maria, acclogger) => {
   const app = require('express').Router();
   app.use(acclogger());
@@ -11,11 +12,11 @@ module.exports = (scheduler, maria, acclogger) => {
 
   app.use(acclogger());
 
-  var time = "* * * * *"; // 리얼용
+  var time = "30 01 * * *"; // 리얼용
   scheduler.scheduleJob(time, async function() {
       if (myConfig.schedulerRun) {
         logger.info("call char Rating scheduler");
-        await charRatingStatsService.charRanking('running', playerId); //
+        await charRatingStatsService.charRanking(); //
       }
   });
 
