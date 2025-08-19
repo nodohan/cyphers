@@ -2,6 +2,7 @@ const commonUtil = require('../util/commonUtil');
 const myConfig = require('../../config/config.js');
 const service = require('../service/CharCombiStatsService');
 
+//캐릭 조합
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
     app.use(acclogger());
@@ -9,7 +10,7 @@ module.exports = (scheduler, maria, acclogger) => {
     const charCombiStatsService = new service(maria);
 
     //스케쥴러 또는 웹 url call
-    var time = "00 04 * * *"; // 리얼용
+    var time = "00 02 * * *"; // 리얼용
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match stats");
