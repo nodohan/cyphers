@@ -69,6 +69,22 @@ class charRankingRepository {
         }
     }
 
+    updateMatchesMapRating = async (date) => {
+        const query = `
+            UPDATE matches_map mm
+            INNER JOIN (select * from userRank where rankDate = '${date}' )  ur
+            ON mm.playerId = ur.playerId
+            AND DATE(mm.matchDate) = ur.rankDate
+            SET mm.rating = ur.rp`;
+    
+        try {
+            await mariadb.doQuery(insertQuery);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
 
 
 }
