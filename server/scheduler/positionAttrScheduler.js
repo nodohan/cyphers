@@ -5,7 +5,7 @@ module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../util/api');
 
-    var time = "30 02 * * *";
+    var time = "00 03 * * *";
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call position attr collect scheduler");

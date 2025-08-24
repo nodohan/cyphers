@@ -6,7 +6,7 @@ module.exports = (scheduler, maria) => {
     const app = require('express').Router();
     const api = require('../util/api');
 
-    var time = "30 03 * * *"; 
+    var time = "00 04 * * *"; 
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match user insert scheduler");

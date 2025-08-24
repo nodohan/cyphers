@@ -7,7 +7,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
 
     //스케쥴러 또는 웹 url call
-    var time = "00 02 * * *"; // 리얼용
+    var time = "30 02 * * *"; // 리얼용
     //var time = "10 18 * * *"; // 테스트중
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
