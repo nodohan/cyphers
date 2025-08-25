@@ -22,12 +22,12 @@
                 getStats("statsList", drawStatsList);
                 callCharStats();
             });
-            
+
             const callCharStats = () => {
                 const day = $("#fromDt").val();
                 getStats(`statsCharList?date=${day}`, drawCharFunc);
             }
-            
+
             const setDatePicker = () => {
                 var yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
@@ -271,14 +271,12 @@
         </script>
 </head>
 
-<body class="body">
+<body class="body renewalBody">
     <%- include  ("../layout/menu") %>
 
-        <div id="statsMain">
-            <div class="topNoheight">
-                <h3>주간 공식 집계 판수
-                    <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreCountDiv" aria-expanded="true"></i>
-                </h3>
+        <div id="statsMain" class="mainLayout">
+            <div class="">
+                <h3>주간 공식 집계 판수<i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreCountDiv" aria-expanded="true"></i></h3>
                 <div id="statsCountDiv">
 
                 </div>
@@ -287,58 +285,59 @@
 
                 </div>
             </div>
-            <div id="con1" class="conLayer">
-                <span class="h3Span"> 최근 30일 조합 </span> ( <span id="mDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
-                <div class="conStats">
-                    <h4>BEST 5</h4>
-                    <div id="mBestTanker">
-                        <h5>탱커</h5>
+            <div>
+                <section id="con1" class="">
+                    <span class="h3Span"> 최근 30일 조합 </span> ( <span id="mDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
+                    <div class="">
+                        <h4>BEST 5</h4>
+                        <div id="mBestTanker">
+                            <h5>탱커</h5>
+                        </div>
+                        <div id="mBestAttack">
+                            <h5>딜러</h5>
+                        </div>
                     </div>
-                    <div id="mBestAttack">
-                        <h5>딜러</h5>
+                    <div class="">
+                        <h4>WORST 5</h4>
+                        <div id="mWorstTanker">
+                            <h5>탱커</h5>
+                        </div>
+                        <div id="mWorstAttack">
+                            <h5>딜러</h5>
+                        </div>
                     </div>
-                </div>
-                <div class="conStats">
-                    <h4>WORST 5</h4>
-                    <div id="mWorstTanker">
-                        <h5>탱커</h5>
+                </section>
+                <section id="con2" class="">
+                    <span class="h3Span"> 금주 조합 </span> ( <span id="wDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
+                    <div class="">
+                        <h4>BEST 5</h4>
+                        <div id="wBestTanker">
+                            <h5>탱커</h5>
+                        </div>
+                        <div id="wBestAttack">
+                            <h5>딜러</h5>
+                        </div>
                     </div>
-                    <div id="mWorstAttack">
-                        <h5>딜러</h5>
+                    <div class="">
+                        <h4>WORST 5</h4>
+                        <div id="wWorstTanker">
+                            <h5>탱커</h5>
+                        </div>
+                        <div id="wWorstAttack">
+                            <h5>딜러</h5>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div id="con2" class="conLayer">
-                <span class="h3Span"> 금주 조합 </span> ( <span id="wDueSpan"> 2022-01-01 ~ 2022-01-31 </span> )
-                <div class="conStats">
-                    <h4>BEST 5</h4>
-                    <div id="wBestTanker">
-                        <h5>탱커</h5>
+                </section>
+                <section id="con3" class="">
+                    <h4>일별 캐릭터 승률</h4>
+                    <div class="datepickerDiv">
+                        <input class="datepicker" id="fromDt" />
+                        <input type="text" id="searchCharName" />
                     </div>
-                    <div id="wBestAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-                <div class="conStats">
-                    <h4>WORST 5</h4>
-                    <div id="wWorstTanker">
-                        <h5>탱커</h5>
-                    </div>
-                    <div id="wWorstAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-            </div>
+                    <div id="charRate">
 
-            <div id="con3" class="conLayer">
-                <h4>일별 캐릭터 승률</h4>
-                <div class="datepickerDiv">
-                    <input class="datepicker" id="fromDt" />
-                    <input type="text" id="searchCharName" />
-                </div>
-                <div id="charRate">
-                    
-                </div>
+                    </div>
+                </section>
             </div>
 
             <!-- 카카오 광고 -->
@@ -359,7 +358,7 @@
                     </tr>
                 </thead>
                 <tbody></tbody>
-            </table>           
+            </table>
         </div>
 
 
