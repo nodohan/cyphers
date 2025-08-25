@@ -6,7 +6,7 @@ module.exports = (scheduler, maria) => {
     const api = require('../util/api');
 
     //스케쥴러 또는 웹 url call
-    var time = "00 01 * * *";
+    var time = "30 00 * * *";
     scheduler.scheduleJob(time, async function() {
         if (myConfig.schedulerRun) {
             logger.info("call match rating scheduler");

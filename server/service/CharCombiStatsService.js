@@ -1,5 +1,5 @@
 const repository = require('../repository/charCombiRepository');
-const commonUtil = require('../util/commonUtil'); // 추정
+const commonUtil = require('../util/commonUtil'); 
 
 class CharCombiStatsService {
     constructor() {

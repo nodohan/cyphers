@@ -14,48 +14,57 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/searchNicknameHistory', async function(req, res) {
-        let userName = req.query.nickname;
+        try {
+            let userName = req.query.nickname;
 
-        const ip = commonUtil.getIp(req);
-        console.log(ip);
+            const ip = commonUtil.getIp(req);
+            console.log(ip);
+    
+            let playerId = await new api().getPlayerIdByName(userName);
+            let userNicknameList;
+            logger.debug("playerId get %s", playerId);
+            if (playerId != null) {
+                userNicknameList = await searchNicknameByPlayerId(playerId);
+            } else {
+                userNicknameList = await searchNickname(userName);
+            }
+    
+            if (userNicknameList == null || userNicknameList.length == 0) {
+                res.send({ resultCode: -1 });
+                return;
+            }
+    
+            /* 랭킹차트로 누른 검색은 이력으로 쌓지 않고
+              , 존재하지 않는 사용자는 수집하지 않도록 수정 */
+            if (req.query.byRank != 'Y') {
+                insertSearchNickname(userName, ip);
+            }
+    
+            if (userNicknameList[0].privateYn == 'Y') {
+                res.send({ resultCode: -2 });
+                return;
+            }
+    
+            let result = userNicknameList.map(row => {
+                return [row.nickname, row.checkingDate]; // 닉네임, 수집일
+            });
 
-        let playerId = await new api().getPlayerIdByName(userName);
-        let userNicknameList;
-        logger.debug("playerId get %s", playerId);
-        if (playerId != null) {
-            userNicknameList = await searchNicknameByPlayerId(playerId);
-        } else {
-            userNicknameList = await searchNickname(userName);
+            res.send(result);
+            return ;
+    
+        } catch(err) {
+            logger.error(err);
         }
 
-        if (userNicknameList == null || userNicknameList.length == 0) {
-            res.send({ resultCode: -1 });
-            return;
-        }
-
-        /* 랭킹차트로 누른 검색은 이력으로 쌓지 않고
-          , 존재하지 않는 사용자는 수집하지 않도록 수정 */
-        if (req.query.byRank != 'Y') {
-            insertSearchNickname(userName, ip);
-        }
-
-        if (userNicknameList[0].privateYn == 'Y') {
-            res.send({ resultCode: -2 });
-            return;
-        }
-
-        let result = userNicknameList.map(row => {
-            return [row.nickname, row.checkingDate]; // 닉네임, 수집일
-        });
-
-        res.send(result);
+        res.send({ "resultCode": 400, "resultMsg": "오류발생" });
+        return ;
     });
 
     async function insertSearchNickname(username, ip) {
         try {
-            let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), '${username}', '${ip}' ) `;
+            let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), ?, ? ) `;
             logger.debug(query);
-            await maria.doQuery(query);
+            await maria.doQuery(query, [ userName, ip]);
         } catch (err) {
             logger.error(err);
         }
@@ -69,7 +78,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         , DATE_FORMAT(STR_TO_DATE(checkingDate, '%Y%m%d'),'%Y-%m-%d ') checkingDate 
                      FROM nickNames nick 
                      WHERE nick.playerId = '${playerId}' 
-                     and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                     and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                      ORDER BY checkingDate DESC; `;
 
         let query2 = `SELECT 
@@ -154,11 +163,11 @@ module.exports = (scheduler, maria, acclogger) => {
                         FROM nickNames 
                         WHERE nickname = '${userName}' 
                         and privateYn = 'N' 
-                        and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                        and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                         order by checkingDate desc 
                         limit 1
                     )
-                    and checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    and checkingDate >= (NOW() - INTERVAL 2 YEAR)
                     ORDER BY checkingDate DESC; `;
 
         logger.debug("닉변검색: " + userName);

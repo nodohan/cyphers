@@ -110,7 +110,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         ,IF(privateYn = 'N', nickname, '비공개') nickname 
                     FROM nickNames 
                     WHERE playerId = '${playerId}' 
-                    AND checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    AND checkingDate >= (NOW() - INTERVAL 2 YEAR)
                     ORDER BY checkingDate DESC `;
 
         //logger.debug("%s", query);
