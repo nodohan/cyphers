@@ -1535,9 +1535,63 @@ div:has(> .beforeSeason) {
     width: auto;
 }
 
-.mainLayout {
+.renewalBody .mainLayout {
     width: 100%;
     max-width: 1520px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 20px;
+}
+.mainLayout rightBanner {
+
+}
+.mainLayout table img {
+    width: auto !important;
+    height: auto !important;
+    box-shadow: 0 0 3px #ced4da;
+}
+.mainLayout .playCounter {
+    padding: 0 0 8px 0;
+    border-bottom: 1px solid #ced4da;
+}
+.mainLayout .playCounter table {
+    table-layout: fixed;
+}
+.mainLayout h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 16px 0;
+    color: #222;
+}
+.mainLayout h4 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+}
+.mainLayout h5 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+}
+.listWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 0 0;
+    gap: 24px;
+}
+.listWrapper article {
+    flex: 1;
+}
+.listWrapper article section {
+    max-height: 64vh;
+    overflow-y: auto;
+    width: 100%;
+}
+.listWrapper article section > div {
+    margin: 0 0 12px 0;
+}
+.listWrapper article > div {
+    margin: 0 0 20px 0;
+}
+.listWrapper article .bestCombi {
+    border-bottom: 1px solid #ced4da;
 }
