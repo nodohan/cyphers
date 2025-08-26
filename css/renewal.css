@@ -1540,9 +1540,13 @@ div:has(> .beforeSeason) {
     max-width: 1520px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
+    float: none;
 }
-.mainLayout rightBanner {
-
+.mainLayout .rightBanner {
+    position: absolute;
+    left: 100%;
+    top: 40px;
 }
 .mainLayout table img {
     width: auto !important;
