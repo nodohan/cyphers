@@ -1601,7 +1601,7 @@ div:has(> .beforeSeason) {
     box-shadow: 0 0 3px #ced4da;
 }
 .listWrapper article section {
-    max-height: 64vh;
+    max-height: 60vh;
     overflow-y: auto;
     width: 100%;
 }
