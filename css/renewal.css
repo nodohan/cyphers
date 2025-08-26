@@ -1562,8 +1562,14 @@ div:has(> .beforeSeason) {
     margin: 0 0 16px 0;
     color: #222;
 }
+.mainLayout article h3 {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 16px 0;
+    color: #222;
+}
 .mainLayout h4 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     margin: 0 0 12px 0;
 }
