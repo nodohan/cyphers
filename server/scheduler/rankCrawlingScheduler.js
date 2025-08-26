@@ -123,6 +123,7 @@ module.exports = (scheduler, maria) => {
             return [];
         }
         let arr = [];
+        //console.log(html.data);
         html.data.rankingTopResponses.forEach(row => {
             arr.push([row.mNickname, row.ranking, row.beforeRank, row.ratingPoint])
         });

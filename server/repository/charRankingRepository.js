@@ -69,6 +69,29 @@ class charRankingRepository {
         }
     }
 
+    insertSeasonCharRanking = async (date) => {
+        const insertQuery = `
+            INSERT INTO char_season_stats (stat_date, char_name, total_matches, win_count, lose_count, rate)
+            SELECT 
+                ${date} AS stat_date,
+                charName,
+                COUNT(*) AS total_matches,
+                SUM(IF(result = 'win', 1, 0)) AS win_count,
+                SUM(IF(result = 'lose', 1, 0)) AS lose_count,
+                ROUND(SUM(IF(result = 'win', 1, 0)) / COUNT(*) * 100, 2) AS rate
+            FROM matches_map
+            where date(matchDate) > '2025-04-10'
+            GROUP BY stat_date, charName`;
+
+        try {
+            await mariadb.doQuery(insertQuery);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
+
     updateMatchesMapRating = async (date) => {
         const query = `
             UPDATE matches_map mm
