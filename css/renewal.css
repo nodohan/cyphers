@@ -1536,8 +1536,8 @@ div:has(> .beforeSeason) {
 }
 
 .renewalBody .mainLayout {
-    width: 100%;
-    max-width: 1400px;
+    width: 100%; !important;
+    max-width: 1480px;
     margin: 0 auto;
     padding: 20px;
     position: relative;
@@ -1605,12 +1605,34 @@ div:has(> .beforeSeason) {
     overflow-y: auto;
     width: 100%;
 }
-.listWrapper article section > div {
-    margin: 0 0 12px 0;
-}
 .listWrapper article > div {
     margin: 0 0 20px 0;
 }
 .listWrapper article .bestCombi {
     border-bottom: 1px solid #ced4da;
+}
+.charWinRate {
+    position: relative;
+}
+.charWinRate > div {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.charWinRate > div > input {
+    border-radius: 8px;
+    border: 1px solid #222;
+    padding: 0 8px;
+    height: 28px;
+}
+.charWinRate input::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background: url("/image/arrowDown.svg") no-repeat center;");
 }
