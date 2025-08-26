@@ -10,7 +10,7 @@ class CharRatingStatsService {
 
     charRanking = async () =>  {
         const yesterday = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
-        this.charRankingRepository.insertCharRanking(yesterday);
+        this.charRankingRepository.insertSeasonCharRanking(yesterday);
         this.charRankingRepository.updateMatchesMapRating(yesterday);
     }
 

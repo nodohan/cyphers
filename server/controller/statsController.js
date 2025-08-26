@@ -37,8 +37,9 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/statsCharList', async function(req, res) {        
 
         try {
+            const todayYYYYMMDD = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
             const query = `select * from char_season_stats where stat_date = ? order by rate desc`;
-            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [ req.query.date]);
+            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [ todayYYYYMMDD ]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
