@@ -1,5 +1,5 @@
 const repository = require('../repository/MatchRepository.js');
-const commonUtil = require('../util/commonUtil.js');
+const commonUtil = require('../util/commonUtil');
 const api = require('../util/api');
 
 class MatchService {
