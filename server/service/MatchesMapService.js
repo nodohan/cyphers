@@ -10,8 +10,8 @@ class MatchesMapService {
         let matchMap = [];
 
         try {
-            const rows = this.matchesMapRepository.selectMatches(day);
-            matchMap = extractPlayerId(rows);
+            const rows = await this.matchesMapRepository.selectMatches(day);
+            matchMap = this.extractPlayerId(rows);
             if(matchMap.length > 0 ) {
                 await this.matchesMapRepository.insertMatchMap(matchMap);
             }
@@ -36,7 +36,7 @@ class MatchesMapService {
                 row2["matchId"] = matchId;
                 row2["date"] = matchDate;
                 row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
-                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, classifyBuild(itemPurchase, items), row2.playInfo.characterName ]);
+                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, this.classifyBuild(itemPurchase, items), row2.playInfo.characterName ]);
             });
         });
 

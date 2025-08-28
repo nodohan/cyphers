@@ -5,7 +5,7 @@ class MatchRepository {
 
     }
 
-    findRankUserList = async (matchType) => {
+    findRankUserList = async (matchType, day) => {
         let query;
         if (matchType == 'rating') {
             let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -20));

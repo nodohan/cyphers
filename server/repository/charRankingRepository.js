@@ -101,7 +101,7 @@ class charRankingRepository {
             SET mm.rating = ur.rp`;
     
         try {
-            await mariadb.doQuery(insertQuery);
+            await mariadb.doQuery(query);
         } catch (err) {
             logger.error(err);
             throw err;

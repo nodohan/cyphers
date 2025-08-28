@@ -44,20 +44,21 @@ module.exports = (scheduler, acclogger) => {
 
     // 2시 이후로 실행해야함..
     callStatsBatch = async () => {        
-        // var time = "30 01 * * *";
+        logger.info("batch insertMatchMap");
         await matchesMapService.insertMatchMap();
 
-        //var time = "00 02 * * *"; // 리얼용
+        logger.info("batch charRanking");
         await charRatingStatsService.charRanking(); //
         
-        //var time = "00 02 * * *"; // 리얼용
-        logger.info("call match stats");
+        logger.info("batch callCombiData");
         await charCombiStatsService.callCombiData(new Date());
+
+        logger.info("batch callInsertStats");
         await charCombiStatsService.callInsertStats(new Date());
-        logger.info("end match stats");
+        logger.info("batch end");
     }
 
-    //test  ( "/batch/insertMatches?matchType=rating&day=2025-06-20" )
+    //test  ( "/batch/insertMatches?matchType=rating&day=2025-08-27" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
