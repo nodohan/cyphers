@@ -1548,10 +1548,17 @@ div:has(> .beforeSeason) {
     left: 100%;
     top: 40px;
 }
+.mainLayout table th {
+    padding: 8px 0;
+}
+.mainLayout table td {
+    padding: 8px 0;
+}
 .mainLayout table img {
     width: auto !important;
     height: auto !important;
     box-shadow: 0 0 3px #ced4da;
+    display: none;
 }
 .mainLayout .playCounter {
     border-bottom: 1px solid #ced4da;
@@ -1567,25 +1574,23 @@ div:has(> .beforeSeason) {
 .mainLayout h3 {
     font-size: 22px;
     font-weight: bold;
-    margin: 0 0 16px 0;
+    padding: 0 0 16px 0;
     color: #222;
 }
 .mainLayout article h3 {
     font-weight: bold;
-    margin: 0 0 16px 0;
     border-bottom: 1px solid #ced4da;
-    padding: 0 0 16px 0;
     color: #222;
 }
 .mainLayout h4 {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 12px 0;
+    padding: 8px 0;
 }
 .mainLayout h5 {
     font-size: 16px;
     font-weight: bold;
-    margin: 0 0 8px 0;
+    padding: 8px 0;
 }
 .listWrapper {
     display: flex;
@@ -1605,7 +1610,26 @@ div:has(> .beforeSeason) {
     overflow-y: auto;
     width: 100%;
 }
-.listWrapper article > div {
+
+.listWrapper article section::-webkit-scrollbar {
+    width: 4px;  /* 스크롤바 전체 폭 */
+}
+
+.listWrapper article section::-webkit-scrollbar-track {
+    background: transparent;
+    width: 6px;
+}
+
+.listWrapper article section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2em;
+}
+
+.listWrapper article section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.listWrapper article > section > div {
     margin: 0 0 20px 0;
 }
 .listWrapper article .bestCombi {
@@ -1614,25 +1638,34 @@ div:has(> .beforeSeason) {
 .charWinRate {
     position: relative;
 }
-.charWinRate > div {
+.charWinRate > .charSearch {
     position: absolute;
     right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(0, -50%);
 }
-.charWinRate > div > input {
+.charWinRate > .charSearch > input {
     border-radius: 8px;
     border: 1px solid #222;
     padding: 0 8px;
+    width: 160px;
     height: 28px;
 }
-.charWinRate input::before {
-    content: "";
+h5:has(.sortButton) {
+    position: relative;
+}
+.sortButton {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 12px;
     width: 24px;
     height: 24px;
-    background: url("/image/arrowDown.svg") no-repeat center;");
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("/image/triangleIcon.svg");
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+}
+.sortButton.rotate {
+    transform: translateY(-50%) rotate(180deg);
 }
