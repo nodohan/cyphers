@@ -1,9 +1,11 @@
+const commonUtil = require('../util/commonUtil');
+
 class MatchRepository {
     constructor() {
 
     }
 
-    findRankUserList = async (matchType) => {
+    findRankUserList = async (matchType, day) => {
         let query;
         if (matchType == 'rating') {
             let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -20));
@@ -12,11 +14,11 @@ class MatchRepository {
             query = `SELECT playerId FROM player`;
         }
         logger.debug(query);
-        return await maria.doQuery(query);
+        return await mariadb.doQuery(query);
     }
 
     insertMatchId = async (matchType, rows) => {
-        let tableName = matchType == 'rating' ? 'matches' : 'matches_normal';
+        let tableName = (matchType == 'rating') ? 'matches' : 'matches_normal';
 
         await mariadb.doQuery("DELETE FROM matchId_temp");
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025H' ) `;
@@ -24,7 +26,6 @@ class MatchRepository {
 
         const pool = mariadb.getPool();
         await pool.batch(query, rows.map(id => [id]), function(err) {
-            console.log(err);
             logger.error(err);
             if (err) throw err;
         });
@@ -37,14 +38,12 @@ class MatchRepository {
                         )`;
 
         logger.debug(mergeQuery);
-        let result = await maria.doQuery(mergeQuery);
+        let result = await mariadb.doQuery(mergeQuery);
 
         logger.debug("insert MatchId End ");
 
         return result;
     }
-
-
 
 }
 

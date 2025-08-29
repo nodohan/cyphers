@@ -64,7 +64,7 @@ class charCombiRepository {
                 WHERE stat_date = '${statsDate}'
                   AND stats_type = '${statsType}'
                   AND role = '${combiType}'
-                  AND total_matches > 100
+                  AND total_matches > ${statsType == 'weekly' ? 10 : 50}
                 ORDER BY win_rate_percent ${order}
                 LIMIT 20
             ) AS t, (SELECT @rownum := 0) AS r

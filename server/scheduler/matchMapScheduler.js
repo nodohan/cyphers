@@ -1,21 +1,12 @@
 const commonUtil = require('../util/commonUtil');
 const myConfig = require('../../config/config.js');
+const MatchesMapService = require('../service/MatchesMapService');
 
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
-    
-    var time = "30 01 * * *";
-    scheduler.scheduleJob(time, async function() {
-        if (myConfig.schedulerRun) {
-            logger.info("call match map scheduler");
-            let isRun = true;
-            while(isRun) {
-                isRun = await selectMatches('2024-09-25');
-            }
-            logger.info("end match map scheduler");
-        }
-    });
 
+    const matchesMapService = new MatchesMapService();
+    
     //test  ( "/matchesMap/insertMatchesMap?day=2025-06-10" )
     app.get('/insertMatchesMap', async function(req, res) {
         if (!commonUtil.isMe(req)) {
@@ -25,11 +16,10 @@ module.exports = (scheduler, maria) => {
         res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
         let isRun = true;
         while(isRun) {
-            isRun = await selectMatches(req.query.day);
+            isRun = await matchesMapService.insertMatchMap(req.query.day);
         }
     });
 
-    
     //test  ( "/matchesMap/updateMatchesMap" )
     app.get('/updateMatchesMap', async function(req, res) {
         if (!commonUtil.isMe(req)) {
@@ -37,10 +27,9 @@ module.exports = (scheduler, maria) => {
         }
 
         res.send({ "resultCode": "200", "resultMsg": "내가 맞다" });
-        updatePositionBatch();
+        matchesMapService.updatePositionBatch();
     });
 
-    
     //test  ( "/matchesMap/getMatchesMap" )
     app.get('/getMatchesMap', async function(req, res) {        
         
@@ -49,7 +38,7 @@ module.exports = (scheduler, maria) => {
             res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
             return ;
         }
-        res.send(await getUserMatchesMap(req.query.playerId));
+        res.send(await matchesMapService.getUserMatchesMap(req.query.playerId));
     });
 
 
@@ -61,176 +50,8 @@ module.exports = (scheduler, maria) => {
             res.send({ "resultCode": "400", "resultMsg": "잘못검색함" });
             return ;
         }
-        const matchResults = await teamRate(playerIds);        
-        const wins = matchResults.filter(r => r.result === 'win').length
-        res.send({ "rate" :  calculateWinRate(matchResults,wins), "total": matchResults.length, "win" : wins, "lose" : matchResults.length-wins, "data" : matchResults });
+        res.send(await matchesMapService.teamRate(playerIds));
     });
-
-    calculateWinRate = (matchResults, wins) => {
-        const total = matchResults.length;
-        const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
-        return `${winRate}%`;
-    };
-
-    teamRate = async (playerIds) => {
-        const cnt = playerIds.length <= 3 ? 2 : 3;
-        const playerStr = playerIds.map(() => '?').join(', ');
-
-        const query = `        
-            SELECT matchId, result
-            FROM matches_map
-            WHERE playerId IN (${playerStr})
-            GROUP BY matchId, result
-            HAVING COUNT(playerId) >= ${cnt}
-        `;
-
-        logger.info("query: %s", query);
-
-        try {
-            return await maria.doQuery(query, [ ... playerIds ]);
-        } catch (err){
-            logger.err(err);
-        }
-        return null;
-    }
-
-    getUserMatchesMap =  async (playerId) => {
-        const query = `
-            SELECT 
-                playerId,
-                POSITION,
-                SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) AS win_count,
-                SUM(CASE WHEN result = 'lose' THEN 1 ELSE 0 END) AS lose_count,
-                COUNT(*) AS total_games
-            FROM matches_map
-            WHERE POSITION IS NOT NULL
-            and playerId = ? 
-            GROUP BY playerId, POSITION
-            `;
-       
-        return await maria.doQuery(query, [ playerId ]);
-    }
-
-    selectMatches = async (day = new Date()) => {
-        //let searchDateStr = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1));
-        const query = `
-        select 
-            matchId, jsonData, matchDate
-        from matches 
-        where matchId in ( 
-            SELECT ma.matchId
-            FROM matches ma
-            LEFT JOIN (
-                select matchId from matches_map group by matchId
-            ) map ON map.matchId = ma.matchId 
-            WHERE matchDate >= '${day}' AND map.matchId IS NULL
-        ) limit 3000`;
-       
-        logger.debug(query);
-        let matchMap = [];
-
-        try {
-            let rows = await maria.doQuery(query);
-            matchMap = extractPlayerId(rows);
-            if(matchMap.length > 0 ) {
-                await insertMatchId(matchMap);
-            }
-        } catch (err) {
-            console.log("에러1",err);
-            logger.error(err);
-        }
-        return matchMap.length > 0;
-    }
-
-    const extractPlayerId = (rows) => {
-        logger.debug("extract players");
-
-        //사용자 매칭 데이터 검색 
-        let matchMap = [];
-        rows.forEach(row => {
-            const { matchId, jsonData, matchDate} = row;
-            let json = JSON.parse(jsonData);
-            const teams = json.teams;
-            json.players.forEach(row2 => {
-                const { itemPurchase, items, playerId } = row2;
-                row2["matchId"] = matchId;
-                row2["date"] = matchDate;
-                row2.playInfo.result = teams[0].players.some(playerId => playerId == row2.playerId) ? teams[0].result : teams[1].result;
-                matchMap.push([matchId, playerId, row2, matchDate, row2.playInfo.result, classifyBuild(itemPurchase, items), row2.playInfo.characterName ]);
-            });
-        });
-
-        return matchMap;
-    }
-
-    function classifyBuild(itemPurchase, items) {
-        if(itemPurchase == null) {
-            return "기타";
-        }
-
-        const itemMap = new Map();
-        for (const item of items) {
-            itemMap.set(item.itemId, item);
-        }
-    
-        const firstFiveItems = itemPurchase.slice(0, Math.min(8,itemPurchase.length))
-            .map(id => itemMap.get(id))
-            .filter(Boolean);
-    
-        const glovesCount = firstFiveItems.filter(item => item.slotName === "손(공격)").length;
-        const chestExists = firstFiveItems.some(item => item.slotName === "가슴(체력)");
-        const helmetCount = firstFiveItems.filter(item => item.slotName === "머리(치명)").length;
-    
-        if (glovesCount === 0) return "극방";
-        if (glovesCount === 1) return "방벨";
-        if (glovesCount >= 2) {
-            if (!chestExists && helmetCount >= 2) return "극공";
-            return "공벨";
-        }
-        return "기타";
-    }
-    
-    async function insertMatchId(rows) {
-        const pool = maria.getPool();
-
-        let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position, charName ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) `;
-        logger.debug(query);
-        logger.debug(rows);
-
-        await pool.batch(query, rows, function(err) {
-            console.log(err);
-            logger.error(err);
-            if (err) throw err;
-        });
-    }
-    
-    const updatePositionBatch = async() => {
-        const batchSize = 1000;
-        
-        while (true) {
-            const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
-            if (rows.length === 0) break;
-        
-            for (const row of rows) {
-                try {
-                    const jsonData = JSON.parse(row.jsonData);
-                    const {playerId, matchId } = jsonData;
-                    const result = jsonData.playInfo?.result ?? null;
-                    const itemPurchase = jsonData.itemPurchase ?? [];
-                    const items = jsonData.items ?? [];
-            
-                    const position = classifyBuild(itemPurchase, items);
-                    await maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
-
-                    log.info("update matchesMap %s", matchId);
-
-                } catch (err) {
-                    console.error(`❌ ID ${row.id} 처리 실패:`, err.message);
-                    // 실패했어도 진행
-                }
-            }
-        }
-    }      
 
     return app;
 }

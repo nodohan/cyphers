@@ -1,5 +1,5 @@
 const repository = require('../repository/MatchRepository.js');
-const commonUtil = require('../util/commonUtil.js');
+const commonUtil = require('../util/commonUtil');
 const api = require('../util/api');
 
 class MatchService {
@@ -10,7 +10,7 @@ class MatchService {
     
     insertMatches = async (matchType, res, day)  => {        
         try {
-            let playerIds = this.matchRepository.findRankUserList(matchType);        
+            let playerIds = await this.matchRepository.findRankUserList(matchType, day);        
             let uniqMatchList = await this.getMatchListByAPI(matchType, playerIds, day);
             let result = await this.matchRepository.insertMatchId(matchType, uniqMatchList);
             if (res) {
@@ -35,7 +35,7 @@ class MatchService {
 
         //사용자 매칭 데이터 검색 
         let promiseItems = [];
-        for (idx in rows) {
+        for (let idx in rows) {
             let playerId = rows[idx].playerId;
             let time = idx * 30;
             let item = new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ class MatchService {
         //검색 결과 Merge 후 matchId insert 
         let resultItems = await Promise.all(promiseItems);
         let matches = [];
-        for (idx in resultItems) {
+        for (let idx in resultItems) {
             if (resultItems[idx] != null) {
                 var rows = resultItems[idx].matches.rows.map(row => row.matchId);
                 Array.prototype.push.apply(matches, rows);
@@ -57,7 +57,7 @@ class MatchService {
         }
 
         const uniqMatchList = [...new Set(matches)];
-        for (idx in uniqMatchList) {
+        for (let idx in uniqMatchList) {
             logger.debug(uniqMatchList[idx]);
         }
         return uniqMatchList;
