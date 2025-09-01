@@ -60,7 +60,12 @@ const matchMapScehduler = require('./server/scheduler/matchMapScheduler')(schedu
 
 const email = require('./server/controller/emailController')(scheduler, maria, loggerCatcher);
 
+// 배치 통합
 const batch = require('./server/scheduler/BatchScheduler')(scheduler, loggerCatcher);
+
+// 캐릭 랭킹
+const charRanking = require('./server/controller/charRankingController')(loggerCatcher);
+
 
 
 app.engine('html', require('ejs').renderFile);
@@ -90,6 +95,7 @@ app.use('/provide', provider);
 app.use('/statsSeasonSche', statsSeasonSche);
 app.use('/email', email);
 app.use('/batch', batch);
+app.use('/char', charRanking);
 
 app.use(loggerCatcher());
 
