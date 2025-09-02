@@ -7,10 +7,11 @@ class MatchesMapService {
     }
 
     insertMatchMap = async (day = new Date()) => {
+        const yesterday = commonUtil.getYYYYMMDD(commonUtil.addDays(day, -1), false);
         let matchMap = [];
 
         try {
-            const rows = await this.matchesMapRepository.selectMatches(day);
+            const rows = await this.matchesMapRepository.selectMatches(yesterday);
             matchMap = this.extractPlayerId(rows);
             if(matchMap.length > 0 ) {
                 await this.matchesMapRepository.insertMatchMap(matchMap);
