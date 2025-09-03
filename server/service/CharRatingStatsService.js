@@ -14,8 +14,8 @@ class CharRatingStatsService {
         this.charRankingRepository.updateMatchesMapRating(yesterday);
     }
 
-    searchRankingForRating = async (delPosition, minRP, maxRP) => {
-        this.charRankingRepository.selectCharRankForRating(delPosition, minRP, maxRP);
+    searchRankingForRating = async (type, minNum, maxNum) => {
+        this.charRankingRepository.selectCharRankForRating(type, minNum, maxNum);
     }
 
 }

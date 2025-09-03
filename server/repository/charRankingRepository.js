@@ -9,7 +9,7 @@ class charRankingRepository {
             SELECT *, CEILING(win / total * 100) AS late
             FROM (
                 SELECT 
-                    ${type} as combi, COUNT(1) total
+                    '${type}' as combi, COUNT(1) total
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose 
                     , GROUP_CONCAT(detail.matchId) matchIds 
@@ -91,7 +91,6 @@ class charRankingRepository {
         }
     }
 
-
     updateMatchesMapRating = async (date) => {
         const query = `
             UPDATE matches_map mm
@@ -108,7 +107,23 @@ class charRankingRepository {
         }
     }
 
+    selectCharRankForRating = async(statsType, day, ratingType) => {
+        const query = `
+            select * 
+            from char_season_stats where stat_date
+            where stats_type = ? 
+            and stat_date = ? 
+            and rating_type = ? 
+            order by rate desc
+        `;
 
+        try {
+            await mariadb.doQuery(query, [statsType, day, ratingType]);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
 
 }
 

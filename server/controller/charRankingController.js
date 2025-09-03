@@ -1,10 +1,10 @@
 const commonUtil = require('../util/commonUtil');
-//const repository = require('../repository/combiRepository');
+const CharRatingStatsService = require('../service/CharRatingStatsService');
 
 
 module.exports = (acclogger) => {
     const app = require('express').Router();
-    //const combiRepository = new repository();
+    const charRatingStatsService = new CharRatingStatsService();
 
     app.use(acclogger());
 
@@ -13,12 +13,12 @@ module.exports = (acclogger) => {
         res.render('./dual/charRankView');
     });
 
-    // app.get('/combiSearch', async function (req, res) {
-    //     const { position, count = 10, order, fromDt, toDt, charName } = req.query;
-    //     const orderType = order === 'count' ? 'total' : 'late';
+    // test : /char/rank/today
+    app.get('/rank/today', async function (req, res) {
+        const { type, minNum, maxNum  } = req.query;
 
-    //     return combiRepository.combiSearch(position, count, orderType, fromDt, toDt, charName);
-    // });
+        return charRatingStatsService.searchRankingForRating(type, minNum, maxNum);
+    });
 
     return app;
 }
