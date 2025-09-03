@@ -64,7 +64,7 @@ module.exports = (scheduler, maria, acclogger) => {
         try {
             let query = `insert into nickNameSearch ( searchDate, nickname, ip ) values ( now(), ?, ? ) `;
             logger.debug(query);
-            await maria.doQuery(query, [ userName, ip]);
+            await maria.doQuery(query, [ username, ip]);
         } catch (err) {
             logger.error(err);
         }
