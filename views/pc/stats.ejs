@@ -7,9 +7,6 @@
     <script type="text/javascript">
         var myChart;
 
-        let isCharDataDesc = true;
-        let charData = [];
-
         $(document).ready(function() {
             $("#searchCharName").on("keydown", function (e) {
                 if (e.key === "Enter") {
@@ -18,7 +15,8 @@
                 }
             });
 
-            $("#sortByWinrate").on("click", toggleCharData);
+            $("#sortByWinrate").on("click", toggleCharRate);
+            $("#sortByTotalMatches").on("click", toggleTotalMatches);
 
             setDatePicker();
             $('#fromDt').on("change", callCharStats);
@@ -62,11 +60,30 @@
             return `${yyyy}-${mm}-${dd}`;
         }
 
+        let charData = [];
+        let sortBy = "rate";
+        let isRateDesc = true;
+        let isTotalMatchesDesc = true;
+
+        const initCharState = () => {
+            charData = [];
+            sortBy = "rate";
+            isRateDesc = true;
+            isTotalMatchesDesc = true;
+        };
+
         const drawCharFunc = (data) => {
             charData = data.row;
 
             let list = [...charData];
-            list.sort(isCharDataDesc ? rateDesc : rateAsc);
+
+            if (sortBy === "rate") {
+                list.sort(isRateDesc ? rateDesc : rateAsc);
+            } else if (sortBy === "totalMatches") {
+                list.sort(isTotalMatchesDesc ? totalMatchesDesc : totalMatchesAsc);
+            }
+
+            console.log(data.row);
 
             const div = $("#charRate");
             div.empty();
@@ -109,11 +126,36 @@
             searchChar();
         }
 
-        const toggleCharData = () => {
-            isCharDataDesc = !isCharDataDesc;
-            drawCharFunc({ row: charData }, isCharDataDesc);
-            document.getElementById("sortByWinrate").classList.toggle("rotate");
-        }
+        const toggleCharRate = () => {
+            if (sortBy !== "rate") {
+                isRateDesc = true;
+            } else {
+                isRateDesc = !isRateDesc;
+            }
+
+            sortBy = "rate";
+
+            drawCharFunc({ row: charData });
+
+            $("#sortByWinrate").removeClass("disabled").toggleClass("rotate");
+            $("#sortByTotalMatches").addClass("disabled").removeClass("rotate");
+        };
+
+        const toggleTotalMatches = () => {
+            if (sortBy !== "totalMatches") {
+                isTotalMatchesDesc = true;
+            } else {
+                isTotalMatchesDesc = !isTotalMatchesDesc;
+            }
+
+            sortBy = "totalMatches";
+
+            drawCharFunc({ row: charData });
+
+            $("#sortByTotalMatches").removeClass("disabled").toggleClass("rotate");
+            $("#sortByWinrate").addClass("disabled").removeClass("rotate");
+        };
+
 
         const searchChar = () => {
             const keyword = $("#searchCharName").val().toLowerCase(); // 입력값 (소문자 처리)
@@ -215,6 +257,24 @@
                 return -1;
             }
             return 0;
+        }
+
+        function totalMatchesDesc(a, b) {
+            if (a.total_matches < b.total_matches) {
+                return 1;
+            }
+            if (a.total_matches > b.total_matches) {
+                return -1;
+            }
+        }
+
+        function totalMatchesAsc(a, b) {
+            if (a.total_matches < b.total_matches) {
+                return -1;
+            }
+            if (a.total_matches > b.total_matches) {
+                return 1;
+            }
         }
 
         function setStatsWDueDate(type, item) {
@@ -352,7 +412,10 @@
                 <div class="season2025U">
                     <h4>2025U</h4>
                     <div class="charWinRate">
-                        <h5>승률순<button type="button" id="sortByWinrate" class="sortButton"></button></h5>
+                        <h5>
+                            <button type="button" id="sortByWinrate">승률순<span class="arrow"></span></button>
+                            <button type="button" id="sortByTotalMatches" class="disabled">판수순<span class="arrow"></span></button>
+                        </h5>
                         <div class="charSearch">
                             <label for="searchCharName"><span class="searchIcon"></span></label>
                             <input type="text" id="searchCharName" placeholder="캐릭터명 검색" />
