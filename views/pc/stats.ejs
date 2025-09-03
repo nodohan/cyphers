@@ -7,7 +7,7 @@
     <script type="text/javascript">
         var myChart;
 
-        let isCharRateDesc = true;
+        let isCharDataDesc = true;
         let charData = [];
 
         $(document).ready(function() {
@@ -66,7 +66,7 @@
             charData = data.row;
 
             let list = [...charData];
-            list.sort(isCharRateDesc ? rateDesc : rateAsc);
+            list.sort(isCharDataDesc ? rateDesc : rateAsc);
 
             const div = $("#charRate");
             div.empty();
@@ -110,8 +110,8 @@
         }
 
         const toggleCharData = () => {
-            isCharRateDesc = !isCharRateDesc;
-            drawCharFunc({ row: charData }, isCharRateDesc);
+            isCharDataDesc = !isCharDataDesc;
+            drawCharFunc({ row: charData }, isCharDataDesc);
             document.getElementById("sortByWinrate").classList.toggle("rotate");
         }
 
