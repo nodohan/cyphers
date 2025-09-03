@@ -23,8 +23,8 @@ module.exports = (scheduler, acclogger) => {
     });
 
     //스케쥴러 또는 웹 url call
-    var StatsTime = "00 02 * * *";
-    scheduler.scheduleJob(StatsTime, async function() {
+    var statsTime = "00 02 * * *";
+    scheduler.scheduleJob(statsTime, async function() {
         if (myConfig.schedulerRun) {
             callStatsBatch();
         }
