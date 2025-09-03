@@ -7,6 +7,9 @@
     <script type="text/javascript">
         var myChart;
 
+        let isCharRateDesc = true;
+        let charData = [];
+
         $(document).ready(function() {
             $("#searchCharName").on("keydown", function (e) {
                 if (e.key === "Enter") {
@@ -14,6 +17,8 @@
                     searchChar();
                 }
             });
+
+            $("#sortByWinrate").on("click", toggleCharData);
 
             setDatePicker();
             $('#fromDt').on("change", callCharStats);
@@ -58,44 +63,56 @@
         }
 
         const drawCharFunc = (data) => {
+            charData = data.row;
+
+            let list = [...charData];
+            list.sort(isCharRateDesc ? rateDesc : rateAsc);
+
             const div = $("#charRate");
             div.empty();
 
             let table = $(`<table id="charTemplate" class="table table-striped table-condensed">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">순위</th>
-                                        <th scope="col">캐릭터</th>
-                                        <th scope="col">판수</th>
-                                        <th scope="col">승</th>
-                                        <th scope="col">패</th>
-                                        <th scope="col">승률</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>`);
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">순위</th>
+                                <th scope="col">캐릭터</th>
+                                <th scope="col">판수</th>
+                                <th scope="col">승</th>
+                                <th scope="col">패</th>
+                                <th scope="col">승률</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>`);
+
             let tbody = table.find("tbody");
 
-            if (data.row.length == 0) {
-                let tr = "<tr><td colspan='6'>데이터가 없습니다.</td></tr>";
-                tbody.append(tr);
-            }
-
-            let idx = 0;
-            for (idx in data.row) {
-                const { char_name, total_matches: total, win_count, lose_count, rate } = data.row[idx];
-                let number = Number(idx) + 1;
-                let tr = `<tr>
+            if (list.length === 0) {
+                tbody.append("<tr><td colspan='6'>데이터가 없습니다.</td></tr>");
+            } else {
+                for (let idx in list) {
+                    const { char_name, total_matches: total, win_count, lose_count, rate } = list[idx];
+                    let number = Number(idx) + 1;
+                    let tr = `<tr>
                         <td>${number}</td>
                         <td><img data-item='${char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(char_name)}' alt="${char_name}"></td>
-                        <td>${total}</td>
-                        <td>${win_count}</td>
-                        <td>${lose_count}</td>
-                        <td>${rate}%</td>`;
-                tbody.append(tr);
+                        <td>${total.toLocaleString()}</td>
+                        <td>${win_count.toLocaleString()}</td>
+                        <td>${lose_count.toLocaleString()}</td>
+                        <td>${rate}%</td>
+                      </tr>`;
+                    tbody.append(tr);
+                }
             }
+
             div.append(table);
             searchChar();
+        }
+
+        const toggleCharData = () => {
+            isCharRateDesc = !isCharRateDesc;
+            drawCharFunc({ row: charData }, isCharRateDesc);
+            document.getElementById("sortByWinrate").classList.toggle("rotate");
         }
 
         const searchChar = () => {
@@ -156,6 +173,7 @@
         }
 
         function drawStatsList(data) {
+
             let wList = dataFilter(data.row, "weekly", "탱커", "top");
             setStatsWDueDate("weekly", wList[0]);
             drawStatsListDiv("wBestTanker", wList);
@@ -267,12 +285,6 @@
             });
             return result;
         }
-
-        const reverseTable = () => {
-            const tbody = $("#charTemplate tbody");
-            tbody.html(tbody.find("tr").get().reverse());
-            $(".sortButton").toggleClass("rotate");
-        };
     </script>
 </head>
 
@@ -340,7 +352,7 @@
                 <div class="season2025U">
                     <h4>2025U</h4>
                     <div class="charWinRate">
-                        <h5>승률순<button type="button" id="sortByWinrate" class="sortButton" onclick="reverseTable()"></button></h5>
+                        <h5>승률순<button type="button" id="sortByWinrate" class="sortButton"></button></h5>
                         <div class="charSearch">
                             <label for="searchCharName"><span class="searchIcon"></span></label>
                             <input type="text" id="searchCharName" placeholder="캐릭터명 검색" />

@@ -1558,6 +1558,7 @@ div:has(> .beforeSeason) {
     width: auto !important;
     height: auto !important;
     box-shadow: 0 0 3px #ced4da;
+    /*display: none;*/
 }
 .mainLayout .playCounter {
     border-bottom: 1px solid #ced4da;
