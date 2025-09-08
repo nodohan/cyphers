@@ -107,14 +107,12 @@ module.exports = (scheduler, maria) => {
         const last = html.data.pagination.totalPage;
 
         let rankList = makeArr(html);
-        console.log(rankList);
-
         while (++i <= last) {
             html = await getHtml(i);
-            let arr = makeArr(html);
-            console.log(arr);
+            let arr = makeArr(html);                        
             rankList.push(...arr);
         }
+        logger.debug(JSON.stringify(rankList));
         return rankList;
     }
 
@@ -144,7 +142,7 @@ module.exports = (scheduler, maria) => {
     */
     const getHtml = async(page) => {
         try {
-            return await axios.get("http://cyphers.nexon.com/ranking/total/25?page=" + page);
+            return await axios.get("http://cyphers.nexon.com/ranking/total/26?page=" + page);
         } catch (error) {
             logger.error(error);
         }
