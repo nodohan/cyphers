@@ -83,8 +83,6 @@
                 list.sort(isTotalMatchesDesc ? totalMatchesDesc : totalMatchesAsc);
             }
 
-            console.log(data.row);
-
             const div = $("#charRate");
             div.empty();
 
@@ -109,15 +107,18 @@
             } else {
                 for (let idx in list) {
                     const { char_name, total_matches: total, win_count, lose_count, rate } = list[idx];
-                    let number = Number(idx) + 1;
+                    let number = ((sortBy === "rate" && !isRateDesc) || (sortBy === "totalMatches" && !isTotalMatchesDesc))
+                        ? list.length - Number(idx)
+                        : Number(idx) + 1;
+
                     let tr = `<tr>
-                        <td>${number}</td>
-                        <td><img data-item='${char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(char_name)}' alt="${char_name}"></td>
-                        <td>${total.toLocaleString()}</td>
-                        <td>${win_count.toLocaleString()}</td>
-                        <td>${lose_count.toLocaleString()}</td>
-                        <td>${rate}%</td>
-                      </tr>`;
+                                <td>${number}</td>
+                                <td><img data-item='${char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(char_name)}' alt="${char_name}"></td>
+                                <td>${total.toLocaleString()}</td>
+                                <td>${win_count.toLocaleString()}</td>
+                                <td>${lose_count.toLocaleString()}</td>
+                                <td>${rate}%</td>
+                              </tr>`;
                     tbody.append(tr);
                 }
             }
@@ -356,12 +357,14 @@
     <%- include  ("../layout/rightBanner") %>
     <div class="playCounter">
         <h3>주간 공식 집계 판수 <i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreCountDiv" aria-expanded="true"></i></h3>
+        <div class="line"></div>
         <div id="statsCountDiv"></div>
         <div id="moreCountDiv" class="collapse"></div>
     </div>
     <div class="listWrapper">
         <article id="con1">
             <h3>최근 30일 조합</h3>
+            <div class="line"></div>
             <section>
                 <div class="bestCombi">
                     <h4>BEST 5</h4>
@@ -385,6 +388,7 @@
         </article>
         <article id="con2">
             <h3>금주 조합</h3>
+            <div class="line"></div>
             <section>
                 <div class="bestCombi">
                     <h4>BEST 5</h4>
@@ -407,7 +411,14 @@
             </section>
         </article>
         <article id="con3">
-            <h3>캐릭터 승률</h3>
+            <div class="charSearchWrapper">
+                <h3>캐릭터 승률</h3>
+                <div class="charSearch">
+                    <label for="searchCharName"><span class="searchIcon"></span></label>
+                    <input type="text" id="searchCharName" placeholder="캐릭터명 검색" />
+                </div>
+            </div>
+            <div class="line"></div>
             <section>
                 <div class="season2025U">
                     <h4>2025U</h4>
@@ -416,10 +427,6 @@
                             <button type="button" id="sortByWinrate">승률순<span class="arrow"></span></button>
                             <button type="button" id="sortByTotalMatches" class="disabled">판수순<span class="arrow"></span></button>
                         </h5>
-                        <div class="charSearch">
-                            <label for="searchCharName"><span class="searchIcon"></span></label>
-                            <input type="text" id="searchCharName" placeholder="캐릭터명 검색" />
-                        </div>
                     </div>
                     <div id="charRate">
 
