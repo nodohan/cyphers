@@ -27,7 +27,7 @@ class matchDetailCharRepository {
                 jsonData
             FROM matches mc
             INNER JOIN matches_users mu ON mu.matchId = mc.matchId 
-            WHERE matchDate >= '2025-04-10'
+            WHERE matchDate >= '2025-09-25'
             AND mu.playerId = ? limit ?`;
         return await mariadb.doQuery(query, [ playerId, limit ]);
     }

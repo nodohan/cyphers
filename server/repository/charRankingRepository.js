@@ -80,7 +80,7 @@ class charRankingRepository {
                 SUM(IF(result = 'lose', 1, 0)) AS lose_count,
                 ROUND(SUM(IF(result = 'win', 1, 0)) / COUNT(*) * 100, 2) AS rate
             FROM matches_map
-            where date(matchDate) > '2025-04-10'
+            where date(matchDate) > '2025-09-25'
             GROUP BY stat_date, charName`;
 
         try {

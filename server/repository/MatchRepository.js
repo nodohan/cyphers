@@ -21,7 +21,7 @@ class MatchRepository {
         let tableName = (matchType == 'rating') ? 'matches' : 'matches_normal';
 
         await mariadb.doQuery("DELETE FROM matchId_temp");
-        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025H' ) `;
+        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025FREE' ) `;
         logger.debug(query);
 
         const pool = mariadb.getPool();
