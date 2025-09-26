@@ -24,8 +24,14 @@ class MatchRepository {
         let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025FREE' ) `;
         logger.debug(query);
 
-        const pool = mariadb.getPool();
-        await pool.batch(query,uniqMatchList.map(id => [id]));
+        try {
+            const pool = mariadb.getPool();
+            await pool.batch(query,rows.map(id => [id]));
+            logger.debug("batch insert success, count=%d", rows.length);
+        } catch (err) {
+            logger.error("batch insert error", err);
+            throw err;
+        }
         
         let mergeQuery = `insert into ${tableName} (matchId, season) 
                         select matchId, season  

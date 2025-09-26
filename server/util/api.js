@@ -154,7 +154,7 @@ function mergeJson(mergeData, resultJson) {
       ); 
       mergeData.matches.rows = rows;
   } catch(err) {
-    console.log(err);
+    //logger.error("[%s] has not matches");
   }
   
   return mergeData;
