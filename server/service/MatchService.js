@@ -51,8 +51,8 @@ class MatchService {
         let matches = [];
         for (let idx in resultItems) {
             if (resultItems[idx] != null) {
-                var rows = resultItems[idx].matches.rows.map(row => row.matchId);
-                Array.prototype.push.apply(matches, rows);
+                const matchIds = resultItems[idx].matches.rows.map(r => r.matchId);
+                matches.push(...matchIds);
             }
         }
 

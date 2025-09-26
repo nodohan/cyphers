@@ -25,11 +25,8 @@ class MatchRepository {
         logger.debug(query);
 
         const pool = mariadb.getPool();
-        await pool.batch(query, rows.map(id => [id]), function(err) {
-            logger.error(err);
-            if (err) throw err;
-        });
-
+        await pool.batch(query,uniqMatchList.map(id => [id]));
+        
         let mergeQuery = `insert into ${tableName} (matchId, season) 
                         select matchId, season  
                         from matchId_temp 
