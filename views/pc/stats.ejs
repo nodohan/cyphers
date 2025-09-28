@@ -172,7 +172,7 @@
             });
         };
 
-        function drawCount(data) {
+        const drawCount = (data) => {
             let div = $("#statsCountDiv");
             div.empty();
 
@@ -201,6 +201,12 @@
                     }
                 }
                 trCount++;
+            }
+
+            // 한줄도 append 못한경우 (7일치 데이터가 없는경우.)
+            if(first) {
+                let newTable = table + tr + th + tbody + td + endTbody;
+                $("#statsCountDiv").append(newTable);
             }
         }
 
