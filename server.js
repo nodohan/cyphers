@@ -47,9 +47,6 @@ const nodo = require('./server/controller/nodoController')(null, maria, loggerCa
 // 스케쥴러4. 사용자 상세 통계
 const userDetail = require('./server/scheduler/userDetailScheduler')(scheduler, maria, loggerCatcher);
 
-// 스케줄러5. 매칭 유저 리스트 매핑
-const matchUserScheduler = require('./server/scheduler/matchUserScheduler')(scheduler, maria, loggerCatcher);
-
 // 스케줄러6. 시즌오프용
 const statsSeasonSche = require('./server/scheduler/statsSeasonScheduler')(scheduler, maria, loggerCatcher);
 
@@ -90,7 +87,6 @@ app.use('/seasonOff', seasonOff);
 app.use('/position', position);
 app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
-app.use('/matchUser', matchUserScheduler);
 app.use('/provide', provider);
 app.use('/statsSeasonSche', statsSeasonSche);
 app.use('/email', email);

@@ -23,12 +23,12 @@ class matchDetailCharRepository {
 
     selectMatchDetailByPlayerId = async(playerId, limit) => {
         const query = `
-        SELECT
-                jsonData
+            SELECT
+                mc.jsonData
             FROM matches mc
-            INNER JOIN matches_users mu ON mu.matchId = mc.matchId 
-            WHERE matchDate >= '2025-09-25'
-            AND mu.playerId = ? limit ?`;
+            INNER JOIN matches_map map ON map.matchId = mc.matchId 
+            WHERE mc.matchDate >= '2025-09-25'
+            AND map.playerId = ? limit ?`;
         return await mariadb.doQuery(query, [ playerId, limit ]);
     }
 
