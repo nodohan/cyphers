@@ -1527,3 +1527,163 @@ div:has(> .beforeSeason) {
     position: absolute;
     margin: 0 0 0 4px;
 }
+#statsMain .datepickerDiv {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+    float: none;
+    width: auto;
+}
+
+.renewalBody .mainLayout {
+    width: 100%; !important;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    float: none;
+}
+.mainLayout .rightBanner {
+    position: absolute;
+    left: 100%;
+    top: 40px;
+}
+.mainLayout table th {
+    padding: 8px 0;
+}
+.mainLayout table td {
+    padding: 8px 0;
+}
+.mainLayout table img {
+    width: auto !important;
+    height: auto !important;
+    box-shadow: 0 0 3px #ced4da;
+    /*display: none;*/
+}
+.mainLayout .playCounter {
+    border-bottom: 1px solid #ced4da;
+    border-radius: 8px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 3px #ced4da;
+}
+.mainLayout .playCounter table {
+    table-layout: fixed;
+    margin: 0;
+}
+.mainLayout h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #222;
+}
+.mainLayout article h3 {
+    font-weight: bold;
+    color: #222;
+}
+.mainLayout h4 {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px 0;
+}
+.mainLayout h5 {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 0;
+}
+.mainLayout h5 button {
+    background: transparent;
+    font-weight: 600;
+}
+.mainLayout h5 .disabled {
+    color: #888;
+}
+.listWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 0 0;
+    gap: 12px;
+}
+.listWrapper article {
+    flex: 1;
+    border-radius: 8px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 3px #ced4da;
+}
+.listWrapper article section {
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.listWrapper article section::-webkit-scrollbar {
+    width: 4px;  /* 스크롤바 전체 폭 */
+}
+
+.listWrapper article section::-webkit-scrollbar-track {
+    background: transparent;
+    width: 6px;
+}
+
+.listWrapper article section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2em;
+}
+
+.listWrapper article section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.listWrapper article > section > div {
+    margin: 0 0 20px 0;
+}
+.listWrapper article .bestCombi {
+    border-bottom: 1px solid #ced4da;
+}
+.charWinRate {
+    position: relative;
+}
+.charWinRate > .charSearch {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-radius: 4px;
+}
+.charWinRate > .charSearch > input {
+    border-radius: 8px;
+    border: 1px solid #222;
+    padding: 0 8px;
+    width: 160px;
+    height: 28px;
+}
+h5:has(.sortButton) {
+    position: relative;
+}
+.sortButton {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("/image/triangleIcon.svg");
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+}
+.sortButton.rotate {
+    transform: translateY(-50%) rotate(180deg);
+}
+.charSearch > input {
+    border-radius: 4px;
+    border: 1px solid #222;
+    padding: 0 8px;
+    width: 160px;
+    height: 28px;
+}
+.charSearchWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

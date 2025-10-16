@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const history = document.getElementById("renewalDetailHistory");
 
         if (!input || !history) {
-            console.warn("nickNames 또는 renewalDetailHistory 요소를 찾을 수 없습니다.");
             return;
         }
 

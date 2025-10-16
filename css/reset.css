@@ -52,3 +52,7 @@ table {
 .singleFr {
     grid-column: span 1 !important;
 }
+.line {
+    border-top: 1px solid #ced4da;
+    margin: 16px 0;
+}

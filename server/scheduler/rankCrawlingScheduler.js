@@ -60,7 +60,7 @@ module.exports = (scheduler, maria) => {
         let hasBefore = `
             INSERT INTO userRank
             SELECT 
-                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2025H', sy.rp  
+                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2025U', sy.rp  
             FROM rank_sync sy
             INNER JOIN (
                 SELECT playerId, rankNumber, nickname 
@@ -72,7 +72,7 @@ module.exports = (scheduler, maria) => {
         let emtpyBefore = `
             INSERT INTO userRank
             SELECT
-               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2025H', sy.rp 
+               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2025U', sy.rp 
             FROM (
                 SELECT distinct nm.nickname, nm.playerId FROM nickNames nm
                 INNER JOIN ( 
@@ -107,14 +107,12 @@ module.exports = (scheduler, maria) => {
         const last = html.data.pagination.totalPage;
 
         let rankList = makeArr(html);
-        console.log(rankList);
-
         while (++i <= last) {
             html = await getHtml(i);
-            let arr = makeArr(html);
-            console.log(arr);
+            let arr = makeArr(html);                        
             rankList.push(...arr);
         }
+        logger.debug(JSON.stringify(rankList));
         return rankList;
     }
 
@@ -123,6 +121,7 @@ module.exports = (scheduler, maria) => {
             return [];
         }
         let arr = [];
+        //console.log(html.data);
         html.data.rankingTopResponses.forEach(row => {
             arr.push([row.mNickname, row.ranking, row.beforeRank, row.ratingPoint])
         });
@@ -143,7 +142,7 @@ module.exports = (scheduler, maria) => {
     */
     const getHtml = async(page) => {
         try {
-            return await axios.get("http://cyphers.nexon.com/ranking/total/25?page=" + page);
+            return await axios.get("http://cyphers.nexon.com/ranking/total/27?page=" + page);
         } catch (error) {
             logger.error(error);
         }

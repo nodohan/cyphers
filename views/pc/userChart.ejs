@@ -49,7 +49,7 @@
 
             function getChartDateLabel(season) {
                 $.ajax({
-                    async: true,
+                    async: false,
                     url: "/rankChart/chartDate",
                     data: {
                         "season": season
@@ -71,7 +71,7 @@
             function searchUserRank(nickName) {
                 var result;
                 $.ajax({
-                    async: true,
+                    async: false,
                     url: "/rankChart/userRank",
                     data: {
                         'nickname': nickName,
@@ -131,8 +131,10 @@
         <div id="main">
             <div class="top" style="height:90px">
                 <div class="form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="season" id="season_2025H" value="2025H" checked/>
-                    <label class="form-check-label" for="season_2025H"> 2025H (현재)</label>&nbsp;&nbsp;&nbsp;                    
+                    <input type="radio" class="form-check-input" name="season" id="season_2025U" value="2025U" checked/>
+                    <label class="form-check-label" for="season_2025U"> 2025U (현재)</label>&nbsp;&nbsp;&nbsp;  
+                    <input type="radio" class="form-check-input" name="season" id="season_2025H" value="2025H" />
+                    <label class="form-check-label" for="season_2025H"> 2025H</label>&nbsp;&nbsp;&nbsp;                    
                     <input type="radio" class="form-check-input" name="season" id="season_2024U" value="2024U"/>
                     <label class="form-check-label" for="season_2024U"> 2024U</label>&nbsp;&nbsp;&nbsp;                    
                     <input type="radio" class="form-check-input" name="season" id="season_2024H" value="2024H" />

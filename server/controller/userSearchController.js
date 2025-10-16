@@ -110,7 +110,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         ,IF(privateYn = 'N', nickname, '비공개') nickname 
                     FROM nickNames 
                     WHERE playerId = '${playerId}' 
-                    AND checkingDate >= (NOW() - INTERVAL 1 YEAR)
+                    AND checkingDate >= (NOW() - INTERVAL 2 YEAR)
                     ORDER BY checkingDate DESC `;
 
         //logger.debug("%s", query);
@@ -148,7 +148,7 @@ module.exports = (scheduler, maria, acclogger) => {
 				, IF(pl.privateYn = 'Y', '몰?루?', ur.rankNumber) rankNumber 
 			FROM userRank ur 
 			LEFT JOIN player pl ON pl.playerId = ur.playerId 
-			WHERE rankDate in ( '2022-02-17', '2022-08-18', '2023-02-23', '2023-09-14', '2024-03-21', '2024-09-26', '2025-04-10' ) AND pl.playerId = '${playerId}' `;
+			WHERE rankDate in ( '2022-02-17', '2022-08-18', '2023-02-23', '2023-09-14', '2024-03-21', '2024-09-26', '2025-04-10', '2025-09-25' ) AND pl.playerId = '${playerId}' `;
 
         
         try {

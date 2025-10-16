@@ -7,7 +7,7 @@ const commonUtil = require("./commonUtil");
 class api {
   constructor() {
 
-    this.seasonStartDay = "2025-04-10 12:00"; //이번시즌 시작일
+    this.seasonStartDay = "2025-09-25 12:00"; //이번시즌 시작일
     this.apiKey = myConfig.apiKey;
 
     this.nickOpt = {
@@ -145,13 +145,16 @@ function mergeJson(mergeData, resultJson) {
         );
       }
 
-      let rows = mergeData.matches.rows;
+      let rows = [];
+      if (mergeData?.matches?.rows) {
+        rows = mergeData.matches.rows;
+      }
       rows = rows.filter((obj, index, self) =>
         index === self.findIndex((t) => t.matchId === obj.matchId)
       ); 
       mergeData.matches.rows = rows;
   } catch(err) {
-    console.log(err);
+    //logger.error("[%s] has not matches");
   }
   
   return mergeData;

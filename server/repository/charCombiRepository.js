@@ -15,7 +15,7 @@ class charCombiRepository {
                 win_rate_percent
             )
             SELECT
-                '${startDay}' AS stat_date,
+                '${endDay}' AS stat_date,
                 '${type}' AS stats_type,
                 role,
                 char_combo,
@@ -41,7 +41,7 @@ class charCombiRepository {
             `;
 
         try {
-            await maria.doQuery(charCombiStatsQuery);
+            await mariadb.doQuery(charCombiStatsQuery);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -64,7 +64,7 @@ class charCombiRepository {
                 WHERE stat_date = '${statsDate}'
                   AND stats_type = '${statsType}'
                   AND role = '${combiType}'
-                  AND total_matches > 100
+                  AND total_matches > ${statsType == 'weekly' ? 10 : 50}
                 ORDER BY win_rate_percent ${order}
                 LIMIT 20
             ) AS t, (SELECT @rownum := 0) AS r
@@ -73,7 +73,7 @@ class charCombiRepository {
         logger.debug(insertQuery);
     
         try {
-            await maria.doQuery(insertQuery);
+            await mariadb.doQuery(insertQuery);
         } catch (err) {
             logger.error(err);
             throw err;

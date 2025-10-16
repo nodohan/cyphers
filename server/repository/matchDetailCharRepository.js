@@ -1,6 +1,5 @@
 class matchDetailCharRepository {
-    constructor(maria) {
-        this.maria = maria;
+    constructor() {
     }
     
     selectMatchDetailByMatchDate = async(dateStr) => {
@@ -10,9 +9,8 @@ class matchDetailCharRepository {
             FROM matches 
             WHERE matchDate >= STR_TO_DATE(?, '%Y-%m-%d')
             AND matchDate < STR_TO_DATE(?, '%Y-%m-%d') + INTERVAL 1 DAY limit 3 `;
-        return await this.maria.doQuery(query,[dateStr, dateStr]);
+        return await mariadb.doQuery(query,[dateStr, dateStr]);
     }
-
 
     selectMatchDetailByMatchDateTest = async(dateStr) => {
         const query = `        
@@ -20,19 +18,18 @@ class matchDetailCharRepository {
             FROM matches 
             WHERE matchDate >= CURRENT_DATE() -2 
             AND jsonData LIKE '%1826e7c7f0becbc1e65ee644c28f0072%' `;
-        return await this.maria.doQuery(query,[dateStr, dateStr]);
+        return await mariadb.doQuery(query,[dateStr, dateStr]);
     }
-
 
     selectMatchDetailByPlayerId = async(playerId, limit) => {
         const query = `
-        SELECT
-                jsonData
+            SELECT
+                mc.jsonData
             FROM matches mc
-            INNER JOIN matches_users mu ON mu.matchId = mc.matchId 
-            WHERE matchDate >= '2025-04-10'
-            AND mu.playerId = ? limit ?`;
-        return await this.maria.doQuery(query, [ playerId, limit ]);
+            INNER JOIN matches_map map ON map.matchId = mc.matchId 
+            WHERE mc.matchDate >= '2025-09-25'
+            AND map.playerId = ? limit ?`;
+        return await mariadb.doQuery(query, [ playerId, limit ]);
     }
 
     // 
@@ -46,17 +43,17 @@ class matchDetailCharRepository {
             FROM nickNames
             GROUP BY playerId
         ) topName ON oName.playerId = topName.playerId AND oName.checkingDate = topName.MaxDate; `;
-        return await this.maria.doQuery(query);
+        return await mariadb.doQuery(query);
     }
 
     countRunningDetail = async() => {
         const query = ` SELECT COUNT(1) cnt FROM userDetail WHERE state = 'running' `;
-        return await this.maria.doQuery(query);
+        return await mariadb.doQuery(query);
     }
 
     getReserveUserFristOne = async() => {
         const query = ` SELECT playerId FROM userDetail WHERE state = 'reserve' order by reqDate asc limit 1 `;
-        return await this.maria.doQuery(query);
+        return await mariadb.doQuery(query);
     }
 
     updateUserDetailState = async(state, playerId) => {
@@ -65,7 +62,7 @@ class matchDetailCharRepository {
         SET 
             state = ?
         WHERE playerId = ? `;
-        return await this.maria.doQuery(query, [ state, playerId ]);
+        return await mariadb.doQuery(query, [ state, playerId ]);
     }
 
     insertUserDetail = async(playerId) => {
@@ -74,7 +71,7 @@ class matchDetailCharRepository {
                 (playerId, state, reqDate, regDate) 
             values 
                 (? , 'reserve', now(), now()) `;
-        return await this.maria.doQuery(query, [ playerId ]);
+        return await mariadb.doQuery(query, [ playerId ]);
     }
 
     updateUserDetail = async(state, playerId, result) => {
@@ -86,12 +83,12 @@ class matchDetailCharRepository {
             , charDetail = ?
             , complateDate = now()
         WHERE playerId = ? `;
-        return await this.maria.doQuery(query, [ state, JSON.stringify(result.vsUser), JSON.stringify(result.vsChar), playerId ]);
+        return await mariadb.doQuery(query, [ state, JSON.stringify(result.vsUser), JSON.stringify(result.vsChar), playerId ]);
     }
 
     selectDetail = async(playerId) =>  {
         const query = ` SELECT state, playerDetail, charDetail, complateDate from userDetail where playerId = ? `;
-        return await this.maria.doQuery(query, [ playerId ]);
+        return await mariadb.doQuery(query, [ playerId ]);
     }
 }
 
