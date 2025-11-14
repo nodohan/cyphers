@@ -139,12 +139,20 @@ div:has(> .inputWrap) {
     transform: translate(-50%, -50%);
     filter: invert(25%);
 }
-.searchInputWrap > div:has(.searchInput#nickNames) .searchBtn{
+.searchInputWrap > div:has(.searchInput#nickNames) .searchBtn {
     background: rgba(224, 237, 255, 0.8);
     z-index: 10;
 }
-.searchInputWrap > div:has(.searchInput#nickNames2) .searchBtn{
+.searchInputWrap > div:has(.searchInput#nickNames) .searchBtn.disabled {
+    background: #ced4da;
+    z-index: 10;
+}
+.searchInputWrap > div:has(.searchInput#nickNames2) .searchBtn {
     background: rgba(255, 235, 235, 0.8);
+    z-index: 10;
+}
+.searchInputWrap > div:has(.searchInput#nickNames2) .searchBtn.disabled {
+    background: #ced4da;
     z-index: 10;
 }
 .searchInputWrap > div:has(.searchInput)::before {
@@ -182,6 +190,18 @@ div:has(> .inputWrap) {
 }
 .searchInput#nickNames2:focus {
     outline: 2px solid rgba(236, 158, 158, 0.8);
+}
+.disabled + .searchInput#nickNames {
+    background: #ced4da99;
+}
+.disabled + .searchInput#nickNames:focus {
+    outline: 2px solid #ced4da;
+}
+.disabled + .searchInput#nickNames2 {
+    background: #ced4da99;
+}
+.disabled + .searchInput#nickNames2:focus {
+    outline: 2px solid #ced4da;
 }
 /*.searchInput + button {*/
 /*    position: absolute;*/
@@ -1460,14 +1480,32 @@ div:has(> .beforeSeason) {
     cursor: pointer;
     margin: 0 4px;
 }
+.refreshWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.refreshIcon {
+    width: 14px;
+    height: 14px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 16 16" xml:space="preserve"><g><path style="fill:%23030104;" d="M2.083,9H0.062H0v5l1.481-1.361C2.932,14.673,5.311,16,8,16c4.08,0,7.446-3.054,7.938-7h-2.021c-0.476,2.838-2.944,5-5.917,5c-2.106,0-3.96-1.086-5.03-2.729L5.441,9H2.083z"/><path style="fill:%23030104;" d="M8,0C3.92,0,0.554,3.054,0.062,7h2.021C2.559,4.162,5.027,2,8,2c2.169,0,4.07,1.151,5.124,2.876L11,7h2h0.917h2.021H16V2l-1.432,1.432C13.123,1.357,10.72,0,8,0z"/></g></svg>');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
 .infoIcon:hover + span {
+    display: block;
+}
+.refreshIcon:hover + span {
     display: block;
 }
 .infoText {
     display: none;
     position: absolute;
-    top: -8px;
-    left: calc(100% + 8px);
+    top: -10px;
+    left: calc(100% + 12px);
     width: max-content;
     padding: 8px;
     border-radius: 4px;
@@ -1480,8 +1518,8 @@ div:has(> .beforeSeason) {
 .infoText::after {
     content: "";
     position: absolute;
-    top: 18px;
-    left: -12px; /* 왼쪽에 붙일 때 */
+    top: 17px;
+    left: -12px;
     transform: translateY(-50%);
     border-width: 6px;
     border-style: solid;

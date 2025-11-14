@@ -86,12 +86,16 @@
         }
 
         function setUserInfo(gameType, divName, data) {
+            if (!removeTemp(divName)) {
+                // 더 지울 요소 없을 때 setUserInfo 실행 중단
+                return;
+            }
+
             const nickname = data.nickname;
             if (userData[nickname] == null) {
                 userData[nickname] = data;
             }
 
-            removeTemp(divName);
             const userDivId = getUserDivId(gameType, data.nickname);
             //기본 정보
             const clone = $("#template").clone();
@@ -285,7 +289,14 @@
 
         function removeTemp(divId) {
             let tempClass = divId == 'con1_2' ? 'infoDivV2Temp' : 'infoDivV3Temp';
-            $("." + tempClass).get(0).remove();
+            const tempElem = $("." + tempClass).get(0);
+            if (tempElem) {
+                tempElem.remove();
+                return true;
+            } else {
+                $(".searchBtn").addClass("disabled");
+                return false;
+            }
         }
 
         function defaultInfo(gameType, clone, data) {
@@ -697,8 +708,8 @@
     <h2>전적검색 (가로)</h2>
     <div class="searchInputWrap">
         <div>
-            <button type="button" class="searchBtn" onclick="searchInputToggle(event)"></button>
-            <input type="text" id="nickNames" class="searchInput" placeholder="아군으로 검색"
+            <button type="button" class="searchBtn disabled" onclick="searchInputToggle(event)"></button>
+            <input type="text" id="nickNames" class="searchInput" placeholder="검색 개수 초과(5건)"
                    aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
                    onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
         </div>
@@ -808,9 +819,6 @@
                 <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP3</div>
                 <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
                     <div id="cardTemp" class="" hidden>
-                        <div>
-                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                        </div>
                         <div>
                             <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
                         </div>
@@ -925,9 +933,6 @@
                 <div id="mostCharTitleDiv" class="width100p mostTitle">자주하는캐릭 TOP6</div>
                 <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
                     <div id="cardTemp" class="" hidden="">
-                        <div>
-                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
-                        </div>
                         <div>
                             <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
                         </div>
