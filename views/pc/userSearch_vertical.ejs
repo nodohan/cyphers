@@ -87,7 +87,6 @@
 
         function setUserInfo(gameType, divName, data) {
             if (!removeTemp(divName)) {
-                // 더 지울 요소 없을 때 setUserInfo 실행 중단
                 return;
             }
 
@@ -285,8 +284,6 @@
                 </div>`);
         }
 
-
-
         function removeTemp(divId) {
             let tempClass = divId == 'con1_2' ? 'infoDivV2Temp' : 'infoDivV3Temp';
             const tempElem = $("." + tempClass).get(0);
@@ -294,13 +291,23 @@
                 tempElem.remove();
                 return true;
             } else {
-                $(".searchBtn").addClass("disabled");
+                let containerDiv, btn, input;
+                if (divId == 'con1_2') {
+                    containerDiv = $("#nickNames").closest("div");
+                    btn = containerDiv.find(".searchBtn");
+                    input = containerDiv.find(".searchInput");
+                } else {
+                    containerDiv = $("#nickNames2").closest("div");
+                    btn = containerDiv.find(".searchBtn");
+                    input = containerDiv.find(".searchInput");
+                }
+                btn.addClass("disabled");
+                input.attr("placeholder", "검색 개수 초과(5건)");
                 return false;
             }
         }
 
         function defaultInfo(gameType, clone, data) {
-            //console.log("data", data);
             var records = Array.isArray(data?.records) ? data.records : [];
             var rating = records.filter(game => game.gameTypeId == gameType)[0] || {
                 loseCount: 0,
@@ -708,8 +715,9 @@
     <h2>전적검색 (가로)</h2>
     <div class="searchInputWrap">
         <div>
-            <button type="button" class="searchBtn disabled" onclick="searchInputToggle(event)"></button>
-            <input type="text" id="nickNames" class="searchInput" placeholder="검색 개수 초과(5건)"
+<!--            검색 개수 초과(5건)-->
+            <button type="button" class="searchBtn" onclick="searchInputToggle(event)"></button>
+            <input type="text" id="nickNames" class="searchInput" placeholder="아군으로 검색"
                    aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
                    onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
         </div>
