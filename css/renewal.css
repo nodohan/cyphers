@@ -192,13 +192,13 @@ div:has(> .inputWrap) {
     outline: 2px solid rgba(236, 158, 158, 0.8);
 }
 .disabled + .searchInput#nickNames {
-    background: #ced4da99;
+    background: #ced4da;
 }
 .disabled + .searchInput#nickNames:focus {
     outline: 2px solid #ced4da;
 }
 .disabled + .searchInput#nickNames2 {
-    background: #ced4da99;
+    background: #ced4da;
 }
 .disabled + .searchInput#nickNames2:focus {
     outline: 2px solid #ced4da;
