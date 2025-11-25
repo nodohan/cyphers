@@ -23,10 +23,10 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     app.get('/userRank', async function(req, res) {
-        const { nickname, season } = req.query;
+        const { nickname, season, dayType } = req.query;
 
-        try {
-            let userRankList = await searchUserRank(nickname, season);
+        try {            
+            let userRankList = await searchUserRank(nickname, season, dayType);
 
             if (userRankList == null) {
                 res.send({ resultCode: -1 });
@@ -40,9 +40,9 @@ module.exports = (scheduler, maria, acclogger) => {
         } catch(err) {
             logger.error(err);
             return res.send({ "resultCode": "400", "resultMsg": "뭐여 ㅡㅡ" });
-        }
-        
+        } 
     });
+
 
     async function chartDate(season = '2022H') {
         // 랭킹차트 축이 안그리면 버그가 생기는 이슈가 있어서 1등(group by대신)을 조회하고 날짜만 수집하여 그림
@@ -69,9 +69,11 @@ module.exports = (scheduler, maria, acclogger) => {
         return null;
     }
 
-    async function searchUserRank(userName, season = '2024U') {
+    async function searchUserRank(userName, season, dayType) {
+        const dateFormat = dayType == "full" ? "%Y-%m-%d" : "'%y%m/%e'";
+
         let query = `SELECT 
-		        		DATE_FORMAT(rankDate,'%m/%e') rankDateStr, rankNumber, rankDate 
+		        		DATE_FORMAT(rankDate, '${dateFormat}') rankDateStr, rankNumber, rankDate 
                     FROM userRank 
                     WHERE season = ?
                     and playerId = ( 
@@ -80,6 +82,8 @@ module.exports = (scheduler, maria, acclogger) => {
                         FROM nickNames WHERE nickname= ?
                         ORDER BY checkingDate DESC LIMIT 1
                     ) order by rankDate asc `;
+
+        logger.debug(query);
 
         try {
             let rows = await maria.doQuery(query, [season, userName]);

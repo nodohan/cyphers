@@ -75,7 +75,8 @@
                     url: "/rankChart/userRank",
                     data: {
                         'nickname': nickName,
-                        'season': $("input[name='season']:checked").val()
+                        'season': $("input[name='season']:checked").val(), 
+                        'dayType' : 'full'
                     },
                     success: function(data) {
                         if (data.resultCode == -1) {
