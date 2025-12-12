@@ -1725,3 +1725,33 @@ h5:has(.sortButton) {
     align-items: center;
     justify-content: space-between;
 }
+.rank-option-wrap {
+
+}
+.rank-option-wrap ul {
+    display: flex;
+    gap: 20px;
+}
+.rank-option-wrap form {
+    margin: 12px 0 0 0;
+}
+.rank-option-wrap form input[type="search"] {
+    border: 0;
+    border-bottom: 2px solid;
+    padding: 0 8px;
+    width: 200px;
+    height: 40px;
+}
+.rank-option-wrap form button {
+    font-size: 14px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.5s;
+    border-radius: 8px;
+    background: #343a40;
+    color: #fff;
+    padding: 0 16px;
+}
