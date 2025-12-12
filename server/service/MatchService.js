@@ -8,10 +8,10 @@ class MatchService {
         this.matchRepository = new repository();
     }
     
-    insertMatches = async (matchType, res, day)  => {        
+    insertMatches = async (matchType, res, startDay, endDay)  => {        
         try {
-            let playerIds = await this.matchRepository.findRankUserList(matchType, day);        
-            let uniqMatchList = await this.getMatchListByAPI(matchType, playerIds, day);
+            let playerIds = await this.matchRepository.findRankUserList(matchType, startDay);        
+            let uniqMatchList = await this.getMatchListByAPI(matchType, playerIds, startDay, endDay);
             let result = await this.matchRepository.insertMatchId(matchType, uniqMatchList);
             if (res) {
                 res.send(result > 0); // rows 를 보내주자
@@ -27,9 +27,9 @@ class MatchService {
         }
     }
 
-    getMatchListByAPI= async (matchType, rows, day) => {
-        let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(day, -1)));
-        let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(new Date(), -1)));
+    getMatchListByAPI= async (matchType, rows, startDay, endDay) => {
+        let yesterday = commonUtil.timestamp(commonUtil.setFromDay(commonUtil.addDays(startDay, -1)));
+        let today = commonUtil.timestamp(commonUtil.setEndDay(commonUtil.addDays(endDay, -1)));
 
         logger.debug("search matchList yesterday = %s, today = %s, length= %d", yesterday, today, rows.length);
 
