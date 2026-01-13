@@ -347,7 +347,7 @@
                 //클릭이벤트 설정용
                 var btn = $(body).find("#matchBtn");
                 btn.attr("id", prefixMatchId + "Btn");
-                btn.attr("data-target", "#" + prefixMatchId + "Modal");
+                btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
                 $("#modalDiv").append(body);
 
                 btn.click();
@@ -511,7 +511,7 @@
             <div class="moreDailyResultWrap">
                 <div id="dailyResult" class="dailyResult"></div>
                 <div id="moreDailyResult" class="collapse"></div>
-                <p style="text-align: center"><i class="fas fa-angle-double-down" data-toggle="collapse" data-target="#moreDailyResult" aria-expanded="true"></i></p>
+                <p style="text-align: center"><i class="fas fa-angle-double-down" data-bs-toggle="collapse" data-bs-target="#moreDailyResult" aria-expanded="true"></i></p>
             </div>
         </section>
         <section>
@@ -607,7 +607,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     </div>
@@ -639,7 +639,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title" id="templateDetailModalLabel"></h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     </div>
@@ -673,7 +673,7 @@
                 </div>
             </div>
             <div hide>
-                <a id="matchBtn" data-toggle='modal' data-target=''></a>
+                <a id="matchBtn" data-bs-toggle='modal' data-bs-target=''></a>
             </div>
         </div>
     </div>
