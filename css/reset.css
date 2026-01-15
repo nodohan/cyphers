@@ -92,3 +92,7 @@ table {
     font-weight: bold;
     color: #222;
 }
+.row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
