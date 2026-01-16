@@ -345,11 +345,9 @@
                 }
 
                 //클릭이벤트 설정용
-                var btn = $(body).find("#matchBtn");
-                btn.attr("id", prefixMatchId + "Btn");
-                btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
                 $("#modalDiv").append(body);
-
+                var myModal = new bootstrap.Modal(document.getElementById(prefixMatchId + "Modal"));
+                myModal.show();
                 btn.click();
             }
 
