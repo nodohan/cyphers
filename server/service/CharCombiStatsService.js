@@ -2,8 +2,8 @@ const repository = require('../repository/charCombiRepository');
 const commonUtil = require('../util/commonUtil'); 
 
 class CharCombiStatsService {
-    constructor() {
-        this.combiRepository = new repository();
+    constructor(maria) {
+        this.combiRepository = new repository(maria);
     }
 
     // 통계 계산 (주간/월간 기준 데이터 계산)

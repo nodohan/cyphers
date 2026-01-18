@@ -4,8 +4,8 @@ const api = require('../util/api');
 
 class MatchService {
 
-    constructor() {
-        this.matchRepository = new repository();
+    constructor(maria) {
+        this.matchRepository = new repository(maria);
     }
     
     insertMatches = async (matchType, res, startDay, endDay)  => {        

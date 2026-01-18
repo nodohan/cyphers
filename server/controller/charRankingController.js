@@ -2,9 +2,9 @@ const commonUtil = require('../util/commonUtil');
 const CharRatingStatsService = require('../service/CharRatingStatsService');
 
 
-module.exports = (acclogger) => {
+module.exports = (acclogger, maria) => {
     const app = require('express').Router();
-    const charRatingStatsService = new CharRatingStatsService();
+    const charRatingStatsService = new CharRatingStatsService(maria);
 
     app.use(acclogger());
 
@@ -17,7 +17,13 @@ module.exports = (acclogger) => {
     app.get('/rank/today', async function (req, res) {
         const { type, minNum, maxNum  } = req.query;
 
-        return charRatingStatsService.searchRankingForRating(type, minNum, maxNum);
+        try {
+            const result = await charRatingStatsService.searchRankingForRating(type, minNum, maxNum);
+            res.json(result);
+        } catch (err) {
+            logger.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     });
 
     return app;
