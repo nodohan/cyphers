@@ -855,7 +855,15 @@ function partySort(party, sort) {
 
 function playGameList(findId, div, nickname, showType, modalId) {
     modalId =  modalId || `pop${nickname}_${findId}_modal`;
+
     if ($("#" + modalId).length != 0) {
+        var existModalElement = document.getElementById(modalId);
+        var bsModal = bootstrap.Modal.getInstance(existModalElement);
+
+        if (!bsModal) {
+            bsModal = new bootstrap.Modal(existModalElement);
+        }
+        bsModal.show();
         return;
     }
 
@@ -881,9 +889,9 @@ function playGameList(findId, div, nickname, showType, modalId) {
     var body = clone.find("tbody");
     rows.forEach(row => {
         const { partyInfo, result, characterId, level
-                , killCount, deathCount, assistCount, attackPoint
-                , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
-        
+            , killCount, deathCount, assistCount, attackPoint
+            , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
+
         let matchId = row.matchId;
 
         let text =
@@ -916,7 +924,8 @@ function playGameList(findId, div, nickname, showType, modalId) {
     }
 
     div.append(clone);
-    clone.show();
+    var newModal = new bootstrap.Modal(document.getElementById(modalId));
+    newModal.show();
 }
 
 function highScore(a, b) {
