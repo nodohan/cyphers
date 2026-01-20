@@ -4,8 +4,8 @@ const commonUtil = require('../util/commonUtil');
 
 class CharRatingStatsService {
 
-    constructor() {
-        this.charRankingRepository = new repository();
+    constructor(maria) {
+        this.charRankingRepository = new repository(maria);
     }
 
     charRanking = async () =>  {
@@ -15,7 +15,7 @@ class CharRatingStatsService {
     }
 
     searchRankingForRating = async (type, minNum, maxNum) => {
-        this.charRankingRepository.selectCharRankForRating(type, minNum, maxNum);
+        return await this.charRankingRepository.selectCharRankForRating(type, minNum, maxNum);
     }
 
 }

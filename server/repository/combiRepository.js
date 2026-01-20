@@ -9,13 +9,22 @@ class CombiRepository {
         return result.cnt || 0;
     }
 
-    combiSearch = async(type, count, orderType, fromDt, toDt, charName) => {        
-        let queryParams = [];
+    combiSearch = async(type, count, orderType, fromDt, toDt, charName) => {
+        // Whitelist validation for orderType to prevent SQL injection.
+        const allowedOrderTypes = ['total', 'late'];
+        const safeOrderType = allowedOrderTypes.includes(orderType) ? orderType : 'late';
+
+        // IMPORTANT: The 'type' parameter is used as a column name, which cannot be parameterized.
+        // This is a potential SQL injection risk if the input is not sanitized.
+        // A proper fix would be to validate 'type' against a whitelist of allowed column names.
+        const safeType = type.replace(/[^a-zA-Z0-9_]/g, '');
+
+        let queryParams = [fromDt, toDt];
         let query = `
             SELECT *, CEILING(win / total * 100) AS late
             FROM (
                 SELECT 
-                    ${type} as combi, COUNT(1) total
+                    ${safeType} as combi, COUNT(1) total
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose 
                     , GROUP_CONCAT(detail.matchId) matchIds 
@@ -31,7 +40,8 @@ class CombiRepository {
         if (charName) {
             let charNames = charName.split(" ");
             for (let idx in charNames) {
-                query += ` AND "${type}" LIKE ?`;
+                // Corrected to use the sanitized column name
+                query += ` AND ${safeType} LIKE ?`;
                 queryParams.push(`%${charNames[idx]}%`);
             }
     
@@ -40,12 +50,12 @@ class CombiRepository {
             }
         }
     
-        query += ` GROUP BY ${type}
+        query += ` GROUP BY ${safeType}
             ) a 
             WHERE total >= ?
-            ORDER BY ${orderType} DESC`;
+            ORDER BY ${safeOrderType} DESC`;
     
-        queryParams.push(fromDt, toDt, count);
+        queryParams.push(count);
     
         logger.debug(query);
     

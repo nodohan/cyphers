@@ -5,14 +5,14 @@ const CharRatingStatsService = require('../service/CharRatingStatsService');
 const CharCombiStatsService = require('../service/CharCombiStatsService');
 const MatchesMapService = require('../service/MatchesMapService');
 
-module.exports = (scheduler, acclogger) => {
+module.exports = (scheduler, acclogger, maria) => {
     const app = require('express').Router();        
     app.use(acclogger());
     
-    const matchService = new MatchService();
-    const charCombiStatsService = new CharCombiStatsService();
-    const charRatingStatsService = new CharRatingStatsService();
-    const matchesMapService = new MatchesMapService();
+    const matchService = new MatchService(maria);
+    const charCombiStatsService = new CharCombiStatsService(maria);
+    const charRatingStatsService = new CharRatingStatsService(maria);
+    const matchesMapService = new MatchesMapService(maria);
 
     //스케쥴러 또는 웹 url call
     var matchIdTime = "30 00 * * *";

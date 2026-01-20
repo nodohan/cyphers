@@ -4,7 +4,7 @@
   "description": "cyphers-google-cloud",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
   },
   "keywords": [
@@ -36,5 +36,9 @@
     "undici": "^6.21.2",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.2.2"
   }
 }

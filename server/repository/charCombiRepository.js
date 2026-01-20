@@ -1,6 +1,6 @@
 class charCombiRepository {
-    constructor() {
-
+    constructor(maria) {
+        this.maria = maria;
     }
 
     calcCombiDate = async (type, startDay, endDay) => {
@@ -15,8 +15,8 @@ class charCombiRepository {
                 win_rate_percent
             )
             SELECT
-                '${endDay}' AS stat_date,
-                '${type}' AS stats_type,
+                ? AS stat_date,
+                ? AS stats_type,
                 role,
                 char_combo,
                 COUNT(*) AS total_matches,
@@ -33,7 +33,7 @@ class charCombiRepository {
                     END AS role,
                     GROUP_CONCAT(charName ORDER BY charName ASC) AS char_combo
                 FROM matches_map
-                WHERE matchDate BETWEEN '${startDay}' AND '${endDay}'
+                WHERE matchDate BETWEEN ? AND ?
                 GROUP BY matchId, result, role
             ) AS combos
             GROUP BY role, char_combo
@@ -41,7 +41,7 @@ class charCombiRepository {
             `;
 
         try {
-            await mariadb.doQuery(charCombiStatsQuery);
+            await this.maria.doQuery(charCombiStatsQuery, [endDay, type, startDay, endDay]);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -49,6 +49,10 @@ class charCombiRepository {
     }
     
     insertStats = async (statsDate, statsType, combiType, order, rankType) => {
+        // Whitelist validation for dynamic, non-parameterizable values
+        const safeOrder = ['ASC', 'DESC'].includes(order.toUpperCase()) ? order.toUpperCase() : 'DESC';
+        const totalMatchesThreshold = statsType === 'weekly' ? 10 : 50;
+        
         const insertQuery = `
             INSERT INTO char_combi_stats_ranked (
                 stat_date, stats_type, role, char_combo, total_matches,
@@ -57,23 +61,25 @@ class charCombiRepository {
             SELECT 
                 stat_date, stats_type, role, char_combo, total_matches,
                 win_count, win_rate_percent,
-                '${rankType}' AS rank_type,
+                ? AS rank_type,
                 @rownum := @rownum + 1 AS rank_no
             FROM (
                 SELECT * FROM char_combi_stats
-                WHERE stat_date = '${statsDate}'
-                  AND stats_type = '${statsType}'
-                  AND role = '${combiType}'
-                  AND total_matches > ${statsType == 'weekly' ? 10 : 50}
-                ORDER BY win_rate_percent ${order}
+                WHERE stat_date = ?
+                  AND stats_type = ?
+                  AND role = ?
+                  AND total_matches > ?
+                ORDER BY win_rate_percent ${safeOrder}
                 LIMIT 20
             ) AS t, (SELECT @rownum := 0) AS r
         `;
     
+        const queryParams = [rankType, statsDate, statsType, combiType, totalMatchesThreshold];
+    
         logger.debug(insertQuery);
     
         try {
-            await mariadb.doQuery(insertQuery);
+            await this.maria.doQuery(insertQuery, queryParams);
         } catch (err) {
             logger.error(err);
             throw err;
