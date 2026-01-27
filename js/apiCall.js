@@ -1074,7 +1074,7 @@ function drawCharCardVer(div, charInfo, nickname) {
 
 const drawDailyResult = (div, dailyMap) => {
     let table = "<table class='table table-bordered table-striped'>";
-    let tr = "<thead><tr>"; 
+    let tr = "<thead><tr>";
     let tbody = "<tbody><tr>";
     let endTbody = "</tr></tbody></table>";
 
@@ -1084,10 +1084,13 @@ const drawDailyResult = (div, dailyMap) => {
     let first = true;
     let columnNum = isMobile ? 4 : 7;
 
+    const totalSize = dailyMap.size;
+
     dailyMap.forEach(function(item, key) {
         th += `<th>${key}</th>`;
         td += `<td>${item.win}승 ${item.lose}패 </td>`;
-        if (trCount % columnNum == 0) {
+
+        if (trCount % columnNum == 0 || trCount === totalSize) {
             let newTable = table + tr + th + tbody + td + endTbody;
             th = "";
             td = "";
