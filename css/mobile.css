@@ -323,3 +323,7 @@ table, td, th {
 .secondChar {
     height: 29px;
 }
+.row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}

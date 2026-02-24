@@ -5,14 +5,14 @@ const CharRatingStatsService = require('../service/CharRatingStatsService');
 const CharCombiStatsService = require('../service/CharCombiStatsService');
 const MatchesMapService = require('../service/MatchesMapService');
 
-module.exports = (scheduler, acclogger) => {
+module.exports = (scheduler, acclogger, maria) => {
     const app = require('express').Router();        
     app.use(acclogger());
     
-    const matchService = new MatchService();
-    const charCombiStatsService = new CharCombiStatsService();
-    const charRatingStatsService = new CharRatingStatsService();
-    const matchesMapService = new MatchesMapService();
+    const matchService = new MatchService(maria);
+    const charCombiStatsService = new CharCombiStatsService(maria);
+    const charRatingStatsService = new CharRatingStatsService(maria);
+    const matchesMapService = new MatchesMapService(maria);
 
     //스케쥴러 또는 웹 url call
     var matchIdTime = "30 00 * * *";
@@ -34,11 +34,11 @@ module.exports = (scheduler, acclogger) => {
     callMatchIdBatch = async () => {
         // "30 00 * * *";
         logger.info("call match rating scheduler");
-        await matchService.insertMatches('rating', null, new Date());
+        await matchService.insertMatches('rating', null, new Date(), new Date());
         logger.info("end match rating scheduler");
 
         logger.info("call match rating scheduler");
-        await matchService.insertMatches('normal', null, new Date());
+        await matchService.insertMatches('normal', null, new Date(), new Date());
         logger.info("end match rating scheduler");
     }
 
@@ -58,14 +58,14 @@ module.exports = (scheduler, acclogger) => {
         logger.info("batch end");
     }
 
-    //test  ( "/batch/insertMatches?matchType=rating&day=2025-08-27" )
+    //test  ( "/batch/insertMatches?matchType=rating&startDay=2025-11-19&endDay=2025-11-21" )
     app.get('/insertMatches', function(req, res) {
         if (!commonUtil.isMe(req)) {
             return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
         }
 
-        const {matchType, day } = req.query;
-        return matchService.insertMatches(matchType, res, new Date(day));
+        const {matchType, startDay, endDay } = req.query;
+        return matchService.insertMatches(matchType, res, new Date(startDay), new Date(endDay));
     });
     
 

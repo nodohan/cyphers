@@ -142,7 +142,7 @@ module.exports = (scheduler, maria) => {
     */
     const getHtml = async(page) => {
         try {
-            return await axios.get("http://cyphers.nexon.com/ranking/total/27?page=" + page);
+            return await axios.get("http://cyphers.nexon.com/ranking/total/28?page=" + page);
         } catch (error) {
             logger.error(error);
         }

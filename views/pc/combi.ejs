@@ -87,7 +87,7 @@
                 var yesterdayStr = yesterday.toISOString().slice(0, 10);
 
                 $('#fromDt').datepicker({
-                    uiLibrary: 'bootstrap4',
+                    uiLibrary: 'bootstrap5',
                     iconsLibrary: 'fontawesome',
                     locale: 'kr-ko',
                     minDate: '2025-09-25',
@@ -97,7 +97,7 @@
                 });
 
                 $('#toDt').datepicker({
-                    uiLibrary: 'bootstrap4',
+                    uiLibrary: 'bootstrap5',
                     iconsLibrary: 'fontawesome',
                     locale: 'kr-ko',
                     format: 'yyyy-mm-dd',
@@ -260,8 +260,8 @@
             <div id="con2" class="con">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="wTanker-tab" data-toggle="tab" href="#wTanker" role="tab" aria-controls="wTanker" aria-selected="true">금주의탱커</a>
-                        <a class="nav-link" id="wAttack-tab" data-toggle="tab" href="#wAttack" role="tab" aria-controls="wAttack" aria-selected="false">금주의딜러</a>
+                        <a class="nav-link active" id="wTanker-tab" data-bs-toggle="tab" href="#wTanker" role="tab" aria-controls="wTanker" aria-selected="true">금주의탱커</a>
+                        <a class="nav-link" id="wAttack-tab" data-bs-toggle="tab" href="#wAttack" role="tab" aria-controls="wAttack" aria-selected="false">금주의딜러</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
@@ -305,7 +305,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                         </div>

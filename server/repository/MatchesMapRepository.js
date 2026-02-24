@@ -1,6 +1,6 @@
 class MatchesMapRepository {
-    constructor() {
-
+    constructor(maria) {
+        this.maria = maria;
     }
     
     selectMatches = async(day) =>  {
@@ -14,12 +14,12 @@ class MatchesMapRepository {
             LEFT JOIN (
                 select matchId from matches_map group by matchId
             ) map ON map.matchId = ma.matchId 
-            WHERE matchDate >= '${day}' AND map.matchId IS NULL
+            WHERE matchDate >= ? AND map.matchId IS NULL
         ) limit 3000`;
        
         logger.debug(query);
 
-        return await mariadb.doQuery(query);
+        return await this.maria.doQuery(query, [day]);
     }
     
     getUserMatchesMap =  async (playerId) => {
@@ -36,7 +36,7 @@ class MatchesMapRepository {
             GROUP BY playerId, POSITION
             `;
        
-        return await mariadb.doQuery(query, [ playerId ]);
+        return await this.maria.doQuery(query, [ playerId ]);
     }
 
     teamRate = async (playerIds) => {
@@ -48,13 +48,13 @@ class MatchesMapRepository {
             FROM matches_map
             WHERE playerId IN (${playerStr})
             GROUP BY matchId, result
-            HAVING COUNT(playerId) >= ${cnt}
+            HAVING COUNT(playerId) >= ?
         `;
 
         //logger.info("query: %s", query);
 
         try {
-            return await mariadb.doQuery(query, [ ... playerIds ]);
+            return await this.maria.doQuery(query, [ ...playerIds, cnt ]);
         } catch (err){
             logger.err(err);
         }
@@ -62,7 +62,7 @@ class MatchesMapRepository {
     }
     
     insertMatchMap = async (rows) => {
-        const pool = mariadb.getPool();
+        const pool = this.maria.getPool();
 
         let query = `INSERT INTO matches_map (matchId, playerId, jsonData, matchDate, result, position, charName ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) `;
         logger.debug(query);

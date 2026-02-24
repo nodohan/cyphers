@@ -2,8 +2,9 @@ const MatchesMapRepository = require('../repository/MatchesMapRepository');
 const commonUtil = require('../util/commonUtil'); 
 
 class MatchesMapService {
-    constructor() {
-        this.matchesMapRepository = new MatchesMapRepository();
+    constructor(maria) {
+        this.matchesMapRepository = new MatchesMapRepository(maria);
+        this.maria = maria;
     }
 
     insertMatchMap = async (day = new Date()) => {
@@ -75,7 +76,7 @@ class MatchesMapService {
         const batchSize = 1000;
         
         while (true) {
-            const rows = await maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
+            const rows = await this.maria.doQuery(`SELECT jsonData FROM matches_map WHERE position IS NULL ORDER BY matchId ASC LIMIT ?`,[batchSize]);           
             if (rows.length === 0) break;
         
             for (const row of rows) {
@@ -87,7 +88,7 @@ class MatchesMapService {
                     const items = jsonData.items ?? [];
             
                     const position = this.classifyBuild(itemPurchase, items);
-                    await mariadb.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
+                    await this.maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
 
                     log.info("update matchesMap %s", matchId);
 

@@ -5,7 +5,7 @@ const MatchesMapService = require('../service/MatchesMapService');
 module.exports = (scheduler, maria) => {
     const app = require('express').Router();
 
-    const matchesMapService = new MatchesMapService();
+    const matchesMapService = new MatchesMapService(maria);
     
     //test  ( "/matchesMap/insertMatchesMap?day=2025-06-10" )
     app.get('/insertMatchesMap', async function(req, res) {

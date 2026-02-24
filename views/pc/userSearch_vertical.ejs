@@ -86,12 +86,15 @@
         }
 
         function setUserInfo(gameType, divName, data) {
+            if (!removeTemp(divName)) {
+                return;
+            }
+
             const nickname = data.nickname;
             if (userData[nickname] == null) {
                 userData[nickname] = data;
             }
 
-            removeTemp(divName);
             const userDivId = getUserDivId(gameType, data.nickname);
             //기본 정보
             const clone = $("#template").clone();
@@ -281,15 +284,30 @@
                 </div>`);
         }
 
-
-
         function removeTemp(divId) {
             let tempClass = divId == 'con1_2' ? 'infoDivV2Temp' : 'infoDivV3Temp';
-            $("." + tempClass).get(0).remove();
+            const tempElem = $("." + tempClass).get(0);
+            if (tempElem) {
+                tempElem.remove();
+                return true;
+            } else {
+                let containerDiv, btn, input;
+                if (divId == 'con1_2') {
+                    containerDiv = $("#nickNames").closest("div");
+                    btn = containerDiv.find(".searchBtn");
+                    input = containerDiv.find(".searchInput");
+                } else {
+                    containerDiv = $("#nickNames2").closest("div");
+                    btn = containerDiv.find(".searchBtn");
+                    input = containerDiv.find(".searchInput");
+                }
+                btn.addClass("disabled");
+                input.attr("placeholder", "검색 개수 초과(5건)");
+                return false;
+            }
         }
 
         function defaultInfo(gameType, clone, data) {
-            //console.log("data", data);
             var records = Array.isArray(data?.records) ? data.records : [];
             var rating = records.filter(game => game.gameTypeId == gameType)[0] || {
                 loseCount: 0,
@@ -666,9 +684,9 @@
                 const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
                 let moreAlink;
                 if (isMap) {
-                    moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
+                    moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
                 } else {
-                    moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+                    moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
                 }
 
                 infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br><small class='text-muted'>${type.rateInfo}</small>`;
@@ -697,6 +715,7 @@
     <h2>전적검색 (가로)</h2>
     <div class="searchInputWrap">
         <div>
+<!--            검색 개수 초과(5건)-->
             <button type="button" class="searchBtn" onclick="searchInputToggle(event)"></button>
             <input type="text" id="nickNames" class="searchInput" placeholder="아군으로 검색"
                    aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton"
@@ -809,7 +828,7 @@
                 <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
                     <div id="cardTemp" class="" hidden>
                         <div>
-                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                            <img class="card-img-top" src="" alt="">
                         </div>
                         <div>
                             <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
@@ -926,7 +945,7 @@
                 <div id="mostCharDetailDiv" class="mostCharDetailDivV2 mostCharItem">
                     <div id="cardTemp" class="" hidden="">
                         <div>
-                            <img class="card-img-top" src="http://static.cyphers.co.kr/img/game_position/position1.jpg">
+                            <img class="card-img-top" src="" alt="">
                         </div>
                         <div>
                             <p id="tankerSpan" class="card-text mostWinrate">0% <br> <small class="">0승<br>0패</small></p>
@@ -982,7 +1001,7 @@
 
             <div id="recentlyDiv" class="width100p recentlyDiv">
                 <div class="width100p recentGame" id="recentlyDivTitle">최근 게임:
-                <span class="blue">패</span> <span class="blue">패</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="blue">패</span> <span class="blue">패</span> <span class="blue">패</span> <a data-toggle="modal" data-target="#">&nbsp;<i class="fa fa-search-plus" style="font-size:15px;color:black"></i></a></div>
+                <span class="blue">패</span> <span class="blue">패</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="red">승</span> <span class="blue">패</span> <span class="blue">패</span> <span class="blue">패</span> <a data-bs-toggle="modal" data-bs-target="#">&nbsp;<i class="fa fa-search-plus" style="font-size:15px;color:black"></i></a></div>
             </div>
 
             <div class="overlay"></div>
@@ -997,7 +1016,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="templateModalLabel">최근 10게임</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>

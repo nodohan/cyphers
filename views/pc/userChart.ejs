@@ -2,173 +2,287 @@
 <html lang="ko">
 
 <head>
-    <%- include  ("../layout/head") %>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%- include ("../layout/head") %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
-        <script type="text/javascript">
-            var myChart;
-            const config = {
-                type: 'line',
-                options: {
-                    scales: {
-                        y: {
-                            reverse: true,
-                            min: 0,
-                            max: 10,
-                        },
+    <script type="text/javascript">
+        var myChart;
+
+        const config = {
+            type: 'line',
+            data: {
+                datasets: [],
+                labels: []
+            },
+            options: {
+                animation: {
+                    duration: 0
+                },
+                transitions: {
+                    resize: {
+                        animation: {
+                            duration: 0
+                        }
                     }
+                },
+                maintainAspectRatio: false, // 이 설정 추가 (캔버스 height 속성 무시)
+                clip: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '위';
+                                }
+                                return label;
+                            }
+                        }
+                    },
+
+                    legend: {
+                        onClick: function(e, legendItem, legend) {
+                            const chart = legend.chart;
+                            const index = legendItem.datasetIndex;
+
+                            if (chart.isDatasetVisible(index)) {
+                                chart.hide(index);
+                            } else {
+                                chart.show(index);
+                            }
+
+                            let isAnyVisible = false;
+                            for (let i = 0; i < chart.data.datasets.length; i++) {
+                                if (chart.isDatasetVisible(i)) {
+                                    isAnyVisible = true;
+                                    break;
+                                }
+                            }
+
+                            chart.options.scales.x.ticks.display = isAnyVisible;
+                            chart.options.scales.x.grid.display = isAnyVisible;
+
+                            chart.options.scales.y.ticks.display = isAnyVisible;
+                            chart.options.scales.y.grid.display = isAnyVisible;
+
+                            chart.update();
+                        }
+                    }
+
+                },
+                elements: {
+                    line: {
+                        tension: 0.05
+                    },
+                    point: {
+                        radius: 2,
+                        hoverRadius: 4,
+                        hitRadius: 20,
+                        pointStyle: 'circle'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            tooltipFormat: 'yyyy-MM-dd',
+                            displayFormats: {
+                                day: 'MM-dd'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '날짜',
+                        },
+                        // 초기 상태: 숨김
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        reverse: true,
+                        min: 1,
+                        title: {
+                            display: true,
+                            text: '순위',
+                        },
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+            }
+        };
+
+        $(document).ready(function() {
+            $("#mainMenu").removeClass("active");
+            $("#userChart").addClass("active");
+
+            myChart = new Chart($("#myChart"), config);
+
+            $("input[name='season']").on("change", resetChart);
+        });
+
+        function userRankSearch() {
+            const $nickInput = $("#nickNames");
+            const nickName = $nickInput.val().trim();
+
+            if (!nickName) {
+                alert("닉네임을 입력해주세요.");
+                return;
+            }
+
+            const exists = myChart.data.datasets.some(ds => ds.label === nickName);
+            if (exists) {
+                alert("이미 추가된 사용자입니다.");
+                $nickInput.val("");
+                return;
+            }
+
+            $nickInput.val("");
+
+            searchUserRank(nickName);
+        }
+
+        function searchUserRank(nickName) {
+            const currentSeason = $("input[name='season']:checked").val();
+
+            $.ajax({
+                async: true,
+                url: "/rankChart/userRank",
+                data: {
+                    'nickname': nickName,
+                    'season': currentSeason,
+                    'dayType': 'full'
+                },
+                success: function(data) {
+                    if (data.resultCode == -1) {
+                        alert(nickName + "님의 정보가 없습니다.");
+                    } else {
+                        drawRank(nickName, data);
+                    }
+                },
+                error: function() {
+                    alert(nickName + "님의 정보가 없습니다.");
                 }
+            }).done(function() {
+
+            });
+        }
+
+        function drawRank(nickName, row) {
+            // 차트 영역 보이게 하기 (추가된 부분)
+            $("#con1").show();
+
+            const color = 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')';
+
+            const dataset = {
+                label: nickName,
+                data: row,
+                borderColor: color,
+                backgroundColor: color,
+                borderWidth: 2
             };
 
-            $(document).ready(function() {
-                $("input[type='text']").css("width", "15%");
+            myChart.data.datasets.push(dataset);
+            myChart.options.scales.x.ticks.display = true;
+            myChart.options.scales.x.grid.display = true;
+            myChart.options.scales.y.ticks.display = true;
+            myChart.options.scales.y.grid.display = true;
 
-                $("#mainMenu").removeClass("active");
-                $("#userChart").addClass("active");
+            myChart.update();
+        }
 
-                myChart = new Chart($("#myChart"), config);
+        function resetChart() {
+            // 차트 영역 숨기기 (추가된 부분)
+            $("#con1").hide();
 
-                $("input[name='season']").on("change", resetChart);
-                getChartDateLabel($("input[name='season']:checked").val());
-            });
+            myChart.data.datasets = [];
+            myChart.data.labels = [];
+            myChart.options.scales.x.ticks.display = false;
+            myChart.options.scales.x.grid.display = false;
+            myChart.options.scales.y.ticks.display = false;
+            myChart.options.scales.y.grid.display = false;
 
-            function resetChart() {
-                myChart.data.datasets = [];
-                myChart.data.labels = [];
-                myChart.update();
-
-                getChartDateLabel($("input[name='season']:checked").val());
-            }
-
-            function userRankSearch() {
-                let nickName = $("#nickNames").val();
-                $("#nickNames").val("");
-
-                searchUserRank(nickName, drawRank);
-            }
-
-            function getChartDateLabel(season) {
-                $.ajax({
-                    async: false,
-                    url: "/rankChart/chartDate",
-                    data: {
-                        "season": season
-                    },
-                    success: function(data) {
-                        if (data.resultCode == -1) {
-                            return;
-                        }
-                        drawRank('날짜축', data, true);
-                    },
-                    error: function(data) {
-                        return;
-                    }
-                }).done(function() {
-
-                });
-            }
-
-            function searchUserRank(nickName) {
-                var result;
-                $.ajax({
-                    async: false,
-                    url: "/rankChart/userRank",
-                    data: {
-                        'nickname': nickName,
-                        'season': $("input[name='season']:checked").val()
-                    },
-                    success: function(data) {
-                        if (data.resultCode == -1) {
-                            alert(nickName + "님의 정보가 없습니다.");
-                            return;
-                        }
-                        drawRank(nickName, data);
-                    },
-                    error: function(data) {
-                        alert(nickName + "님의 정보가 없습니다.");
-                        return;
-                    }
-                }).done(function() {
-
-                });
-                return result;
-            }
-
-            function drawRank(nickName, row, hide = false) {
-
-                let dataset = {
-                    label: nickName,
-                    data: row,
-                    hidden: hide,
-                    fill: false,
-                    borderColor: 'rgb(' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ', ' + getRandomInt(0, 255) + ')',
-                }
-                addData(dataset);
-            }
-
-            function getRandomInt(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
-            }
-
-            function addData(data) {
-                const max = config.options.scales.y.max;
-                let rowMax = Math.max(...data.data.map(arr => arr[1]));
-                if (max < rowMax) {
-                    config.options.scales.y.max = rowMax;
-                }
-
-                myChart.data.datasets.push(data);
-                myChart.update();
-            }
-        </script>
+            myChart.update();
+        }
+    </script>
 </head>
 
-<body class="body">
-    <%- include  ("../layout/menu") %>
+<body class="body renewalBody">
+<%- include  ("../layout/menu") %>
 
-        <div id="main">
-            <div class="top" style="height:90px">
-                <div class="form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="season" id="season_2025U" value="2025U" checked/>
-                    <label class="form-check-label" for="season_2025U"> 2025U (현재)</label>&nbsp;&nbsp;&nbsp;  
-                    <input type="radio" class="form-check-input" name="season" id="season_2025H" value="2025H" />
-                    <label class="form-check-label" for="season_2025H"> 2025H</label>&nbsp;&nbsp;&nbsp;                    
-                    <input type="radio" class="form-check-input" name="season" id="season_2024U" value="2024U"/>
-                    <label class="form-check-label" for="season_2024U"> 2024U</label>&nbsp;&nbsp;&nbsp;                    
-                    <input type="radio" class="form-check-input" name="season" id="season_2024H" value="2024H" />
-                    <label class="form-check-label" for="season_2024H"> 2024H</label>&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="form-check-input" name="season" id="season_2023U" value="2023U" />
-                    <label class="form-check-label" for="season_2023U"> 2023U</label>&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="form-check-input" name="season" id="season_2023H" value="2023H" />
-                    <label class="form-check-label" for="season_2023H"> 2023H </label>&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="form-check-input" name="season" id="season_2022U" value="2022U" />
-                    <label class="form-check-label" for="season_2022U"> 2022U </label>&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="form-check-input" name="season" id="season_2022H" value="2022H" />
-                    <label class="form-check-label" for="season_2022H"> 2022H </label>&nbsp;&nbsp;&nbsp;
-                    <input type="radio" class="form-check-input" name="season" id="season_2021U" value="2021U" />
+<div id="main" class="content">
+    <div class="inner">
+        <!-- 카카오 광고 -->
+        <%- include  ("../layout/rightBanner") %>
+        <div class="card-layout rank-option-wrap">
+            <h3>랭킹추이</h3>
+            <div class="line"></div>
+            <ul>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2025U" value="2025U" checked/>
+                    <label class="form-check-label" for="season_2025U"> 2025U (현재)</label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2025H" value="2025H" />
+                    <label class="form-check-label" for="season_2025H"> 2025H</label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2024U" value="2024U"/>
+                    <label class="form-check-label" for="season_2024U"> 2024U</label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2024H" value="2024H" />
+                    <label class="form-check-label" for="season_2024H"> 2024H</label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2023U" value="2023U" />
+                    <label class="form-check-label" for="season_2023U"> 2023U</label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2023H" value="2023H" />
+                    <label class="form-check-label" for="season_2023H"> 2023H </label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2022U" value="2022U" />
+                    <label class="form-check-label" for="season_2022U"> 2022U </label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2022H" value="2022H" />
+                    <label class="form-check-label" for="season_2022H"> 2022H </label>
+                </li>
+                <li>
+                    <input type="radio" class="" name="season" id="season_2021U" value="2021U" />
                     <label class="form-check-label" for="season_2021U"> 2021U </label>
-                </div>
-                <div style="margin-top: 10px;">
-                    <input type="text" class="shortText" id="nickNames" onKeyPress="if(event.keyCode == 13) { userRankSearch(); } " placeholder="닉네임" />
-                    <input type="button" value="검색" onClick="userRankSearch();">
-                    <input type="button" value="초기화" onClick="resetChart();">
-                </div>
+                </li>
+            </ul>
+            <form role="search" onsubmit="event.preventDefault(); userRankSearch();">
+                <input type="search" id="nickNames" class="shortText" placeholder="닉네임 검색" title="닉네임 검색" />
+                <button type="submit">검색</button>
+                <button type="button" onclick="resetChart();">초기화</button>
+            </form>
 
 
-            </div>
-            <div id="con1" class="con" style="width:87%">
-                <h3>랭킹추이</h3>
-                <div id="con1_2" class="table-responsive">
-                    <canvas id="myChart" width="900" height="400"></canvas>
-                </div>
-
-            </div>
-
-            <!-- 카카오 광고 -->
-            <%- include  ("../layout/rightBanner") %>
         </div>
+        <div id="con1" class="" style="display: none;">
+            <div id="con1_2" class="table-responsive" style="position: relative; height: 600px;">
+                <canvas id="myChart" width="900" height="400" class="card-layout" style="margin: 20px 0 0 0;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 

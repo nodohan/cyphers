@@ -306,8 +306,8 @@ function drawInGameList(data) {
              <td class='kda'>${(playInfo.damagePoint / 1000).toFixed(0)}K</td>
              <td class='kda'>${((playInfo.spendConsumablesCoin / playInfo.getCoin) * 100).toFixed(0)}%</td>
              <td>
-                <i class='fas fa-angle-double-down' data-toggle='collapse' 
-                    data-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
+                <i class='fas fa-angle-double-down' data-bs-toggle='collapse' 
+                    data-bs-target='.m${matchId}' onClick='searchMatch("${matchId}")' >
              </td>
         </tr>
         <tr>
@@ -370,8 +370,8 @@ function drawInGameDetail(matchId, data, trClass) {
     let itemInfoId = `m${matchId}_${data.playerId}`;
     //const itemInfoId = `m${matchId}_items`;
     score += `<td>
-                <i class="fas fa-angle-double-down" data-toggle="collapse" 
-                    data-target=".${itemInfoId}" aria-expanded="true">
+                <i class="fas fa-angle-double-down" data-bs-toggle="collapse" 
+                    data-bs-target=".${itemInfoId}" aria-expanded="true">
                 </i>
             </td>
         </tr>
@@ -490,7 +490,7 @@ function drawRecently(div, rows, userDivId) {
     }
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
     title.append(titleText);
-    title.append(`<a data-toggle='modal' data-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+    title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
 
     $("#modalDiv").append(body);
 }
@@ -577,9 +577,9 @@ function appendPlayTypeInfo(div, type, typeId, positionName, nickname) {
         const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
         let moreAlink;
         if(isMap) {
-            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
+            moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameMapList('${positionName}', '${mapName}', 'position');">${moreIcon}</a>`;
         } else {
-            moreAlink = `<a href='#' data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
+            moreAlink = `<a href='#' data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameList('${positionName}', null, '${nickname}', 'position', '${modalId}' );">${moreIcon}</a>`;
         }
         
         infoStr = `${type.rate.toFixed(0)}% ${moreAlink}<br><small class='text-muted'>${type.rateInfo}</small>`;
@@ -677,14 +677,14 @@ function drawPartyType(userDivId, clone, row) {
     if (partyJson.two.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>2인</span>: ${partyJson.two.win}승 ${partyJson.two.lose}패 
-            <a data-toggle='collapse' href='#two${userDivId}' role='button' 
+            <a data-bs-toggle='collapse' href='#two${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='two${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
         index++;
     }
     if (partyJson.three.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>3인</span>: ${partyJson.three.win}승 ${partyJson.three.lose}패 
-            <a data-toggle='collapse' href='#three${userDivId}' role='button' 
+            <a data-bs-toggle='collapse' href='#three${userDivId}' role='button' 
                 aria-expanded='false' aria-controls='three${userDivId}' >${moreIcon}</a>  ]&nbsp;`;
         index++;
     }
@@ -694,14 +694,14 @@ function drawPartyType(userDivId, clone, row) {
         }
         appendHtml +=
             `&nbsp;[ <span class='blue'>4인</span>: ${partyJson.four.win}승 ${partyJson.four.lose}패 
-            <a data-toggle='collapse' href='#four${userDivId}' role='button' 
+            <a data-bs-toggle='collapse' href='#four${userDivId}' role='button' 
 	            aria-expanded='false' aria-controls='four${userDivId}' >${moreIcon}</a>  ]`;
     }
 
     if (partyJson.five.count != 0) {
         appendHtml +=
             `&nbsp;[ <span class='blue'>5인</span>: ${partyJson.five.win}승 ${partyJson.five.lose}패 
-            <a data-toggle='collapse' href='#five${userDivId}' role='button' 
+            <a data-bs-toggle='collapse' href='#five${userDivId}' role='button' 
 	            aria-expanded='false' aria-controls='five${userDivId}' >${moreIcon}</a>  ]`;
     }
     appendHtml += "<br><div class='row'>";
@@ -855,7 +855,15 @@ function partySort(party, sort) {
 
 function playGameList(findId, div, nickname, showType, modalId) {
     modalId =  modalId || `pop${nickname}_${findId}_modal`;
+
     if ($("#" + modalId).length != 0) {
+        var existModalElement = document.getElementById(modalId);
+        var bsModal = bootstrap.Modal.getInstance(existModalElement);
+
+        if (!bsModal) {
+            bsModal = new bootstrap.Modal(existModalElement);
+        }
+        bsModal.show();
         return;
     }
 
@@ -881,9 +889,9 @@ function playGameList(findId, div, nickname, showType, modalId) {
     var body = clone.find("tbody");
     rows.forEach(row => {
         const { partyInfo, result, characterId, level
-                , killCount, deathCount, assistCount, attackPoint
-                , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
-        
+            , killCount, deathCount, assistCount, attackPoint
+            , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
+
         let matchId = row.matchId;
 
         let text =
@@ -898,7 +906,7 @@ function playGameList(findId, div, nickname, showType, modalId) {
                 <td class='kda'>${(damagePoint / 1000).toFixed(0)}k</td>
                 <td class='kda'>${((spendConsumablesCoin / getCoin) * 100).toFixed(0)}%</td>
                 <td>
-                    <i class='fas fa-angle-double-down' data-toggle='collapse' data-target='.char_${matchId}' 
+                    <i class='fas fa-angle-double-down' data-bs-toggle='collapse' data-bs-target='.char_${matchId}' 
                         onClick='searchMatch("${matchId}", null, "char_")' >
                 </td>
                 </tr>
@@ -916,7 +924,8 @@ function playGameList(findId, div, nickname, showType, modalId) {
     }
 
     div.append(clone);
-    clone.show();
+    var newModal = new bootstrap.Modal(document.getElementById(modalId));
+    newModal.show();
 }
 
 function highScore(a, b) {
@@ -1036,12 +1045,12 @@ function drawCharCardVer(div, charInfo, nickname) {
     if(!isMap) {
         let modalId = `pop${nickname}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-        let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;
+        let moreAlink = `<a href='#'  data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameList('${characterId}', null, '${nickname}');">${moreIcon}</a>`;
         cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;    
     } else {
         let modalId = `pop${nickname}_${mapName}_${characterId}_modal`;
         let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
-        let moreAlink = `<a href='#'  data-toggle="modal" data-target="#${modalId}" onClick="javascript:playGameMapList('${characterId}', '${mapName}');">${moreIcon}</a>`;
+        let moreAlink = `<a href='#'  data-bs-toggle="modal" data-bs-target="#${modalId}" onClick="javascript:playGameMapList('${characterId}', '${mapName}');">${moreIcon}</a>`;
         cardText = `${pov.toFixed(0)}% ${moreAlink} <br/> <small class='text-muted'>${win}승 ${lose}패</small>`;    
     }
     
@@ -1065,7 +1074,7 @@ function drawCharCardVer(div, charInfo, nickname) {
 
 const drawDailyResult = (div, dailyMap) => {
     let table = "<table class='table table-bordered table-striped'>";
-    let tr = "<thead><tr>"; 
+    let tr = "<thead><tr>";
     let tbody = "<tbody><tr>";
     let endTbody = "</tr></tbody></table>";
 
@@ -1075,10 +1084,13 @@ const drawDailyResult = (div, dailyMap) => {
     let first = true;
     let columnNum = isMobile ? 4 : 7;
 
+    const totalSize = dailyMap.size;
+
     dailyMap.forEach(function(item, key) {
         th += `<th>${key}</th>`;
         td += `<td>${item.win}승 ${item.lose}패 </td>`;
-        if (trCount % columnNum == 0) {
+
+        if (trCount % columnNum == 0 || trCount === totalSize) {
             let newTable = table + tr + th + tbody + td + endTbody;
             th = "";
             td = "";

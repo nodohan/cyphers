@@ -56,3 +56,43 @@ table {
     border-top: 1px solid #ced4da;
     margin: 16px 0;
 }
+.inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+.content {
+    width: 100% !important;
+    position: relative;
+    padding: 40px 0;
+}
+.inner .rightBanner {
+    width: auto;
+    position: absolute;
+    float: none;
+    top: 0;
+    left: calc(100% + 20px);
+    margin: 0;
+}
+.input-type-text {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+.card-layout {
+    border-bottom: 1px solid #ced4da;
+    border-radius: 8px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 3px #ced4da;
+}
+.card-layout h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #222;
+}
+.row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}

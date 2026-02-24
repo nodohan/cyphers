@@ -82,3 +82,6 @@ charMap.set('키아라', 'e95cf83fbb35243fac1ef42b8a40314b');
 charMap.set('베로니카', '6b9f3c8bf6b1e43d2f5c7361c47ac33e');
 charMap.set('주세페', '4f108bf6580428e6f69c837d3e1d5706');
 charMap.set('루카', '9daea482979d99d7f150a538f2dca5d1');
+charMap.set('엔데카', 'ac5cf15d9d4ce68c552f473010c5ec11');
+charMap.set('앤지 헌트', '6cef18da6526670928b419b5c1bfcf5b');
+

@@ -1,15 +1,15 @@
 class charRankingRepository {
-    constructor() {
-
+    constructor(maria) {
+        this.maria = maria;
     }
 
     combiSearch = async(type, count, orderType, fromDt, toDt, charName) => {        
-        let queryParams = [];
+        let queryParams = [fromDt, toDt];
         let query = `
             SELECT *, CEILING(win / total * 100) AS late
             FROM (
                 SELECT 
-                    '${type}' as combi, COUNT(1) total
+                    ? as combi, COUNT(1) total
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose 
                     , GROUP_CONCAT(detail.matchId) matchIds 
@@ -21,12 +21,14 @@ class charRankingRepository {
                     WHERE matchDate BETWEEN ? AND ?
                 ) matches ON matches.matchId = detail.matchId
                 WHERE 1=1`;
-    
+        
+        queryParams.push(type);
+
         if (charName) {
             let charNames = charName.split(" ");
             for (let idx in charNames) {
-                query += ` AND "${type}" LIKE ?`;
-                queryParams.push(`%${charNames[idx]}%`);
+                query += ` AND ? LIKE ?`;
+                queryParams.push(type, `%${charNames[idx]}%`);
             }
     
             if (charNames.length >= 3) {
@@ -34,12 +36,12 @@ class charRankingRepository {
             }
         }
     
-        query += ` GROUP BY ${type}
+        query += ` GROUP BY ?
             ) a 
             WHERE total >= ?
-            ORDER BY ${orderType} DESC`;
+            ORDER BY ? DESC`;
     
-        queryParams.push(fromDt, toDt, count);
+        queryParams.push(type, count, orderType);
     
         logger.debug(query);
     
@@ -58,11 +60,11 @@ class charRankingRepository {
                 SUM(IF(result = 'lose', 1, 0)) AS lose_count,
                 ROUND(SUM(IF(result = 'win', 1, 0)) / COUNT(*) * 100, 2) AS rate
             FROM matches_map
-            where date(matchDate) = '${date}'
+            where date(matchDate) = ?
             GROUP BY stat_date, charName`;
 
         try {
-            await mariadb.doQuery(insertQuery);
+            await this.maria.doQuery(insertQuery, [date]);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -73,7 +75,7 @@ class charRankingRepository {
         const insertQuery = `
             INSERT INTO char_season_stats (stat_date, char_name, total_matches, win_count, lose_count, rate)
             SELECT 
-                '${date}' AS stat_date,
+                ? AS stat_date,
                 charName,
                 COUNT(*) AS total_matches,
                 SUM(IF(result = 'win', 1, 0)) AS win_count,
@@ -84,7 +86,7 @@ class charRankingRepository {
             GROUP BY stat_date, charName`;
 
         try {
-            await mariadb.doQuery(insertQuery);
+            await this.maria.doQuery(insertQuery, [date]);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -94,13 +96,13 @@ class charRankingRepository {
     updateMatchesMapRating = async (date) => {
         const query = `
             UPDATE matches_map mm
-            INNER JOIN (select * from userRank where rankDate = '${date}' )  ur
+            INNER JOIN (select * from userRank where rankDate = ? )  ur
             ON mm.playerId = ur.playerId
             AND DATE(mm.matchDate) = ur.rankDate
             SET mm.rating = ur.rp`;
     
         try {
-            await mariadb.doQuery(query);
+            await this.maria.doQuery(query, [date]);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -110,7 +112,7 @@ class charRankingRepository {
     selectCharRankForRating = async(statsType, day, ratingType) => {
         const query = `
             select * 
-            from char_season_stats where stat_date
+            from char_season_stats
             where stats_type = ? 
             and stat_date = ? 
             and rating_type = ? 
@@ -118,7 +120,7 @@ class charRankingRepository {
         `;
 
         try {
-            await mariadb.doQuery(query, [statsType, day, ratingType]);
+            return await this.maria.doQuery(query, [statsType, day, ratingType]);
         } catch (err) {
             logger.error(err);
             throw err;

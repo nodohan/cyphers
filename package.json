@@ -4,7 +4,7 @@
   "description": "cyphers-google-cloud",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
   },
   "keywords": [
@@ -13,8 +13,9 @@
   "author": "nodohan",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.8.2",
-    "bootstrap": "^4.6.0",
+    "axios": "^1.12.0",
+    "bootstrap": "^5.3.3",
+    "brace-expansion": "^2.0.2",
     "chart.js": "^3.6.0",
     "check-ie": "^2.0.1",
     "cheerio": "^1.0.0-rc.10",
@@ -22,18 +23,22 @@
     "ejs": "^3.1.8",
     "express": "^4.21.0",
     "express-rate-limit": "^7.5.0",
+    "form-data": "^4.0.4",
     "is-mobile": "^3.0.0",
     "mariadb": "^3.0.2",
     "multer": "^2.0.1",
     "node-fetch": "^3.3.2",
     "node-schedule": "^2.0.0",
-    "nodemailer": "^7.0.3",
+    "nodemailer": "^7.0.7",
+    "qs": "^6.14.1",
     "querystring": "^0.2.1",
     "serve-favicon": "^2.5.0",
     "undici": "^6.21.2",
-    "brace-expansion": "^2.0.2",
-    "form-data": "^4.0.4",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.2.2"
   }
 }

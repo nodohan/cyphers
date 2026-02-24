@@ -143,7 +143,7 @@ module.exports = (scheduler, maria, acclogger) => {
             return;
         }
 
-        let query = `SELECT 
+        const query = `SELECT 
 				ur.rankDate, ur.nickname, ur.rp, ur.season 
 				, IF(pl.privateYn = 'Y', '몰?루?', ur.rankNumber) rankNumber 
 			FROM userRank ur 
