@@ -30,7 +30,15 @@ module.exports = (scheduler, maria, acclogger) => {
         await insertStats('2024-09-26', '2025-04-10', "2024U", "TANKER", "DESC");
         await insertStats('2024-09-26', '2025-04-10', "2024U", "TANKER", "ASC");
         await insertStats('2024-09-26', '2025-04-10', "2024U", "ALL", "DESC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "ALL", "ASC");        
+        await insertStats('2024-09-26', '2025-04-10', "2024U", "ALL", "ASC");
+        
+        // New season 2026H
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "ATTACK", "DESC");
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "ATTACK", "ASC");
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "TANKER", "DESC");
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "TANKER", "ASC");
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "ALL", "DESC");
+        await insertStats('2026-02-26', '2026-02-26', "2026H", "ALL", "ASC");        
     }
 
     async function insertStats(startDate, endDate, statsType, combiType, order) {
@@ -76,7 +84,7 @@ module.exports = (scheduler, maria, acclogger) => {
         let query = `
             INSERT INTO char_stats
             SELECT 
-                '2025U' season, charName
+                '2026H' season, charName
                 , total, win, lose
                 , CEILING( win / total * 100 ) AS rate 
             FROM ( 
@@ -86,7 +94,7 @@ module.exports = (scheduler, maria, acclogger) => {
                     , COUNT(IF(matchResult = '승', 1, NULL)) win
                     , COUNT(IF(matchResult = '패', 1, NULL)) lose
                 FROM matches_char 
-                WHERE matchDate BETWEEN '2024-09-25' AND '2025-04-10'
+                WHERE matchDate >= '2026-02-26'
                 GROUP BY charName
             ) aa `;
     }
