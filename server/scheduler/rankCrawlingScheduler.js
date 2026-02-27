@@ -60,7 +60,7 @@ module.exports = (scheduler, maria) => {
         let hasBefore = `
             INSERT INTO userRank
             SELECT 
-                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2025U', sy.rp  
+                '${today}', sy.rankNumber, ur.playerId, sy.nickname, '2026H_FREE', sy.rp  
             FROM rank_sync sy
             INNER JOIN (
                 SELECT playerId, rankNumber, nickname 
@@ -72,7 +72,7 @@ module.exports = (scheduler, maria) => {
         let emtpyBefore = `
             INSERT INTO userRank
             SELECT
-               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2025U', sy.rp 
+               '${today}', sy.rankNumber, ln.playerId, sy.nickname, '2026H_FREE', sy.rp 
             FROM (
                 SELECT distinct nm.nickname, nm.playerId FROM nickNames nm
                 INNER JOIN ( 
@@ -103,14 +103,22 @@ module.exports = (scheduler, maria) => {
 
     async function getRankList() {
         let i = 1;
-        let html = await getHtml(i++);
-        const last = html.data.pagination.totalPage;
+        let html = await getHtml(i);
+        
+        if (!html || !html.data || !html.data.pagination) {
+            logger.warn("Ranking data or pagination info is missing.");
+            return [];
+        }
 
+        const last = html.data.pagination.totalPage;
         let rankList = makeArr(html);
+
         while (++i <= last) {
             html = await getHtml(i);
-            let arr = makeArr(html);                        
-            rankList.push(...arr);
+            if (html && html.data) {
+                let arr = makeArr(html);                        
+                rankList.push(...arr);
+            }
         }
         logger.debug(JSON.stringify(rankList));
         return rankList;
