@@ -56,10 +56,10 @@ const matchMapScehduler = require('./server/scheduler/matchMapScheduler')(schedu
 const email = require('./server/controller/emailController')(scheduler, maria, loggerCatcher);
 
 // 배치 통합
-const batch = require('./server/scheduler/BatchScheduler')(scheduler, loggerCatcher);
+const batch = require('./server/scheduler/BatchScheduler')(scheduler, loggerCatcher, maria);
 
 // 캐릭 랭킹
-const charRanking = require('./server/controller/charRankingController')(loggerCatcher);
+const charRanking = require('./server/controller/charRankingController')(loggerCatcher, maria);
 
 
 
