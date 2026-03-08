@@ -21,6 +21,13 @@ module.exports = (scheduler, maria, acclogger) => {
         }
     });
 
+    app.get('/hidden', function(req, res) {
+        if (!commonUtil.isMe(req)) {
+            res.redirect("/");
+        }
+        res.render('./pc/hidden');
+    });
+
     app.get('/userNickname', async function(req, res) {
         // 나님 체크 
         if (!commonUtil.isMe(req)) {
@@ -87,6 +94,20 @@ module.exports = (scheduler, maria, acclogger) => {
         let todayHiddenNickNames = await nodoRepository.selectTodayHiddenNicknames(playerId, todayYYYYMMDD);
 
         res.send({ "resultCode": resultCode, "resultMsg": todayHiddenNickNames });
+    });
+
+    app.get('/registPunishedUser', async function(req, res) {
+        if (!commonUtil.isMe(req)) {
+            return res.send({ "resultCode": 400, "resultMsg": "권한 없음" });
+        }
+        const { nickname, reason, punishDate } = req.query;
+        try {
+            await nodoRepository.insertPunishedUser(nickname, reason, punishDate);
+            res.send({ "resultCode": 200, "resultMsg": "성공" });
+        } catch (err) {
+            logger.error(err);
+            res.status(500).send({ "resultCode": 500, "resultMsg": "오류발생" });
+        }
     });
 
 

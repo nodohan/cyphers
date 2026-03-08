@@ -23,8 +23,29 @@
                 $("#mainMenu").removeClass("active");
                 $("#userHistory").addClass("active");
 
-                ajaxCall("/history/getUserSearchRank", null,drawRank);
+                ajaxCall("/history/getUserSearchRank", null, drawRank);
+                fetchPunishedUsers();
             });
+
+            function fetchPunishedUsers() {
+                $.ajax({
+                    url: "/history/punishedUsers",
+                    success: function(data) {
+                        let html = "";
+                        if (!data || data.length == 0) {
+                            html = "<div>기록이 없습니다.</div>";
+                        } else {
+                            data.forEach(row => {
+                                html += "<div>";
+                                html += "<label> <b>" + row.punish_date + "</b> </label> ";
+                                html += "<label>" + row.nickname + " - " + row.reason + "</label>";
+                                html += "</div>";
+                            });
+                        }
+                        $("#punishedUserList").html(html);
+                    }
+                });
+            }
 
             function drawRank(data) {
                 let tbody = $("#searchRankTable").find("tbody");
@@ -155,15 +176,7 @@
                 <h3>비공개 해지</h3>
                 <label>닉네임 비공개 신청을 하였으나, 특정 사유가 발생하여 해지된 사용자 리스트</label>
 
-                <div id="con1_2" class="infoLayerHalf">
-                    <div>
-                        <label> <b>2025-08-30</b> </label>
-                        <label>공방악동 - 성희롱, 다만 해당닉이 2년이 넘음</label>
-                    </div>
-                    <div>
-                        <label> <b>2025-08-11</b> </label>
-                        <label>Tsumugi - 핵쟁이</label>
-                    </div>
+                <div id="punishedUserList" class="infoLayerHalf">
                 </div>
             </div>
 

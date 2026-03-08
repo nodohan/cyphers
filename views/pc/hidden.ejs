@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include  ("../layout/head") %>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#mainMenu").removeClass("active");
+        });
+
+        function registPunishedUser() {
+            const data = {
+                "nickname": $("#punish_nickname").val(),
+                "reason": $("#punish_reason").val(),
+                "punishDate": $("#punish_date").val()
+            };
+
+            if(!data.nickname || !data.reason || !data.punishDate) {
+                alert("모든 항목을 입력해주세요.");
+                return;
+            }
+
+            ajaxCall("/nodo/registPunishedUser", data, (result) => {
+                if(result.resultCode == 200) {
+                    alert("등록 성공");
+                    $("#punish_nickname").val("");
+                    $("#punish_reason").val("");
+                } else {
+                    alert(result.resultMsg);
+                }
+            });
+        }
+    </script>
+</head>
+
+<body class="body">
+    <%- include  ("../layout/menu") %>
+    <div id="main">
+        <div id="con1" class="width45p">
+            <h3>박제 유저 등록 (6개월 관리)</h3>
+            <div class="input-group input-group-default mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">닉네임</span>
+                </div>
+                <input type="text" id="punish_nickname" class="form-control">
+            </div>
+            <div class="input-group input-group-default mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">사유</span>
+                </div>
+                <input type="text" id="punish_reason" class="form-control">
+            </div>
+            <div class="input-group input-group-default mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">날짜</span>
+                </div>
+                <input type="date" id="punish_date" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-danger" type="button" onClick="registPunishedUser();">박제 등록</button>
+                </div>
+            </div>
+            <script>
+                // 오늘 날짜 기본값 설정
+                document.getElementById('punish_date').value = new Date().toISOString().substring(0, 10);
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
