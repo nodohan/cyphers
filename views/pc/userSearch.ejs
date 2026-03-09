@@ -5,6 +5,41 @@
 
     <%- include  ("../layout/head") %>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
+        <style>
+            .rank-info-box {
+                display: flex;
+                align-items: center;
+                background: linear-gradient(135deg, #fff5f0 0%, #fff 100%);
+                border: 1px solid #ffd8c4;
+                border-radius: 8px;
+                padding: 8px 15px;
+                margin-top: 10px;
+                margin-bottom: 5px;
+                box-shadow: 0 2px 4px rgba(255, 69, 0, 0.05);
+                width: max-content;
+            }
+            .rank-info-text {
+                display: flex;
+                flex-direction: column;
+                margin-right: 15px;
+            }
+            .rank-label {
+                font-size: 0.8em;
+                color: #888;
+                font-weight: 600;
+                letter-spacing: -0.5px;
+            }
+            .rank-value {
+                font-size: 1.2em;
+                color: #ff4500;
+                font-weight: bold;
+                margin-top: 2px;
+            }
+            .rank-sparkline-svg {
+                vertical-align: middle;
+                overflow: visible;
+            }
+        </style>
         <script type="text/javascript">
             pageName = "pcUserSearch";
 
@@ -351,6 +386,20 @@
                     item.find("#currRP").text(data.ratingPoint);
                     item.find("#maxRP").text("(" + data.maxRatingPoint + ")");
                 }
+                
+                // 최신 랭킹 표시 및 히스토리 차트
+                if (data.latestRank) {
+                    item.find("#rankBadgeContainer").show();
+                    item.find("#latestRankDiv").text(`${data.latestRank}위`);
+                }
+                
+                if (data.rankHistory && data.rankHistory.length > 1) {
+                    const sparkline = createRankSparkline(data.rankHistory);
+                    item.find("#rankChartDiv").html(sparkline);
+                } else {
+                    item.find("#rankChartDiv").empty();
+                }
+
                 item.find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
 
                 let tot = rating.winCount + rating.loseCount + rating.stopCount;
@@ -365,6 +414,47 @@
                     item.find(".tackRemove").show();
                 }
 
+            }
+
+            function createRankSparkline(history) {
+                const width = 120;
+                const height = 35;
+                const padding = 4;
+                
+                const ranks = history.map(h => h.rankNumber);
+                const minRank = Math.min(...ranks);
+                const maxRank = Math.max(...ranks);
+                const range = maxRank - minRank || 1;
+                
+                const points = history.map((h, i) => {
+                    const x = (i / (history.length - 1)) * (width - padding * 2) + padding;
+                    // 랭킹은 낮을수록(1위에 가까울수록) 위에 그려야 하므로 Y축 계산 주의
+                    const y = ((h.rankNumber - minRank) / range) * (height - padding * 2) + padding;
+                    return `${x},${y}`;
+                });
+                
+                const pointsStr = points.join(" ");
+                
+                // 영역 그라데이션을 위한 path 데이터 생성
+                let pathD = `M ${padding},${height} `;
+                pathD += points.map((p, i) => (i === 0 ? `L ${p}` : `L ${p}`)).join(" ");
+                const lastX = points[points.length-1].split(',')[0];
+                const lastY = points[points.length-1].split(',')[1];
+                pathD += ` L ${lastX},${height} Z`;
+                
+                return `
+                    <svg width="${width}" height="${height}" class="rank-sparkline-svg">
+                        <defs>
+                            <linearGradient id="rankGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#ff4500" stop-opacity="0.3" />
+                                <stop offset="100%" stop-color="#ff4500" stop-opacity="0.0" />
+                            </linearGradient>
+                        </defs>
+                        <path d="${pathD}" fill="url(#rankGradient)" />
+                        <polyline points="${pointsStr}" fill="none" stroke="#ff4500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="${lastX}" cy="${lastY}" r="3" fill="#fff" stroke="#ff4500" stroke-width="1.5" />
+                    </svg>
+                `;
             }
 
             function drawSeasonRank(data) {
@@ -571,6 +661,15 @@
                     </div>
                     <div class="tackRemove" style="display:none">
                         <i class='fas fa-window-close' style='font-size:18px;color:red'></i>
+                    </div>
+                </div>
+                <div id="rankBadgeContainer" style="display:none;">
+                    <div class="rank-info-box">
+                        <div class="rank-info-text">
+                            <!-- <span class="rank-label">오늘의 랭킹</span> -->
+                            <span id="latestRankDiv" class="rank-value"></span>
+                        </div>
+                        <div id="rankChartDiv"></div>
                     </div>
                 </div>
                 <div class="width100p">

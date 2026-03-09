@@ -18,6 +18,10 @@ class CharRatingStatsService {
         return await this.charRankingRepository.selectCharRankForRating(type, minNum, maxNum);
     }
 
+    getLatestUserRanking = async () => {
+        return await this.charRankingRepository.selectLatestRanking();
+    }
+
 }
 
 module.exports = CharRatingStatsService;

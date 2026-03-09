@@ -127,6 +127,21 @@ class charRankingRepository {
         }
     }
 
+    selectLatestRanking = async() => {
+        const query = `
+            SELECT * 
+            FROM userRank 
+            WHERE rankDate = (SELECT MAX(rankDate) FROM userRank)
+            ORDER BY rankNumber ASC
+        `;
+        try {
+            return await this.maria.doQuery(query);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
 }
 
 module.exports = charRankingRepository;
