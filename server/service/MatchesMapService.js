@@ -90,7 +90,7 @@ class MatchesMapService {
                     const position = this.classifyBuild(itemPurchase, items);
                     await this.maria.doQuery(`UPDATE matches_map SET result = ?, position = ? WHERE matchId = ? and playerId = ?`, [result, position, matchId, playerId]);
 
-                    log.info("update matchesMap %s", matchId);
+                    logger.info("update matchesMap %s", matchId);
 
                 } catch (err) {
                     console.error(`❌ ID ${row.id} 처리 실패:`, err.message);

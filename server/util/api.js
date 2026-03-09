@@ -7,7 +7,7 @@ const commonUtil = require("./commonUtil");
 class api {
   constructor() {
 
-    this.seasonStartDay = "2025-09-25 12:00"; //이번시즌 시작일
+    this.seasonStartDay = "2026-02-26 12:00"; //이번시즌 시작일
     this.apiKey = myConfig.apiKey;
 
     this.nickOpt = {

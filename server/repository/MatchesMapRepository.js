@@ -56,7 +56,7 @@ class MatchesMapRepository {
         try {
             return await this.maria.doQuery(query, [ ...playerIds, cnt ]);
         } catch (err){
-            logger.err(err);
+            logger.error(err);
         }
         return null;
     }

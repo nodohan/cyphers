@@ -35,8 +35,6 @@ const combi = require('./server/controller/combiController')(scheduler, maria, l
 //스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
 const statsSche = require('./server/scheduler/statsScheduler')(scheduler, maria, loggerCatcher);
 
-// 포지션 특성 - 컨트롤러
-const position = require('./server/controller/positionController')(scheduler, maria, loggerCatcher);
 
 //스케쥴러3. 조합통계 - 주간/월간 (메인페이지용)
 const stats = require('./server/controller/statsController')(scheduler, maria, loggerCatcher);
@@ -58,10 +56,10 @@ const matchMapScehduler = require('./server/scheduler/matchMapScheduler')(schedu
 const email = require('./server/controller/emailController')(scheduler, maria, loggerCatcher);
 
 // 배치 통합
-const batch = require('./server/scheduler/BatchScheduler')(scheduler, loggerCatcher);
+const batch = require('./server/scheduler/BatchScheduler')(scheduler, loggerCatcher, maria);
 
 // 캐릭 랭킹
-const charRanking = require('./server/controller/charRankingController')(loggerCatcher);
+const charRanking = require('./server/controller/charRankingController')(loggerCatcher, maria);
 
 
 
@@ -84,7 +82,6 @@ app.use('/combi', combi);
 app.use('/statsSche', statsSche);
 app.use('/stats', stats);
 app.use('/seasonOff', seasonOff);
-app.use('/position', position);
 app.use('/nodo', nodo);
 app.use('/userDetail', userDetail);
 app.use('/provide', provider);

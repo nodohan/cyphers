@@ -67,6 +67,25 @@ class nodoRepository {
 
         return await this.maria.doQuery(updatePlayerQuery, [ reason, playerId ]);
     }
+
+    selectPunishedUsers = async() => {
+        const query = `
+            SELECT 
+                nickname, reason, DATE_FORMAT(punish_date, '%Y-%m-%d') as punish_date
+            FROM punished_users
+            WHERE punish_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            ORDER BY punish_date DESC;
+        `;
+        return await this.maria.doQuery(query);
+    }
+
+    insertPunishedUser = async(nickname, reason, punishDate) => {
+        const query = `
+            INSERT INTO punished_users (nickname, reason, punish_date)
+            VALUES (?, ?, ?);
+        `;
+        return await this.maria.doQuery(query, [nickname, reason, punishDate]);
+    }
 }
 
 module.exports = nodoRepository;

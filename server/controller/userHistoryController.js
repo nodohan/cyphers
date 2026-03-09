@@ -1,8 +1,11 @@
 const commonUtil = require('../util/commonUtil');
 const api = require('../util/api');
+const repository = require('../repository/nodoRepository');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
+    const nodoRepository = new repository(maria);
+
     app.use(acclogger());
 
     app.get('/nicknameHistory', function(req, res) {
@@ -182,6 +185,16 @@ module.exports = (scheduler, maria, acclogger) => {
 
         return null;
     }
+
+    app.get('/punishedUsers', async function(req, res) {
+        try {
+            const rows = await nodoRepository.selectPunishedUsers();
+            res.send(rows);
+        } catch (err) {
+            logger.error(err);
+            res.status(500).send({ "resultCode": 500, "resultMsg": "오류발생" });
+        }
+    });
 
     return app;
 }

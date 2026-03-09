@@ -33,7 +33,7 @@ class MatchRepository {
         }
 
         await this.maria.doQuery("DELETE FROM matchId_temp");
-        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2025U' ) `;
+        let query = `INSERT INTO matchId_temp (matchId, season) VALUES ( ?, '2026H' ) `;
         logger.debug(query);
 
         try {

@@ -23,7 +23,6 @@
   - <a href='http://doseh.co.kr/user/userDetail'> 상세 검색 </a>
   - <a href='http://doseh.co.kr/user/userVs'> VS(갈등을빚자) </a>
   - <a href='http://doseh.co.kr/combi/combi'> 조합통계 </a>
-  - <a href='http://doseh.co.kr/position/positionAttr'> 특성통계 </a>
   - <a href='http://doseh.co.kr/rankChart/userChart'> 차트 </a>
   - <a href='http://doseh.co.kr/history/nicknameHistory'> 닉변이력 </a>
   - <a href='http://doseh.co.kr/stats/stats2022h'> 2022H 결산 </a>
