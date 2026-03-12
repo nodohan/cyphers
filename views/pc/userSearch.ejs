@@ -20,7 +20,7 @@
             }
             .rank-info-text {
                 display: flex;
-                flex-direction: column;
+                align-items: baseline;
                 margin-right: 15px;
             }
             .rank-label {
@@ -34,6 +34,20 @@
                 color: #ff4500;
                 font-weight: bold;
                 margin-top: 2px;
+            }
+            .rank-diff {
+                font-size: 0.85em;
+                margin-top: 2px;
+                font-weight: 500;
+            }
+            .rank-diff.up {
+                color: #ff4d4f;
+            }
+            .rank-diff.down {
+                color: #1890ff;
+            }
+            .rank-diff.stay {
+                color: #8c8c8c;
             }
             .rank-sparkline-svg {
                 vertical-align: middle;
@@ -390,7 +404,26 @@
                 // 최신 랭킹 표시 및 히스토리 차트
                 if (data.latestRank) {
                     item.find("#rankBadgeContainer").show();
-                    item.find("#latestRankDiv").text(`${data.latestRank}위`);
+                    const rankVal = typeof data.latestRank === 'object' ? data.latestRank.rank : data.latestRank;
+                    item.find("#latestRankDiv").text(`${rankVal}위`);
+                    
+                    if (typeof data.latestRank === 'object' && data.latestRank.rankDiff !== null) {
+                        const diff = data.latestRank.rankDiff;
+                        let diffText = "";
+                        let diffClass = "";
+                        
+                        if (diff > 0) {
+                            diffText = `▲${diff}`;
+                            diffClass = "up";
+                        } else if (diff < 0) {
+                            diffText = `▼${Math.abs(diff)}`;
+                            diffClass = "down";
+                        } else {
+                            diffText = " - ";
+                            diffClass = "stay";
+                        }
+                        item.find("#rankDiffDiv").text(diffText).removeClass("up down stay").addClass(diffClass);
+                    }
                 }
                 
                 if (data.rankHistory && data.rankHistory.length > 1) {
@@ -668,6 +701,7 @@
                         <div class="rank-info-text">
                             <!-- <span class="rank-label">오늘의 랭킹</span> -->
                             <span id="latestRankDiv" class="rank-value"></span>
+                            <span id="rankDiffDiv" class="rank-diff"></span>
                         </div>
                         <div id="rankChartDiv"></div>
                     </div>

@@ -26,11 +26,23 @@ class userRepository {
             SELECT rankNumber 
             FROM userRank 
             WHERE playerId = ? 
-            AND rankDate = (SELECT MAX(rankDate) FROM userRank)
+            ORDER BY rankDate DESC 
+            LIMIT 2
         `;
         try {
             const rows = await this.maria.doQuery(query, [playerId]);
-            return rows && rows.length > 0 ? rows[0].rankNumber : null;
+            if (rows && rows.length > 0) {
+                const latestRank = rows[0].rankNumber;
+                let rankDiff = null;
+                if (rows.length > 1) {
+                    rankDiff = rows[1].rankNumber - latestRank;
+                }
+                return {
+                    rank: latestRank,
+                    rankDiff: rankDiff
+                };
+            }
+            return null;
         } catch (err) {
             logger.error(err);
             return null;
