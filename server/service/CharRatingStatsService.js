@@ -1,4 +1,5 @@
 const repository = require('../repository/charRankingRepository.js');
+const SeasonRepository = require('../repository/seasonRepository');
 
 const commonUtil = require('../util/commonUtil');
 
@@ -6,11 +7,18 @@ class CharRatingStatsService {
 
     constructor(maria) {
         this.charRankingRepository = new repository(maria);
+        this.seasonRepository = new SeasonRepository(maria);
     }
 
     charRanking = async () =>  {
         const yesterday = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
-        await this.charRankingRepository.insertSeasonCharRanking(yesterday);
+        const currentSeason = await this.seasonRepository.selectCurrentSeason();
+
+        if (!currentSeason) {
+            throw new Error('Current season metadata not found');
+        }
+
+        await this.charRankingRepository.insertSeasonCharRanking(yesterday, currentSeason.data_start_at);
         await this.charRankingRepository.updateMatchesMapRating(yesterday);
     }
 

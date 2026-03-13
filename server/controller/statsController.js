@@ -1,28 +1,51 @@
 const commonUtil = require('../util/commonUtil');
+const SeasonRepository = require('../repository/seasonRepository');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
+    const seasonRepository = new SeasonRepository(maria);
     app.use(acclogger());
 
-    app.get('/stats', function(req, res) {
-        if (commonUtil.isMobile(req)) {
-            res.render('../mobile/stats');
-        } else {
-            res.render('../pc/stats');
+    const getCurrentSeason = async () => {
+        const currentSeason = await seasonRepository.selectCurrentSeason();
+        if (!currentSeason) {
+            throw new Error('Current season metadata not found');
+        }
+
+        return currentSeason;
+    };
+
+    app.get('/stats', async function(req, res) {
+        try {
+            const currentSeason = await getCurrentSeason();
+
+            if (commonUtil.isMobile(req)) {
+                res.render('../mobile/stats');
+            } else {
+                res.render('../pc/stats', { dataStartDate: currentSeason.data_start_date });
+            }
+        } catch (err) {
+            logger.error(err);
+            return res
+                .status(500)
+                .send('season metadata not found')
+                .end();
         }
     });
 
     app.get('/statsCountList', async function(req, res) {        
 
         try {
+            const currentSeason = await getCurrentSeason();
             let query = ` SELECT dates, COUNT(dates) cnt FROM ( 
-             	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d (%W)') dates, matchId FROM matches 
+             	SELECT DATE_FORMAT(matchDate, '%Y-%m-%d (%W)') dates, matchId FROM matches
+                WHERE matchDate >= ?
              ) aa  
              GROUP BY dates 
              ORDER BY dates DESC 
              LIMIT 30 `;
 
-            let row = await maria.doQuery({ bigNumberStrings: true, sql: query });
+            let row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [currentSeason.data_start_at]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -37,9 +60,16 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/statsCharList', async function(req, res) {        
 
         try {
-            const todayYYYYMMDD = commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
-            const query = `select * from char_season_stats where stat_date = ? order by rate desc`;
-            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [ todayYYYYMMDD ]);
+            const currentSeason = await getCurrentSeason();
+            const targetDate = req.query.date || commonUtil.getYYYYMMDD(commonUtil.addDays(new Date(), -1), false);
+            const query = `
+                select *
+                from char_season_stats
+                where stat_date = ?
+                  and stat_date >= ?
+                order by rate desc
+            `;
+            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [targetDate, currentSeason.data_start_date]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -66,11 +96,12 @@ module.exports = (scheduler, maria, acclogger) => {
         }
 
         try {
-            let query = ` SELECT * FROM char_combi_stats_ranked WHERE stat_date = ? `;
+            const currentSeason = await getCurrentSeason();
+            let query = ` SELECT * FROM char_combi_stats_ranked WHERE stat_date = ? AND stat_date >= ? `;
             // let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
             logger.debug(query);
 
-            let row = await maria.doQuery(query, [todayStr]);
+            let row = await maria.doQuery(query, [todayStr, currentSeason.data_start_date]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);

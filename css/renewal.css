@@ -1755,3 +1755,162 @@ h5:has(.sortButton) {
     color: #fff;
     padding: 0 16px;
 }
+
+.seasonStatsPage {
+    padding-top: 24px;
+}
+
+.seasonStatsHero {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #eef3f8 100%);
+}
+
+.seasonStatsHeroText {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.seasonStatsEyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6c7a89;
+}
+
+.seasonStatsHero h3 {
+    margin: 0;
+}
+
+.seasonStatsControl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 180px;
+}
+
+.seasonStatsControl label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.seasonStatsControl .form-select {
+    min-width: 180px;
+    border-radius: 10px;
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.seasonListWrapper {
+    align-items: stretch;
+}
+
+.seasonPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.seasonPanelHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.seasonPanelHeader h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.seasonPanelHeader p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.seasonTabs {
+    gap: 8px;
+    border-bottom: 0;
+}
+
+.seasonTabs .nav-link {
+    border: 1px solid #d7dee5;
+    border-radius: 999px;
+    color: #495057;
+    padding: 8px 14px;
+    background: #fff;
+}
+
+.seasonTabs .nav-link.active {
+    border-color: #343a40;
+    background: #343a40;
+    color: #fff;
+}
+
+.seasonTabContent {
+    flex: 1;
+}
+
+.seasonDualGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.seasonDualGrid > section {
+    min-width: 0;
+}
+
+.seasonDualGrid h5,
+.seasonTabContent h5 {
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.seasonStatsPage table {
+    margin: 0;
+    table-layout: fixed;
+}
+
+.seasonStatsPage table th {
+    background: #f8fafc;
+    color: #495057;
+    font-weight: 600;
+}
+
+.seasonStatsPage table td,
+.seasonStatsPage table th {
+    vertical-align: middle;
+}
+
+.seasonStatsPage table td:nth-child(2) img {
+    margin-right: 6px;
+}
+
+.seasonStatsEmpty {
+    display: inline-block;
+    color: #868e96;
+    font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .seasonStatsHero {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .seasonStatsControl {
+        min-width: 0;
+    }
+
+    .seasonDualGrid {
+        grid-template-columns: 1fr;
+    }
+}
