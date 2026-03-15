@@ -1,103 +1,53 @@
 const commonUtil = require('../util/commonUtil');
-const myConfig = require('../../config/config.js');
+const StatsSeasonRepository = require('../repository/statsSeasonRepository');
 
 module.exports = (scheduler, maria, acclogger) => {
     const app = require('express').Router();
+    const statsSeasonRepository = new StatsSeasonRepository(maria);
     app.use(acclogger());
 
-    //test  ( "/statsSeasonSche/insertStats" )
-    app.get('/insertStats', function(req, res) {
+    const DEFAULT_MIN_MATCHES = 30;
+    const DEFAULT_HIDDEN_OP_EXCLUDE_RANK = 20;
+
+    const normalizeSeason = (season) => {
+        const normalizedSeason = (season || '').toUpperCase();
+        return /^\d{4}[HU]$/.test(normalizedSeason) ? normalizedSeason : null;
+    };
+
+    // test: /statsSeasonSche/rebuildSeasonStats?season=2025U
+    app.get('/rebuildSeasonStats', async function(req, res) {
         if (!commonUtil.isMe(req)) {
-            return res.send({ "resultCode": "400", "resultMsg": "내가 아닌데??" });
+            return res.send({ resultCode: '400', resultMsg: '내가 아닌데??' });
+        }
+
+        const season = normalizeSeason(req.query.season || '2025U');
+        const minMatches = Number(req.query.minMatches || DEFAULT_MIN_MATCHES);
+        const hiddenOpExcludeRank = Number(req.query.hiddenOpExcludeRank || DEFAULT_HIDDEN_OP_EXCLUDE_RANK);
+
+        if (!season) {
+            return res.send({ resultCode: '400', resultMsg: '시즌 코드 오류' });
         }
 
         try {
-            callInsertStats(res)
-        } catch (err) {
-            res.send(err);
-        }
+            await statsSeasonRepository.deleteSeasonStats(season);
+            await statsSeasonRepository.insertSeasonSummary(season, minMatches, hiddenOpExcludeRank);
+            await statsSeasonRepository.insertSeasonCharacterStats(season);
 
-        return res
-            .status(200)
-            .send(true)
-            .end();
-    });
-
-    async function callInsertStats() {
-        //SEASON
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "ATTACK", "DESC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "ATTACK", "ASC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "TANKER", "DESC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "TANKER", "ASC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "ALL", "DESC");
-        await insertStats('2024-09-26', '2025-04-10', "2024U", "ALL", "ASC");
-        
-        // New season 2026H
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "ATTACK", "DESC");
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "ATTACK", "ASC");
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "TANKER", "DESC");
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "TANKER", "ASC");
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "ALL", "DESC");
-        await insertStats('2026-02-26', '2026-02-26', "2026H", "ALL", "ASC");        
-    }
-
-    async function insertStats(startDate, endDate, statsType, combiType, order) {
-        let combiTarget = combiType == "ATTACK" ? "attackerJoin" : "tankerJoin";        
-        if (combiType == 'ALL') {
-            combiTarget = 'allJoin';
-        }
-
-        let query =
-            `   INSERT INTO match_stats  
-                SELECT 
-                    '${statsType}', 'A', '${combiType}' 
-                    , '${startDate}', '${endDate}', '${order}' 
-                    , combi, total, win, lose, CEILING( win / total * 100 ) AS late 
-                FROM ( 
-                    SELECT 
-                        ${combiTarget} AS combi, COUNT(1) total
-                        , COUNT(IF(matchResult = '승', 1, NULL)) win  
-                        , COUNT(IF(matchResult = '패', 1, NULL)) lose 
-                        , ROW_NUMBER() OVER(ORDER BY total DESC) AS total_rank
-                    FROM matchdetail detail 
-                    INNER JOIN (   
-                        SELECT matchId FROM matches WHERE matchDate BETWEEN '${startDate}' AND '${endDate}' 
-                    ) matches ON matches.matchId = detail.matchId 
-                    GROUP BY ${combiTarget} 
-                ) a   
-                WHERE total_rank < 100
-                ORDER BY late ${order} 
-                limit 20`;
-
-        logger.debug(query);
-
-        
-        try {
-            await maria.doQuery(query);
+            return res.send({
+                resultCode: '200',
+                resultMsg: 'OK',
+                season,
+                minMatches,
+                hiddenOpExcludeRank
+            });
         } catch (err) {
             logger.error(err);
-            //throw err;
+            return res.status(500).send({
+                resultCode: '500',
+                resultMsg: '오류 발생'
+            });
         }
-    }
-
-    async function insertCountSeasonChar() {
-        let query = `
-            INSERT INTO char_stats
-            SELECT 
-                '2026H' season, charName
-                , total, win, lose
-                , CEILING( win / total * 100 ) AS rate 
-            FROM ( 
-                SELECT 
-                    charName
-                    , COUNT(1) total
-                    , COUNT(IF(matchResult = '승', 1, NULL)) win
-                    , COUNT(IF(matchResult = '패', 1, NULL)) lose
-                FROM matches_char 
-                WHERE matchDate >= '2026-02-26'
-                GROUP BY charName
-            ) aa `;
-    }
+    });
 
     return app;
 }
