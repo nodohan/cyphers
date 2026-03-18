@@ -18,7 +18,7 @@ class CharRatingStatsService {
             throw new Error('Current season metadata not found');
         }
 
-        await this.charRankingRepository.insertSeasonCharRanking(yesterday, currentSeason.data_start_at);
+        await this.charRankingRepository.insertSeasonCharRanking(yesterday, currentSeason.season_start_at);
         await this.charRankingRepository.updateMatchesMapRating(yesterday);
     }
 

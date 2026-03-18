@@ -34,7 +34,7 @@ module.exports = (scheduler, maria, acclogger) => {
             if (commonUtil.isMobile(req)) {
                 res.render('../mobile/stats');
             } else {
-                res.render('../pc/stats', { dataStartDate: currentSeason.data_start_date });
+                res.render('../pc/stats', { dataStartDate: currentSeason.season_start_date });
             }
         } catch (err) {
             logger.error(err);
@@ -57,7 +57,7 @@ module.exports = (scheduler, maria, acclogger) => {
              ORDER BY dates DESC 
              LIMIT 30 `;
 
-            let row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [currentSeason.data_start_at]);
+            let row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [currentSeason.season_start_at]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -81,7 +81,7 @@ module.exports = (scheduler, maria, acclogger) => {
                   and stat_date >= ?
                 order by rate desc
             `;
-            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [targetDate, currentSeason.data_start_date]);
+            const row = await maria.doQuery({ bigNumberStrings: true, sql: query }, [targetDate, currentSeason.season_start_date]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
@@ -113,7 +113,7 @@ module.exports = (scheduler, maria, acclogger) => {
             // let query = ` SELECT * FROM match_stats WHERE statsDate = ? `;
             logger.debug(query);
 
-            let row = await maria.doQuery(query, [todayStr, currentSeason.data_start_date]);
+            let row = await maria.doQuery(query, [todayStr, currentSeason.season_start_date]);
             res.send({ 'row': row });
         } catch (err) {
             logger.error(err);
