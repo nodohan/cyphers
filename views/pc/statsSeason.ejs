@@ -16,7 +16,7 @@
         const refreshData = () => {
             season = $("#seasonSelect").val();
 
-            $("#bestAll, #worstAll, #bestTanker, #worstTanker, #bestAttack, #worstAttack, #charRate, #charTotal").empty();
+            $("#bestTanker, #worstTanker, #bestAttack, #worstAttack, #charRate, #charTotal").empty();
 
             getStats("statsSeasonList", drawStatsList);
             getStats("charList", drawCharList);
@@ -48,8 +48,6 @@
         const drawStatsList = (data) => {
             const rows = data.row || [];
 
-            drawStatsListDiv("bestAll", dataFilter(rows, "A", "ALL", "DESC"), "조합");
-            drawStatsListDiv("worstAll", dataFilter(rows, "A", "ALL", "ASC"), "조합");
             drawStatsListDiv("bestTanker", dataFilter(rows, "A", "TANKER", "DESC"), "조합");
             drawStatsListDiv("worstTanker", dataFilter(rows, "A", "TANKER", "ASC"), "조합");
             drawStatsListDiv("bestAttack", dataFilter(rows, "A", "ATTACK", "DESC"), "조합");
@@ -69,6 +67,10 @@
             table.removeAttr("id");
             table.find("th:eq(1)").text(columnName);
 
+            if (columnName === "조합") {
+                table.addClass("seasonCombiTable");
+            }
+
             if (columnName === "캐릭터") {
                 table.find("th:eq(1)").after("<th scope='col'>이름</th>");
             }
@@ -85,7 +87,7 @@
                 tr += `<td>${idx + 1}</td>`;
 
                 if (columnName === "조합") {
-                    tr += `<td>${getChars((row.combi || "").split("|"))}</td>`;
+                    tr += `<td class="seasonCombiCell">${getChars((row.combi || "").split("|"))}</td>`;
                 } else {
                     tr += `<td>${getChars([row.charName])}</td>`;
                     tr += `<td>${row.charName}</td>`;
@@ -109,10 +111,10 @@
                 return "<span class='seasonStatsEmpty'>정보 없음</span>";
             }
 
-            return names.map((name) => {
+            return `<div class="seasonCombiChars">${names.map((name) => {
                 const charId = charMap.get(name);
                 return `<img data-item="${name}" src="https://img-api.neople.co.kr/cy/characters/${charId}" alt="${name}">`;
-            }).join("");
+            }).join("")}</div>`;
         };
 
         const formatNumber = (value) => Number(value || 0).toLocaleString();
@@ -167,30 +169,17 @@
             <article id="con1" class="seasonPanel">
                 <div class="seasonPanelHeader">
                     <h4>조합 통계</h4>
-                    <p>승률 기준 상위와 하위를 역할별로 정리했습니다.</p>
+                    <p>탱커와 딜러 조합의 상위, 하위 성적을 정리했습니다.</p>
                 </div>
                 <nav>
                     <div class="nav nav-tabs seasonTabs" role="tablist">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#all" role="tab" aria-selected="true">전체 조합</a>
-                        <a class="nav-link" data-bs-toggle="tab" href="#tanker" role="tab" aria-selected="false">탱커 조합</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#tanker" role="tab" aria-selected="true">탱커 조합</a>
                         <a class="nav-link" data-bs-toggle="tab" href="#attack" role="tab" aria-selected="false">딜러 조합</a>
                     </div>
                 </nav>
                 <div class="tab-content seasonTabContent">
-                    <div class="tab-pane fade show active" id="all" role="tabpanel">
-                        <div class="seasonDualGrid">
-                            <section>
-                                <h5>Best 5</h5>
-                                <div id="bestAll"></div>
-                            </section>
-                            <section>
-                                <h5>Worst 5</h5>
-                                <div id="worstAll"></div>
-                            </section>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tanker" role="tabpanel">
-                        <div class="seasonDualGrid">
+                    <div class="tab-pane fade show active" id="tanker" role="tabpanel">
+                        <div class="seasonStackGrid">
                             <section>
                                 <h5>Best 5</h5>
                                 <div id="bestTanker"></div>
@@ -202,7 +191,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="attack" role="tabpanel">
-                        <div class="seasonDualGrid">
+                        <div class="seasonStackGrid">
                             <section>
                                 <h5>Best 5</h5>
                                 <div id="bestAttack"></div>
@@ -219,12 +208,12 @@
             <article id="con2" class="seasonPanel">
                 <div class="seasonPanelHeader">
                     <h4>캐릭터 통계</h4>
-                    <p>승률 순과 판수 순을 시즌 기준으로 확인할 수 있습니다.</p>
+                    <p>승률 순과 픽수 순을 시즌 기준으로 확인할 수 있습니다.</p>
                 </div>
                 <nav>
                     <div class="nav nav-tabs seasonTabs" role="tablist">
                         <a class="nav-link active" data-bs-toggle="tab" href="#charRateTab" role="tab" aria-selected="true">승률 순</a>
-                        <a class="nav-link" data-bs-toggle="tab" href="#charTotalTab" role="tab" aria-selected="false">판수 순</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#charTotalTab" role="tab" aria-selected="false">픽수 순</a>
                     </div>
                 </nav>
                 <div class="tab-content seasonTabContent">
@@ -245,7 +234,7 @@
                 <tr>
                     <th scope="col">순위</th>
                     <th scope="col">조합</th>
-                    <th scope="col">판수</th>
+                    <th scope="col">픽수</th>
                     <th scope="col">승</th>
                     <th scope="col">패</th>
                     <th scope="col">승률</th>

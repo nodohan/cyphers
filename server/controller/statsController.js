@@ -10,7 +10,6 @@ module.exports = (scheduler, maria, acclogger) => {
 
     const DEFAULT_MIN_MATCHES = 30;
     const DEFAULT_HIDDEN_OP_EXCLUDE_RANK = 20;
-    const TOP_LIMIT = 20;
     const SIDE_LIMIT = 10;
 
     const getCurrentSeason = async () => {
@@ -152,6 +151,10 @@ module.exports = (scheduler, maria, acclogger) => {
         res.render('./pc/statsSeason2025u', { 'season': '2025U' });
     });
 
+    app.get('/stats2025h', function(req, res) {
+        res.render('./pc/statsSeason2025u', { 'season': '2025H' });
+    });
+
     app.get('/statsSeasonList', async function(req, res) {
         let season = req.query.season
 
@@ -187,8 +190,8 @@ module.exports = (scheduler, maria, acclogger) => {
             const hiddenOpExcludeRank = Number(summary?.hiddenOpExcludeRank || DEFAULT_HIDDEN_OP_EXCLUDE_RANK);
 
             const [topWinRate, topTotalMatches, hiddenOp, trap] = await Promise.all([
-                statsSeasonRepository.selectTopWinRate(season, minMatches, TOP_LIMIT),
-                statsSeasonRepository.selectTopTotalMatches(season, TOP_LIMIT),
+                statsSeasonRepository.selectTopWinRate(season, minMatches),
+                statsSeasonRepository.selectTopTotalMatches(season),
                 statsSeasonRepository.selectHiddenOp(season, minMatches, hiddenOpExcludeRank, SIDE_LIMIT),
                 statsSeasonRepository.selectTrap(season, minMatches, hiddenOpExcludeRank, SIDE_LIMIT)
             ]);

@@ -3,12 +3,64 @@ class StatsSeasonRepository {
         this.maria = maria;
     }
 
+    runQuery = async (query, params = []) => {
+        const result = await this.maria.doQuery(query, params);
+
+        if (result === -1) {
+            throw new Error('Database query failed');
+        }
+
+        return result;
+    }
+
+    getSeasonTableName = (prefix, season) => {
+        if (!/^\d{4}[HU]$/.test(season)) {
+            throw new Error(`Invalid season code: ${season}`);
+        }
+
+        return `${prefix}_${season}`;
+    }
+
+    hasColumn = async (tableName, columnName) => {
+        const query = `
+            SELECT COUNT(*) AS cnt
+            FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = ?
+              AND COLUMN_NAME = ?
+        `;
+        const [row] = await this.runQuery(query, [tableName, columnName]);
+        return Number(row?.cnt || 0) > 0;
+    }
+
+    assertTableExists = async (tableName) => {
+        const query = `
+            SELECT COUNT(*) AS cnt
+            FROM information_schema.TABLES
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = ?
+        `;
+        const [row] = await this.runQuery(query, [tableName]);
+
+        if (Number(row?.cnt || 0) === 0) {
+            throw new Error(`Table not found: ${tableName}`);
+        }
+    }
+
     deleteSeasonStats = async (season) => {
-        await this.maria.doQuery(`DELETE FROM season_character_stats WHERE season_code = ?`, [season]);
-        await this.maria.doQuery(`DELETE FROM season_summary_stats WHERE season_code = ?`, [season]);
+        await this.runQuery(`DELETE FROM season_character_stats WHERE season_code = ?`, [season]);
+        await this.runQuery(`DELETE FROM season_summary_stats WHERE season_code = ?`, [season]);
     }
 
     insertSeasonSummary = async (season, minMatches, hiddenOpExcludeRank) => {
+        const matchesTable = this.getSeasonTableName('matches', season);
+        await this.assertTableExists(matchesTable);
+
+        const hasDurationColumn = await this.hasColumn(matchesTable, 'duration');
+        const avgDurationExpr = hasDurationColumn
+            ? 'ROUND(AVG(duration))'
+            : `ROUND(AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(jsonData, '$.players[0].playInfo.playTime')) AS UNSIGNED)))`;
+
         const query = `
             INSERT INTO season_summary_stats (
                 season_code,
@@ -20,36 +72,36 @@ class StatsSeasonRepository {
             SELECT
                 ?,
                 COUNT(*),
-                ROUND(AVG(duration)),
+                ${avgDurationExpr},
                 ?,
                 ?
-            FROM matches_2025U
+            FROM ${matchesTable}
+            ON DUPLICATE KEY UPDATE
+                total_matches = VALUES(total_matches),
+                avg_duration = VALUES(avg_duration),
+                min_matches = VALUES(min_matches),
+                hidden_op_exclude_rank = VALUES(hidden_op_exclude_rank)
         `;
 
-        await this.maria.doQuery(query, [season, minMatches, hiddenOpExcludeRank]);
+        await this.runQuery(query, [season, minMatches, hiddenOpExcludeRank]);
     }
 
-    insertSeasonCharacterStats = async (season) => {
+    selectSeasonCharacterStats = async (season) => {
+        const matchesTable = this.getSeasonTableName('matches', season);
+        const matchesMapTable = this.getSeasonTableName('matches_map', season);
+
+        await this.assertTableExists(matchesTable);
+        await this.assertTableExists(matchesMapTable);
+
         const query = `
-            INSERT INTO season_character_stats (
-                season_code,
-                char_name,
-                total_matches,
-                win_count,
-                lose_count,
-                win_rate,
-                total_rank,
-                win_rate_rank
-            )
             SELECT
-                ?,
-                ranked.char_name,
-                ranked.total_matches,
-                ranked.win_count,
-                ranked.lose_count,
-                ranked.win_rate,
-                ranked.total_rank,
-                ranked.win_rate_rank
+                ranked.char_name AS charName,
+                ranked.total_matches AS totalMatches,
+                ranked.win_count AS winCount,
+                ranked.lose_count AS loseCount,
+                ranked.win_rate AS winRate,
+                ranked.total_rank AS totalRank,
+                ranked.win_rate_rank AS winRateRank
             FROM (
                 SELECT
                     aggregated.char_name,
@@ -70,8 +122,8 @@ class StatsSeasonRepository {
                         SUM(CASE WHEN mm.result = 'win' THEN 1 ELSE 0 END) AS win_count,
                         SUM(CASE WHEN mm.result = 'lose' THEN 1 ELSE 0 END) AS lose_count,
                         ROUND(SUM(CASE WHEN mm.result = 'win' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS win_rate
-                    FROM matches_map mm
-                    INNER JOIN matches_2025U m ON m.matchId = mm.matchId
+                    FROM ${matchesMapTable} mm
+                    INNER JOIN ${matchesTable} m ON m.matchId = mm.matchId
                     WHERE mm.charName IS NOT NULL
                       AND mm.result IN ('win', 'lose')
                       AND m.matchId IS NOT NULL
@@ -80,7 +132,48 @@ class StatsSeasonRepository {
             ) ranked
         `;
 
-        await this.maria.doQuery(query, [season]);
+        return await this.runQuery(query);
+    }
+
+    insertSeasonCharacterStats = async (season) => {
+        const rows = await this.selectSeasonCharacterStats(season);
+        if (!rows || rows.length === 0) {
+            return;
+        }
+
+        const pool = this.maria.getPool();
+        const query = `
+            INSERT INTO season_character_stats (
+                season_code,
+                char_name,
+                total_matches,
+                win_count,
+                lose_count,
+                win_rate,
+                total_rank,
+                win_rate_rank
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                total_matches = VALUES(total_matches),
+                win_count = VALUES(win_count),
+                lose_count = VALUES(lose_count),
+                win_rate = VALUES(win_rate),
+                total_rank = VALUES(total_rank),
+                win_rate_rank = VALUES(win_rate_rank)
+        `;
+
+        const values = rows.map((row) => ([
+            season,
+            row.charName,
+            row.totalMatches,
+            row.winCount,
+            row.loseCount,
+            row.winRate,
+            row.totalRank,
+            row.winRateRank
+        ]));
+
+        await pool.batch(query, values);
     }
 
     selectSeasonSummary = async (season) => {
@@ -95,7 +188,7 @@ class StatsSeasonRepository {
             WHERE season_code = ?
         `;
 
-        return await this.maria.doQuery(query, [season]);
+        return await this.runQuery(query, [season]);
     }
 
     selectTopWinRate = async (season, minMatches, limit) => {
@@ -110,10 +203,13 @@ class StatsSeasonRepository {
             WHERE season_code = ?
               AND total_matches >= ?
             ORDER BY win_rate DESC, total_matches DESC, char_name ASC
-            LIMIT ?
         `;
 
-        return await this.maria.doQuery(query, [season, minMatches, limit]);
+        if (Number.isFinite(limit)) {
+            return await this.runQuery(`${query}\n LIMIT ?`, [season, minMatches, limit]);
+        }
+
+        return await this.runQuery(query, [season, minMatches]);
     }
 
     selectTopTotalMatches = async (season, limit) => {
@@ -127,10 +223,13 @@ class StatsSeasonRepository {
             FROM season_character_stats
             WHERE season_code = ?
             ORDER BY total_matches DESC, win_rate DESC, char_name ASC
-            LIMIT ?
         `;
 
-        return await this.maria.doQuery(query, [season, limit]);
+        if (Number.isFinite(limit)) {
+            return await this.runQuery(`${query}\n LIMIT ?`, [season, limit]);
+        }
+
+        return await this.runQuery(query, [season]);
     }
 
     selectHiddenOp = async (season, minMatches, excludeRank, limit) => {
@@ -149,7 +248,7 @@ class StatsSeasonRepository {
             LIMIT ?
         `;
 
-        return await this.maria.doQuery(query, [season, minMatches, excludeRank, limit]);
+        return await this.runQuery(query, [season, minMatches, excludeRank, limit]);
     }
 
     selectTrap = async (season, minMatches, topRank, limit) => {
@@ -168,7 +267,7 @@ class StatsSeasonRepository {
             LIMIT ?
         `;
 
-        return await this.maria.doQuery(query, [season, minMatches, topRank, limit]);
+        return await this.runQuery(query, [season, minMatches, topRank, limit]);
     }
 }
 

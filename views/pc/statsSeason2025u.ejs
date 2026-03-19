@@ -10,12 +10,20 @@
         $(document).ready(function () {
             $("#seasonSelect").val(season);
             refreshData();
-            $("#seasonSelect").on("change", refreshData);
+
+            $("#seasonSelect").on("change", function () {
+                season = $("#seasonSelect").val();
+                window.history.replaceState({}, "", `/stats/stats${season.toLowerCase()}`);
+                refreshData();
+            });
         });
 
         const refreshData = () => {
             season = $("#seasonSelect").val();
-            $("#seasonOverview, #topWinRate, #topTotalMatches, #hiddenOp, #trap").empty();
+            $("#seasonOverview").empty();
+            $("#topWinRate, #topTotalMatches, #hiddenOp, #trap").empty();
+            $(".seasonStatsEyebrow").text(`${season} Season Stats`);
+            $(".seasonStatsTitle").text(`${season} 별도 집계 통계`);
             getStats(drawSeasonSummary);
         };
 
@@ -28,55 +36,50 @@
                     callback(data.row || {});
                 },
                 error: function () {
-                    $("#seasonOverview").html("<p>집계 데이터가 없습니다. 먼저 배치를 실행하세요.</p>");
+                    $("#seasonOverview").html("<p>집계 데이터가 없습니다. 먼저 배치를 실행해주세요.</p>");
                 }
             });
         };
 
         const drawSeasonSummary = (data) => {
             drawOverview(data.overview || {}, data.thresholds || {});
-            drawStatsListDiv("topWinRate", data.topWinRate || [], "캐릭 승률 TOP20");
-            drawStatsListDiv("topTotalMatches", data.topTotalMatches || [], "캐릭 판수 TOP20");
-            drawStatsListDiv("hiddenOp", data.hiddenOp || [], "숨은 OP");
-            drawStatsListDiv("trap", data.trap || [], "함정 캐릭");
+            drawStatsListDiv("topWinRate", data.topWinRate || [], "캐릭터 승률");
+            drawStatsListDiv("topTotalMatches", data.topTotalMatches || [], "캐릭터 픽수");
+            drawStatsListDiv("hiddenOp", data.hiddenOp || [], "히든 OP");
+            drawStatsListDiv("trap", data.trap || [], "함정 캐릭터");
         };
 
-        const drawOverview = (overview, thresholds) => {
-            const cards = [
+        const drawOverview = (overview) => {
+            const rows = [
                 {
                     label: "시즌 총 경기 수",
-                    value: formatNumber(overview.totalMatches),
-                    desc: "집계 완료된 시즌 경기 수"
+                    value: formatNumber(overview.totalMatches)
                 },
                 {
                     label: "평균 게임 시간",
-                    value: formatDuration(overview.avgDuration),
-                    desc: "matches.duration 기준 평균"
-                },
-                {
-                    label: "승률 집계 최소 판수",
-                    value: formatNumber(thresholds.minMatches),
-                    desc: "숨은 OP, 함정 캐릭 포함 공통 기준"
-                },
-                {
-                    label: "숨은 OP 제외 판수 순위",
-                    value: formatNumber(thresholds.hiddenOpExcludeRank),
-                    desc: "판수 상위권 캐릭은 숨은 OP에서 제외"
+                    value: formatDuration(overview.avgDuration)
                 }
             ];
 
-            const wrap = $("<div class='seasonOverviewGrid'></div>");
-            cards.forEach((card) => {
-                wrap.append(`
-                    <article class="seasonOverviewCard">
-                        <p class="seasonOverviewLabel">${card.label}</p>
-                        <strong class="seasonOverviewValue">${card.value}</strong>
-                        <p class="seasonOverviewDesc">${card.desc}</p>
-                    </article>
+            const table = $(`
+                <div class="seasonOverviewTable">
+                    <div class="seasonOverviewHead seasonOverviewRow">
+                        <span>항목</span>
+                        <span>값</span>
+                    </div>
+                </div>
+            `);
+
+            rows.forEach((row) => {
+                table.append(`
+                    <div class="seasonOverviewRow">
+                        <strong class="seasonOverviewLabel">${row.label}</strong>
+                        <span class="seasonOverviewValue">${row.value}</span>
+                    </div>
                 `);
             });
 
-            $("#seasonOverview").append(wrap);
+            $("#seasonOverview").append(table);
         };
 
         const drawStatsListDiv = (divId, rows, title) => {
@@ -87,6 +90,7 @@
                     </div>
                 </section>
             `);
+
             const table = $("#seasonTableTemplate").clone();
             table.removeAttr("id");
 
@@ -148,18 +152,19 @@
 <body class="body renewalBody">
     <%- include("../layout/menu") %>
 
-    <div id="statsMain" class="mainLayout seasonStatsPage">
+    <div id="statsMain" class="mainLayout seasonStatsPage seasonStatsWidePage">
         <%- include("../layout/rightBanner") %>
 
         <section class="playCounter seasonStatsHero">
             <div class="seasonStatsHeroText">
-                <p class="seasonStatsEyebrow">2025U Season Stats</p>
-                <h3><%= season %> 별도 집계 통계</h3>
-                <p>원장 직접 조회가 아니라 집계 테이블 결과만 표시합니다.</p>
+                <p class="seasonStatsEyebrow"><%= season %> Season Stats</p>
+                <h3 class="seasonStatsTitle"><%= season %> 별도 집계 통계</h3>
+                <p>저장 원본을 직접 조회하지 않고 집계 테이블 결과만 보여줍니다.</p>
             </div>
             <div class="seasonStatsControl">
                 <label for="seasonSelect">시즌 선택</label>
                 <select id="seasonSelect" class="form-select">
+                    <option value="2025H">2025H</option>
                     <option value="2025U">2025U</option>
                 </select>
             </div>
@@ -167,18 +172,38 @@
 
         <section class="seasonPanel">
             <div class="seasonPanelHeader">
-                <h4>시즌 개요</h4>
-                <p>배치로 저장된 총 경기 수와 평균 게임 시간입니다.</p>
             </div>
             <div id="seasonOverview"></div>
         </section>
 
-        <div class="listWrapper seasonListWrapper">
-            <article id="topWinRate" class="seasonPanel"></article>
-            <article id="topTotalMatches" class="seasonPanel"></article>
-            <article id="hiddenOp" class="seasonPanel"></article>
-            <article id="trap" class="seasonPanel"></article>
-        </div>
+        <section class="seasonPanel seasonTabbedPanel">
+            <div class="seasonPanelHeader">
+            </div>
+
+            <nav>
+                <div class="nav nav-tabs seasonTabs" role="tablist">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#seasonWinRateTab" role="tab" aria-selected="true">승률</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#seasonPickTab" role="tab" aria-selected="false">픽수</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#seasonHiddenOpTab" role="tab" aria-selected="false">히든 OP</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#seasonTrapTab" role="tab" aria-selected="false">함정 캐릭터</a>
+                </div>
+            </nav>
+
+            <div class="tab-content seasonTabContent">
+                <div class="tab-pane fade show active" id="seasonWinRateTab" role="tabpanel">
+                    <article id="topWinRate" class="seasonPanel"></article>
+                </div>
+                <div class="tab-pane fade" id="seasonPickTab" role="tabpanel">
+                    <article id="topTotalMatches" class="seasonPanel"></article>
+                </div>
+                <div class="tab-pane fade" id="seasonHiddenOpTab" role="tabpanel">
+                    <article id="hiddenOp" class="seasonPanel"></article>
+                </div>
+                <div class="tab-pane fade" id="seasonTrapTab" role="tabpanel">
+                    <article id="trap" class="seasonPanel"></article>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div style="display:none">
@@ -188,7 +213,7 @@
                     <th scope="col">순위</th>
                     <th scope="col">이미지</th>
                     <th scope="col">캐릭터</th>
-                    <th scope="col">판수</th>
+                    <th scope="col">픽수</th>
                     <th scope="col">승</th>
                     <th scope="col">패</th>
                     <th scope="col">승률</th>
