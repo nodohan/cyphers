@@ -62,7 +62,7 @@
                     $("#con1_2").empty();
 
                     if(result.player.length != 0) {
-                        drawPlayer(result.player);
+                        drawPlayer(result.player, result.row); // 이력(row)도 같이 전달
                     }
                     drawNicknames(result.row);
                 });
@@ -80,17 +80,68 @@
                 ajaxCall("/nodo/hiddenNickName", data, (result) => {
                     callLoadingBar(false);
                     $("#resultNicknames").empty().text(result.resultMsg[0].nicks);
+                    searchUser(); // 등록 후 재조회하여 상태 갱신
                 });
             }
 
-            const drawPlayer = (player) => {
+            const drawPlayer = (player, history) => {
+                const now = new Date();
+                let statusHtml = "";
+                let latestPrivateDate = "";
+
+                // 1. 이력(history)에서 가장 최신 비공개 지원일 찾기
+                if (history && history.length > 0) {
+                    const hiddenRecords = history.filter(h => h.privateYn === 'Y' && h.privateDate);
+                    if (hiddenRecords.length > 0) {
+                        // 이미 내림차순 정렬되어 오므로 첫 번째 요소가 가장 최신
+                        latestPrivateDate = hiddenRecords[0].privateDate;
+                    }
+                }
+
+                // 2. 이력에 없으면 관리자 메모(comment)에서 추출 시도
+                if (!latestPrivateDate && player[0].comment) {
+                    const dateMatch = player[0].comment.match(/(\d{2}-\d{2}-\d{2})/);
+                    if (dateMatch) latestPrivateDate = dateMatch[1];
+                }
+                
+                if (latestPrivateDate) {
+                    let pDateStr = latestPrivateDate;
+                    if (pDateStr.length === 8) pDateStr = "20" + pDateStr; // "25-03-09" -> "2025-03-09"
+                    
+                    const pDate = new Date(pDateStr);
+                    if (!isNaN(pDate.getTime())) {
+                        const diffTime = now - pDate;
+                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays >= 180) {
+                            statusHtml = `<div class="alert alert-success mt-2" style="width:100%">
+                                            <strong>✅ 변경 가능:</strong> 마지막 비공개(${latestPrivateDate})로부터 <strong>${diffDays}일</strong>이 경과되었습니다. (6개월 통과)
+                                          </div>`;
+                        } else {
+                            const remainingDays = 180 - diffDays;
+                            statusHtml = `<div class="alert alert-warning mt-2" style="width:100%">
+                                            <strong>⏳ 대기 중:</strong> 마지막 비공개(${latestPrivateDate})로부터 <strong>${diffDays}일</strong> 지났습니다. (약 ${remainingDays}일 후 가능)
+                                          </div>`;
+                        }
+                    }
+                } else if (player[0].privateYn === 'N') {
+                    statusHtml = `<div class="alert alert-info mt-2" style="width:100%"><strong>ℹ️ 신규 신청 가능:</strong> 비공개 기록이 없는 사용자입니다.</div>`;
+                }
+
                 $("#playerDiv").empty().append(`
-                    <table>
-                        <tr> 
-                            <td>${player[0].privateYn} </td>
-                            <td>${player[0].comment} </td>
-                        </tr>
-                    </table>`);                
+                    <div style="width:100%">
+                        <table class="table table-sm table-bordered mb-1">
+                            <tr class="table-secondary"> 
+                                <th width="20%" class="text-center">현재상태</th>
+                                <th>관리자 메모 (최종 지원일/사유)</th>
+                            </tr>
+                            <tr> 
+                                <td class="text-center"><strong>${player[0].privateYn === 'Y' ? '비공개' : '공개'}</strong></td>
+                                <td>${player[0].comment || '-'}</td>
+                            </tr>
+                        </table>
+                        ${statusHtml}
+                    </div>`);                
             }
 
             const drawNicknames = (list) => {
@@ -102,16 +153,16 @@
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="check_${row.nickname}" checked>
                                     <label class="form-check-label" for="check_${row.nickname}">
-                                        ${row.nickname}&nbsp;&nbsp;&nbsp;
-                                        /${row.checkingDate}&nbsp;&nbsp;&nbsp;
-                                        /${row.privateYn}&nbsp;&nbsp;&nbsp;
-                                        /${row.privateDate}
+                                        <strong>${row.nickname}</strong>&nbsp;&nbsp;&nbsp;
+                                        <small class="text-muted">/${row.checkingDate}</small>&nbsp;&nbsp;&nbsp;
+                                        <span class="badge ${row.privateYn === 'Y' ? 'bg-danger' : 'bg-secondary'}">${row.privateYn === 'Y' ? '비공개' : '공개'}</span>&nbsp;&nbsp;&nbsp;
+                                        <small class="text-info">/${row.privateDate || '-'}</small>
                                     </label>
                                 </div>
                             </li>
                         `;
                 });
-                divs += '</li></div>';
+                divs += '</ul></div>';
 
                 $("#con1_2").empty().append(divs);
             }

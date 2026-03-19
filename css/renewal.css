@@ -1755,3 +1755,299 @@ h5:has(.sortButton) {
     color: #fff;
     padding: 0 16px;
 }
+
+.seasonStatsPage {
+    padding-top: 24px;
+}
+
+.seasonStatsHero {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #eef3f8 100%);
+}
+
+.seasonStatsHeroText {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.seasonStatsEyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6c7a89;
+}
+
+.seasonStatsHero h3 {
+    margin: 0;
+}
+
+.seasonStatsControl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 180px;
+}
+
+.seasonStatsControl label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.seasonStatsControl .form-select {
+    min-width: 180px;
+    border-radius: 10px;
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.seasonListWrapper {
+    align-items: stretch;
+}
+
+.seasonListWrapper #con1 {
+    flex: 1.45;
+    min-width: 0;
+}
+
+.seasonListWrapper #con2 {
+    flex: 1;
+    min-width: 460px;
+}
+
+.seasonPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.seasonPanelHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.seasonPanelHeader h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.seasonPanelHeader p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.seasonOverviewTable {
+    border: 1px solid #d7dee5;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    width: 50%;
+    min-width: 360px;
+}
+
+.seasonOverviewRow {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.4fr) minmax(140px, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    border-top: 1px solid #eef2f6;
+}
+
+.seasonOverviewRow:first-child {
+    border-top: 0;
+}
+
+.seasonOverviewHead {
+    background: #f8fafc;
+    color: #6c7a89;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.seasonOverviewValue {
+    font-size: 20px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.seasonTabs {
+    gap: 8px;
+    border-bottom: 0;
+    padding: 6px;
+    border-radius: 16px;
+    background: #eef3f8;
+    width: fit-content;
+}
+
+.seasonTabs .nav-link {
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: #5c6773;
+    padding: 10px 18px;
+    background: transparent;
+    font-weight: 700;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.seasonTabs .nav-link.active {
+    border-color: #d7dee5;
+    background: #343a40;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(52, 58, 64, 0.18);
+}
+
+.seasonTabs .nav-link:not(.active):hover {
+    background: rgba(255, 255, 255, 0.85);
+    color: #212529;
+}
+
+.seasonTabContent {
+    flex: 1;
+    border: 1px solid #d7dee5;
+    border-radius: 18px;
+    background: #fff;
+    padding: 18px;
+}
+
+.seasonDualGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.seasonDualGrid > section {
+    min-width: 0;
+}
+
+.seasonStackGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+.seasonStackGrid > section {
+    min-width: 0;
+}
+
+.seasonStatsWidePage .seasonPanel {
+    width: 100%;
+}
+
+.seasonTabbedPanel .tab-pane {
+    padding-top: 12px;
+}
+
+.seasonDualGrid h5,
+.seasonTabContent h5 {
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.seasonStatsPage table {
+    margin: 0;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.seasonCombiTable {
+    table-layout: auto;
+}
+
+.seasonCombiTable th,
+.seasonCombiTable td {
+    text-align: center;
+}
+
+.seasonCombiTable th:nth-child(1),
+.seasonCombiTable td:nth-child(1) {
+    width: 72px;
+    white-space: nowrap;
+}
+
+.seasonCombiTable th:nth-child(n+3),
+.seasonCombiTable td:nth-child(n+3) {
+    width: 88px;
+    min-width: 88px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.seasonStatsPage table th {
+    background: #f8fafc;
+    color: #495057;
+    font-weight: 600;
+}
+
+.seasonStatsPage table td,
+.seasonStatsPage table th {
+    vertical-align: middle;
+}
+
+.seasonStatsPage table td:nth-child(2) img {
+    margin-right: 6px;
+}
+
+.seasonCombiCell {
+    width: 420px;
+    min-width: 420px;
+}
+
+.seasonCombiChars {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.seasonCombiChars img {
+    flex: 0 0 auto;
+    display: block;
+}
+
+.seasonStatsEmpty {
+    display: inline-block;
+    color: #868e96;
+    font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .seasonStatsHero {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .seasonOverviewRow {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .seasonListWrapper #con1,
+    .seasonListWrapper #con2 {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .seasonOverviewTable {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .seasonStatsControl {
+        min-width: 0;
+    }
+
+    .seasonDualGrid {
+        grid-template-columns: 1fr;
+    }
+}

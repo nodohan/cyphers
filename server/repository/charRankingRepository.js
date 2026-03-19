@@ -71,7 +71,7 @@ class charRankingRepository {
         }
     }
 
-    insertSeasonCharRanking = async (date) => {
+    insertSeasonCharRanking = async (date, seasonStartAt) => {
         const insertQuery = `
             INSERT INTO char_season_stats (stat_date, char_name, total_matches, win_count, lose_count, rate)
             SELECT 
@@ -82,11 +82,11 @@ class charRankingRepository {
                 SUM(IF(result = 'lose', 1, 0)) AS lose_count,
                 ROUND(SUM(IF(result = 'win', 1, 0)) / COUNT(*) * 100, 2) AS rate
             FROM matches_map
-            where date(matchDate) > '2026-02-26'
+            where matchDate >= ?
             GROUP BY stat_date, charName`;
 
         try {
-            await this.maria.doQuery(insertQuery, [date]);
+            await this.maria.doQuery(insertQuery, [date, seasonStartAt]);
         } catch (err) {
             logger.error(err);
             throw err;
@@ -121,6 +121,21 @@ class charRankingRepository {
 
         try {
             return await this.maria.doQuery(query, [statsType, day, ratingType]);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
+    selectLatestRanking = async() => {
+        const query = `
+            SELECT * 
+            FROM userRank 
+            WHERE rankDate = (SELECT MAX(rankDate) FROM userRank)
+            ORDER BY rankNumber ASC
+        `;
+        try {
+            return await this.maria.doQuery(query);
         } catch (err) {
             logger.error(err);
             throw err;

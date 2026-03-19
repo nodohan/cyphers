@@ -2,233 +2,262 @@
 <html lang="ko">
 
 <head>
-    <%- include  ("../layout/head") %>
-        <script src="/js/charImage.js" crossorigin="anonymous"></script>
-        <script type="text/javascript">
-            var myChart;
-            var season = '<%=season%>';
-            var charCount = 78;
+    <%- include("../layout/head") %>
+    <script src="/js/charImage.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        let season = '<%= season %>';
 
-            $(document).ready(function() {
-                if(season == '2023H'){
-                    charCount = 78;
-                } else if(season == '2024H'){
-                    charCount = 80;
+        $(document).ready(function () {
+            $("#seasonSelect").val(season);
+            refreshData();
+            $("#seasonSelect").on("change", refreshData);
+        });
+
+        const refreshData = () => {
+            season = $("#seasonSelect").val();
+
+            $("#bestAll, #worstAll, #bestTanker, #worstTanker, #bestAttack, #worstAttack, #charRate, #charTotal").empty();
+
+            getStats("statsSeasonList", drawStatsList);
+            getStats("charList", drawCharList);
+        };
+
+        const getSeasonCharCount = (seasonValue) => {
+            const counts = {
+                "2022H": 74,
+                "2022U": 76,
+                "2023H": 78,
+                "2023U": 78,
+                "2024H": 80,
+                "2024U": 80
+            };
+
+            return counts[seasonValue] || 80;
+        };
+
+        const drawCharList = (data) => {
+            const list = data.row || [];
+            const limit = getSeasonCharCount(season);
+            const byRate = [...list].sort((a, b) => Number(b.rate) - Number(a.rate));
+            const byTotal = [...list].sort((a, b) => Number(b.total) - Number(a.total));
+
+            drawStatsListDiv("charRate", byRate, "캐릭터", limit);
+            drawStatsListDiv("charTotal", byTotal, "캐릭터", limit);
+        };
+
+        const drawStatsList = (data) => {
+            const rows = data.row || [];
+
+            drawStatsListDiv("bestAll", dataFilter(rows, "A", "ALL", "DESC"), "조합");
+            drawStatsListDiv("worstAll", dataFilter(rows, "A", "ALL", "ASC"), "조합");
+            drawStatsListDiv("bestTanker", dataFilter(rows, "A", "TANKER", "DESC"), "조합");
+            drawStatsListDiv("worstTanker", dataFilter(rows, "A", "TANKER", "ASC"), "조합");
+            drawStatsListDiv("bestAttack", dataFilter(rows, "A", "ATTACK", "DESC"), "조합");
+            drawStatsListDiv("worstAttack", dataFilter(rows, "A", "ATTACK", "ASC"), "조합");
+        };
+
+        const dataFilter = (rows, statsType, combiType, order) => {
+            return rows
+                .filter(item => item.statsType === statsType)
+                .filter(item => item.combiType === combiType)
+                .filter(item => item.order === order)
+                .sort(order === "DESC" ? lateDesc : lateAsc);
+        };
+
+        const drawStatsListDiv = (divId, rows, columnName, limit = 5) => {
+            const table = $("#matchInfoTemplate").clone();
+            table.removeAttr("id");
+            table.find("th:eq(1)").text(columnName);
+
+            if (columnName === "조합") {
+                table.addClass("seasonCombiTable");
+            }
+
+            if (columnName === "캐릭터") {
+                table.find("th:eq(1)").after("<th scope='col'>이름</th>");
+            }
+
+            const tbody = table.find("tbody");
+
+            if (!rows.length) {
+                tbody.append("<tr><td colspan='6'>데이터가 없습니다.</td></tr>");
+            }
+
+            for (let idx = 0; idx < rows.length && idx < limit; idx += 1) {
+                const row = rows[idx];
+                let tr = "<tr>";
+                tr += `<td>${idx + 1}</td>`;
+
+                if (columnName === "조합") {
+                    tr += `<td class="seasonCombiCell">${getChars((row.combi || "").split("|"))}</td>`;
+                } else {
+                    tr += `<td>${getChars([row.charName])}</td>`;
+                    tr += `<td>${row.charName}</td>`;
                 }
 
-                refreshData();
-                $("#seasonSelect").on("change", refreshData);
-            });
-
-            const refreshData = () => {                
-                season = $("#seasonSelect").val();
-                console.log(season);
-                $("#charRate").empty();
-                $("#charTotal").empty();
-                $("#bestAttack").empty();
-                $("#worstAttack").empty();
-                $("#bestTanker").empty();
-                $("#worstTanker").empty();
-                $("#bestAll").empty();
-                $("#worstAll").empty();
-
-                getStats("statsList", drawStatsList); // 조합통계 
-                getStats("charList", drawCharList); // 캐릭터 통계
+                tr += `<td>${formatNumber(row.total)}</td>`;
+                tr += `<td>${formatNumber(row.win)}</td>`;
+                tr += `<td>${formatNumber(row.lose)}</td>`;
+                tr += `<td>${columnName === "조합" ? row.late : row.rate}%</td>`;
+                tr += "</tr>";
+                tbody.append(tr);
             }
 
-            function drawCharList(data) {
-                drawStatsListDiv("charRate", data.row, '캐릭터', charCount);
-                drawStatsListDiv("charTotal", data.row.sort(totalDesc), '캐릭터', charCount);
+            $("#" + divId).append(table);
+        };
+
+        const getChars = (arr) => {
+            const names = (arr || []).filter(Boolean);
+
+            if (!names.length) {
+                return "<span class='seasonStatsEmpty'>정보 없음</span>";
             }
 
-            function drawStatsList(data) {
-                let mList = dataFilter(data.row, "A", "TANKER", "DESC");
-                setStatsWDueDate("M", mList[0]);
-                drawStatsListDiv("bestTanker", mList, '조합');
-                drawStatsListDiv("worstTanker", dataFilter(data.row, "A", "TANKER", "ASC"), '조합');
-                drawStatsListDiv("bestAttack", dataFilter(data.row, "A", "ATTACK", "DESC"), '조합');
-                drawStatsListDiv("worstAttack", dataFilter(data.row, "A", "ATTACK", "ASC"), '조합');
-                drawStatsListDiv("bestAll", dataFilter(data.row, "A", "ALL", "DESC"), '조합');
-                drawStatsListDiv("worstAll", dataFilter(data.row, "A", "ALL", "ASC"), '조합');
-            }
+            return `<div class="seasonCombiChars">${names.map((name) => {
+                const charId = charMap.get(name);
+                return `<img data-item="${name}" src="https://img-api.neople.co.kr/cy/characters/${charId}" alt="${name}">`;
+            }).join("")}</div>`;
+        };
 
-            function dataFilter(row, statsType, combiType, order) {
-                let list = row.filter(item => item.statsType == statsType)
-                    .filter(item => item.combiType == combiType)
-                    .filter(item => item.order == order)
-                    .sort(order == "DESC" ? lateDesc : lateAsc);
-                return list;
-            }
+        const formatNumber = (value) => Number(value || 0).toLocaleString();
 
-            function setStatsWDueDate(type, item) {
-                let span = (type == "W") ? $("#wDueSpan") : $("#mDueSpan");
-                span.empty();
-                span.append(item.statsFromDate + "~" + item.statsToDate);
-            }
-
-            function drawStatsListDiv(divId, data, colname, index = 5) {
-                var table = $(`#matchInfoTemplate`).clone();
-                table.removeAttr("id");
-                table.find("th:eq(1)").text(colname);
-
-                if(colname == '캐릭터') {
-                    table.find("th:eq(1)").after("<th scope='col'>이름</th>");
-                }
-
-                let tbody = table.find("tbody");
-
-                if (data.length == 0) {
-                    let tr = "<tr><td colspan='5'>데이터가 없습니다.</td></tr>";
-                    tbody.append(tr);
-                }
-
-                let idx = 0;
-                for (idx in data) {
-                    if (idx >= index) {
-                        break;
-                    }
-                    let row = data[idx];
-                    let tr = "<tr>";
-                    tr += `<td>${Number(idx)+1}</td>`;
-                    if (colname == '조합') {
-                        tr += `<td>${getChars(row.combi.split("|"))}</td>`;
-                    } else {
-                        tr += `<td>${getChars([row.charName])}</td>
-                               <td>${row.charName}</td>`;
-                    }
-                    tr += ` <td>${numberWithCommas(row.total)}</td>
-                            <td>${numberWithCommas(row.win)}</td>
-                            <td>${numberWithCommas(row.lose)}</td>
-                            <td>${colname == '조합' ? row.late : row.rate}%</td>`;
-                    tbody.append(tr);
-                }
-
-                $("#" + divId).append(table);
-            }
-
-            function getChars(arr) {
-                let images = "";
-                if (arr == "") {
-                    return "<span style='font-size:32px;'>탱커 없음</span>";
-                }
-                for (idx in arr) {
-                    images += "&nbsp;&nbsp;&nbsp;<img data-item='" + arr[idx] + "' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
-                }
-                return images;
-            }
-
-            function getStats(url, callback) {
-                var result;
-                $.ajax({
-                    async: true,
-                    url: "/stats/" + url,
-                    data: {
-                        'season': season
-                    },
-                    success: function(data) {
-                        if (data.resultCode == -1) {
-                            return;
-                        }
-                        callback(data);
-                    },
-                    error: function(data) {
+        const getStats = (url, callback) => {
+            $.ajax({
+                async: true,
+                url: "/stats/" + url,
+                data: {
+                    season: season
+                },
+                success: function (data) {
+                    if (data.resultCode === -1) {
                         return;
                     }
-                }).done(function() {
 
-                });
-                return result;
-            }
-        </script>
+                    callback(data);
+                },
+                error: function () {
+                    return;
+                }
+            });
+        };
+    </script>
 </head>
 
-<body class="body">
-    <%- include  ("../layout/menu") %>
+<body class="body renewalBody">
+    <%- include("../layout/menu") %>
 
-        <div id="statsMain">
+    <div id="statsMain" class="mainLayout seasonStatsPage">
+        <%- include("../layout/rightBanner") %>
 
-            <div>
-                <select id="seasonSelect" class="form-select">
-                    <option>2024U</option>
-                    <option>2024H</option>
-                    <option>2023U</option>
-                    <option>2023H</option>
-                    <option>2022U</option>
-                    <option>2022H</option>
-                  </select>
+        <section class="playCounter seasonStatsHero">
+            <div class="seasonStatsHeroText">
+                <p class="seasonStatsEyebrow">Season Summary</p>
+                <h3><%= season %> 결산 통계</h3>
             </div>
+            <div class="seasonStatsControl">
+                <label for="seasonSelect">시즌 선택</label>
+                <select id="seasonSelect" class="form-select">
+                    <option value="2024U">2024U</option>
+                    <option value="2024H">2024H</option>
+                    <option value="2023U">2023U</option>
+                    <option value="2023H">2023H</option>
+                    <option value="2022U">2022U</option>
+                    <option value="2022H">2022H</option>
+                </select>
+            </div>
+        </section>
 
-            <div id="con1" class="conLayer">
-                <h4>조합통계</h4>
+        <div class="listWrapper seasonListWrapper">
+            <article id="con1" class="seasonPanel">
+                <div class="seasonPanelHeader">
+                    <h4>조합 통계</h4>
+                    <p>탱커와 딜러 조합의 상위, 하위 성적을 정리했습니다.</p>
+                </div>
                 <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab" aria-controls="tanker" aria-selected="true">전체조합</a>
-                        <a class="nav-link" id="tanker-tab" data-bs-toggle="tab" href="#tanker" role="tab" aria-controls="tanker" aria-selected="true">탱커조합</a>
-                        <a class="nav-link" id="attack-tab" data-bs-toggle="tab" href="#attack" role="tab" aria-controls="attack" aria-selected="false">딜러조합</a>
+                    <div class="nav nav-tabs seasonTabs" role="tablist">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#all" role="tab" aria-selected="true">전체 조합</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#tanker" role="tab" aria-selected="false">탱커 조합</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#attack" role="tab" aria-selected="false">딜러 조합</a>
                     </div>
                 </nav>
-                <div class="tab-content seasonTabDiv" id="nav-tabContent">
-                    <div class="tab-pane active" id="all" role="tabpanel" aria-labelledby="tanker-tab">
-                        <h4>Best 5</h4>
-                        <div id="bestAll"></div>
-                        <h4>Worst 5</h4>
-                        <div id="worstAll"></div>
+                <div class="tab-content seasonTabContent">
+                    <div class="tab-pane fade show active" id="all" role="tabpanel">
+                        <div class="seasonStackGrid">
+                            <section>
+                                <h5>Best 5</h5>
+                                <div id="bestAll"></div>
+                            </section>
+                            <section>
+                                <h5>Worst 5</h5>
+                                <div id="worstAll"></div>
+                            </section>
+                        </div>
                     </div>
-                    <div class="tab-pane fade" id="tanker" role="tabpanel" aria-labelledby="tanker-tab">
-                        <h4>Best 5</h4>
-                        <div id="bestTanker"></div>
-                        <h4>Worst 5</h4>
-                        <div id="worstTanker"></div>
+                    <div class="tab-pane fade" id="tanker" role="tabpanel">
+                        <div class="seasonStackGrid">
+                            <section>
+                                <h5>Best 5</h5>
+                                <div id="bestTanker"></div>
+                            </section>
+                            <section>
+                                <h5>Worst 5</h5>
+                                <div id="worstTanker"></div>
+                            </section>
+                        </div>
                     </div>
-                    <div class="tab-pane fade" id="attack" role="tabpanel" aria-labelledby="wAttack-tab">
-                        <h4>Best 5</h4>
-                        <div id="bestAttack"></div>
-                        <h4>Worst 5</h4>
-                        <div id="worstAttack"></div>
+                    <div class="tab-pane fade" id="attack" role="tabpanel">
+                        <div class="seasonStackGrid">
+                            <section>
+                                <h5>Best 5</h5>
+                                <div id="bestAttack"></div>
+                            </section>
+                            <section>
+                                <h5>Worst 5</h5>
+                                <div id="worstAttack"></div>
+                            </section>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="con2" class="conLayer">
-                <h4>캐릭통계</h4>
+            </article>
+
+            <article id="con2" class="seasonPanel">
+                <div class="seasonPanelHeader">
+                    <h4>캐릭터 통계</h4>
+                    <p>승률 순과 픽수 순을 시즌 기준으로 확인할 수 있습니다.</p>
+                </div>
                 <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="rate-tab" data-bs-toggle="tab" href="#charRateTab" role="tab" aria-controls="charRateTab" aria-selected="true">승률순</a>
-                        <a class="nav-link" id="total-tab" data-bs-toggle="tab" href="#charTotalTab" role="tab" aria-controls="charTotalTab" aria-selected="true">판수순</a>
+                    <div class="nav nav-tabs seasonTabs" role="tablist">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#charRateTab" role="tab" aria-selected="true">승률 순</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#charTotalTab" role="tab" aria-selected="false">픽수 순</a>
                     </div>
                 </nav>
-                <div class="tab-content seasonTabDiv" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="charRateTab" role="tabpanel" aria-labelledby="tanker-tab">
+                <div class="tab-content seasonTabContent">
+                    <div class="tab-pane fade show active" id="charRateTab" role="tabpanel">
                         <div id="charRate"></div>
                     </div>
-
-                    <div class="tab-pane fade show" id="charTotalTab" role="tabpanel" aria-labelledby="tanker-tab">
+                    <div class="tab-pane fade" id="charTotalTab" role="tabpanel">
                         <div id="charTotal"></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- 카카오 광고 -->
-            <%- include  ("../layout/rightBanner") %>
-
+            </article>
         </div>
+    </div>
 
-        <div style="display:none">
-            <table id="matchInfoTemplate" class="table table-striped table-condensed">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">조합</th>
-                        <th scope="col">판수</th>
-                        <th scope="col">승</th>
-                        <th scope="col">패</th>
-                        <th scope="col">승률</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-
+    <div style="display:none">
+        <table id="matchInfoTemplate" class="table table-striped table-condensed">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">순위</th>
+                    <th scope="col">조합</th>
+                    <th scope="col">픽수</th>
+                    <th scope="col">승</th>
+                    <th scope="col">패</th>
+                    <th scope="col">승률</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </body>
 
 </html>

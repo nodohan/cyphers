@@ -68,7 +68,15 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/getUserInfo', async function(req, res) {
         const { nickname, gameType} = req.query;
         let userInfo = await new api().searchUser(nickname, gameType);
-        //getRatingData(userInfo);
+        
+        if (userInfo && userInfo.playerId) {
+            const [latestRank, rankHistory] = await Promise.all([
+                userRepository.selectUserLatestRank(userInfo.playerId),
+                userRepository.selectUserRankHistory(userInfo.playerId)
+            ]);
+            userInfo.latestRank = latestRank;
+            userInfo.rankHistory = rankHistory;
+        }
         
         res.send(userInfo);
     });

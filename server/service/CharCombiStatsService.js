@@ -1,16 +1,29 @@
 const repository = require('../repository/charCombiRepository');
+const SeasonRepository = require('../repository/seasonRepository');
 const commonUtil = require('../util/commonUtil'); 
 
 class CharCombiStatsService {
     constructor(maria) {
         this.combiRepository = new repository(maria);
+        this.seasonRepository = new SeasonRepository(maria);
     }
 
     // 통계 계산 (주간/월간 기준 데이터 계산)
-    callCombiData = async (statsDate) => {  
+    callCombiData = async (statsDate) => {
+        const currentSeason = await this.seasonRepository.selectCurrentSeason();
+        if (!currentSeason) {
+            throw new Error('Current season metadata not found');
+        }
+
+        const seasonStartDate = new Date(currentSeason.season_start_at);
+        const targetDate = new Date(statsDate);
+        if (targetDate < seasonStartDate) {
+            return;
+        }
+
         const todayStr = commonUtil.getYYYYMMDD(statsDate, false);
-        const aWeekAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(statsDate, -7), false);
-        const aMonthAgo = commonUtil.getYYYYMMDD(commonUtil.addDays(statsDate, -30), false);
+        const aWeekAgo = commonUtil.getYYYYMMDD(this.maxDate(commonUtil.addDays(statsDate, -7), seasonStartDate), false);
+        const aMonthAgo = commonUtil.getYYYYMMDD(this.maxDate(commonUtil.addDays(statsDate, -30), seasonStartDate), false);
 
         await this.combiRepository.calcCombiDate('weekly', aWeekAgo, todayStr);
         await this.combiRepository.calcCombiDate('monthly', aMonthAgo, todayStr);
@@ -36,6 +49,10 @@ class CharCombiStatsService {
 
         // 병렬 실행 (동시성 높이기)
         await Promise.all(jobs);
+    }
+
+    maxDate = (left, right) => {
+        return left > right ? left : right;
     }
 }
 
