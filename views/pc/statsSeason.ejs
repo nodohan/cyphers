@@ -16,7 +16,7 @@
         const refreshData = () => {
             season = $("#seasonSelect").val();
 
-            $("#bestTanker, #worstTanker, #bestAttack, #worstAttack, #charRate, #charTotal").empty();
+            $("#bestAll, #worstAll, #bestTanker, #worstTanker, #bestAttack, #worstAttack, #charRate, #charTotal").empty();
 
             getStats("statsSeasonList", drawStatsList);
             getStats("charList", drawCharList);
@@ -48,6 +48,8 @@
         const drawStatsList = (data) => {
             const rows = data.row || [];
 
+            drawStatsListDiv("bestAll", dataFilter(rows, "A", "ALL", "DESC"), "조합");
+            drawStatsListDiv("worstAll", dataFilter(rows, "A", "ALL", "ASC"), "조합");
             drawStatsListDiv("bestTanker", dataFilter(rows, "A", "TANKER", "DESC"), "조합");
             drawStatsListDiv("worstTanker", dataFilter(rows, "A", "TANKER", "ASC"), "조합");
             drawStatsListDiv("bestAttack", dataFilter(rows, "A", "ATTACK", "DESC"), "조합");
@@ -173,12 +175,25 @@
                 </div>
                 <nav>
                     <div class="nav nav-tabs seasonTabs" role="tablist">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#tanker" role="tab" aria-selected="true">탱커 조합</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#all" role="tab" aria-selected="true">전체 조합</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#tanker" role="tab" aria-selected="false">탱커 조합</a>
                         <a class="nav-link" data-bs-toggle="tab" href="#attack" role="tab" aria-selected="false">딜러 조합</a>
                     </div>
                 </nav>
                 <div class="tab-content seasonTabContent">
-                    <div class="tab-pane fade show active" id="tanker" role="tabpanel">
+                    <div class="tab-pane fade show active" id="all" role="tabpanel">
+                        <div class="seasonStackGrid">
+                            <section>
+                                <h5>Best 5</h5>
+                                <div id="bestAll"></div>
+                            </section>
+                            <section>
+                                <h5>Worst 5</h5>
+                                <div id="worstAll"></div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tanker" role="tabpanel">
                         <div class="seasonStackGrid">
                             <section>
                                 <h5>Best 5</h5>

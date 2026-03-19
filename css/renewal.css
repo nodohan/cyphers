@@ -1813,10 +1813,12 @@ h5:has(.sortButton) {
 
 .seasonListWrapper #con1 {
     flex: 1.45;
+    min-width: 0;
 }
 
 .seasonListWrapper #con2 {
     flex: 1;
+    min-width: 460px;
 }
 
 .seasonPanel {
@@ -1961,6 +1963,11 @@ h5:has(.sortButton) {
     table-layout: auto;
 }
 
+.seasonCombiTable th,
+.seasonCombiTable td {
+    text-align: center;
+}
+
 .seasonCombiTable th:nth-child(1),
 .seasonCombiTable td:nth-child(1) {
     width: 72px;
@@ -1999,8 +2006,8 @@ h5:has(.sortButton) {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    min-width: 360px;
 }
 
 .seasonCombiChars img {
@@ -2028,6 +2035,7 @@ h5:has(.sortButton) {
     .seasonListWrapper #con1,
     .seasonListWrapper #con2 {
         flex: 1;
+        min-width: 0;
     }
 
     .seasonOverviewTable {
