@@ -15,7 +15,7 @@ class CharCombiStatsService {
             throw new Error('Current season metadata not found');
         }
 
-        const seasonStartDate = new Date(currentSeason.data_start_at);
+        const seasonStartDate = new Date(currentSeason.season_start_at);
         const targetDate = new Date(statsDate);
         if (targetDate < seasonStartDate) {
             return;

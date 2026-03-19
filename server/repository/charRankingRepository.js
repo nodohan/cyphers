@@ -71,7 +71,7 @@ class charRankingRepository {
         }
     }
 
-    insertSeasonCharRanking = async (date, dataStartAt) => {
+    insertSeasonCharRanking = async (date, seasonStartAt) => {
         const insertQuery = `
             INSERT INTO char_season_stats (stat_date, char_name, total_matches, win_count, lose_count, rate)
             SELECT 
@@ -86,7 +86,7 @@ class charRankingRepository {
             GROUP BY stat_date, charName`;
 
         try {
-            await this.maria.doQuery(insertQuery, [date, dataStartAt]);
+            await this.maria.doQuery(insertQuery, [date, seasonStartAt]);
         } catch (err) {
             logger.error(err);
             throw err;

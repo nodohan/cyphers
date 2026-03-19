@@ -7,11 +7,13 @@ class SeasonRepository {
         const query = `
             SELECT
                 season_code,
-                data_start_at,
-                DATE_FORMAT(data_start_at, '%Y-%m-%d') AS data_start_date
+                season_start_at,
+                season_end_at,
+                DATE_FORMAT(season_start_at, '%Y-%m-%d') AS season_start_date,
+                DATE_FORMAT(season_end_at, '%Y-%m-%d') AS season_end_date
             FROM season_meta
             WHERE is_current = 'Y'
-            ORDER BY data_start_at DESC
+            ORDER BY season_start_at DESC
             LIMIT 1
         `;
 
