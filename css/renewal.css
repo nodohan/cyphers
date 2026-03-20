@@ -2456,9 +2456,16 @@ h5:has(.sortButton) {
 }
 
 .specialCounterTable {
+    display: table;
     width: 100%;
     margin: 0;
     table-layout: fixed;
+}
+
+.specialCounterTable tbody {
+    display: table-row-group;
+    height: auto;
+    overflow: visible;
 }
 
 .specialCounterTable thead th {
