@@ -130,18 +130,16 @@
             <div class="specialHeroText">
                 <p class="specialEyebrow">SPECIAL MENU</p>
                 <h3>닉네임 이력 조회</h3>
-                <p>닉변 기록, 최근 검색 순위, 비공개 처리 목록을 카드형 레이아웃으로 정리했습니다.</p>
+                <p>※ 닉네임 비공개 요청은, 공지 게시판의 양식에 맞춰서 신청해주시기 바랍니다. </p>
+                <p>※ 추가 비공개는 개인별 신청일로부터 6개월마다 재신청 받아 지원합니다. (트롤/어뷰징/욕설 노상관)</p>
             </div>
             <div class="specialSearchPanel">
-                <div class="specialVsSearchRow">
+                <div class="specialCounterSearchRow specialCounterSearchRowCompact">
                     <input type="text" class="form-control specialInput" id="nickNames"
                         onKeyPress="if(event.keyCode == 13) { searchNicknameHistory(); }"
-                        placeholder="조회할 닉네임">
+                        placeholder="조회할 닉네임" aria-label="조회할 닉네임">
                     <button class="btn specialActionBtn" type="button" onClick="searchNicknameHistory();">검색</button>
-                    <button class="btn specialGhostBtn" type="button"
-                        onClick="$('#historyResult').empty().append('<div class=&quot;specialEmptyState&quot;>조회 결과가 여기에 표시됩니다.</div>'); $('#historyResultTitle').text('조회 결과');">초기화</button>
                 </div>
-                <p class="specialHint">비공개 요청 및 게시글 양식 관련 안내는 공지사항 기준으로 운영됩니다.</p>
             </div>
         </section>
 
@@ -182,8 +180,8 @@
 
             <article class="specialPanel">
                 <div class="specialPanelHeader">
-                    <p class="specialPanelEyebrow">PRIVATE LIST</p>
-                    <h4>비공개 처리 이력</h4>
+                    <p class="specialPanelEyebrow">RE OPEN LIST</p>
+                    <h4>비공개 해지 이력</h4>
                     <p class="specialHint">요청 또는 운영 사유로 공개가 제한된 닉네임 목록입니다.</p>
                 </div>
                 <div id="punishedUserList" class="specialScrollable historyTimeline">

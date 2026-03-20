@@ -2041,14 +2041,14 @@ h5:has(.sortButton) {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-width: 540px;
+    max-width: 800px;
 }
 
 .specialHeroText h3 {
     margin: 0;
 }
 
-.specialHeroText p:last-child {
+.specialHeroText p {
     margin: 0;
     color: #55606d;
     line-height: 1.6;
@@ -2163,7 +2163,7 @@ h5:has(.sortButton) {
     height: 48px;
     border-radius: 14px;
     font-weight: 700;
-    padding: 0 18px;
+    padding: 0 15px;
 }
 
 .specialActionBtn {
