@@ -2316,9 +2316,15 @@ h5:has(.sortButton) {
 .specialResultSummary {
     margin: 0;
     padding: 14px 18px;
-    font-size: 15px;
+    font-size: 18px;
+    font-weight: 700;
     border-bottom: 1px solid #edf1f5;
     background: linear-gradient(90deg, rgba(238, 243, 248, 0.9), rgba(255, 255, 255, 0.95));
+}
+
+.specialResultSummary .red,
+.specialResultSummary .blue {
+    font-size: 25px;
 }
 
 .specialEmptyState {
@@ -2339,6 +2345,11 @@ h5:has(.sortButton) {
 
 .specialVsPanel.vs-rating-mode {
     background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
+}
+
+.specialVsPanel .specialTableWrap {
+    max-height: 850px;
+    overflow-y: auto;
 }
 
 .historyTimeline {
