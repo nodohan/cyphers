@@ -8,11 +8,19 @@
         pageName = "pcCounter";
         let currentCounterData = null;
         let currentMinGames = 3;
+        let currentFilterTerm = "";
 
         $(document).ready(function () {
             $("#mainMenu").removeClass("active");
             $("#userCounterMenu").addClass("active");
             updateMinGamesDisplay();
+
+            $(document).on("input", "#counterFilterInput", function () {
+                currentFilterTerm = ($(this).val() || "").trim().toLowerCase();
+                if (currentCounterData) {
+                    renderCounterPanels(currentCounterData);
+                }
+            });
         });
 
         function userCounter() {
@@ -140,7 +148,11 @@
 
             rows.sort(counterRateDesc);
 
-            rows.filter(row => (row.win + row.lose) >= min).forEach(row => {
+            rows.filter(row => {
+                const matchesMin = (row.win + row.lose) >= min;
+                const matchesFilter = !currentFilterTerm || (row.nickname || "").toLowerCase().includes(currentFilterTerm);
+                return matchesMin && matchesFilter;
+            }).forEach(row => {
                 body.append(`
                     <tr>
                         <td><b>${row.nickname}</b></td>
@@ -171,7 +183,11 @@
 
             transArr.sort(counterRateDesc);
 
-            transArr.filter(row => (row.win + row.lose) >= min).forEach(row => {
+            transArr.filter(row => {
+                const matchesMin = (row.win + row.lose) >= min;
+                const matchesFilter = !currentFilterTerm || (row.charName || "").toLowerCase().includes(currentFilterTerm);
+                return matchesMin && matchesFilter;
+            }).forEach(row => {
                 const charId = charMap.get(row.charName);
                 const charIcon = charId ? drawCharicter(charId) : "";
 
@@ -237,6 +253,8 @@
                     <a class="nav-link" data-bs-toggle="tab" href="#charCounterTab" role="tab" aria-selected="false">캐릭터상성</a>
                 </div>
                 <div class="specialTabControl">
+                    <input type="text" id="counterFilterInput" class="form-control specialInlineInput" placeholder="결과 검색"
+                        aria-label="결과 검색">
                     <div class="userCountSpan"></div>
                     <div class="specialMinControl">
                         <span class="specialMinLabel">판수</span>

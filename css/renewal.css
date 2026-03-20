@@ -2269,6 +2269,20 @@ h5:has(.sortButton) {
     justify-content: flex-end;
 }
 
+.specialInlineInput {
+    width: 180px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid #d7dee5;
+    box-shadow: none;
+    font-size: 14px;
+}
+
+.specialInlineInput:focus {
+    border-color: #9db6d0;
+    box-shadow: 0 0 0 4px rgba(157, 182, 208, 0.18);
+}
+
 .specialTabControl label {
     font-size: 13px;
     font-weight: 700;
@@ -2326,7 +2340,7 @@ h5:has(.sortButton) {
 }
 
 .specialMinValue {
-    min-width: 56px;
+    width: 72px;
     text-align: center;
     font-size: 14px;
     font-weight: 700;
