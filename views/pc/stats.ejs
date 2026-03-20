@@ -6,6 +6,8 @@
     <script src="/js/charImage.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         var myChart;
+        const currentSeasonCode = '<%= typeof currentSeasonCode !== "undefined" ? currentSeasonCode : "현재" %>';
+        const currentSeasonStartDate = '<%= typeof dataStartDate !== "undefined" ? dataStartDate : "" %>';
 
         $(document).ready(function() {
             $("#searchCharName").on("keydown", function (e) {
@@ -40,7 +42,7 @@
                 uiLibrary: 'bootstrap5',
                 iconsLibrary: 'fontawesome',
                 locale: 'kr-ko',
-                minDate: '2026-03-05',
+                minDate: currentSeasonStartDate,
                 value: yesterdayStr,
                 format: 'yyyy-mm-dd',
                 maxDate: yesterday
@@ -427,7 +429,7 @@
             <div class="line"></div>
             <section>
                 <div class="season2025U">
-                    <h4>2025U</h4>
+                    <h4><%= currentSeasonCode %> 현황판</h4>
                     <div class="charWinRate">
                         <h5>
                             <button type="button" id="sortByWinrate">승률순<span class="arrow"></span></button>

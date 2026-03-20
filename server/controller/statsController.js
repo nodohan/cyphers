@@ -31,9 +31,12 @@ module.exports = (scheduler, maria, acclogger) => {
             const currentSeason = await getCurrentSeason();
 
             if (commonUtil.isMobile(req)) {
-                res.render('../mobile/stats');
+                res.render('./mobile/stats');
             } else {
-                res.render('../pc/stats', { dataStartDate: currentSeason.season_start_date });
+                res.render('./pc/stats', {
+                    dataStartDate: currentSeason.season_start_date,
+                    currentSeasonCode: currentSeason.season_code
+                });
             }
         } catch (err) {
             logger.error(err);
