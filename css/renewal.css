@@ -2127,6 +2127,10 @@ h5:has(.sortButton) {
     grid-template-columns: minmax(0, 1fr) 120px 104px;
 }
 
+.specialCounterSearchRowCompact {
+    grid-template-columns: minmax(0, 1fr) 104px;
+}
+
 .specialInput {
     height: 48px;
     border-radius: 14px;
@@ -2249,6 +2253,86 @@ h5:has(.sortButton) {
     padding: 0;
 }
 
+.specialTabBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.specialTabControl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.specialTabControl label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #55606d;
+    white-space: nowrap;
+}
+
+.specialTabControl .form-select {
+    min-width: 104px;
+    border-radius: 12px;
+    border-color: #d7dee5;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.specialMinControl {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 16px;
+    background: #eef3f8;
+}
+
+.specialMinLabel {
+    padding: 0 4px 0 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #55606d;
+    white-space: nowrap;
+}
+
+.specialStepBtn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid #d7dee5;
+    background: #fff;
+    color: #212529;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.specialStepBtn:hover {
+    background: #f8fafc;
+    color: #212529;
+}
+
+.specialStepBtn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.specialMinValue {
+    min-width: 56px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #212529;
+}
+
 .specialMetaLine {
     display: flex;
     align-items: center;
@@ -2352,6 +2436,47 @@ h5:has(.sortButton) {
     overflow-y: auto;
 }
 
+.specialCounterPane .specialTableWrap {
+    max-height: 560px;
+    overflow-y: auto;
+}
+
+.specialCounterTable {
+    width: 100%;
+    margin: 0;
+    table-layout: fixed;
+}
+
+.specialCounterTable thead th {
+    padding: 14px 12px;
+    font-size: 14px;
+}
+
+.specialCounterTable tbody td {
+    padding: 14px 12px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.specialCounterCharCell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+}
+
+.specialCounterCharCell img {
+    width: 38px !important;
+    height: 38px !important;
+    flex: 0 0 38px;
+    border-radius: 8px;
+}
+
+.specialCounterCharCell b {
+    font-size: 16px;
+    font-weight: 700;
+}
+
 .historyTimeline {
     display: flex;
     flex-direction: column;
@@ -2391,9 +2516,14 @@ h5:has(.sortButton) {
     .specialDualGrid,
     .specialQuadGrid,
     .specialHistoryGrid,
+    .specialTabBar,
     .specialVsSearchRow,
     .specialCounterSearchRow {
         grid-template-columns: 1fr;
+    }
+
+    .specialTabBar {
+        align-items: stretch;
     }
 
     .specialInputDivider {
