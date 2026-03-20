@@ -2021,6 +2021,375 @@ h5:has(.sortButton) {
     font-size: 14px;
 }
 
+.specialPageLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.specialHero {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    background:
+        radial-gradient(circle at top left, rgba(173, 216, 255, 0.4), transparent 34%),
+        linear-gradient(135deg, #ffffff 0%, #eef3f8 100%);
+}
+
+.specialHeroText {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 540px;
+}
+
+.specialHeroText h3 {
+    margin: 0;
+}
+
+.specialHeroText p:last-child {
+    margin: 0;
+    color: #55606d;
+    line-height: 1.6;
+}
+
+.specialEyebrow,
+.specialPanelEyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6c7a89;
+}
+
+.specialSearchPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    min-width: 420px;
+}
+
+.specialModeSwitch {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #dbe3ea;
+    width: fit-content;
+}
+
+.specialModeOption {
+    margin: 0;
+    cursor: pointer;
+}
+
+.specialModeOption input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.specialModeOption span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #495057;
+    transition: 0.2s ease;
+}
+
+.specialModeOption input:checked + span {
+    background: #212529;
+    color: #fff;
+    box-shadow: 0 10px 18px rgba(33, 37, 41, 0.2);
+}
+
+.specialVsSearchRow,
+.specialCounterSearchRow {
+    display: grid;
+    align-items: center;
+    gap: 10px;
+}
+
+.specialVsSearchRow {
+    grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr) 104px;
+}
+
+.specialCounterSearchRow {
+    grid-template-columns: minmax(0, 1fr) 120px 104px;
+}
+
+.specialInput {
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid #d6dde5;
+    box-shadow: none;
+    padding: 0 16px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.specialInput:focus,
+.specialNumberInput:focus {
+    border-color: #9db6d0;
+    box-shadow: 0 0 0 4px rgba(157, 182, 208, 0.18);
+}
+
+.specialInputDivider {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-radius: 14px;
+    background: #212529;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.specialActionBtn,
+.specialGhostBtn {
+    height: 48px;
+    border-radius: 14px;
+    font-weight: 700;
+    padding: 0 18px;
+}
+
+.specialActionBtn {
+    background: #212529;
+    color: #fff;
+}
+
+.specialActionBtn:hover {
+    background: #101418;
+    color: #fff;
+}
+
+.specialGhostBtn {
+    background: #fff;
+    color: #212529;
+    border: 1px solid #d6dde5;
+}
+
+.specialGhostBtn:hover {
+    background: #f8fafc;
+    color: #212529;
+}
+
+.specialHint {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.specialDualGrid,
+.specialQuadGrid,
+.specialHistoryGrid {
+    display: grid;
+    gap: 16px;
+}
+
+.specialDualGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.specialQuadGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.specialHistoryGrid {
+    grid-template-columns: 1.2fr 0.9fr 0.9fr;
+}
+
+.specialPanel,
+.specialSubPanel {
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(28, 38, 49, 0.08);
+}
+
+.specialPanel {
+    padding: 22px;
+}
+
+.specialSubPanel {
+    padding: 18px;
+    border: 1px solid #eef2f6;
+}
+
+.specialSubPanel h5 {
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.specialPanelHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.specialPanelHeaderRow {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px;
+}
+
+.specialPanelHeader h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.specialMetaLine {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.specialMetaBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #eef3f8;
+    color: #495057;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.specialTableWrap {
+    border: 1px solid #edf1f5;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.specialTableWrap table {
+    margin: 0;
+}
+
+.specialTableWrap table thead th {
+    background: #f8fafc;
+    color: #55606d;
+    border: 0;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.specialTableWrap table td {
+    vertical-align: middle;
+}
+
+.specialTableWrap .vsTable {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.specialTableWrap .vsTable thead {
+    display: table-header-group;
+}
+
+.specialTableWrap .vsTable tbody {
+    display: table-row-group;
+    overflow: visible;
+    height: auto;
+}
+
+.specialTableWrap .vsTable th:last-child,
+.specialTableWrap .vsTable td:last-child {
+    width: 60px;
+}
+
+.specialResultSummary {
+    margin: 0;
+    padding: 14px 18px;
+    font-size: 15px;
+    border-bottom: 1px solid #edf1f5;
+    background: linear-gradient(90deg, rgba(238, 243, 248, 0.9), rgba(255, 255, 255, 0.95));
+}
+
+.specialEmptyState {
+    padding: 36px 24px;
+    text-align: center;
+    color: #7a8794;
+    line-height: 1.7;
+}
+
+.specialScrollable {
+    max-height: 640px;
+    overflow-y: auto;
+}
+
+.specialVsPanel.vs-normal-mode {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+}
+
+.specialVsPanel.vs-rating-mode {
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
+}
+
+.historyTimeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.historyTimelineItem {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #eef2f6;
+}
+
+.historyTimelineItem strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #212529;
+}
+
+.historyTimelineItem p {
+    margin: 0;
+    color: #55606d;
+    line-height: 1.5;
+}
+
+@media (max-width: 1200px) {
+    .specialHero,
+    .specialPanelHeaderRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .specialSearchPanel {
+        min-width: 0;
+    }
+
+    .specialDualGrid,
+    .specialQuadGrid,
+    .specialHistoryGrid,
+    .specialVsSearchRow,
+    .specialCounterSearchRow {
+        grid-template-columns: 1fr;
+    }
+
+    .specialInputDivider {
+        min-height: 48px;
+    }
+}
+
 @media (max-width: 1200px) {
     .seasonStatsHero {
         flex-direction: column;
