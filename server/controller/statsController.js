@@ -189,8 +189,9 @@ module.exports = (scheduler, maria, acclogger) => {
             const minMatches = Number(summary?.minMatches || DEFAULT_MIN_MATCHES);
             const hiddenOpExcludeRank = Number(summary?.hiddenOpExcludeRank || DEFAULT_HIDDEN_OP_EXCLUDE_RANK);
 
-            const [topWinRate, topTotalMatches, hiddenOp, trap] = await Promise.all([
+            const [topWinRate, topPickRate, topTotalMatches, hiddenOp, trap] = await Promise.all([
                 statsSeasonRepository.selectTopWinRate(season, minMatches),
+                statsSeasonRepository.selectTopPickRate(season),
                 statsSeasonRepository.selectTopTotalMatches(season),
                 statsSeasonRepository.selectHiddenOp(season, minMatches, hiddenOpExcludeRank, SIDE_LIMIT),
                 statsSeasonRepository.selectTrap(season, minMatches, hiddenOpExcludeRank, SIDE_LIMIT)
@@ -207,6 +208,7 @@ module.exports = (scheduler, maria, acclogger) => {
                         hiddenOpExcludeRank
                     },
                     topWinRate,
+                    topPickRate,
                     topTotalMatches,
                     hiddenOp,
                     trap

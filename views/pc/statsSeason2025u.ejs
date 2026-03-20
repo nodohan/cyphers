@@ -21,7 +21,7 @@
         const refreshData = () => {
             season = $("#seasonSelect").val();
             $("#seasonOverview").empty();
-            $("#topWinRate, #topTotalMatches, #hiddenOp, #trap").empty();
+            $("#topWinRate, #topPickRate, #topTotalMatches, #hiddenOp, #trap").empty();
             $(".seasonStatsEyebrow").text(`${season} Season Stats`);
             $(".seasonStatsTitle").text(`${season} 별도 집계 통계`);
             getStats(drawSeasonSummary);
@@ -43,10 +43,37 @@
 
         const drawSeasonSummary = (data) => {
             drawOverview(data.overview || {}, data.thresholds || {});
-            drawStatsListDiv("topWinRate", data.topWinRate || [], "캐릭터 승률");
-            drawStatsListDiv("topTotalMatches", data.topTotalMatches || [], "캐릭터 픽수");
-            drawStatsListDiv("hiddenOp", data.hiddenOp || [], "히든 OP");
-            drawStatsListDiv("trap", data.trap || [], "함정 캐릭터");
+            drawStatsListDiv("topWinRate", data.topWinRate || [], "캐릭터 승률", [
+                { key: "totalMatches", label: "픽수", format: formatNumber },
+                { key: "winCount", label: "승", format: formatNumber },
+                { key: "loseCount", label: "패", format: formatNumber },
+                { key: "winRate", label: "승률", format: formatPercent }
+            ]);
+            drawStatsListDiv("topPickRate", data.topPickRate || [], "캐릭터 픽률", [
+                { key: "totalMatches", label: "픽수", format: formatNumber },
+                { key: "pickRate", label: "픽률", format: formatPercent },
+                { key: "winCount", label: "승", format: formatNumber },
+                { key: "loseCount", label: "패", format: formatNumber },
+                { key: "winRate", label: "승률", format: formatPercent }
+            ]);
+            drawStatsListDiv("topTotalMatches", data.topTotalMatches || [], "캐릭터 픽수", [
+                { key: "totalMatches", label: "픽수", format: formatNumber },
+                { key: "winCount", label: "승", format: formatNumber },
+                { key: "loseCount", label: "패", format: formatNumber },
+                { key: "winRate", label: "승률", format: formatPercent }
+            ]);
+            drawStatsListDiv("hiddenOp", data.hiddenOp || [], "히든 OP", [
+                { key: "totalMatches", label: "픽수", format: formatNumber },
+                { key: "winCount", label: "승", format: formatNumber },
+                { key: "loseCount", label: "패", format: formatNumber },
+                { key: "winRate", label: "승률", format: formatPercent }
+            ]);
+            drawStatsListDiv("trap", data.trap || [], "함정 캐릭터", [
+                { key: "totalMatches", label: "픽수", format: formatNumber },
+                { key: "winCount", label: "승", format: formatNumber },
+                { key: "loseCount", label: "패", format: formatNumber },
+                { key: "winRate", label: "승률", format: formatPercent }
+            ]);
         };
 
         const drawOverview = (overview) => {
@@ -82,7 +109,7 @@
             $("#seasonOverview").append(table);
         };
 
-        const drawStatsListDiv = (divId, rows, title) => {
+        const drawStatsListDiv = (divId, rows, title, metricColumns) => {
             const section = $(`
                 <section class="seasonTableSection">
                     <div class="seasonPanelHeader">
@@ -91,30 +118,51 @@
                 </section>
             `);
 
-            const table = $("#seasonTableTemplate").clone();
-            table.removeAttr("id");
+            const table = createStatsTable(metricColumns);
 
             const tbody = table.find("tbody");
+            const columnCount = 3 + metricColumns.length;
             if (!rows.length) {
-                tbody.append("<tr><td colspan='7'>데이터가 없습니다.</td></tr>");
+                tbody.append(`<tr><td colspan='${columnCount}'>데이터가 없습니다.</td></tr>`);
             }
 
             rows.forEach((row, index) => {
+                const metricCells = metricColumns.map((column) => (
+                    `<td>${column.format(row[column.key])}</td>`
+                )).join("");
+
                 tbody.append(`
                     <tr>
                         <td>${index + 1}</td>
                         <td>${getChars([row.charName])}</td>
                         <td>${row.charName}</td>
-                        <td>${formatNumber(row.totalMatches)}</td>
-                        <td>${formatNumber(row.winCount)}</td>
-                        <td>${formatNumber(row.loseCount)}</td>
-                        <td>${Number(row.winRate || 0).toFixed(2)}%</td>
+                        ${metricCells}
                     </tr>
                 `);
             });
 
             section.append(table);
             $("#" + divId).append(section);
+        };
+
+        const createStatsTable = (metricColumns) => {
+            const headers = [
+                { label: "순위" },
+                { label: "이미지" },
+                { label: "캐릭터" },
+                ...metricColumns
+            ];
+
+            const thead = headers.map((header) => `<th scope="col">${header.label}</th>`).join("");
+
+            return $(`
+                <table class="table table-striped table-condensed">
+                    <thead class="thead-light">
+                        <tr>${thead}</tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `);
         };
 
         const getChars = (arr) => {
@@ -135,6 +183,8 @@
         };
 
         const formatNumber = (value) => Number(value || 0).toLocaleString();
+
+        const formatPercent = (value) => `${Number(value || 0).toFixed(2)}%`;
 
         const formatDuration = (seconds) => {
             if (seconds == null) {
@@ -183,6 +233,7 @@
             <nav>
                 <div class="nav nav-tabs seasonTabs" role="tablist">
                     <a class="nav-link active" data-bs-toggle="tab" href="#seasonWinRateTab" role="tab" aria-selected="true">승률</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#seasonPickRateTab" role="tab" aria-selected="false">픽률</a>
                     <a class="nav-link" data-bs-toggle="tab" href="#seasonPickTab" role="tab" aria-selected="false">픽수</a>
                     <a class="nav-link" data-bs-toggle="tab" href="#seasonHiddenOpTab" role="tab" aria-selected="false">히든 OP</a>
                     <a class="nav-link" data-bs-toggle="tab" href="#seasonTrapTab" role="tab" aria-selected="false">함정 캐릭터</a>
@@ -192,6 +243,9 @@
             <div class="tab-content seasonTabContent">
                 <div class="tab-pane fade show active" id="seasonWinRateTab" role="tabpanel">
                     <article id="topWinRate" class="seasonPanel"></article>
+                </div>
+                <div class="tab-pane fade" id="seasonPickRateTab" role="tabpanel">
+                    <article id="topPickRate" class="seasonPanel"></article>
                 </div>
                 <div class="tab-pane fade" id="seasonPickTab" role="tabpanel">
                     <article id="topTotalMatches" class="seasonPanel"></article>
@@ -206,22 +260,6 @@
         </section>
     </div>
 
-    <div style="display:none">
-        <table id="seasonTableTemplate" class="table table-striped table-condensed">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">순위</th>
-                    <th scope="col">이미지</th>
-                    <th scope="col">캐릭터</th>
-                    <th scope="col">픽수</th>
-                    <th scope="col">승</th>
-                    <th scope="col">패</th>
-                    <th scope="col">승률</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
 </body>
 
 </html>

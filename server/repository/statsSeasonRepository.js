@@ -232,6 +232,29 @@ class StatsSeasonRepository {
         return await this.runQuery(query, [season]);
     }
 
+    selectTopPickRate = async (season, limit) => {
+        const query = `
+            SELECT
+                scs.char_name AS charName,
+                scs.total_matches AS totalMatches,
+                scs.win_count AS winCount,
+                scs.lose_count AS loseCount,
+                scs.win_rate AS winRate,
+                ROUND(scs.total_matches / NULLIF(sss.total_matches, 0) * 100, 2) AS pickRate
+            FROM season_character_stats scs
+            INNER JOIN season_summary_stats sss
+                ON sss.season_code = scs.season_code
+            WHERE scs.season_code = ?
+            ORDER BY pickRate DESC, scs.total_matches DESC, scs.char_name ASC
+        `;
+
+        if (Number.isFinite(limit)) {
+            return await this.runQuery(`${query}\n LIMIT ?`, [season, limit]);
+        }
+
+        return await this.runQuery(query, [season]);
+    }
+
     selectHiddenOp = async (season, minMatches, excludeRank, limit) => {
         const query = `
             SELECT
