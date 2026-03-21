@@ -189,8 +189,8 @@
                 background: #8a94a6;
             }
             .userSearchRenewal .infoLayer {
-                margin-top: 12px;
-                height: calc(100% - 94px);
+                margin-top: 10px;
+                height: calc(100% - 88px);
                 background: transparent;
             }
             .userSearchRenewal .userSearchCard {
@@ -199,8 +199,8 @@
                 border-radius: 18px;
                 background: linear-gradient(180deg, rgba(237, 244, 255, 0.98) 0%, rgba(223, 235, 255, 0.98) 100%);
                 box-shadow: 0 14px 26px rgba(65, 105, 180, 0.12);
-                padding: 10px 12px 12px;
-                margin-bottom: 8px;
+                padding: 8px 10px 9px;
+                margin-bottom: 6px;
             }
             .userSearchRenewal .infoDivRed.userSearchCard {
                 border-color: rgba(222, 138, 138, 0.26);
@@ -209,12 +209,19 @@
             }
             .userSearchRenewal .nicknameLayer {
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
+                justify-content: space-between;
                 gap: 6px;
-                flex-wrap: wrap;
                 border-bottom: 1px solid rgba(120, 136, 160, 0.22);
-                padding-bottom: 8px !important;
-                margin-bottom: 8px;
+                padding-bottom: 6px !important;
+                margin-bottom: 6px;
+            }
+            .userSearchRenewal .nicknameMain {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+                min-width: 0;
+                flex: 1 1 auto;
             }
             .userSearchRenewal .nickNameDiv {
                 min-width: auto;
@@ -224,19 +231,71 @@
                 letter-spacing: -0.03em;
                 color: #24324a;
             }
-            .userSearchRenewal .width45p,
-            .userSearchRenewal .width50p {
+            .userSearchRenewal .nicknameMeta {
                 display: flex;
                 align-items: center;
                 gap: 4px;
                 flex-wrap: wrap;
+                color: #5b6780;
+                font-size: 13px;
+            }
+            .userSearchRenewal .nicknameSide {
+                display: flex;
+                align-items: flex-end;
+                gap: 6px;
+                margin-left: auto;
+                min-width: 0;
+            }
+            .userSearchRenewal .tierGroup {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 3px;
+                min-width: 0;
+                max-width: 100%;
+            }
+            .userSearchRenewal .tierLine {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 4px;
+                flex-wrap: wrap;
+                text-align: right;
+                max-width: 100%;
+            }
+            .userSearchRenewal .tierLine #tierName {
+                font-weight: 700;
+            }
+            .userSearchRenewal .tierLine #currRP {
+                color: #24324a;
+            }
+            .userSearchRenewal .tierLine #maxRP {
+                color: #6a768e;
+                font-size: 12px;
+            }
+            .userSearchRenewal .tierLine #beforeSeason {
+                display: inline-flex;
+                align-items: center;
+            }
+            .userSearchRenewal #rankBadgeContainer {
+                margin: 0;
+                max-width: 100%;
+            }
+            .userSearchRenewal #rankChartDiv {
+                max-width: 84px;
+                overflow: hidden;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .userSearchRenewal #defaultDiv > .width100p {
+                margin-bottom: 4px;
             }
             .userSearchRenewal #playGameDiv {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 8px 10px;
-                margin: 4px 0 6px;
+                padding: 6px 8px;
+                margin: 2px 0 4px;
                 background: rgba(255, 255, 255, 0.72);
                 border-radius: 12px;
             }
@@ -244,27 +303,28 @@
                 margin: 0;
             }
             .userSearchRenewal .playParty {
-                padding: 8px 10px;
+                padding: 6px 8px;
                 border-radius: 12px;
                 background: rgba(255, 255, 255, 0.62);
             }
             .userSearchRenewal .positionDiv,
             .userSearchRenewal .mostCharDiv,
             .userSearchRenewal .recentlyDiv {
-                margin-top: 8px;
-                padding: 8px 10px;
+                margin-top: 6px;
+                padding: 6px 8px;
                 border-radius: 12px;
                 background: rgba(255, 255, 255, 0.62);
             }
             .userSearchRenewal .positionDiv {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 6px;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 4px;
+                align-items: stretch;
             }
             .userSearchRenewal .positionDiv > .card {
                 width: 100%;
                 background: rgba(255, 255, 255, 0.96);
-                padding: 6px 8px;
+                padding: 4px 6px;
             }
             .userSearchRenewal .positionDiv > .card,
             .userSearchRenewal .positionDiv > .card * {
@@ -274,33 +334,41 @@
                 display: flex;
                 align-items: center;
                 margin: 0;
+                flex-direction: column;
+                text-align: center;
             }
             .userSearchRenewal .positionDiv .col-md-4 {
-                flex: 0 0 44px;
-                max-width: 44px;
+                flex: 0 0 auto;
+                max-width: none;
+                width: 100%;
             }
             .userSearchRenewal .positionDiv .col-md-8 {
                 flex: 1 1 auto;
-                max-width: calc(100% - 44px);
+                max-width: none;
+                width: 100%;
             }
             .userSearchRenewal .positionDiv .card-body {
                 min-width: 0;
                 padding: 0 !important;
-                text-align: left;
+                text-align: center;
                 font-size: 14px;
                 line-height: 1.2;
             }
             .userSearchRenewal .positionDiv img {
                 display: block;
-                width: 34px;
-                height: 34px;
-                margin: 0 auto;
+                width: 28px;
+                height: 28px;
+                margin: 0 auto 2px;
             }
             .userSearchRenewal .positionDiv .card,
             .userSearchRenewal .mostCharDetailDiv .card {
                 border: 0;
                 border-radius: 10px;
                 box-shadow: none;
+            }
+            .userSearchRenewal .mostCharDiv .card,
+            .userSearchRenewal .recentlyDiv {
+                margin-top: 0;
             }
             .userSearchRenewal #mostCharTitleDiv,
             .userSearchRenewal #recentlyDivTitle {
@@ -309,7 +377,10 @@
             }
             .userSearchRenewal .tack,
             .userSearchRenewal .tackRemove {
-                margin-left: auto;
+                margin-left: 2px;
+                align-self: center;
+                padding-top: 0;
+                line-height: 1;
             }
             .rank-info-box {
                 display: flex;
@@ -317,16 +388,17 @@
                 background: linear-gradient(135deg, #fff5f0 0%, #fff 100%);
                 border: 1px solid #ffd8c4;
                 border-radius: 8px;
-                padding: 8px 15px;
-                margin-top: 10px;
-                margin-bottom: 5px;
+                padding: 4px 8px;
+                margin-top: 0;
+                margin-bottom: 0;
                 box-shadow: 0 2px 4px rgba(255, 69, 0, 0.05);
-                width: max-content;
+                width: auto;
+                max-width: 100%;
             }
             .rank-info-text {
                 display: flex;
                 align-items: baseline;
-                margin-right: 15px;
+                margin-right: 8px;
             }
             .rank-label {
                 font-size: 0.8em;
@@ -335,14 +407,14 @@
                 letter-spacing: -0.5px;
             }
             .rank-value {
-                font-size: 1.2em;
+                font-size: 1em;
                 color: #ff4500;
                 font-weight: bold;
-                margin-top: 2px;
+                margin-top: 0;
             }
             .rank-diff {
-                font-size: 0.85em;
-                margin-top: 2px;
+                font-size: 0.78em;
+                margin-top: 0;
                 font-weight: 500;
             }
             .rank-diff.up {
@@ -357,6 +429,7 @@
             .rank-sparkline-svg {
                 vertical-align: middle;
                 overflow: visible;
+                max-width: 84px;
             }
         </style>
         <script type="text/javascript">
@@ -982,32 +1055,38 @@
             <div id="defaultDiv">
                 <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
                 <div class="nicknameLayer width100p">
-                    <div id="nickNameDiv" class="nickNameDiv"> </div>
-                    <div class="width45p">
-                        <span id="levelDiv"></span>&nbsp;&nbsp;
-                        <span id="clanDiv"></span>
-                    </div>
-                    <div>
-                        <span id="tierName"></span>&nbsp;
-                        <span id="currRP" class="bold"></span>
-                        <span id="maxRP"></span>
-                        <span id="beforeSeason"></span>
-                    </div>
-                    <div class="tack">
-                        <i id="tack" style="margin-right: 2px;font-size: 18px;" class="fas"></i>
-                    </div>
-                    <div class="tackRemove" style="display:none">
-                        <i class='fas fa-window-close' style='font-size:18px;color:red'></i>
-                    </div>
-                </div>
-                <div id="rankBadgeContainer" style="display:none;">
-                    <div class="rank-info-box">
-                        <div class="rank-info-text">
-                            <!-- <span class="rank-label">오늘의 랭킹</span> -->
-                            <span id="latestRankDiv" class="rank-value"></span>
-                            <span id="rankDiffDiv" class="rank-diff"></span>
+                    <div class="nicknameMain">
+                        <div id="nickNameDiv" class="nickNameDiv"> </div>
+                        <div class="nicknameMeta">
+                            <span id="levelDiv"></span>
+                            <span id="clanDiv"></span>
                         </div>
-                        <div id="rankChartDiv"></div>
+                    </div>
+                    <div class="nicknameSide">
+                        <div class="tierGroup">
+                            <div id="rankBadgeContainer" style="display:none;">
+                                <div class="rank-info-box">
+                                    <div class="rank-info-text">
+                                        <!-- <span class="rank-label">오늘의 랭킹</span> -->
+                                        <span id="latestRankDiv" class="rank-value"></span>
+                                        <span id="rankDiffDiv" class="rank-diff"></span>
+                                    </div>
+                                    <div id="rankChartDiv"></div>
+                                </div>
+                            </div>
+                            <div class="tierLine">
+                                <span id="tierName"></span>
+                                <span id="currRP" class="bold"></span>
+                                <span id="maxRP"></span>
+                                <span id="beforeSeason"></span>
+                            </div>
+                        </div>
+                        <div class="tack">
+                            <i id="tack" style="margin-right: 2px;font-size: 18px;" class="fas"></i>
+                        </div>
+                        <div class="tackRemove" style="display:none">
+                            <i class='fas fa-window-close' style='font-size:18px;color:red'></i>
+                        </div>
                     </div>
                 </div>
                 <div class="width100p">
