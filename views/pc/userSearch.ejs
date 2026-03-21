@@ -633,6 +633,19 @@
                 isShow ? div.show() : div.hide();
             }
 
+            function normalizeRankValue(rankValue) {
+                const numericRank = Number(rankValue);
+                return Number.isFinite(numericRank) && numericRank > 0 ? numericRank : null;
+            }
+
+            function getRenderableRankHistory(rankHistory) {
+                if (!Array.isArray(rankHistory)) {
+                    return [];
+                }
+
+                return rankHistory.filter((historyItem) => normalizeRankValue(historyItem.rankNumber) !== null);
+            }
+
             function setUserInfo(gameType, divName, data) {
                 const nickname = data.nickname;
                 if (userData[nickname] == null) {
@@ -843,6 +856,25 @@
                 }
 
                 item.find("#beforeSeason").append(`<a href='javascript:userSeasonRank("${data.playerId}", drawSeasonRank);' >전시즌</a>`);
+
+                const latestRankValue = data.latestRank && typeof data.latestRank === 'object'
+                    ? normalizeRankValue(data.latestRank.rank)
+                    : normalizeRankValue(data.latestRank);
+                const renderableRankHistory = getRenderableRankHistory(data.rankHistory);
+
+                if (latestRankValue === null) {
+                    item.find("#rankBadgeContainer").hide();
+                    item.find("#latestRankDiv").empty();
+                    item.find("#rankDiffDiv").empty().removeClass("up down stay");
+                } else {
+                    item.find("#latestRankDiv").text(`${latestRankValue}위`);
+                }
+
+                if (renderableRankHistory.length > 1) {
+                    item.find("#rankChartDiv").html(createRankSparkline(renderableRankHistory));
+                } else {
+                    item.find("#rankChartDiv").empty();
+                }
 
                 let tot = rating.winCount + rating.loseCount + rating.stopCount;
                 item.find("#playGameDiv").append(`<b class="red">승률</b> : ${pov.toFixed(0)}% [${tot}전 ${rating.winCount}승 ${rating.loseCount}패 ${rating.stopCount}중단]`);

@@ -25,7 +25,13 @@ class userRepository {
         const query = `
             SELECT rankNumber 
             FROM userRank 
-            WHERE playerId = ? 
+            WHERE playerId = ?
+              AND season = (
+                SELECT season
+                FROM userRank
+                ORDER BY rankDate DESC
+                LIMIT 1
+              )
             ORDER BY rankDate DESC 
             LIMIT 2
         `;
@@ -53,7 +59,13 @@ class userRepository {
         const query = `
             SELECT rankNumber, DATE_FORMAT(rankDate, '%m/%d') as date
             FROM userRank 
-            WHERE playerId = ? 
+            WHERE playerId = ?
+              AND season = (
+                SELECT season
+                FROM userRank
+                ORDER BY rankDate DESC
+                LIMIT 1
+              )
             ORDER BY rankDate DESC
             LIMIT 20
         `;
