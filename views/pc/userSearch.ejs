@@ -375,6 +375,20 @@
             .userSearchRenewal .recentlyDiv {
                 margin-top: 0;
             }
+            .userSearchRenewal .mostCharDetailDiv {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .userSearchRenewal .mostCharDetailDiv .card {
+                width: calc(25% - 3px);
+                min-height: 54px;
+                background: rgba(255, 255, 255, 0.96);
+            }
+            .userSearchRenewal .mostCharDetailDiv .card.empty {
+                visibility: hidden;
+                pointer-events: none;
+            }
             .userSearchRenewal #mostCharTitleDiv,
             .userSearchRenewal #recentlyDivTitle {
                 font-weight: 700;
