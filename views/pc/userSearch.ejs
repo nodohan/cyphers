@@ -192,7 +192,7 @@
             .userSearchRenewal .nickNameDiv {
                 min-width: auto;
                 height: auto;
-                font-size: 24px;
+                font-size: 28px;
                 line-height: 1.1;
                 letter-spacing: -0.03em;
                 color: #24324a;
@@ -203,7 +203,6 @@
                 align-items: center;
                 gap: 4px;
                 flex-wrap: wrap;
-                font-size: 13px;
             }
             .userSearchRenewal #playGameDiv {
                 display: flex;
@@ -213,7 +212,6 @@
                 margin: 4px 0 6px;
                 background: rgba(255, 255, 255, 0.72);
                 border-radius: 12px;
-                font-size: 13px;
             }
             .userSearchRenewal #playGameDiv p {
                 margin: 0;
@@ -222,7 +220,6 @@
                 padding: 8px 10px;
                 border-radius: 12px;
                 background: rgba(255, 255, 255, 0.62);
-                font-size: 13px;
             }
             .userSearchRenewal .positionDiv,
             .userSearchRenewal .mostCharDiv,
@@ -237,6 +234,41 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 6px;
             }
+            .userSearchRenewal .positionDiv > .card {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.96);
+                padding: 6px 8px;
+            }
+            .userSearchRenewal .positionDiv > .card,
+            .userSearchRenewal .positionDiv > .card * {
+                float: none;
+            }
+            .userSearchRenewal .positionDiv .row {
+                display: flex;
+                align-items: center;
+                margin: 0;
+            }
+            .userSearchRenewal .positionDiv .col-md-4 {
+                flex: 0 0 44px;
+                max-width: 44px;
+            }
+            .userSearchRenewal .positionDiv .col-md-8 {
+                flex: 1 1 auto;
+                max-width: calc(100% - 44px);
+            }
+            .userSearchRenewal .positionDiv .card-body {
+                min-width: 0;
+                padding: 0 !important;
+                text-align: left;
+                font-size: 14px;
+                line-height: 1.2;
+            }
+            .userSearchRenewal .positionDiv img {
+                display: block;
+                width: 34px;
+                height: 34px;
+                margin: 0 auto;
+            }
             .userSearchRenewal .positionDiv .card,
             .userSearchRenewal .mostCharDetailDiv .card {
                 border: 0;
@@ -247,7 +279,6 @@
             .userSearchRenewal #recentlyDivTitle {
                 font-weight: 700;
                 color: #33415c;
-                font-size: 13px;
             }
             .userSearchRenewal .tack,
             .userSearchRenewal .tackRemove {
@@ -939,7 +970,7 @@
                         <span id="levelDiv"></span>&nbsp;&nbsp;
                         <span id="clanDiv"></span>
                     </div>
-                    <div class="width50p">
+                    <div>
                         <span id="tierName"></span>&nbsp;
                         <span id="currRP" class="bold"></span>
                         <span id="maxRP"></span>
