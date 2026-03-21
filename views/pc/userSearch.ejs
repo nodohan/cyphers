@@ -439,8 +439,16 @@
             pageName = "pcUserSearch";
 
             var userData = {};
+            const visibilityToggleConfig = {
+                partyShow: { selector: ".playParty", cookieKey: "playParty" },
+                positionShow: { selector: ".positionDiv", cookieKey: "positionDiv" },
+                mostCharShow: { selector: ".mostCharDiv", cookieKey: "mostCharDiv" },
+                recentShow: { selector: ".recentlyDiv", cookieKey: "recentlyDiv" }
+            };
 
             $(document).ready(function() {
+                getCookie();
+
                 let nickname = '<%=searchNickname%>';
                 if (nickname != '') {
                     $("#nickNames").val(nickname);
@@ -448,12 +456,12 @@
                 }
 
                 showSearchHistory();
-                $("#partyShow").on("change", () => checkVisibility("partyShow"));
-                $("#positionShow").on("change", () => checkVisibility("positionShow"));
-                $("#mostCharShow").on("change", () => checkVisibility("mostCharShow"));
-                $("#recentShow").on("change", () => checkVisibility("recentShow"));
+                Object.keys(visibilityToggleConfig).forEach((toggleId) => {
+                    $("#" + toggleId).on("change", () => updateVisibility(toggleId));
+                });
                 $("#tackShow").on("change", () => tackUse());
                 $("input[name='gameType']").on("change", syncGameTypeButtons);
+                applyAllVisibility();
                 tackUse();
                 syncGameTypeButtons();
 
@@ -484,10 +492,9 @@
             }
 
             function getCookie() {
-                setCheckbox('partyShow', Cookies.get('playParty'));
-                setCheckbox('positionShow', Cookies.get('positionDiv'));
-                setCheckbox('mostCharShow', Cookies.get('mostCharDiv'));
-                setCheckbox('recentShow', Cookies.get('recentlyDiv'));
+                Object.entries(visibilityToggleConfig).forEach(([toggleId, config]) => {
+                    setCheckbox(toggleId, Cookies.get(config.cookieKey));
+                });
                 setCheckbox('tackShow', Cookies.get('tackShow'));
 
                 let gameType = Cookies.get('gameType');
@@ -504,13 +511,21 @@
                 chkbox.prop('checked', checked);
             }
 
-            function checkVisibility(id) {
-                console.log(id);
-                const isShow = $("#" + id).is(":checked");
-                setVisible(id, isShow);
-                Cookies.set(id, isShow, {
+            function updateVisibility(toggleId) {
+                const config = visibilityToggleConfig[toggleId];
+                if (!config) {
+                    return;
+                }
+
+                const isShow = $("#" + toggleId).is(":checked");
+                setVisible(config.selector, isShow);
+                Cookies.set(config.cookieKey, isShow, {
                     expires: 7
                 });
+            }
+
+            function applyAllVisibility() {
+                Object.keys(visibilityToggleConfig).forEach(updateVisibility);
             }
 
             const visibleTackDiv = () => {
@@ -611,8 +626,8 @@
                 return divItem.length != 0;
             }
 
-            function setVisible(classId, isShow) {
-                let div = $("." + classId);
+            function setVisible(selector, isShow) {
+                const div = $(selector);
                 isShow ? div.show() : div.hide();
             }
 
@@ -630,6 +645,8 @@
                 } else {
                     drawNormalUserInfo(gameType, divName, data, nickname);
                 }
+
+                applyAllVisibility();
             }
 
             const drawTeamRate  = (team, data) => {
