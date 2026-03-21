@@ -3,9 +3,251 @@
 
 <head>
 
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <%- include  ("../layout/head") %>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.js"></script>
         <style>
+            .userSearchRenewal {
+                background:
+                    radial-gradient(circle at top left, rgba(102, 154, 214, 0.14), transparent 28%),
+                    radial-gradient(circle at top right, rgba(220, 120, 120, 0.12), transparent 24%),
+                    linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
+                font-family: "Pretendard Variable", Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
+            }
+            .userSearchRenewal #mainUserSearch {
+                width: 1850px;
+                max-width: calc(100vw - 48px);
+                padding-bottom: 36px;
+            }
+            .userSearchRenewal .divContainer {
+                gap: 12px;
+                margin-bottom: 6px;
+            }
+            .userSearchRenewal .topUserSearch,
+            .userSearchRenewal .topHistory,
+            .userSearchRenewal #drop-zone,
+            .userSearchRenewal .con {
+                box-sizing: border-box;
+                border: 1px solid rgba(120, 136, 160, 0.18);
+                border-radius: 22px;
+                box-shadow: 0 18px 40px rgba(31, 44, 74, 0.08);
+            }
+            .userSearchRenewal .topUserSearch,
+            .userSearchRenewal .topHistory,
+            .userSearchRenewal #drop-zone {
+                background: rgba(255, 255, 255, 0.88);
+                backdrop-filter: blur(10px);
+            }
+            .userSearchRenewal .topUserSearch {
+                min-height: 92px;
+                height: auto;
+                padding: 18px 22px;
+            }
+            .userSearchRenewal .topUserSearch .btn-group {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+            .userSearchRenewal .topUserSearch .btn-group > div:last-child {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .userSearchRenewal .topUserSearch label.btn {
+                border: 0;
+                border-radius: 999px;
+                background: #e9edf5;
+                color: #4d5b75;
+                font-weight: 700;
+                padding: 10px 18px;
+                box-shadow: none;
+            }
+            .userSearchRenewal .topUserSearch label.btn.active {
+                background: #343a40;
+                color: #fff;
+            }
+            .userSearchRenewal .topUserSearch .form-check-inline {
+                margin-right: 0;
+                padding: 8px 14px;
+                border-radius: 999px;
+                background: #f4f7fb;
+                border: 1px solid rgba(120, 136, 160, 0.18);
+            }
+            .userSearchRenewal .topHistory {
+                min-height: 64px;
+                padding: 16px 22px;
+            }
+            .userSearchRenewal #drop-zone {
+                min-height: 126px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: #5e6b84;
+                line-height: 1.6;
+                background: linear-gradient(135deg, rgba(226, 237, 255, 0.92) 0%, rgba(255, 245, 245, 0.92) 100%);
+            }
+            .userSearchRenewal .con {
+                padding: 22px 20px 18px;
+                background: rgba(255, 255, 255, 0.72);
+                backdrop-filter: blur(8px);
+            }
+            .userSearchRenewal .con h3 {
+                display: inline-flex;
+                align-items: center;
+                margin: 0;
+                font-size: 28px;
+                font-weight: 800;
+                letter-spacing: -0.03em;
+            }
+            .userSearchRenewal .teamRateBlue,
+            .userSearchRenewal .teamRateRed {
+                display: inline-flex;
+                margin: 10px 0 0;
+                padding: 7px 12px;
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 700;
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid rgba(120, 136, 160, 0.18);
+            }
+            .userSearchRenewal #con1 .input-group,
+            .userSearchRenewal #con2 .input-group,
+            .userSearchRenewal #con3 .input-group {
+                margin-top: 16px;
+                background: #fff;
+                border-radius: 18px;
+                border: 1px solid rgba(120, 136, 160, 0.18);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+                overflow: hidden;
+            }
+            .userSearchRenewal #nickNames,
+            .userSearchRenewal #nickNames3 {
+                background: rgba(224, 237, 255, 0.72);
+            }
+            .userSearchRenewal #nickNames2 {
+                background: rgba(255, 235, 235, 0.72);
+            }
+            .userSearchRenewal .input-group > .form-control {
+                box-sizing: border-box;
+                border: 0;
+                min-height: 54px;
+                padding: 0 18px;
+                font-size: 15px;
+                box-shadow: none;
+            }
+            .userSearchRenewal .input-group-append {
+                display: flex;
+                gap: 8px;
+                padding: 8px;
+                background: #fff;
+            }
+            .userSearchRenewal .input-group-append .btn {
+                box-sizing: border-box;
+                border: 0;
+                min-width: 84px;
+                border-radius: 14px;
+                font-weight: 700;
+                color: #fff;
+            }
+            .userSearchRenewal .searchBtnPrimary {
+                background: #343a40;
+            }
+            .userSearchRenewal .searchBtnSecondary {
+                background: #8a94a6;
+            }
+            .userSearchRenewal .infoLayer {
+                margin-top: 18px;
+                height: calc(100% - 118px);
+                background: transparent;
+            }
+            .userSearchRenewal .userSearchCard {
+                box-sizing: border-box;
+                border: 1px solid rgba(103, 150, 217, 0.22);
+                border-radius: 24px;
+                background: linear-gradient(180deg, rgba(237, 244, 255, 0.98) 0%, rgba(223, 235, 255, 0.98) 100%);
+                box-shadow: 0 14px 26px rgba(65, 105, 180, 0.12);
+                padding: 16px 18px 18px;
+                margin-bottom: 14px;
+            }
+            .userSearchRenewal .infoDivRed.userSearchCard {
+                border-color: rgba(222, 138, 138, 0.26);
+                background: linear-gradient(180deg, rgba(255, 243, 243, 0.98) 0%, rgba(255, 231, 231, 0.98) 100%);
+                box-shadow: 0 14px 26px rgba(202, 83, 83, 0.1);
+            }
+            .userSearchRenewal .nicknameLayer {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+                border-bottom: 1px solid rgba(120, 136, 160, 0.22);
+                padding-bottom: 12px !important;
+                margin-bottom: 12px;
+            }
+            .userSearchRenewal .nickNameDiv {
+                min-width: auto;
+                height: auto;
+                font-size: 28px;
+                line-height: 1.1;
+                letter-spacing: -0.03em;
+                color: #24324a;
+            }
+            .userSearchRenewal .width45p,
+            .userSearchRenewal .width50p {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .userSearchRenewal #playGameDiv {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 14px;
+                margin: 8px 0 10px;
+                background: rgba(255, 255, 255, 0.72);
+                border-radius: 16px;
+            }
+            .userSearchRenewal #playGameDiv p {
+                margin: 0;
+            }
+            .userSearchRenewal .playParty {
+                padding: 12px 14px;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.62);
+            }
+            .userSearchRenewal .positionDiv,
+            .userSearchRenewal .mostCharDiv,
+            .userSearchRenewal .recentlyDiv {
+                margin-top: 12px;
+                padding: 14px;
+                border-radius: 18px;
+                background: rgba(255, 255, 255, 0.62);
+            }
+            .userSearchRenewal .positionDiv {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+            .userSearchRenewal .positionDiv .card,
+            .userSearchRenewal .mostCharDetailDiv .card {
+                border: 0;
+                border-radius: 14px;
+                box-shadow: none;
+            }
+            .userSearchRenewal #mostCharTitleDiv,
+            .userSearchRenewal #recentlyDivTitle {
+                font-weight: 700;
+                color: #33415c;
+            }
+            .userSearchRenewal .tack,
+            .userSearchRenewal .tackRemove {
+                margin-left: auto;
+            }
             .rank-info-box {
                 display: flex;
                 align-items: center;
@@ -72,17 +314,26 @@
                 $("#mostCharShow").on("change", () => checkVisibility("mostCharShow"));
                 $("#recentShow").on("change", () => checkVisibility("recentShow"));
                 $("#tackShow").on("change", () => tackUse());
+                $("input[name='gameType']").on("change", syncGameTypeButtons);
                 tackUse();
+                syncGameTypeButtons();
 
                 resetGameType();
                 $("input[name='gameType']").on("change", resetGameType);
             });
+
+            function syncGameTypeButtons() {
+                $("input[name='gameType']").each(function() {
+                    $(this).closest("label.btn").toggleClass("active", this.checked);
+                });
+            }
 
             function resetGameType() {
                 const val = $("input[name='gameType']:checked").val();
                 clearDiv('con1_2');
                 clearDiv('con2_2');
                 $(".gameTypeText").text(val == 'rating' ? '[공식전]' : '[일반전]');
+                syncGameTypeButtons();
 
                 // modalDiv의 자식 div 중 id가 templateModal이 아닌 것을 찾아 삭제
                 $('#modalDiv > div:not(#templateModal)').remove();
@@ -592,7 +843,7 @@
         </script>
 </head>
 
-<body class="body">
+<body class="body userSearchRenewal">
     <%- include  ("../layout/menu") %>
 
     <!-- 카카오 광고 -->
@@ -642,8 +893,8 @@
                 <div class="input-group">
                     <input type="text" id="nickNames" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames', 'con1_2'); } ">
                     <div class="input-group-append" id="searchButton">
-                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
-                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con1_2');">초기화</button>
+                        <button class="btn btn-outline-secondary searchBtnPrimary" type="button" onClick="search('nickNames', 'con1_2');">검색</button>
+                        <button class="btn btn-outline-secondary searchBtnSecondary" type="button" onClick="clearDiv('con1_2');">초기화</button>
                     </div>
                 </div>
                 <div id="con1_2" class="infoLayer"> </div>
@@ -653,8 +904,8 @@
                 <div class="input-group">
                     <input type="text" id="nickNames2" class="form-control" placeholder="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-label="띄어쓰기로 검색 가능 ex) 마을주민1 마을주민2 마을주민3 ..." aria-describedby="searchButton" onKeyPress="if(event.keyCode == 13) { search('nickNames2', 'con2_2'); } ">
                     <div class="input-group-append" id="searchButton">
-                        <button class="btn btn-outline-secondary" type="button" onClick="search('nickNames2', 'con2_2');">검색</button>
-                        <button class="btn btn-outline-secondary" type="button" onClick="clearDiv('con2_2');">초기화</button>
+                        <button class="btn btn-outline-secondary searchBtnPrimary" type="button" onClick="search('nickNames2', 'con2_2');">검색</button>
+                        <button class="btn btn-outline-secondary searchBtnSecondary" type="button" onClick="clearDiv('con2_2');">초기화</button>
                     </div>
                 </div>
                 <div id="con2_2" class="infoLayer"></div>
@@ -674,7 +925,7 @@
         </div>
 
 
-        <div id="template" class="infoDiv" style="display:none">
+        <div id="template" class="infoDiv userSearchCard" style="display:none">
             <div id="defaultDiv">
                 <!-- <div id="gameTypeDiv" class="red bold width100p"></div> -->
                 <div class="nicknameLayer width100p">
