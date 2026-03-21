@@ -334,31 +334,32 @@
                 display: flex;
                 align-items: center;
                 margin: 0;
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                text-align: left;
             }
             .userSearchRenewal .positionDiv .col-md-4 {
-                flex: 0 0 auto;
-                max-width: none;
-                width: 100%;
+                flex: 0 0 34px;
+                max-width: 34px;
+                width: 34px;
             }
             .userSearchRenewal .positionDiv .col-md-8 {
                 flex: 1 1 auto;
-                max-width: none;
-                width: 100%;
+                max-width: calc(100% - 34px);
+                width: calc(100% - 34px);
+                padding-left: 6px;
             }
             .userSearchRenewal .positionDiv .card-body {
                 min-width: 0;
                 padding: 0 !important;
-                text-align: center;
-                font-size: 14px;
-                line-height: 1.2;
+                text-align: left;
+                font-size: 13px;
+                line-height: 1.15;
             }
             .userSearchRenewal .positionDiv img {
                 display: block;
-                width: 28px;
-                height: 28px;
-                margin: 0 auto 2px;
+                width: 40px;
+                height: 40px;
+                margin: 0 auto;
             }
             .userSearchRenewal .positionDiv .card,
             .userSearchRenewal .mostCharDetailDiv .card {
