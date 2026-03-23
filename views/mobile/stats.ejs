@@ -10,6 +10,12 @@
             flex-wrap: wrap;
         }
 
+        #con1.conLayer,
+        #con1.conLayer > * {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .recentCharTab {
             border: 1px solid #cfd6df;
             background: #f3f6f9;
@@ -31,6 +37,37 @@
             margin-top: 12px;
         }
 
+        .recentCharSearch {
+            margin-bottom: 12px;
+        }
+
+        .recentCharSearch input {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid #d7dee8;
+            border-radius: 14px;
+            padding: 0 14px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #24324a;
+            font-size: 14px;
+        }
+
+        .recentCharPanel > div[id^="recent"] {
+            max-height: 68vh;
+            min-height: 280px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .recentCharPanel > div[id^="recent"]::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .recentCharPanel > div[id^="recent"]::-webkit-scrollbar-thumb {
+            background: rgba(129, 140, 153, 0.6);
+            border-radius: 999px;
+        }
+
         .recentLeaderCell {
             text-align: left;
         }
@@ -41,14 +78,272 @@
             color: #667085;
             font-size: 12px;
         }
+
+        #statsCountDiv,
+        #moreCountDiv {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #statsCountDiv table,
+        #moreCountDiv table {
+            width: 100%;
+            min-width: 0;
+            table-layout: fixed;
+        }
+
+        #statsCountDiv th,
+        #statsCountDiv td,
+        #moreCountDiv th,
+        #moreCountDiv td {
+            padding: 7px 4px !important;
+            font-size: 11px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .recentCharBoard {
+            display: grid;
+            gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .recentCharCard {
+            border: 1px solid rgba(118, 134, 158, 0.18);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 255, 0.98) 100%);
+            box-shadow: 0 10px 24px rgba(31, 44, 74, 0.08);
+        }
+
+        .recentCharTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .recentCharProfile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recentCharRank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: #24324a;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentCharAvatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #edf2f7 0%, #dce7f3 100%);
+            padding: 4px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .recentCharName {
+            display: block;
+            color: #24324a;
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .recentCharSummary {
+            margin-top: 3px;
+            color: #667085;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .recentCharRateWrap {
+            min-width: 72px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .recentCharRateValue {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 62px;
+            height: 30px;
+            border-radius: 999px;
+            padding: 0 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .recentCharRateValue.is-hot {
+            background: linear-gradient(135deg, #ff7a59 0%, #ff9a62 100%);
+        }
+
+        .recentCharRateValue.is-mid {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        }
+
+        .recentCharRateValue.is-cold {
+            background: linear-gradient(135deg, #7b8798 0%, #98a2b3 100%);
+        }
+
+        .recentCharRateLabel {
+            margin-top: 4px;
+            color: #667085;
+            font-size: 10px;
+        }
+
+        .recentCharRateBar {
+            height: 8px;
+            margin: 12px 0 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e8eef5;
+        }
+
+        .recentCharRateBar > span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+        }
+
+        .recentLeaderSection {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #e6a15f;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .recentLeaderSection::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ebeef3;
+        }
+
+        .recentLeaderList {
+            display: grid;
+            gap: 6px;
+        }
+
+        .recentLeaderItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid #eef2f6;
+            border-radius: 10px;
+            background: #fbfcfd;
+        }
+
+        .recentLeaderHead {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recentLeaderOrder {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: #eef2f6;
+            color: #475467;
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentLeaderBadge {
+            color: #667085;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .recentLeaderMeta {
+            color: #667085;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recentLeaderPill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentLeaderPill.is-best {
+            background: #2f6fed;
+        }
+
+        .recentLeaderPill.is-worst {
+            background: #df5a5a;
+        }
+
+        .recentLeaderPill.is-neutral {
+            background: #98a2b3;
+        }
+
+        .recentCharEmpty {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px dashed #d5dce5;
+            border-radius: 14px;
+            padding: 18px 14px;
+            text-align: center;
+            color: #667085;
+            background: rgba(248, 250, 252, 0.9);
+        }
+
+        .recentCharFilterEmpty {
+            display: none;
+            margin-top: 10px;
+        }
     </style>
     <script src="/js/charImage.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#mainMenu").removeClass("active");
             $(".recentCharTab").on("click", switchRecentCharTab);
+            $("#recentCharSearchInput").on("input", filterRecentChars);
             getStats("statsCountList", drawCount);
-            getStats("statsRecentCharLeaders", drawRecentCharLeaders);
+            getStats("statsRecentCharLeaders", drawRecentCharLeadersMobile);
         });
 
         function drawCount(data) {
@@ -69,7 +364,7 @@
                 const item = data.row[idx];
                 th += "<th>" + replaceEngToKo(item.dates) + "</th>";
                 td += "<td>" + toDisplayNumber(item.cnt) + "</td>";
-                if (trCount % 5 === 0) {
+                if (trCount % 4 === 0) {
                     const newTable = table + tr + th + tbody + td + endTbody;
                     th = "";
                     td = "";
@@ -81,6 +376,15 @@
                     }
                 }
                 trCount++;
+            }
+
+            if (th !== "" || td !== "") {
+                const newTable = table + tr + th + tbody + td + endTbody;
+                if (first) {
+                    $("#statsCountDiv").append(newTable);
+                } else {
+                    $("#moreCountDiv").append(newTable);
+                }
             }
         }
 
@@ -155,8 +459,121 @@
             setActiveRecentCharTab("7");
         }
 
+        function drawRecentCharLeadersMobile(data) {
+            (data.row || []).forEach((periodData) => {
+                const targetId = periodData.periodDays === 30 ? "recent30CharRate" : "recent7CharRate";
+                const metaId = periodData.periodDays === 30 ? "recent30CharRateMeta" : "recent7CharRateMeta";
+                const div = $("#" + targetId);
+                div.empty();
+
+                if (periodData.latestRankDate) {
+                    $("#" + metaId).text(`Ranker cutoff: ${periodData.latestRankDate} / Top 600`);
+                }
+
+                const list = periodData.list || [];
+                if (list.length === 0) {
+                    div.append("<div class='recentCharEmpty'>No data available.</div>");
+                    return;
+                }
+
+                const board = $("<div class='recentCharBoard'></div>");
+
+                list.forEach((item, index) => {
+                    const visibleLeaders = (item.leaders || [])
+                        .filter((leader) => Number(leader.player_matches) > 5)
+                        .slice(0, 4);
+                    const qualifiedRates = visibleLeaders.map((leader) => Number(leader.player_rate));
+                    const bestRate = qualifiedRates.length > 0 ? Math.max(...qualifiedRates) : null;
+                    const worstRate = qualifiedRates.length > 0 ? Math.min(...qualifiedRates) : null;
+                    const rateClass = getRecentRateClass(Number(item.rate));
+                    const leaders = visibleLeaders.length > 0
+                        ? visibleLeaders.map((leader, leaderIndex) => buildRecentLeaderItemMobile(leader, bestRate, worstRate, leaderIndex + 1)).join("")
+                        : "<div class='recentCharEmpty'>No qualified ranker data.</div>";
+
+                    board.append(`
+                        <article class="recentCharCard">
+                            <div class="recentCharTop">
+                                <div class="recentCharProfile">
+                                    <span class="recentCharRank">${index + 1}</span>
+                                    <img class="recentCharAvatar" data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}' alt="${item.char_name}">
+                                    <div>
+                                        <strong class="recentCharName">${item.char_name}</strong>
+                                        <div class="recentCharSummary">${Number(item.total_matches).toLocaleString()}판 ${Number(item.win_count).toLocaleString()}승 ${Number(item.lose_count).toLocaleString()}패</div>
+                                    </div>
+                                </div>
+                                <div class="recentCharRateWrap">
+                                    <div class="recentCharRateValue ${rateClass}">${item.rate}%</div>
+                                    <div class="recentCharRateLabel">전체 승률</div>
+                                </div>
+                            </div>
+                            <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
+                            <div class="recentLeaderSection">대표유저</div>
+                            <div class="recentLeaderList">${leaders}</div>
+                        </article>
+                    `);
+                });
+
+                div.append(board);
+                div.append("<div class='recentCharEmpty recentCharFilterEmpty'>검색 결과가 없습니다.</div>");
+            });
+            filterRecentChars();
+            setActiveRecentCharTab("7");
+        }
+
+        function buildRecentLeaderItemMobile(leader, bestRate, worstRate, order) {
+            const pillClass = getLeaderPillClassMobile(Number(leader.player_rate), bestRate, worstRate);
+            return `
+                <div class="recentLeaderItem">
+                    <div class="recentLeaderHead">
+                        <span class="recentLeaderOrder">${order}</span>
+                        <span class="recentLeaderBadge">${leader.rank_number}위</span>
+                        <div class="recentLeaderMeta">${Number(leader.player_matches).toLocaleString()}판 ${Number(leader.player_win_count).toLocaleString()}승 ${Number(leader.player_lose_count).toLocaleString()}패</div>
+                    </div>
+                    <div class="recentLeaderPill ${pillClass}">${leader.player_rate}%</div>
+                </div>
+            `;
+        }
+
+        function getRecentRateClass(rate) {
+            if (rate >= 55) {
+                return "is-hot";
+            }
+            if (rate >= 50) {
+                return "is-mid";
+            }
+            return "is-cold";
+        }
+
+        function getLeaderPillClassMobile(rate, bestRate, worstRate) {
+            if (bestRate != null && worstRate != null && rate === bestRate && rate !== worstRate) {
+                return "is-best";
+            }
+            if (bestRate != null && worstRate != null && rate === worstRate && rate !== bestRate) {
+                return "is-worst";
+            }
+            return "is-neutral";
+        }
+
         function switchRecentCharTab() {
             setActiveRecentCharTab($(this).data("period"));
+            filterRecentChars();
+        }
+
+        function filterRecentChars() {
+            const keyword = ($("#recentCharSearchInput").val() || "").toLowerCase().trim();
+            const visiblePanel = $(".recentCharPanel:visible");
+            let visibleCount = 0;
+
+            visiblePanel.find(".recentCharCard").each(function() {
+                const charName = ($(this).find(".recentCharName").text() || "").toLowerCase();
+                const matched = charName.includes(keyword);
+                $(this).toggle(matched);
+                if (matched) {
+                    visibleCount++;
+                }
+            });
+
+            visiblePanel.find(".recentCharFilterEmpty").toggle(keyword !== "" && visibleCount === 0);
         }
 
         function setActiveRecentCharTab(period) {
@@ -201,6 +618,9 @@
             <div class="recentCharTabs" style="margin-bottom:12px;">
                 <button type="button" class="recentCharTab" data-period="30">최근 30일</button>
                 <button type="button" class="recentCharTab active" data-period="7">최근 7일</button>
+            </div>
+            <div class="recentCharSearch">
+                <input type="text" id="recentCharSearchInput" placeholder="캐릭터 검색">
             </div>
             <div id="recentCharPanel30" class="recentCharPanel" style="display:none;">
                 <p id="recent30CharRateMeta"></p>
