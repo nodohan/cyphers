@@ -175,68 +175,114 @@
 
         .recentLeaderList {
             display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .recentLeaderSection {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 10px;
+            margin-top: 2px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #e6a15f;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .recentLeaderSection::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e5ebf2;
         }
 
         .recentLeaderItem {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: #f8fafc;
-            border: 1px solid #e5ebf2;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: #fbfcfd;
+            border: 1px solid #f1f5f9;
         }
 
         .recentLeaderHead {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             min-width: 0;
+            flex: 1;
         }
 
-        .recentLeaderBadge {
+        .recentLeaderOrder {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 30px;
-            height: 30px;
+            min-width: 20px;
+            height: 20px;
             border-radius: 999px;
-            background: #dbe6f3;
-            color: #1f2937;
-            font-size: 13px;
+            background: #eef2f6;
+            color: #475467;
+            font-size: 10px;
             font-weight: 800;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .recentLeaderBadge {
+            color: #667085;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
         .recentLeaderMeta {
             font-size: 13px;
-            color: #4b5563;
+            color: #667085;
         }
 
         .recentLeaderPill {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 72px;
-            height: 34px;
+            min-width: 50px;
+            height: 24px;
             border-radius: 999px;
-            padding: 0 12px;
-            font-size: 15px;
+            padding: 0 8px;
+            font-size: 11px;
             font-weight: 800;
             color: #fff;
         }
 
         .recentLeaderPill.is-best {
-            background: linear-gradient(135deg, #1d4ed8 0%, #38bdf8 100%);
+            background: #2f6fed;
         }
 
         .recentLeaderPill.is-worst {
-            background: linear-gradient(135deg, #dc2626 0%, #fb7185 100%);
+            background: #df5a5a;
         }
 
         .recentLeaderPill.is-neutral {
-            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+            background: #98a2b3;
+        }
+
+        .recentLeaderItem.is-best {
+            border-color: rgba(47, 111, 237, 0.18);
+        }
+
+        .recentLeaderItem.is-worst {
+            border-color: rgba(223, 90, 90, 0.18);
+        }
+
+        @media (max-width: 900px) {
+            .recentLeaderList {
+                grid-template-columns: 1fr;
+            }
         }
 
         .recentCharEmpty {
@@ -462,15 +508,17 @@
             const board = $("<div class='recentCharBoard'></div>");
 
             list.forEach((item, index) => {
-                const visibleLeaders = (item.leaders || []).filter((leader) => Number(leader.player_matches) > 5);
+                const visibleLeaders = (item.leaders || [])
+                    .filter((leader) => Number(leader.player_matches) > 5)
+                    .slice(0, 6);
                 const qualifiedRates = visibleLeaders.map((leader) => Number(leader.player_rate));
                 const bestRate = qualifiedRates.length > 0 ? Math.max(...qualifiedRates) : null;
                 const worstRate = qualifiedRates.length > 0 ? Math.min(...qualifiedRates) : null;
                 const rateClass = getRecentRateClass(Number(item.rate));
 
                 const leaders = visibleLeaders.length > 0
-                    ? visibleLeaders.map((leader) => buildRecentLeaderItem(leader, bestRate, worstRate)).join("")
-                    : "<div class='recentCharEmpty'>No qualified ranker data.</div>";
+                    ? visibleLeaders.map((leader, leaderIndex) => buildRecentLeaderItem(leader, bestRate, worstRate, leaderIndex + 1)).join("")
+                    : "<div class='recentCharEmpty'>대표 유저 없음(6판 이상).</div>";
 
                 board.append(`
                     <article class="recentCharCard">
@@ -489,6 +537,7 @@
                             </div>
                         </div>
                         <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
+                        <div class="recentLeaderSection">대표유저</div>
                         <div class="recentLeaderList">${leaders}</div>
                     </article>
                 `);
@@ -497,13 +546,15 @@
             div.append(board);
         };
 
-        const buildRecentLeaderItem = (leader, bestRate, worstRate) => {
+        const buildRecentLeaderItem = (leader, bestRate, worstRate, order) => {
             const pillClass = getLeaderPillClass(Number(leader.player_rate), bestRate, worstRate);
+            const rowClass = pillClass === "is-best" ? "is-best" : (pillClass === "is-worst" ? "is-worst" : "");
             return `
-                <div class="recentLeaderItem">
+                <div class="recentLeaderItem ${rowClass}">
                     <div class="recentLeaderHead">
-                        <span class="recentLeaderBadge">#${leader.rank_number}</span>
-                        <div class="recentLeaderMeta">${Number(leader.player_matches).toLocaleString()}G ${Number(leader.player_win_count).toLocaleString()}W ${Number(leader.player_lose_count).toLocaleString()}L</div>
+                        <span class="recentLeaderOrder">${order}</span>
+                        <span class="recentLeaderBadge">${leader.rank_number}위</span>
+                        <div class="recentLeaderMeta">${Number(leader.player_matches).toLocaleString()}판 ${Number(leader.player_win_count).toLocaleString()}승 ${Number(leader.player_lose_count).toLocaleString()}패</div>
                     </div>
                     <div class="recentLeaderPill ${pillClass}">${leader.player_rate}%</div>
                 </div>
