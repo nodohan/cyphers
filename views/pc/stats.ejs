@@ -267,13 +267,13 @@
 
         .recentLeaderBadge {
             color: #667085;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
             white-space: nowrap;
         }
 
         .recentLeaderMeta {
-            font-size: 12px;
+            font-size: 13px;
             color: #667085;
             flex: 1;
             white-space: nowrap;
@@ -283,11 +283,11 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 46px;
-            height: 22px;
+            min-width: 50px;
+            height: 24px;
             border-radius: 999px;
-            padding: 0 7px;
-            font-size: 10px;
+            padding: 0 8px;
+            font-size: 11px;
             font-weight: 800;
             color: #fff;
         }
@@ -348,6 +348,7 @@
                     searchChar();
                 }
             });
+            $("#searchRecentCharName").on("input", searchRecentChar);
 
             $("#sortByWinrate").on("click", toggleCharRate);
             $("#sortByTotalMatches").on("click", toggleTotalMatches);
@@ -443,6 +444,7 @@
             (data.row || []).forEach((periodData) => {
                 drawRecentCharLeaderCards(periodData.periodDays, periodData.list || [], periodData.latestRankDate);
             });
+            searchRecentChar();
             setActiveRecentCharTab("7");
         };
 
@@ -672,6 +674,16 @@
             });
         };
 
+        const searchRecentChar = () => {
+            const keyword = ($("#searchRecentCharName").val() || "").toLowerCase();
+            const cards = $("#recent30CharRate .recentCharCard, #recent7CharRate .recentCharCard");
+
+            cards.each(function() {
+                const charName = ($(this).find(".recentCharProfile img").attr("data-item") || "").toLowerCase();
+                $(this).toggle(charName.includes(keyword));
+            });
+        };
+
         const statsPageRateDesc = (a, b) => Number(b.rate) - Number(a.rate);
         const statsPageRateAsc = (a, b) => Number(a.rate) - Number(b.rate);
         const statsPageTotalMatchesDesc = (a, b) => Number(b.total_matches) - Number(a.total_matches);
@@ -768,7 +780,7 @@
     <div class="listWrapper">
         <article id="con1">
             <div class="charSearchWrapper">
-                <h3>최근 캐릭터 승률</h3>
+                <h3>캐릭터 승률 (1위-600위)</h3>
                 <div class="charWinRate">
                     <h5>
                         <span class="recentCharTabs">                            
@@ -776,6 +788,10 @@
                             <button type="button" class="recentCharTab" data-period="30">최근 30일</button>
                         </span>
                     </h5>
+                </div>
+                <div class="charSearch" style="margin-top:10px;">
+                    <label for="searchRecentCharName"><span class="searchIcon"></span></label>
+                    <input type="text" id="searchRecentCharName" placeholder="캐릭터명 검색" />
                 </div>
             </div>
             <div class="line"></div>
