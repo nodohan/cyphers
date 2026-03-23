@@ -4,6 +4,8 @@ const MatchService = require('../service/MatchService');
 const CharRatingStatsService = require('../service/CharRatingStatsService');
 const CharCombiStatsService = require('../service/CharCombiStatsService');
 const MatchesMapService = require('../service/MatchesMapService');
+const SeasonRepository = require('../repository/seasonRepository');
+const RecentCharLeaderStatsRepository = require('../repository/recentCharLeaderStatsRepository');
 
 module.exports = (scheduler, acclogger, maria) => {
     const app = require('express').Router();        
@@ -13,6 +15,8 @@ module.exports = (scheduler, acclogger, maria) => {
     const charCombiStatsService = new CharCombiStatsService(maria);
     const charRatingStatsService = new CharRatingStatsService(maria);
     const matchesMapService = new MatchesMapService(maria);
+    const seasonRepository = new SeasonRepository(maria);
+    const recentCharLeaderStatsRepository = new RecentCharLeaderStatsRepository(maria);
 
     //스케쥴러 또는 웹 url call
     var matchIdTime = "30 00 * * *";
@@ -55,6 +59,16 @@ module.exports = (scheduler, acclogger, maria) => {
 
         logger.info("batch callInsertStats");
         await charCombiStatsService.callInsertStats(new Date());
+
+        const currentSeason = await seasonRepository.selectCurrentSeason();
+        if (currentSeason) {
+            logger.info("batch rebuildRecentCharLeaderStats");
+            await recentCharLeaderStatsRepository.rebuildStats({
+                seasonCode: currentSeason.season_code,
+                seasonStartAt: currentSeason.season_start_at
+            });
+        }
+
         logger.info("batch end");
     }
 

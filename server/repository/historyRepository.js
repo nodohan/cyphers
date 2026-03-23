@@ -4,8 +4,8 @@ class historyRepository {
     }
 
     insertAccessLog = async (ip, url) => {
-        const query = `insert into useHistory ( ip, url ) values ( ?, ? )`;
-        return await this.maria.doQuery(query, [ip, url]);
+        const query = `insert into useHistory ( ip, url, url_path ) values ( ?, ?, ? )`;
+        return await this.maria.doQuery(query, [ip, url, url.split("\?")[0]]);
     }
 }
 

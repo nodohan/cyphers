@@ -65,15 +65,10 @@ module.exports = (scheduler, maria, acclogger) => {
     });
 
     //  url = "/user/getUserInfo"
-    app.get('/getUserInfo', async function(req, res) {       
-
+    app.get('/getUserInfo', async function(req, res) {
         const { nickname, gameType} = req.query;
-        logger.debug("getUserInfo: " + nickname +":"+ gameType);
-
         let userInfo = await new api().searchUser(nickname, gameType);
 
-        logger.debug("getUserInfo: " + userInfo);
-        
         if (userInfo && userInfo.playerId) {
             const [latestRank, rankHistory] = await Promise.all([
                 userRepository.selectUserLatestRank(userInfo.playerId),
