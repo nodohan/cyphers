@@ -59,6 +59,194 @@
             color: #667085;
             font-size: 13px;
         }
+
+        .recentCharBoard {
+            display: grid;
+            gap: 14px;
+        }
+
+        .recentCharCard {
+            border: 1px solid #d9e1ea;
+            border-radius: 18px;
+            padding: 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        .recentCharTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .recentCharProfile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .recentCharRank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: #111827;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .recentCharProfile img {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #edf2f7 0%, #dbe7f3 100%);
+            padding: 6px;
+            object-fit: contain;
+        }
+
+        .recentCharProfile strong {
+            display: block;
+            font-size: 18px;
+            color: #111827;
+        }
+
+        .recentCharSub {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .recentCharRateSummary {
+            min-width: 140px;
+            text-align: right;
+        }
+
+        .recentCharRateValue {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 86px;
+            height: 38px;
+            border-radius: 999px;
+            padding: 0 14px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .recentCharRateValue.is-hot {
+            background: linear-gradient(135deg, #ff6b4a 0%, #ff975c 100%);
+        }
+
+        .recentCharRateValue.is-mid {
+            background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
+        }
+
+        .recentCharRateValue.is-cold {
+            background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+        }
+
+        .recentCharRateCaption {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .recentCharRateBar {
+            position: relative;
+            height: 10px;
+            border-radius: 999px;
+            background: #e9eef5;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .recentCharRateBar span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+        }
+
+        .recentLeaderList {
+            display: grid;
+            gap: 10px;
+        }
+
+        .recentLeaderItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e5ebf2;
+        }
+
+        .recentLeaderHead {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .recentLeaderBadge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: #dbe6f3;
+            color: #1f2937;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .recentLeaderMeta {
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .recentLeaderPill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            height: 34px;
+            border-radius: 999px;
+            padding: 0 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .recentLeaderPill.is-best {
+            background: linear-gradient(135deg, #1d4ed8 0%, #38bdf8 100%);
+        }
+
+        .recentLeaderPill.is-worst {
+            background: linear-gradient(135deg, #dc2626 0%, #fb7185 100%);
+        }
+
+        .recentLeaderPill.is-neutral {
+            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+        }
+
+        .recentCharEmpty {
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 24px 18px;
+            text-align: center;
+            color: #64748b;
+            background: #f8fafc;
+        }
     </style>
     <script src="/js/charImage.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -170,7 +358,7 @@
 
         const drawRecentCharLeaders = (data) => {
             (data.row || []).forEach((periodData) => {
-                drawRecentCharLeaderTable(periodData.periodDays, periodData.list || [], periodData.latestRankDate);
+                drawRecentCharLeaderCards(periodData.periodDays, periodData.list || [], periodData.latestRankDate);
             });
             setActiveRecentCharTab("7");
         };
@@ -255,6 +443,91 @@
             }
 
             return `${rate}%`;
+        };
+
+        const drawRecentCharLeaderCards = (periodDays, list, latestRankDate) => {
+            const targetId = periodDays === 30 ? "recent30CharRate" : "recent7CharRate";
+            const div = $("#" + targetId);
+            div.empty();
+
+            if (latestRankDate) {
+                $("#" + targetId + "Meta").text(`Ranker cutoff: ${latestRankDate} / Top 600`);
+            }
+
+            if (list.length === 0) {
+                div.append("<div class='recentCharEmpty'>No data available.</div>");
+                return;
+            }
+
+            const board = $("<div class='recentCharBoard'></div>");
+
+            list.forEach((item, index) => {
+                const visibleLeaders = (item.leaders || []).filter((leader) => Number(leader.player_matches) > 5);
+                const qualifiedRates = visibleLeaders.map((leader) => Number(leader.player_rate));
+                const bestRate = qualifiedRates.length > 0 ? Math.max(...qualifiedRates) : null;
+                const worstRate = qualifiedRates.length > 0 ? Math.min(...qualifiedRates) : null;
+                const rateClass = getRecentRateClass(Number(item.rate));
+
+                const leaders = visibleLeaders.length > 0
+                    ? visibleLeaders.map((leader) => buildRecentLeaderItem(leader, bestRate, worstRate)).join("")
+                    : "<div class='recentCharEmpty'>No qualified ranker data.</div>";
+
+                board.append(`
+                    <article class="recentCharCard">
+                        <div class="recentCharTop">
+                            <div class="recentCharProfile">
+                                <span class="recentCharRank">${index + 1}</span>
+                                <img data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}' alt="${item.char_name}">
+                                <div>
+                                    <strong>${item.char_name}</strong>
+                                    <div class="recentCharSub">${Number(item.total_matches).toLocaleString()}G ${Number(item.win_count).toLocaleString()}W ${Number(item.lose_count).toLocaleString()}L</div>
+                                </div>
+                            </div>
+                            <div class="recentCharRateSummary">
+                                <div class="recentCharRateValue ${rateClass}">${item.rate}%</div>
+                                <div class="recentCharRateCaption">Overall Win Rate</div>
+                            </div>
+                        </div>
+                        <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
+                        <div class="recentLeaderList">${leaders}</div>
+                    </article>
+                `);
+            });
+
+            div.append(board);
+        };
+
+        const buildRecentLeaderItem = (leader, bestRate, worstRate) => {
+            const pillClass = getLeaderPillClass(Number(leader.player_rate), bestRate, worstRate);
+            return `
+                <div class="recentLeaderItem">
+                    <div class="recentLeaderHead">
+                        <span class="recentLeaderBadge">#${leader.rank_number}</span>
+                        <div class="recentLeaderMeta">${Number(leader.player_matches).toLocaleString()}G ${Number(leader.player_win_count).toLocaleString()}W ${Number(leader.player_lose_count).toLocaleString()}L</div>
+                    </div>
+                    <div class="recentLeaderPill ${pillClass}">${leader.player_rate}%</div>
+                </div>
+            `;
+        };
+
+        const getRecentRateClass = (rate) => {
+            if (rate >= 55) {
+                return "is-hot";
+            }
+            if (rate >= 50) {
+                return "is-mid";
+            }
+            return "is-cold";
+        };
+
+        const getLeaderPillClass = (rate, bestRate, worstRate) => {
+            if (bestRate != null && worstRate != null && rate === bestRate && rate !== worstRate) {
+                return "is-best";
+            }
+            if (bestRate != null && worstRate != null && rate === worstRate && rate !== bestRate) {
+                return "is-worst";
+            }
+            return "is-neutral";
         };
 
         const switchRecentCharTab = function() {
