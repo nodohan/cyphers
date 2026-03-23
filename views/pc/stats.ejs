@@ -83,12 +83,21 @@
         .recentCharMain,
         .recentCharSide {
             min-width: 0;
+            height: 100%;
         }
 
         .recentCharMain {
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .recentCharMainMeta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            min-height: 100%;
         }
 
         .recentCharTop {
@@ -538,7 +547,7 @@
             list.forEach((item, index) => {
                 const visibleLeaders = (item.leaders || [])
                     .filter((leader) => Number(leader.player_matches) > 5)
-                    .slice(0, 6);
+                    .slice(0, 4);
                 const qualifiedRates = visibleLeaders.map((leader) => Number(leader.player_rate));
                 const bestRate = qualifiedRates.length > 0 ? Math.max(...qualifiedRates) : null;
                 const worstRate = qualifiedRates.length > 0 ? Math.min(...qualifiedRates) : null;
@@ -552,21 +561,22 @@
                     <article class="recentCharCard">
                         <div class="recentCharCardGrid">
                             <div class="recentCharMain">
-                        <div class="recentCharTop">
-                            <div class="recentCharProfile">
-                                <span class="recentCharRank">${index + 1}</span>
-                                <img data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}' alt="${item.char_name}">
-                                <div>
-                                    <strong>${item.char_name}</strong>
-                                    <div class="recentCharSub">${Number(item.total_matches).toLocaleString()}G ${Number(item.win_count).toLocaleString()}W ${Number(item.lose_count).toLocaleString()}L</div>
+                                <div class="recentCharMainMeta">
+                                    <div class="recentCharTop">
+                                        <div class="recentCharProfile">
+                                            <span class="recentCharRank">${index + 1}</span>
+                                            <img data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}' alt="${item.char_name}">
+                                            <div>
+                                                <strong>${item.char_name}</strong>
+                                                <div class="recentCharSub">${Number(item.total_matches).toLocaleString()}판 ${Number(item.win_count).toLocaleString()}승 ${Number(item.lose_count).toLocaleString()}패</div>
+                                            </div>
+                                        </div>
+                                        <div class="recentCharRateSummary">
+                                            <div class="recentCharRateValue ${rateClass}">${item.rate}%</div>
+                                        </div>
+                                    </div>
+                                    <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
                                 </div>
-                            </div>
-                            <div class="recentCharRateSummary">
-                                <div class="recentCharRateValue ${rateClass}">${item.rate}%</div>
-                                <div class="recentCharRateCaption">Overall Win Rate</div>
-                            </div>
-                        </div>
-                        <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
                             </div>
                             <div class="recentCharSide">
                         <div class="recentLeaderSection">대표유저</div>
