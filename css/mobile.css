@@ -2,6 +2,73 @@ body {
     background-color: rgba(0, 123, 255, 0.2);
 }
 
+.mobileNav {
+    padding: 10px 14px;
+    background: rgba(18, 27, 43, 0.92) !important;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 28px rgba(11, 18, 31, 0.18);
+}
+
+.mobileBrand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: calc(100vw - 104px);
+    text-decoration: none;
+}
+
+.mobileBrandEyebrow {
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.mobileBrandTitle {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobileNav .navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    padding: 6px 9px;
+    box-shadow: none !important;
+}
+
+.mobileNav .navbar-collapse {
+    margin-top: 10px;
+}
+
+.mobileNav .navbar-nav {
+    gap: 6px;
+}
+
+.mobileNav .nav-link {
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.82) !important;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.mobileNav .nav-link:hover,
+.mobileNav .nav-link:focus,
+.mobileNav .active > .nav-link,
+.mobileNav .nav-link.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff !important;
+}
+
 .top {
     margin-top: 10px;
     float: left;
