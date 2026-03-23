@@ -109,17 +109,35 @@
             } else {
                 for (let idx in list) {
                     const { char_name, total_matches: total, win_count, lose_count, rate } = list[idx];
+                    const rateNumber = Number(rate) || 0;
+                    const rateToneClass = rateNumber >= 55 ? "high" : rateNumber >= 48 ? "mid" : "low";
                     let number = ((sortBy === "rate" && !isRateDesc) || (sortBy === "totalMatches" && !isTotalMatchesDesc))
                         ? list.length - Number(idx)
                         : Number(idx) + 1;
 
                     let tr = `<tr>
-                                <td>${number}</td>
-                                <td><img data-item='${char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(char_name)}' alt="${char_name}"></td>
+                                <td><span class="rankBadge">${number}</span></td>
+                                <td>
+                                    <div class="charIdentity">
+                                        <img data-item='${char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(char_name)}' alt="${char_name}">
+                                        <strong>${char_name}</strong>
+                                    </div>
+                                </td>
                                 <td>${total.toLocaleString()}</td>
                                 <td>${win_count.toLocaleString()}</td>
                                 <td>${lose_count.toLocaleString()}</td>
-                                <td>${rate}%</td>
+                                <td>
+                                    <div class="winrateCell">
+                                        <div class="winrateHeader">
+                                            <strong class="winrateValue ${rateToneClass}">${rateNumber}%</strong>
+                                        </div>
+                                        <div class="winrateBar"><span style="width:${Math.max(0, Math.min(rateNumber, 100))}%"></span></div>
+                                        <div class="winrateRecord">
+                                            <span class="winChip">W ${win_count.toLocaleString()}</span>
+                                            <span class="loseChip">L ${lose_count.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </td>
                               </tr>`;
                     tbody.append(tr);
                 }
