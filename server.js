@@ -99,7 +99,7 @@ app.get('/', function(req, res) {
     if (commonUtil.isMobile(req)) {
         res.render('./mobile/stats');
     } else {
-        res.render('./pc/stats');
+        res.redirect('/stats/stats');
     }
 });
 

@@ -68,7 +68,8 @@ module.exports = () => {
     
     return (req, res, next) => {
         const url = req.url;
-        if(url.length > 128) {
+        if(url.length > 192) {
+          next();
           return;
         }
 

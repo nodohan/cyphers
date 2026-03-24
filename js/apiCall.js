@@ -506,7 +506,12 @@ function drawOften(div, info, drawCharFunc, nickname) {
             : (isMobile || pageName === "pcUserSearch_vertical" ? 6 : 8),
         info.length
     );
-    let rowCount = isMobile || pageName == "pcUserSearch_vertical" ? 6 : 8;
+    let rowCount;
+    if (isMobile || pageName == "pcUserSearch_vertical") {
+        rowCount = 6;
+    } else {
+        rowCount = count <= 4 ? 4 : 8;
+    }
 
     $(div).find("#mostCharTitleDiv").text("자주하는캐릭 TOP" + count);
     for (let i = 0; i < count; i++) {
@@ -538,6 +543,7 @@ function drawEmptyChar(div) {
         }
         let card = $(div).find("#cardTemp").clone();
         card.attr("style", `height:${height}px;`);
+        card.addClass("empty");
 
         card.removeAttr("id");
         card.removeAttr("hidden");

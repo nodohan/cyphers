@@ -2,222 +2,636 @@
 <html lang="ko">
 
 <head>
-    <%- include  ("../layout/head_mobile") %>
-        <script src="/js/charImage.js" crossorigin="anonymous"></script>
-        <script type="text/javascript">
-            var myChart;
+    <%- include("../layout/head_mobile") %>
+    <style>
+        .recentCharTabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-            $(document).ready(function() {
-                $("#mainMenu").removeClass("active");
-                getStats("statsCountList", drawCount);
-                getStats("statsList", drawStatsList);
-            });
+        #con1.conLayer,
+        #con1.conLayer > * {
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-            function drawCount(data) {
-                let div = $("#statsCountDiv");
+        .recentCharTab {
+            border: 1px solid #cfd6df;
+            background: #f3f6f9;
+            color: #4a5563;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .recentCharTab.active {
+            background: #1f2937;
+            border-color: #1f2937;
+            color: #fff;
+        }
+
+        .recentCharPanel {
+            margin-top: 12px;
+        }
+
+        .recentCharSearch {
+            margin-bottom: 12px;
+        }
+
+        .recentCharSearch input {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid #d7dee8;
+            border-radius: 14px;
+            padding: 0 14px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #24324a;
+            font-size: 14px;
+        }
+
+        .recentCharPanel > div[id^="recent"] {
+            max-height: 68vh;
+            min-height: 280px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .recentCharPanel > div[id^="recent"]::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .recentCharPanel > div[id^="recent"]::-webkit-scrollbar-thumb {
+            background: rgba(129, 140, 153, 0.6);
+            border-radius: 999px;
+        }
+
+        .recentLeaderCell {
+            text-align: left;
+        }
+
+        #recent30CharRateMeta,
+        #recent7CharRateMeta {
+            margin-bottom: 8px;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        #statsCountDiv,
+        #moreCountDiv {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #statsCountDiv table,
+        #moreCountDiv table {
+            width: 100%;
+            min-width: 0;
+            table-layout: fixed;
+        }
+
+        #statsCountDiv th,
+        #statsCountDiv td,
+        #moreCountDiv th,
+        #moreCountDiv td {
+            padding: 7px 4px !important;
+            font-size: 11px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .recentCharBoard {
+            display: grid;
+            gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .recentCharCard {
+            border: 1px solid rgba(118, 134, 158, 0.18);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 255, 0.98) 100%);
+            box-shadow: 0 10px 24px rgba(31, 44, 74, 0.08);
+        }
+
+        .recentCharTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .recentCharProfile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recentCharRank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: #24324a;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentCharAvatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #edf2f7 0%, #dce7f3 100%);
+            padding: 4px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .recentCharName {
+            display: block;
+            color: #24324a;
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .recentCharSummary {
+            margin-top: 3px;
+            color: #667085;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .recentCharRateWrap {
+            min-width: 72px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .recentCharRateValue {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 62px;
+            height: 30px;
+            border-radius: 999px;
+            padding: 0 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .recentCharRateValue.is-hot {
+            background: linear-gradient(135deg, #ff7a59 0%, #ff9a62 100%);
+        }
+
+        .recentCharRateValue.is-mid {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        }
+
+        .recentCharRateValue.is-cold {
+            background: linear-gradient(135deg, #7b8798 0%, #98a2b3 100%);
+        }
+
+        .recentCharRateLabel {
+            margin-top: 4px;
+            color: #667085;
+            font-size: 10px;
+        }
+
+        .recentCharRateBar {
+            height: 8px;
+            margin: 12px 0 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e8eef5;
+        }
+
+        .recentCharRateBar > span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+        }
+
+        .recentLeaderSection {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #e6a15f;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .recentLeaderSection::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ebeef3;
+        }
+
+        .recentLeaderList {
+            display: grid;
+            gap: 6px;
+        }
+
+        .recentLeaderItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid #eef2f6;
+            border-radius: 10px;
+            background: #fbfcfd;
+        }
+
+        .recentLeaderHead {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recentLeaderOrder {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: #eef2f6;
+            color: #475467;
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentLeaderBadge {
+            color: #667085;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .recentLeaderMeta {
+            color: #667085;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recentLeaderPill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .recentLeaderPill.is-best {
+            background: #2f6fed;
+        }
+
+        .recentLeaderPill.is-worst {
+            background: #df5a5a;
+        }
+
+        .recentLeaderPill.is-neutral {
+            background: #98a2b3;
+        }
+
+        .recentCharEmpty {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px dashed #d5dce5;
+            border-radius: 14px;
+            padding: 18px 14px;
+            text-align: center;
+            color: #667085;
+            background: rgba(248, 250, 252, 0.9);
+        }
+
+        .recentCharFilterEmpty {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="/js/charImage.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#mainMenu").removeClass("active");
+            $(".recentCharTab").on("click", switchRecentCharTab);
+            $("#recentCharSearchInput").on("input", filterRecentChars);
+            getStats("statsCountList", drawCount);
+            getStats("statsRecentCharLeaders", drawRecentCharLeadersMobile);
+        });
+
+        function drawCount(data) {
+            let div = $("#statsCountDiv");
+            div.empty();
+
+            let table = "<table class='table table-bordered table-striped'>";
+            let tr = "<thead><tr>";
+            let tbody = "<tbody><tr>";
+            let endTbody = "</tr></tbody></table>";
+
+            let th = "";
+            let td = "";
+            let trCount = 1;
+            let first = true;
+
+            for (idx in data.row) {
+                const item = data.row[idx];
+                th += "<th>" + replaceEngToKo(item.dates) + "</th>";
+                td += "<td>" + toDisplayNumber(item.cnt) + "</td>";
+                if (trCount % 4 === 0) {
+                    const newTable = table + tr + th + tbody + td + endTbody;
+                    th = "";
+                    td = "";
+                    if (first) {
+                        $("#statsCountDiv").append(newTable);
+                        first = false;
+                    } else {
+                        $("#moreCountDiv").append(newTable);
+                    }
+                }
+                trCount++;
+            }
+
+            if (th !== "" || td !== "") {
+                const newTable = table + tr + th + tbody + td + endTbody;
+                if (first) {
+                    $("#statsCountDiv").append(newTable);
+                } else {
+                    $("#moreCountDiv").append(newTable);
+                }
+            }
+        }
+
+        function replaceEngToKo(date) {
+            return date
+                .replace("2022-", "")
+                .replace("Monday", "월")
+                .replace("Tuesday", "화")
+                .replace("Wednesday", "수")
+                .replace("Thursday", "목")
+                .replace("Friday", "금")
+                .replace("Saturday", "토")
+                .replace("Sunday", "일");
+        }
+
+        function toDisplayNumber(value) {
+            const normalized = String(value ?? "0").replace(/,/g, "");
+            const parsed = Number(normalized);
+            return Number.isFinite(parsed) ? parsed.toLocaleString() : "0";
+        }
+
+        function drawRecentCharLeaders(data) {
+            (data.row || []).forEach((periodData) => {
+                const targetId = periodData.periodDays === 30 ? "recent30CharRate" : "recent7CharRate";
+                const metaId = periodData.periodDays === 30 ? "recent30CharRateMeta" : "recent7CharRateMeta";
+                const div = $("#" + targetId);
                 div.empty();
 
-                let table = "<table class='table table-bordered table-striped'>";
-                let tr = "<thead><tr>";
-                let tbody = "<tbody><tr>";
-                let endTbody = "</tr></tbody></table>";
-
-                let th = "";
-                let td = "";
-                let trCount = 1;
-                let first = true;
-                for (idx in data.row) {
-                    let item = data.row[idx];
-                    th += "<th>" + replaceEngToKo(item.dates) + "</th>";
-                    td += "<td>" + item.cnt.toLocaleString() + "</td>";
-                    if (trCount % 5 == 0) {
-                        let newTable = table + tr + th + tbody + td + endTbody;
-                        th = "";
-                        td = "";
-                        if (first) {
-                            $("#statsCountDiv").append(newTable);
-                            first = false;
-                        } else {
-                            $("#moreCountDiv").append(newTable);
-                        }
-                    }
-                    trCount++;
-                }
-            }
-
-            function replaceEngToKo(date) {
-                return date
-                        .replace("2022-","")
-                        .replace("Monday", "월")
-                        .replace("Tuesday", "화")
-                        .replace("Wednesday", "수")
-                        .replace("Thursday", "목")
-                        .replace("Friday", "금")
-                        .replace("Saturday", "토")
-                        .replace("Sunday", "일");
-            }
-
-            function drawStatsList(data) {
-                drawStatsListDiv("wBestTanker", dataFilter(data.row, "W", "TANKER", "DESC"));
-                drawStatsListDiv("wWorstTanker", dataFilter(data.row, "W", "TANKER", "ASC"));
-                drawStatsListDiv("wBestAttack", dataFilter(data.row, "W", "ATTACK", "DESC"));
-                drawStatsListDiv("wWorstAttack", dataFilter(data.row, "W", "ATTACK", "ASC"));
-
-                drawStatsListDiv("mBestTanker", dataFilter(data.row, "M", "TANKER", "DESC"));
-                drawStatsListDiv("mWorstTanker", dataFilter(data.row, "M", "TANKER", "ASC"));
-                drawStatsListDiv("mBestAttack", dataFilter(data.row, "M", "ATTACK", "DESC"));
-                drawStatsListDiv("mWorstAttack", dataFilter(data.row, "M", "ATTACK", "ASC"));
-            }
-
-            function dataFilter(row, statsType, combiType, order) {
-                let list = row.filter(item => item.statsType == statsType)
-                    .filter(item => item.combiType == combiType)
-                    .filter(item => item.order == order)
-                    .sort(order == "DESC" ? lateDesc : lateAsc);
-                return list;
-            }
-
-            function drawStatsListDiv(divId, data) {
-                //console.log(divId, data, data.length);
-
-                var table = $("#matchInfoTemplate").clone();
-                table.removeAttr("id");
-                let tbody = table.find("tbody");
-
-                if (data.length == 0) {
-                    let tr = "<tr><td colspan='5'>데이터가 없습니다.</td></tr>";
-                    tbody.append(tr);
+                if (periodData.latestRankDate) {
+                    $("#" + metaId).text(`대표 유저 기준: ${periodData.latestRankDate} 랭킹 600위 이내`);
                 }
 
-                let idx = 0;
-                for (idx in data) {
-                    if (idx >= 5) {
-                        break;
-                    }
-                    let row = data[idx];
-                    let tr = "<tr>";
-                    //console.log(row.combi.split("|"));
-                    tr += "<td>" + getChars(row.combi.split("|")) + "</td>";
-                    tr += "<td>" + row.total + "</td>";
-                    tr += "<td>" + row.win + "</td>";
-                    tr += "<td>" + row.lose + "</td>";
-                    tr += "<td>" + row.late + "%</td>";
-                    tbody.append(tr);
+                const table = $(`
+                    <table class="table table-striped table-condensed">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">캐릭터</th>
+                                <th scope="col">전체 승률</th>
+                                <th scope="col">대표 유저 5명</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                `);
+
+                const tbody = table.find("tbody");
+                const list = periodData.list || [];
+
+                if (list.length === 0) {
+                    tbody.append("<tr><td colspan='3'>데이터가 없습니다.</td></tr>");
+                } else {
+                    list.forEach((item) => {
+                        const visibleLeaders = (item.leaders || []).filter((leader) => Number(leader.player_matches) > 5);
+                        const leaders = visibleLeaders.length > 0
+                            ? visibleLeaders.map((leader) => `
+                                <div>랭킹 ${leader.rank_number}위 / ${leader.player_matches}전 / ${leader.player_rate}%</div>
+                            `).join("")
+                            : "<div>조건에 맞는 유저 없음</div>";
+
+                        tbody.append(`
+                            <tr>
+                                <td><img class='charImgSmall' data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}'></td>
+                                <td>${item.rate}%<br>${Number(item.total_matches).toLocaleString()}전</td>
+                                <td class="recentLeaderCell">${leaders}</td>
+                            </tr>
+                        `);
+                    });
                 }
 
-                $("#" + divId).append(table);
+                div.append(table);
+            });
+            setActiveRecentCharTab("7");
+        }
+
+        function drawRecentCharLeadersMobile(data) {
+            (data.row || []).forEach((periodData) => {
+                const targetId = periodData.periodDays === 30 ? "recent30CharRate" : "recent7CharRate";
+                const metaId = periodData.periodDays === 30 ? "recent30CharRateMeta" : "recent7CharRateMeta";
+                const div = $("#" + targetId);
+                div.empty();
+
+                if (periodData.latestRankDate) {
+                    $("#" + metaId).text(`Ranker cutoff: ${periodData.latestRankDate} / Top 600`);
+                }
+
+                const list = periodData.list || [];
+                if (list.length === 0) {
+                    div.append("<div class='recentCharEmpty'>No data available.</div>");
+                    return;
+                }
+
+                const board = $("<div class='recentCharBoard'></div>");
+
+                list.forEach((item, index) => {
+                    const visibleLeaders = (item.leaders || [])
+                        .filter((leader) => Number(leader.player_matches) > 5)
+                        .slice(0, 4);
+                    const qualifiedRates = visibleLeaders.map((leader) => Number(leader.player_rate));
+                    const bestRate = qualifiedRates.length > 0 ? Math.max(...qualifiedRates) : null;
+                    const worstRate = qualifiedRates.length > 0 ? Math.min(...qualifiedRates) : null;
+                    const rateClass = getRecentRateClass(Number(item.rate));
+                    const leaders = visibleLeaders.length > 0
+                        ? visibleLeaders.map((leader, leaderIndex) => buildRecentLeaderItemMobile(leader, bestRate, worstRate, leaderIndex + 1)).join("")
+                        : "<div class='recentCharEmpty'>No qualified ranker data.</div>";
+
+                    board.append(`
+                        <article class="recentCharCard">
+                            <div class="recentCharTop">
+                                <div class="recentCharProfile">
+                                    <span class="recentCharRank">${index + 1}</span>
+                                    <img class="recentCharAvatar" data-item='${item.char_name}' src='https://img-api.neople.co.kr/cy/characters/${charMap.get(item.char_name)}' alt="${item.char_name}">
+                                    <div>
+                                        <strong class="recentCharName">${item.char_name}</strong>
+                                        <div class="recentCharSummary">${Number(item.total_matches).toLocaleString()}판 ${Number(item.win_count).toLocaleString()}승 ${Number(item.lose_count).toLocaleString()}패</div>
+                                    </div>
+                                </div>
+                                <div class="recentCharRateWrap">
+                                    <div class="recentCharRateValue ${rateClass}">${item.rate}%</div>
+                                    <div class="recentCharRateLabel">전체 승률</div>
+                                </div>
+                            </div>
+                            <div class="recentCharRateBar"><span style="width:${Math.max(0, Math.min(Number(item.rate), 100))}%"></span></div>
+                            <div class="recentLeaderSection">대표유저</div>
+                            <div class="recentLeaderList">${leaders}</div>
+                        </article>
+                    `);
+                });
+
+                div.append(board);
+                div.append("<div class='recentCharEmpty recentCharFilterEmpty'>검색 결과가 없습니다.</div>");
+            });
+            filterRecentChars();
+            setActiveRecentCharTab("7");
+        }
+
+        function buildRecentLeaderItemMobile(leader, bestRate, worstRate, order) {
+            const pillClass = getLeaderPillClassMobile(Number(leader.player_rate), bestRate, worstRate);
+            return `
+                <div class="recentLeaderItem">
+                    <div class="recentLeaderHead">
+                        <span class="recentLeaderOrder">${order}</span>
+                        <span class="recentLeaderBadge">${leader.rank_number}위</span>
+                        <div class="recentLeaderMeta">${Number(leader.player_matches).toLocaleString()}판 ${Number(leader.player_win_count).toLocaleString()}승 ${Number(leader.player_lose_count).toLocaleString()}패</div>
+                    </div>
+                    <div class="recentLeaderPill ${pillClass}">${leader.player_rate}%</div>
+                </div>
+            `;
+        }
+
+        function getRecentRateClass(rate) {
+            if (rate >= 55) {
+                return "is-hot";
             }
-
-            function getChars(arr) {
-                let images = "";
-                if (arr == "") {
-                    return "<spna style='font-size:25px;'>탱커 없음</span>";
-                }
-                for (idx in arr) {
-                    images += "&nbsp;<img class='charImgSmall' data-item='" + arr[idx] + "' src='https://img-api.neople.co.kr/cy/characters/" + charMap.get(arr[idx]) + "'>"
-                }
-                return images;
+            if (rate >= 50) {
+                return "is-mid";
             }
+            return "is-cold";
+        }
 
-            function getStats(url, callback) {
-                var result;
-                $.ajax({
-                    async: true,
-                    url: "/stats/" + url,
-                    success: function(data) {
-                        if (data.resultCode == -1) {
-                            return;
-                        }
-                        callback(data);
-                    },
-                    error: function(data) {
+        function getLeaderPillClassMobile(rate, bestRate, worstRate) {
+            if (bestRate != null && worstRate != null && rate === bestRate && rate !== worstRate) {
+                return "is-best";
+            }
+            if (bestRate != null && worstRate != null && rate === worstRate && rate !== bestRate) {
+                return "is-worst";
+            }
+            return "is-neutral";
+        }
+
+        function switchRecentCharTab() {
+            setActiveRecentCharTab($(this).data("period"));
+            filterRecentChars();
+        }
+
+        function filterRecentChars() {
+            const keyword = ($("#recentCharSearchInput").val() || "").toLowerCase().trim();
+            const visiblePanel = $(".recentCharPanel:visible");
+            let visibleCount = 0;
+
+            visiblePanel.find(".recentCharCard").each(function() {
+                const charName = ($(this).find(".recentCharName").text() || "").toLowerCase();
+                const matched = charName.includes(keyword);
+                $(this).toggle(matched);
+                if (matched) {
+                    visibleCount++;
+                }
+            });
+
+            visiblePanel.find(".recentCharFilterEmpty").toggle(keyword !== "" && visibleCount === 0);
+        }
+
+        function setActiveRecentCharTab(period) {
+            $(".recentCharTab").removeClass("active");
+            $(`.recentCharTab[data-period='${period}']`).addClass("active");
+            $(".recentCharPanel").hide();
+            $(`#recentCharPanel${period}`).show();
+        }
+
+        function getStats(url, callback) {
+            $.ajax({
+                async: true,
+                url: "/stats/" + url,
+                success: function(data) {
+                    if (data.resultCode === -1) {
                         return;
                     }
-                }).done(function() {
-
-                });
-                return result;
-            }
-        </script>
+                    callback(data);
+                },
+                error: function() {
+                    return;
+                }
+            });
+        }
+    </script>
 </head>
 
 <body class="body">
-    <%- include  ("../layout/menu_mobile") %>
+    <%- include("../layout/menu_mobile") %>
 
-        <div id="statsMain">
-            <div class="topNoheight">
-                <h3>주간 공식 집계 판수
-                    <i class="fas fa-angle-double-down" data-bs-toggle="collapse" data-bs-target="#moreCountDiv" aria-expanded="true"></i>
-                </h3>
-                <div id="statsCountDiv">
-
-                </div>
-
-                <div id="moreCountDiv" class="collapse">
-
-                </div>
-            </div>
-            <div id="con1" class="conLayer">
-                <h3> 이번달 조합 </h3>
-                <div class="conStats">
-                    <h4>BEST 5</h4>
-                    <div id="mBestTanker">
-                        <h5>탱커</h5>
-                    </div>
-                    <div id="mBestAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-                <div class="conStats">
-                    <h4>WORST 5</h4>
-                    <div id="mWorstTanker">
-                        <h5>탱커</h5>
-                    </div>
-                    <div id="mWorstAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-            </div>
-            <div id="con2" class="conLayer">
-                <h3> 금주 조합 </h3>
-                <div class="conStats">
-                    <h4>BEST 5</h4>
-                    <div id="wBestTanker">
-                        <h5>탱커</h5>
-                    </div>
-                    <div id="wBestAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-                <div class="conStats">
-                    <h4>WORST 5</h4>
-                    <div id="wWorstTanker">
-                        <h5>탱커</h5>
-                    </div>
-                    <div id="wWorstAttack">
-                        <h5>딜러</h5>
-                    </div>
-                </div>
-            </div>
+    <div id="statsMain">
+        <div class="topNoheight">
+            <h3>주간 공식 집계 판수
+                <i class="fas fa-angle-double-down" data-bs-toggle="collapse" data-bs-target="#moreCountDiv" aria-expanded="true"></i>
+            </h3>
+            <div id="statsCountDiv"></div>
+            <div id="moreCountDiv" class="collapse"></div>
         </div>
 
-
-        <div style="display:none">
-            <table id="matchInfoTemplate" class="table table-striped table-condensed">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">조합</th>
-                        <th scope="col">판수</th>
-                        <th scope="col">승</th>
-                        <th scope="col">패</th>
-                        <th scope="col">승률</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <div id="con1" class="conLayer">
+            <h3>최근 캐릭터 승률</h3>
+            <div class="recentCharTabs" style="margin-bottom:12px;">
+                <button type="button" class="recentCharTab" data-period="30">최근 30일</button>
+                <button type="button" class="recentCharTab active" data-period="7">최근 7일</button>
+            </div>
+            <div class="recentCharSearch">
+                <input type="text" id="recentCharSearchInput" placeholder="캐릭터 검색">
+            </div>
+            <div id="recentCharPanel30" class="recentCharPanel" style="display:none;">
+                <p id="recent30CharRateMeta"></p>
+                <div id="recent30CharRate"></div>
+            </div>
+            <div id="recentCharPanel7" class="recentCharPanel">
+                <p id="recent7CharRateMeta"></p>
+                <div id="recent7CharRate"></div>
+            </div>
         </div>
-
-
+    </div>
 </body>
 
 </html>

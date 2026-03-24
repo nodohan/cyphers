@@ -1,7 +1,7 @@
 
 function drawVsNormal(result) {
 
-    $(".con").removeAttr("style").attr("class", "conNormal");
+    $(".specialVsPanel").removeClass("vs-rating-mode").addClass("vs-normal-mode");
     $("#con1_2").empty();
     $("#con2_2").empty();
 
@@ -41,12 +41,15 @@ function drawInGameScoreNormal(data) {
 function drawMatchVsNormal(matchId, result) {
     let prefixMatchId = "m" + matchId;
 
-    var data;
     if (result == null) {
-        $("#" + prefixMatchId + "Btn").click();
+        const existingModal = document.getElementById(prefixMatchId + "Modal");
+        if (existingModal) {
+            bootstrap.Modal.getOrCreateInstance(existingModal).show();
+        }
         return;
     }
 
+    var data;
     if (typeof result == 'string') {
         data = JSON.parse(result);
     } else {
@@ -73,10 +76,6 @@ function drawMatchVsNormal(matchId, result) {
     }
 
     //클릭이벤트 설정용
-    var btn = $(body).find("#matchBtn");
-    btn.attr("id", prefixMatchId + "Btn");
-    btn.attr("data-bs-target", "#" + prefixMatchId + "Modal");
     $("#modalDiv").append(body);
-
-    btn.click();
+    bootstrap.Modal.getOrCreateInstance(body[0]).show();
 }

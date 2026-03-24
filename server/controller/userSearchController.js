@@ -68,7 +68,7 @@ module.exports = (scheduler, maria, acclogger) => {
     app.get('/getUserInfo', async function(req, res) {
         const { nickname, gameType} = req.query;
         let userInfo = await new api().searchUser(nickname, gameType);
-        
+
         if (userInfo && userInfo.playerId) {
             const [latestRank, rankHistory] = await Promise.all([
                 userRepository.selectUserLatestRank(userInfo.playerId),
@@ -80,24 +80,6 @@ module.exports = (scheduler, maria, acclogger) => {
         
         res.send(userInfo);
     });
-
-    const getRatingData = async (userInfo) => {
-        if(gameType == 'rating') {
-            try {
-                let matches = await userRepository.selectUserMatches(userInfo.playerId);
-                matches = matches.map(row => JSON.parse(row.jsonData)) || [];
-                userInfo.matches.rows.push(... matches);
-                let rows = userInfo.matches.rows;
-                rows = rows.filter((obj, index, self) => index === self.findIndex((t) => t.matchId === obj.matchId));
-                userInfo.matches.rows = rows;
-                //const hasMatchIds = userInfo.matches.rows.length != 0 ? userInfo.matches.rows.map(row => "'" +  row.matchId + "'").join(",") : "";
-                logger.debug("getUserInfo matchRow: " + rows.length);
-            } catch(err) {
-                logger.error(err);
-            }
-        }
-    }
-
 
     //  url = "/user/grade"
     app.get('/userInfoSimple', async function(req, res) {
