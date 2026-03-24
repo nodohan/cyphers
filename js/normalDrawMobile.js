@@ -13,6 +13,7 @@ const drawNormalUserInfo = (gameType, divName, data, nickname) => {
         clone.addClass("infoDivRed");
     }
 
+    const rating = data.records.filter(game => game.gameTypeId == gameType)[0] || { loseCount: 0, stopCount: 0, winCount: 0, playCount : 0 };
     defaultInfoNormal(userDivId, gameType, clone, data, divName != "con3_2");
 
     var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -30,6 +31,10 @@ const drawNormalUserInfo = (gameType, divName, data, nickname) => {
 
     //최근 10경기 결과
     drawRecentlyNormal(clone, rows, userDivId);
+
+    if (typeof decorateMobileMultiSearchCard === "function") {
+        decorateMobileMultiSearchCard(clone, data, rating, rows, gameType);
+    }
 
     clone.show();
     $("#" + divName).prepend(clone);
@@ -310,18 +315,34 @@ const drawRecentlyNormal = (div, rows, userDivId) => {
     let bodyCount = Math.min(20, rows.length);
 
     let title = $(div).find("#recentlyDivTitle");
-    title.prepend(`최근 ${bodyCount} 게임 보기`);
-    
     const modalId = `pop${userDivId}Modal`;
     const labelId = `pop${userDivId}ModalLabel`;
     const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
 
     let body = $(getTempModalTableNormal(modalId, labelId,  `최근 ${bodyCount} 게임`));
     rows.sort(sortDate);
+    const previewCount = Math.min(10, rows.length);
+    let titleText = "";
     for (let j = 0; j < bodyCount; j++) {
+        if (j < previewCount) {
+            titleText += `<span class="neutral">●</span> `;
+        }
         body.find("tbody").append(drawInGameListNormal(rows[j]));
     }
-    title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+
+    if (document.body && document.body.classList.contains("mobileUserSearchRenewal")) {
+        title
+            .addClass("multiRecentSummary")
+            .empty()
+            .append(`<div class="multiRecentStrip neutral">${titleText}</div>`)
+            .append(`
+                <button type="button" class="multiRecentMoreButton" data-bs-toggle="modal" data-bs-target="#${modalId}">
+                    <span>${bodyCount}G</span>${moreIcon}
+                </button>`);
+    } else {
+        title.prepend(`최근 ${bodyCount} 게임 보기`);
+        title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+    }
 
     $("#modalDiv").append(body);
 }

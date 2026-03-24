@@ -457,8 +457,20 @@ function drawRecently(div, rows, userDivId) {
         body.find("tbody").append(drawInGameList(rows[j]));
     }
     let moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black"></i>';
-    title.append(titleText);
-    title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+
+    if (document.body && document.body.classList.contains("mobileUserSearchRenewal")) {
+        title
+            .addClass("multiRecentSummary")
+            .empty()
+            .append(`<div class="multiRecentStrip">${titleText}</div>`)
+            .append(`
+                <button type="button" class="multiRecentMoreButton" data-bs-toggle="modal" data-bs-target="#${modalId}">
+                    <span>${bodyCount}G</span>${moreIcon}
+                </button>`);
+    } else {
+        title.append(titleText);
+        title.append(`<a data-bs-toggle='modal' data-bs-target='#${modalId}'>&nbsp;${moreIcon}</a>`);
+    }
 
     $("#modalDiv").append(body);
 }

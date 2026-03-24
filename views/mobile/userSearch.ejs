@@ -102,6 +102,7 @@
 
                 //최근 10경기 결과
                 drawRecently(clone, rows, userDivId);
+                decorateMobileMultiSearchCard(clone, data, rating, rows, gameType);
 
                 clone.show();
                 $("#" + divName).append(clone);
@@ -153,6 +154,21 @@
 
                 const {win_count, lose_count, total_games} = data;
                 const winRate = ((win_count / total_games) * 100) || 0;
+                if (isMobileUserSearchRenewal()) {
+                    $(div).append(`
+                    <div class="multiPositionCard">
+                        <div class="multiPositionIcon">
+                            <img src="${imgUrl}" alt="${type}">
+                        </div>
+                        <div class="multiPositionBody">
+                            <strong class="multiPositionName">${type}</strong>
+                            <div class="multiPositionRate">${winRate.toFixed(1)}%</div>
+                            <small>${total_games}전 ${win_count}승 ${lose_count}패</small>
+                        </div>
+                    </div>`);
+                    return;
+                }
+
                 const infoStr = `${winRate.toFixed(2)}% <br><small class='text-muted'>${win_count}승 ${lose_count}패</small>`;
 
                 $(div).append(`
@@ -168,6 +184,130 @@
                         </div>
                     </div>
                 </div>`);
+            }
+
+            function isMobileUserSearchRenewal() {
+                return document.body && document.body.classList.contains("mobileUserSearchRenewal");
+            }
+
+            function buildMultiResultStat(label, value, tone) {
+                return `
+                    <div class="multiResultStatCard${tone ? " " + tone : ""}">
+                        <span class="multiResultStatLabel">${label}</span>
+                        <strong class="multiResultStatValue">${value}</strong>
+                    </div>`;
+            }
+
+            function decorateMobileMultiSearchCard(card, data, rating, rows, gameType) {
+                if (!isMobileUserSearchRenewal()) {
+                    return;
+                }
+
+                const root = $(card);
+                const defaultDiv = root.find("#defaultDiv");
+                const historyDiv = root.find("#historyDiv").detach();
+                const playParty = root.find("#playParty").detach();
+                const positionDiv = root.find("#positionDiv").detach();
+                const mostCharDiv = root.find("#mostCharDiv").detach();
+                const recentlyDiv = root.find("#recentlyDiv").detach();
+
+                const nicknameHtml = root.find("#nickNameDiv").html();
+                const levelText = root.find("#levelDiv").text();
+                const clanText = root.find("#clanDiv").text();
+                const tierNode = root.find("#tierName");
+                const tierText = tierNode.text() || "UNRANK";
+                const tierClass = tierNode.attr("class") || "";
+                const currRP = root.find("#currRP").text();
+                const maxRP = root.find("#maxRP").text();
+                const seasonHtml = root.find("#beforeSeason").html();
+                const recordHtml = root.find("#playGameDiv").html();
+                const partyInfo = extractParty(rows);
+                const totalMatches = rows.length;
+                const wins = rows.filter(row => row.playInfo.result == "win").length;
+                const loses = rows.filter(row => row.playInfo.result == "lose").length;
+                const stops = Math.max(0, totalMatches - wins - loses);
+                const winRate = totalMatches === 0 ? 0 : (wins * 100) / totalMatches;
+                const gameTypeText = gameType == "rating" ? "RATING" : "NORMAL";
+                const rankMeta = currRP
+                    ? `<div class="multiResultRankMeta">
+                            <span class="multiResultTier ${tierClass}">${tierText}</span>
+                            <strong>${currRP}</strong>
+                            <span>${maxRP}</span>
+                       </div>`
+                    : `<div class="multiResultRankMeta">
+                            <span class="multiResultTier ${tierClass}">${tierText}</span>
+                       </div>`;
+
+                defaultDiv
+                    .addClass("multiResultHead")
+                    .empty()
+                    .append(`
+                        <div class="multiResultTopline">
+                            <span class="multiResultMode">${gameTypeText}</span>
+                            ${rankMeta}
+                        </div>
+                        <div class="multiResultIdentity">
+                            <div class="multiResultName">${nicknameHtml}</div>
+                            <div class="multiResultSubline">
+                                <span>${levelText}</span>
+                                <span>${clanText || "클랜 없음"}</span>
+                            </div>
+                        </div>
+                        <div class="multiResultStatGrid">
+                            ${buildMultiResultStat("TOTAL", totalMatches)}
+                            ${buildMultiResultStat("WIN RATE", `${winRate.toFixed(0)}%`, "accent")}
+                            ${buildMultiResultStat("SOLO", partyInfo.solo.win + partyInfo.solo.lose)}
+                            ${buildMultiResultStat("PARTY", partyInfo.all.count)}
+                        </div>
+                        <div class="multiResultRecordLine">${recordHtml || ""}</div>
+                        <div class="multiResultSummaryPills">
+                            <span class="multiResultSummaryPill win">WIN ${wins}</span>
+                            <span class="multiResultSummaryPill lose">LOSE ${loses}</span>
+                            <span class="multiResultSummaryPill neutral">STOP ${stops}</span>
+                            ${seasonHtml ? `<span class="multiResultSummaryPill link">${seasonHtml}</span>` : ""}
+                        </div>
+                    `);
+
+                if (historyDiv.length) {
+                    historyDiv.addClass("multiResultHistory");
+                    defaultDiv.append(historyDiv);
+                }
+
+                playParty.addClass("multiResultSection multiResultPartySection");
+                positionDiv.addClass("multiResultSection multiResultPositionSection");
+                mostCharDiv.addClass("multiResultSection multiResultMostCharSection");
+                recentlyDiv.addClass("multiResultSection multiResultRecentSection");
+
+                if (playParty.text().trim()) {
+                    playParty.prepend(`<div class="multiResultSectionTitle">Party Breakdown</div>`);
+                }
+                if (positionDiv.children().length) {
+                    positionDiv.prepend(`<div class="multiResultSectionTitle">Position Snapshot</div>`);
+                }
+                if (mostCharDiv.children().length) {
+                    mostCharDiv.prepend(`<div class="multiResultSectionTitle">Character Pool</div>`);
+                }
+                if (recentlyDiv.children().length) {
+                    recentlyDiv.prepend(`<div class="multiResultSectionTitle">Recent Form</div>`);
+                }
+
+                root
+                    .addClass("multiResultCard")
+                    .empty()
+                    .append(defaultDiv);
+
+                if (playParty.text().trim()) {
+                    root.append(playParty);
+                }
+                if (positionDiv.children().length > 1) {
+                    root.append(positionDiv);
+                }
+                if (mostCharDiv.children().length > 1) {
+                    root.append(mostCharDiv);
+                }
+                if (recentlyDiv.children().length > 1) {
+                    root.append(recentlyDiv);
+                }
             }
 
             //기본정보
