@@ -16,7 +16,7 @@ module.exports = (scheduler, maria, acclogger) => {
     //  url = "/user/userSearch"
     app.get('/userSearch', function(req, res) {
         commonUtil.getIp(req);
-        const isApp = req.query.isApp || false;
+        const isApp = commonUtil.isApp(req);
         console.log("앱맞음?", isApp);
 
         if (isApp || commonUtil.isMobile(req)) {
