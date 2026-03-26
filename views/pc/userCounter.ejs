@@ -205,19 +205,20 @@
                                     <span class="specialCounterRank">${order}</span>
                                     <div>
                                         <strong>${escapeHtml(row.nickname || "알 수 없음")}</strong>
-                                        <div class="specialCounterSub">${total.toLocaleString()}판 · ${row.win}승 ${row.lose}패</div>
+                                        <div class="specialCounterSubRow">
+                                            <div class="specialCounterSub">${total.toLocaleString()}판 · ${row.win}승 ${row.lose}패</div>
+                                            <div class="specialCounterRateWrap">
+                                                <div class="specialCounterRateValue ${getCounterRateClass(rate)}">승률 ${rate}%</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="specialCounterRateWrap">
-                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
-                                </div>
+                                <button type="button" class="specialCounterToggle specialCounterToggleInline ${hasMatches ? "" : "is-disabled"}" ${hasMatches ? "" : "disabled"}>
+                                    <span>최근5판</span>
+                                </button>
                             </div>
                         </div>
                         <div class="specialCounterSide">
-                            <button type="button" class="specialCounterToggle ${hasMatches ? "" : "is-disabled"}" ${hasMatches ? "" : "disabled"}>
-                                <span>같이 잡힌 최근 게임</span>
-                                <span class="specialCounterToggleMeta">${hasMatches ? `${matches.length}개` : "없음"}</span>
-                            </button>
                             <div class="specialCounterSideList">
                                 ${matches.length ? matches.map(buildMatchItem).join("") : "<div class='specialCounterEmpty'>저장된 경기 요약이 없습니다.</div>"}
                             </div>
@@ -250,7 +251,7 @@
                                     </div>
                                 </div>
                                 <div class="specialCounterRateWrap">
-                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">승률 ${rate}%</div>
                                 </div>
                             </div>
                         </div>
@@ -270,13 +271,9 @@
             const meta = [match.date, match.mapName].filter(Boolean).join(" · ");
             return `
                 <div class="specialCounterSideItem">
-                    <div class="specialCounterSideHead">
-                        <strong>${escapeHtml(vsText || "캐릭터 정보 없음")}</strong>
-                        <span class="specialCounterPill ${match.result === "win" ? "is-win" : "is-lose"}">${match.result === "win" ? "승" : "패"}</span>
-                    </div>
-                    <div class="specialCounterSideBody">
-                        <span>${escapeHtml(meta || match.matchId || "")}</span>
-                    </div>
+                    <strong>${escapeHtml(vsText || "캐릭터 정보 없음")}</strong>
+                    <span>${escapeHtml(meta || match.matchId || "")}</span>
+                    <span class="specialCounterPill ${match.result === "win" ? "is-win" : "is-lose"}">${match.result === "win" ? "승" : "패"}</span>
                 </div>
             `;
         };

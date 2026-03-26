@@ -2513,9 +2513,9 @@ h5:has(.sortButton) {
 }
 
 .specialCounterCardGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.95fr);
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     padding: 5px;
 }
 
@@ -2529,7 +2529,7 @@ h5:has(.sortButton) {
     display: flex;
     align-items: start;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
 }
 
 .specialCounterProfile {
@@ -2553,24 +2553,22 @@ h5:has(.sortButton) {
     word-break: keep-all;
 }
 
-.specialCounterRank {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    background: #212529;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    flex: 0 0 34px;
+.specialCounterSub {
+    margin-top: 2px;
+    color: #6c757d;
+    font-size: 12px;
 }
 
-.specialCounterSub {
-    margin-top: 4px;
-    color: #6c757d;
-    font-size: 13px;
+.specialCounterSubRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.specialCounterSubRow .specialCounterSub {
+    margin-top: 0;
 }
 
 .specialCounterRateWrap {
@@ -2581,14 +2579,15 @@ h5:has(.sortButton) {
 }
 
 .specialCounterRateValue {
-    min-width: 66px;
+    min-width: 72px;
     text-align: center;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 999px;
-    font-size: 18px;
+    font-size: 13px;
     font-weight: 700;
     background: #eef3f8;
     color: #495057;
+    white-space: nowrap;
 }
 
 .specialCounterRateValue.is-hot {
@@ -2605,20 +2604,33 @@ h5:has(.sortButton) {
     background: #e7f5ff;
     color: #1864ab;
 }
+.specialCounterRank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #212529;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    flex: 0 0 34px;
+}
 
 .specialCounterSide {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    border-left: 1px solid #edf2f7;
-    padding-left: 16px;
+    gap: 6px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 6px;
     min-width: 0;
 }
 
 .specialCounterSideList {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     display: none;
 }
 
@@ -2627,35 +2639,28 @@ h5:has(.sortButton) {
 }
 
 .specialCounterSideItem {
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: #f8fafc;
-    border: 1px solid #edf2f7;
-}
-
-.specialCounterSideHead {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 4px;
-}
-
-.specialCounterSideHead strong {
-    color: #212529;
-    font-size: 14px;
-    font-weight: 700;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
     min-width: 0;
 }
 
-.specialCounterSideBody {
-    display: block;
+.specialCounterSideItem strong {
+    color: #212529;
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 0;
+    white-space: nowrap;
 }
 
-.specialCounterSideBody span,
-.specialCounterTeam {
+.specialCounterSideItem span {
     color: #6c757d;
-    font-size: 13px;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 .specialCounterToggle {
@@ -2666,13 +2671,29 @@ h5:has(.sortButton) {
     gap: 10px;
     border: 0;
     background: linear-gradient(135deg, #f7fbff 0%, #edf5fc 100%);
-    border-radius: 14px;
-    padding: 12px 14px;
+    border-radius: 10px;
+    padding: 8px 10px;
     color: #1f2933;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-align: left;
     box-shadow: inset 0 0 0 1px #d8e1ea;
+}
+
+.specialCounterToggleInline {
+    width: auto;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    box-shadow: inset 0 0 0 1px #d8e1ea;
+}
+
+.specialCounterToggleInline::after {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    background-size: 10px 10px;
+    box-shadow: none;
 }
 
 .specialCounterToggle::after {
@@ -2805,15 +2826,8 @@ h5:has(.sortButton) {
         min-height: 48px;
     }
 
-    .specialCounterCardGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .specialCounterSide {
-        border-left: 0;
-        border-top: 1px solid #edf2f7;
-        padding-left: 0;
-        padding-top: 14px;
+    .specialCounterSideItem {
+        flex-wrap: wrap;
     }
 }
 
