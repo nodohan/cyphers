@@ -183,6 +183,7 @@ module.exports = (scheduler, maria, acclogger) => {
 
       const isWin = row.teams[0].result == "win" && row.teams[0].players.includes(playerId) || row.teams[1].result == "win" && row.teams[1].players.includes(playerId);
       const myTeamList = row.teams[0].players.includes(playerId) ? row.teams[0].players : row.teams[1].players;
+      const me = row.players.find(player => player.playerId == playerId);
       
       row.players.forEach(player => {
           const youId = player.playerId;
@@ -193,7 +194,13 @@ module.exports = (scheduler, maria, acclogger) => {
           const targetMap = myTeamList.includes(youId) ? myTeam : enemyTeam;
           const charName = player.playInfo.characterName;
           setMap(targetMap, isWin, charName);
-          appendCharUser(targetMap, charName, youId, isWin);
+          appendCharUser(targetMap, charName, youId, isWin, {
+            matchId: row.matchId,
+            date: row.date,
+            mapName: player.map?.name || row.map?.name || "",
+            myCharName: me?.playInfo?.characterName || "",
+            youCharName: player.playInfo?.characterName || ""
+          });
       });
     });
 
@@ -235,7 +242,7 @@ module.exports = (scheduler, maria, acclogger) => {
     map.set(key, row);
   }
 
-  const appendCharUser = (map, charName, userId, isWin) => {
+  const appendCharUser = (map, charName, userId, isWin, matchSummary) => {
     const row = map.get(charName);
     if(!row) {
       return ;
@@ -247,8 +254,13 @@ module.exports = (scheduler, maria, acclogger) => {
     if(!target) {
       target = {
         playerId: userId,
+        matchId: "",
         win: 0,
         lose: 0,
+        date: "",
+        mapName: "",
+        myCharName: "",
+        youCharName: "",
       };
       users.push(target);
     }
@@ -257,6 +269,14 @@ module.exports = (scheduler, maria, acclogger) => {
       target.win++;
     } else {
       target.lose++;
+    }
+
+    if(!target.date || new Date(matchSummary.date) > new Date(target.date)) {
+      target.matchId = matchSummary.matchId || "";
+      target.date = matchSummary.date || "";
+      target.mapName = matchSummary.mapName || "";
+      target.myCharName = matchSummary.myCharName || "";
+      target.youCharName = matchSummary.youCharName || "";
     }
 
     row.users = users;
@@ -289,7 +309,12 @@ module.exports = (scheduler, maria, acclogger) => {
         row.users = (row.users || []).map(user => ({
           win: user.win,
           lose: user.lose,
-          nickname: playerInfos.get(user.playerId) || ""
+          nickname: playerInfos.get(user.playerId) || "",
+          matchId: user.matchId || "",
+          date: user.date || "",
+          mapName: user.mapName || "",
+          myCharName: user.myCharName || "",
+          youCharName: user.youCharName || ""
         }));
       }
     });
@@ -305,7 +330,12 @@ module.exports = (scheduler, maria, acclogger) => {
         users: (row.users || []).map(user => ({
           win: user.win || 0,
           lose: user.lose || 0,
-          nickname: user.nickname || ""
+          nickname: user.nickname || "",
+          matchId: user.matchId || "",
+          date: user.date || "",
+          mapName: user.mapName || "",
+          myCharName: user.myCharName || "",
+          youCharName: user.youCharName || ""
         }))
       };
     });

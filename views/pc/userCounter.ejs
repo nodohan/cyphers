@@ -233,6 +233,7 @@
             const charId = charMap.get(row.charName);
             const charIcon = charId ? drawCharicter(charId) : "";
             const users = (row.users || []).slice(0, 5);
+            const hasUsers = users.length > 0;
 
             return `
                 <article class="specialCounterCard">
@@ -249,16 +250,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="specialCounterRateWrap">
-                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                <div class="specialCounterTopActions">
+                                    <div class="specialCounterRateWrap">
+                                        <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                    </div>
+                                    <button type="button" class="specialCounterToggle specialCounterToggleInline ${hasUsers ? "" : "is-disabled"}" ${hasUsers ? "" : "disabled"}>
+                                        <span>많이 한 유저</span>
+                                        <span class="specialCounterToggleMeta">${hasUsers ? `${users.length}명` : "없음"}</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="specialCounterSide">
-                            <div class="specialCounterSideTitle">이 캐릭터를 많이 한 유저</div>
-                            <div class="specialCounterSideList">
-                                ${users.length ? users.map(buildCharUserItem).join("") : "<div class='specialCounterEmpty'>집계된 유저가 없습니다.</div>"}
-                            </div>
+                        <div class="specialCounterSideList">
+                            ${users.length ? users.map(buildCharUserItem).join("") : "<div class='specialCounterEmpty'>집계된 유저가 없습니다.</div>"}
                         </div>
                     </div>
                 </article>
@@ -266,12 +270,12 @@
         };
 
         const buildMatchItem = (match) => {
-            const vsText = [match.myCharName, match.youCharName].filter(Boolean).join(" vs ");
+            const vsText = `나 ${match.myCharName || "?"} · 상대 ${match.youCharName || "?"}`;
             const meta = [match.date, match.mapName].filter(Boolean).join(" · ");
             return `
                 <div class="specialCounterSideItem">
                     <div class="specialCounterSideHead">
-                        <strong>${escapeHtml(vsText || "캐릭터 정보 없음")}</strong>
+                        <strong>${escapeHtml(vsText)}</strong>
                         <span class="specialCounterPill ${match.result === "win" ? "is-win" : "is-lose"}">${match.result === "win" ? "승" : "패"}</span>
                     </div>
                     <div class="specialCounterSideBody">
@@ -284,14 +288,16 @@
         const buildCharUserItem = (user) => {
             const total = getTotalGames(user);
             const rate = getWinRate(user);
+            const vsText = `나 ${user.myCharName || "?"} · ${escapeHtml(user.nickname || "알 수 없음")} ${user.youCharName || "?"}`;
+            const meta = [user.date, user.mapName].filter(Boolean).join(" · ");
             return `
-                <div class="specialCounterSideItem">
+                <div class="specialCounterSideItem" data-match-id="${escapeHtml(user.matchId || "")}">
                     <div class="specialCounterSideHead">
-                        <strong>${escapeHtml(user.nickname || "알 수 없음")}</strong>
-                        <span class="specialCounterPill ${getCounterRateClass(rate)}">${rate}%</span>
+                        <strong>${escapeHtml(vsText)}</strong>
+                        <span class="specialCounterPill ${getCounterRateClass(rate)}">승률 ${rate}%</span>
                     </div>
                     <div class="specialCounterSideBody">
-                        <span>${total.toLocaleString()}판 · ${user.win}승 ${user.lose}패</span>
+                        <span>${escapeHtml(meta || `${total.toLocaleString()}판 · ${user.win}승 ${user.lose}패`)}</span>
                     </div>
                 </div>
             `;
