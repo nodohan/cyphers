@@ -21,6 +21,10 @@
                     renderCounterPanels(currentCounterData);
                 }
             });
+
+            $(document).on("click", ".specialCounterToggle", function () {
+                $(this).closest(".specialCounterCard").toggleClass("is-expanded");
+            });
         });
 
         function userCounter() {
@@ -101,7 +105,7 @@
             currentCounterData = data;
 
             let refreshButton = "";
-            if (data.state === "complate" && !isYesterday(data.complateDate)) {
+            if (data.state === "complate") {
                 refreshButton = `<button type="button" class="btn specialGhostBtn" onClick="javascript:insertUserDetail();">재분석</button>`;
             }
 
@@ -124,96 +128,209 @@
             const user = JSON.parse(data.playerDetail);
             const char = JSON.parse(data.charDetail);
 
-            drawUserCounter($("#con1_1"), user.myTeam);
-            drawUserCounter($("#con1_2"), user.enemyTeam);
-            drawCharCounter($("#con2_1"), char.myTeam);
-            drawCharCounter($("#con2_2"), char.enemyTeam);
+            drawUserCounter($("#con1_1"), user.myTeam || []);
+            drawUserCounter($("#con1_2"), user.enemyTeam || []);
+            drawCharCounter($("#con2_1"), char.myTeam || {});
+            drawCharCounter($("#con2_2"), char.enemyTeam || {});
         };
 
         const alterInfo = () => {
-            alert("해당 기능은 데이터 수집과 분석에 시간이 필요합니다.\n최소 2분에서 최대 1시간 후 다시 확인해주세요.");
-        };
-
-        const buildCounterTable = (title) => {
-            const clone = $("#templateTable").clone();
-            clone.removeAttr("id").addClass("specialCounterTable");
-            clone.find("th:first").text(title);
-            return clone;
+            alert("해당 기능은 데이터 수집과 분석에 시간이 필요합니다.\n최소 2분에서 최대 1시간 뒤 다시 확인해주세요.");
         };
 
         const drawUserCounter = (div, rows) => {
+            const board = $("<div class='specialCounterBoard'></div>");
             const min = getMinGames();
-            const clone = buildCounterTable("닉네임");
-            const body = clone.find("tbody");
 
-            rows.sort(counterRateDesc);
+            rows
+                .slice()
+                .sort(counterRateDesc)
+                .filter((row) => {
+                    const total = getTotalGames(row);
+                    const keyword = [row.nickname, row.youCharName, row.myCharName].join(" ").toLowerCase();
+                    return total >= min && (!currentFilterTerm || keyword.includes(currentFilterTerm));
+                })
+                .forEach((row, index) => {
+                    board.append(buildUserCounterCard(row, index + 1));
+                });
 
-            rows.filter(row => {
-                const matchesMin = (row.win + row.lose) >= min;
-                const matchesFilter = !currentFilterTerm || (row.nickname || "").toLowerCase().includes(currentFilterTerm);
-                return matchesMin && matchesFilter;
-            }).forEach(row => {
-                body.append(`
-                    <tr>
-                        <td><b>${row.nickname}</b></td>
-                        <td>${row.win}승</td>
-                        <td>${row.lose}패</td>
-                        <td>${((row.win * 100) / (row.win + row.lose)).toFixed(0)}%</td>
-                    </tr>
-                `);
-            });
-
-            if (!body.children().length) {
-                body.append(`<tr><td colspan="4">조건에 맞는 전적이 없습니다.</td></tr>`);
+            if (!board.children().length) {
+                div.append(`<div class="specialEmptyState">조건에 맞는 인간상성 데이터가 없습니다.</div>`);
+                return;
             }
 
-            div.append(clone);
+            div.append(board);
         };
 
         const drawCharCounter = (div, rows) => {
+            const board = $("<div class='specialCounterBoard'></div>");
             const min = getMinGames();
-            const clone = buildCounterTable("캐릭터");
-            const body = clone.find("tbody");
-
-            const transArr = Object.entries(rows).map(item => ({
-                win: item[1].win,
-                lose: item[1].lose,
-                charName: item[0]
+            const transArr = Object.entries(rows).map(([charName, charData]) => ({
+                charName,
+                ...charData
             }));
 
-            transArr.sort(counterRateDesc);
+            transArr
+                .sort(counterRateDesc)
+                .filter((row) => {
+                    const total = getTotalGames(row);
+                    const userNames = (row.users || []).map((user) => user.nickname || "").join(" ").toLowerCase();
+                    const keyword = `${row.charName} ${userNames}`.toLowerCase();
+                    return total >= min && (!currentFilterTerm || keyword.includes(currentFilterTerm));
+                })
+                .forEach((row, index) => {
+                    board.append(buildCharCounterCard(row, index + 1));
+                });
 
-            transArr.filter(row => {
-                const matchesMin = (row.win + row.lose) >= min;
-                const matchesFilter = !currentFilterTerm || (row.charName || "").toLowerCase().includes(currentFilterTerm);
-                return matchesMin && matchesFilter;
-            }).forEach(row => {
-                const charId = charMap.get(row.charName);
-                const charIcon = charId ? drawCharicter(charId) : "";
-
-                body.append(`
-                    <tr>
-                        <td>
-                            <div class="specialCounterCharCell">
-                                ${charIcon}
-                                <b>${row.charName}</b>
-                            </div>
-                        </td>
-                        <td>${row.win}승</td>
-                        <td>${row.lose}패</td>
-                        <td>${((row.win * 100) / (row.win + row.lose)).toFixed(0)}%</td>
-                    </tr>
-                `);
-            });
-
-            if (!body.children().length) {
-                body.append(`<tr><td colspan="4">조건에 맞는 전적이 없습니다.</td></tr>`);
+            if (!board.children().length) {
+                div.append(`<div class="specialEmptyState">조건에 맞는 캐릭터 상성 데이터가 없습니다.</div>`);
+                return;
             }
 
-            div.append(clone);
+            div.append(board);
         };
 
-        const counterRateDesc = (a, b) => ((b.win * 100) / (b.win + b.lose)) - ((a.win * 100) / (a.win + a.lose));
+        const buildUserCounterCard = (row, order) => {
+            const total = getTotalGames(row);
+            const rate = getWinRate(row);
+            const matches = (row.matches || []).slice(0, 5);
+            const hasMatches = matches.length > 0;
+
+            return `
+                <article class="specialCounterCard">
+                    <div class="specialCounterCardGrid">
+                        <div class="specialCounterMain">
+                            <div class="specialCounterTop">
+                                <div class="specialCounterProfile">
+                                    <span class="specialCounterRank">${order}</span>
+                                    <div>
+                                        <strong>${escapeHtml(row.nickname || "알 수 없음")}</strong>
+                                        <div class="specialCounterSub">${total.toLocaleString()}판 · ${row.win}승 ${row.lose}패</div>
+                                    </div>
+                                </div>
+                                <div class="specialCounterRateWrap">
+                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="specialCounterSide">
+                            <button type="button" class="specialCounterToggle ${hasMatches ? "" : "is-disabled"}" ${hasMatches ? "" : "disabled"}>
+                                <span>같이 잡힌 최근 게임</span>
+                                <span class="specialCounterToggleMeta">${hasMatches ? `${matches.length}개` : "없음"}</span>
+                            </button>
+                            <div class="specialCounterSideList">
+                                ${matches.length ? matches.map(buildMatchItem).join("") : "<div class='specialCounterEmpty'>저장된 경기 요약이 없습니다.</div>"}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `;
+        };
+
+        const buildCharCounterCard = (row, order) => {
+            const total = getTotalGames(row);
+            const rate = getWinRate(row);
+            const charId = charMap.get(row.charName);
+            const charIcon = charId ? drawCharicter(charId) : "";
+            const users = (row.users || []).slice(0, 5);
+
+            return `
+                <article class="specialCounterCard">
+                    <div class="specialCounterCardGrid">
+                        <div class="specialCounterMain">
+                            <div class="specialCounterTop">
+                                <div class="specialCounterProfile">
+                                    <span class="specialCounterRank">${order}</span>
+                                    <div class="specialCounterCharCell">
+                                        ${charIcon}
+                                        <div>
+                                            <strong>${escapeHtml(row.charName)}</strong>
+                                            <div class="specialCounterSub">${total.toLocaleString()}판 · ${row.win}승 ${row.lose}패</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="specialCounterRateWrap">
+                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="specialCounterSide">
+                            <div class="specialCounterSideTitle">이 캐릭터를 많이 한 유저</div>
+                            <div class="specialCounterSideList">
+                                ${users.length ? users.map(buildCharUserItem).join("") : "<div class='specialCounterEmpty'>집계된 유저가 없습니다.</div>"}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `;
+        };
+
+        const buildMatchItem = (match) => {
+            const vsText = [match.myCharName, match.youCharName].filter(Boolean).join(" vs ");
+            const meta = [match.date, match.mapName].filter(Boolean).join(" · ");
+            return `
+                <div class="specialCounterSideItem">
+                    <div class="specialCounterSideHead">
+                        <strong>${escapeHtml(vsText || "캐릭터 정보 없음")}</strong>
+                        <span class="specialCounterPill ${match.result === "win" ? "is-win" : "is-lose"}">${match.result === "win" ? "승" : "패"}</span>
+                    </div>
+                    <div class="specialCounterSideBody">
+                        <span>${escapeHtml(meta || match.matchId || "")}</span>
+                    </div>
+                </div>
+            `;
+        };
+
+        const buildCharUserItem = (user) => {
+            const total = getTotalGames(user);
+            const rate = getWinRate(user);
+            return `
+                <div class="specialCounterSideItem">
+                    <div class="specialCounterSideHead">
+                        <strong>${escapeHtml(user.nickname || "알 수 없음")}</strong>
+                        <span class="specialCounterPill ${getCounterRateClass(rate)}">${rate}%</span>
+                    </div>
+                    <div class="specialCounterSideBody">
+                        <span>${total.toLocaleString()}판 · ${user.win}승 ${user.lose}패</span>
+                    </div>
+                </div>
+            `;
+        };
+
+        const getTotalGames = (row) => Number(row.win || 0) + Number(row.lose || 0);
+
+        const getWinRate = (row) => {
+            const total = getTotalGames(row);
+            if (!total) {
+                return 0;
+            }
+            return Math.round((Number(row.win || 0) * 100) / total);
+        };
+
+        const getCounterRateClass = (rate) => {
+            if (rate >= 55) {
+                return "is-hot";
+            }
+            if (rate >= 45) {
+                return "is-mid";
+            }
+            return "is-cold";
+        };
+
+        const counterRateDesc = (a, b) => {
+            const rateDiff = getWinRate(b) - getWinRate(a);
+            if (rateDiff !== 0) {
+                return rateDiff;
+            }
+            return getTotalGames(b) - getTotalGames(a);
+        };
+
+        const escapeHtml = (value) => String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
     </script>
 </head>
 
@@ -227,7 +344,7 @@
             <div class="specialHeroText">
                 <p class="specialEyebrow">SPECIAL MENU</p>
                 <h3>인간상성 분석</h3>
-                <p>같은 팀, 상대 팀, 캐릭터 기준 상성을 한 화면에서 빠르게 비교합니다.</p>
+                <p>같은 팀, 상대 팀, 캐릭터 기준 상성을 한 화면에서 비교합니다.</p>
             </div>
             <div class="specialSearchPanel">
                 <div class="specialCounterSearchRow specialCounterSearchRowCompact">
@@ -235,7 +352,7 @@
                         aria-label="닉네임" onKeyPress="if(event.keyCode == 13) { userCounter(); }">
                     <button class="btn specialActionBtn" type="button" onClick="userCounter();">분석</button>
                 </div>
-                <p class="specialHint">공식전 데이터를 기반으로 집계되며, 최초 요청 시 분석 작업이 등록됩니다.</p>
+                <p class="specialHint">공식전 기준으로 집계하며, 처음 요청한 닉네임은 분석 대기열에 등록됩니다.</p>
             </div>
         </section>
 
@@ -249,7 +366,7 @@
 
             <nav class="specialTabBar">
                 <div class="nav nav-tabs seasonTabs" role="tablist">
-                    <a class="nav-link active" data-bs-toggle="tab" href="#userCounterTab" role="tab" aria-selected="true">유저상성</a>
+                    <a class="nav-link active" data-bs-toggle="tab" href="#userCounterTab" role="tab" aria-selected="true">인간상성</a>
                     <a class="nav-link" data-bs-toggle="tab" href="#charCounterTab" role="tab" aria-selected="false">캐릭터상성</a>
                 </div>
                 <div class="specialTabControl">
@@ -257,7 +374,7 @@
                         aria-label="결과 검색">
                     <div class="userCountSpan"></div>
                     <div class="specialMinControl">
-                        <span class="specialMinLabel">판수</span>
+                        <span class="specialMinLabel">최소 판수</span>
                         <button id="counterMinDown" class="btn specialStepBtn" type="button" onClick="changeMinGames(-1)">-</button>
                         <span id="counterMinValue" class="specialMinValue">3판</span>
                         <button id="counterMinUp" class="btn specialStepBtn" type="button" onClick="changeMinGames(1)">+</button>
@@ -271,13 +388,13 @@
                         <section class="specialSubPanel specialCounterPane">
                             <h5>같은 팀</h5>
                             <div id="con1_1" class="specialTableWrap table-responsive">
-                                <div class="specialEmptyState">분석이 완료되면 같은 팀 기준 승패 비율이 표시됩니다.</div>
+                                <div class="specialEmptyState">분석이 완료되면 같은 팀으로 많이 만난 유저와 최근 경기 리스트가 표시됩니다.</div>
                             </div>
                         </section>
                         <section class="specialSubPanel specialCounterPane">
                             <h5>상대 팀</h5>
                             <div id="con1_2" class="specialTableWrap table-responsive">
-                                <div class="specialEmptyState">상대 팀에서 자주 마주친 닉네임이 정렬됩니다.</div>
+                                <div class="specialEmptyState">상대 팀으로 자주 만난 유저와 최근 경기 리스트가 표시됩니다.</div>
                             </div>
                         </section>
                     </div>
@@ -288,33 +405,19 @@
                         <section class="specialSubPanel specialCounterPane">
                             <h5>같은 팀</h5>
                             <div id="con2_1" class="specialTableWrap table-responsive">
-                                <div class="specialEmptyState">함께 플레이했을 때의 캐릭터 궁합이 여기에 표시됩니다.</div>
+                                <div class="specialEmptyState">같은 팀에서 자주 만난 캐릭터와 그 캐릭터를 많이 한 유저가 표시됩니다.</div>
                             </div>
                         </section>
                         <section class="specialSubPanel specialCounterPane">
                             <h5>상대 팀</h5>
                             <div id="con2_2" class="specialTableWrap table-responsive">
-                                <div class="specialEmptyState">상대 진영에서 강하거나 약한 캐릭터를 확인할 수 있습니다.</div>
+                                <div class="specialEmptyState">상대 팀에서 자주 만난 캐릭터와 그 캐릭터를 많이 한 유저가 표시됩니다.</div>
                             </div>
                         </section>
                     </div>
                 </div>
             </div>
         </section>
-    </div>
-
-    <div style="display:none">
-        <table id="templateTable" class="counterTable table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">승리</th>
-                    <th scope="col">패배</th>
-                    <th scope="col">승률</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
     </div>
 </body>
 
