@@ -208,19 +208,19 @@
                                         <div class="specialCounterSub">${total.toLocaleString()}판 · ${row.win}승 ${row.lose}패</div>
                                     </div>
                                 </div>
-                                <div class="specialCounterRateWrap">
-                                    <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                <div class="specialCounterTopActions">
+                                    <div class="specialCounterRateWrap">
+                                        <div class="specialCounterRateValue ${getCounterRateClass(rate)}">${rate}%</div>
+                                    </div>
+                                    <button type="button" class="specialCounterToggle specialCounterToggleInline ${hasMatches ? "" : "is-disabled"}" ${hasMatches ? "" : "disabled"}>
+                                        <span>같이잡힌 최근 게임</span>
+                                        <span class="specialCounterToggleMeta">${hasMatches ? `${matches.length}개` : "없음"}</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="specialCounterSide">
-                            <button type="button" class="specialCounterToggle ${hasMatches ? "" : "is-disabled"}" ${hasMatches ? "" : "disabled"}>
-                                <span>같이 잡힌 최근 게임</span>
-                                <span class="specialCounterToggleMeta">${hasMatches ? `${matches.length}개` : "없음"}</span>
-                            </button>
-                            <div class="specialCounterSideList">
-                                ${matches.length ? matches.map(buildMatchItem).join("") : "<div class='specialCounterEmpty'>저장된 경기 요약이 없습니다.</div>"}
-                            </div>
+                        <div class="specialCounterSideList">
+                            ${matches.length ? matches.map(buildMatchItem).join("") : "<div class='specialCounterEmpty'>저장된 경기 요약이 없습니다.</div>"}
                         </div>
                     </div>
                 </article>

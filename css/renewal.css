@@ -2513,9 +2513,9 @@ h5:has(.sortButton) {
 }
 
 .specialCounterCardGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.95fr);
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding: 5px;
 }
 
@@ -2530,6 +2530,13 @@ h5:has(.sortButton) {
     align-items: start;
     justify-content: space-between;
     gap: 12px;
+}
+
+.specialCounterTopActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
 }
 
 .specialCounterProfile {
@@ -2610,8 +2617,8 @@ h5:has(.sortButton) {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    border-left: 1px solid #edf2f7;
-    padding-left: 16px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 14px;
     min-width: 0;
 }
 
@@ -2703,10 +2710,25 @@ h5:has(.sortButton) {
 }
 
 .specialCounterToggleMeta {
-    margin-left: auto;
+    margin-left: 4px;
     color: #6c757d;
     font-size: 12px;
     font-weight: 700;
+}
+
+.specialCounterToggleInline {
+    width: auto;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.specialCounterToggleInline::after {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    background-size: 10px 10px;
+    box-shadow: none;
 }
 
 .specialCounterPill {
@@ -2805,15 +2827,17 @@ h5:has(.sortButton) {
         min-height: 48px;
     }
 
-    .specialCounterCardGrid {
-        grid-template-columns: 1fr;
+    .specialCounterSide {
+        padding-top: 14px;
     }
 
-    .specialCounterSide {
-        border-left: 0;
-        border-top: 1px solid #edf2f7;
-        padding-left: 0;
-        padding-top: 14px;
+    .specialCounterTop {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .specialCounterTopActions {
+        justify-content: space-between;
     }
 }
 
