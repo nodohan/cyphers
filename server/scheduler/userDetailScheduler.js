@@ -110,7 +110,13 @@ module.exports = (scheduler, maria, acclogger) => {
     //const result = await matchDetailCharRepository.selectMatchDetailByMatchDateTest(yyyymmdd);
     const result = await matchDetailCharRepository.selectMatchDetailByPlayerId(playerId, 2000);
 
-    const arr = result.map(data => JSON.parse(data.jsonData));
+    const arr = result.map(data => {
+      const row = JSON.parse(data.jsonData);
+      row.matchId = data.matchId || row.matchId || "";
+      row.matchDate = data.matchDate || row.matchDate || "";
+      row.date = row.date || data.matchDate || "";
+      return row;
+    });
 
     const playerList = await matchDetailCharRepository.selectLastNickNames();
     const playerMap = new Map();
