@@ -31,6 +31,38 @@ class commonUtil {
         return false;
     }
 
+    isApp(req) {
+        const appQuery = req.query?.isApp;
+        const appHeader = req.headers['x-doseh-client'] || req.headers['x-app-client'];
+        const cookie = req.headers['cookie'] || '';
+        const ua = (req.headers['user-agent'] || '').toLowerCase();
+
+        if (appQuery === true || appQuery === 'true') {
+            return true;
+        }
+
+        if (typeof cookie === 'string' && /(?:^|;\s*)doseh_app=true(?:;|$)/i.test(cookie)) {
+            return true;
+        }
+
+        if (typeof appHeader === 'string') {
+            const normalizedHeader = appHeader.toLowerCase();
+            if (normalizedHeader === 'android-app' || normalizedHeader === 'app') {
+                return true;
+            }
+        }
+
+        return ua.includes('dosehapp') || ua.includes('doseh-android-app');
+    }
+
+    getDeviceType(req) {
+        if (this.isApp(req)) {
+            return 'APP';
+        }
+
+        return this.isMobile(req) ? 'MOBILE' : 'PC';
+    }
+
     getYYYYMMDD(date, delHyphen = true) {
         let day = new Date(date.getTime());
         day.setHours(day.getHours() + 9);

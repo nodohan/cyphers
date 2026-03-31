@@ -25,6 +25,8 @@ class matchDetailCharRepository {
     selectMatchDetailByPlayerId = async(playerId, limit) => {
         const query = `
             SELECT
+                mc.matchId,
+                mc.matchDate,
                 mc.jsonData
             FROM matches mc
             INNER JOIN matches_map map ON map.matchId = mc.matchId 

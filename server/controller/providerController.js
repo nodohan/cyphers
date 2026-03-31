@@ -6,6 +6,11 @@ module.exports = (scheduler, maria, acclogger) => {
     app.use(acclogger());
 
     app.get('/app', function(req, res) {
+        res.cookie('doseh_app', 'true', {
+            maxAge: 1000 * 60 * 60 * 24 * 365,
+            httpOnly: true,
+            sameSite: 'lax'
+        });
         res.redirect("/user/userSearch?isApp=true");
         //res.render('./mobile/invalid');
     });

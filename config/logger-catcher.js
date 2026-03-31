@@ -47,7 +47,8 @@ module.exports = () => {
             logger.info('%s %s', req.method, req.url);
             const ip = commonUtil.getIp(req);
             const safeUrl = sanitizeURL(url);
-            historyRepository.insertAccessLog(ip, safeUrl);
+            const deviceType = commonUtil.getDeviceType(req);
+            historyRepository.insertAccessLog(ip, safeUrl, deviceType);
           }
       
           return false; // 정상 흐름
