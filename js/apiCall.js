@@ -298,7 +298,7 @@ function drawInGameList(data) {
         `<tr>
              <td>${data.date}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
-             <td>${winLoseKo(playInfo.result)}</td>
+             <td>${winLoseKo(playInfo.result, playInfo.playTypeName)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>
              <td>${playInfo.level}</td>
              <td class='kda'>${playInfo.killCount}/${playInfo.deathCount}/${playInfo.assistCount}</td>"
@@ -329,7 +329,7 @@ function drawInGameDetail(matchId, data, trClass) {
     const isSecond = items.some(item => item.itemName.endsWith("SU"));
     const secondIcon = "<img class='secondChar' src='/image/ee.png' />";
 
-    score += `<td>${winLoseKo(playInfo.result)}</td>
+    score += `<td>${winLoseKo(playInfo.result, playInfo.playTypeName)}</td>
                 <td>${isSecond? secondIcon : ""}</td>
                 <td>${drawCharicter(playInfo.characterId)}</td>`;
     if (typeof partyUserSearch == 'function' && pageName != 'pcDetail') {
@@ -495,8 +495,11 @@ function drawRecently(div, rows, userDivId) {
     $("#modalDiv").append(body);
 }
 
-function winLoseKo(result) {
-    return (result == "win") ? "<span class='red'>승</span> " : "<span class='blue'>패</span> ";
+function winLoseKo(result, playTypeName) {
+    const resultText = result == "win" ? "승" : "패";
+    const playTypeText = playTypeName && playTypeName != "정상" ? "/난입" : "";
+    const className = result == "win" ? "red" : "blue";
+    return `<span class='${className}'>${resultText}${playTypeText}</span> `;
 }
 
 function drawOften(div, info, drawCharFunc, nickname) {
@@ -894,7 +897,7 @@ function playGameList(findId, div, nickname, showType, modalId) {
 
     var body = clone.find("tbody");
     rows.forEach(row => {
-        const { partyInfo, result, characterId, level
+        const { partyInfo, result, characterId, level, playTypeName
             , killCount, deathCount, assistCount, attackPoint
             , damagePoint, spendConsumablesCoin, getCoin } = row.playInfo;
 
@@ -904,7 +907,7 @@ function playGameList(findId, div, nickname, showType, modalId) {
             `<tr>
                 <td> ${row.date} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
-                <td><b>${winLoseKo(result)}</b></td>
+                <td><b>${winLoseKo(result, playTypeName)}</b></td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td class='kda'>${killCount}/${deathCount}/${assistCount}</td>

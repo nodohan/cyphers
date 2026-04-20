@@ -299,6 +299,7 @@ function drawInGameListNormal(data) {
         `<tr>
              <td>${data.date}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
+             <td>${winLoseKo(playInfo.result, playInfo.playTypeName)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>
              <td>${playInfo.level}</td>
              <td>
@@ -339,13 +340,14 @@ const playGameListNormal = (findId, div, nickname, showType, modalId) => {
     let clone = getTempModalTableNormal(modalId, labelId, title);
 
     rows.forEach(row => {
-        const { partyInfo, result, characterId, level } = row.playInfo;
+        const { partyInfo, result, characterId, level, playTypeName } = row.playInfo;
         
         let matchId = row.matchId;
         clone +=
             `<tr>
                 <td> ${row.date} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
+                <td>${winLoseKo(result, playTypeName)}</td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td>
@@ -391,6 +393,7 @@ const getTempModalTableNormal = (modalId, labelId, title) => {
                                 <tr>
                                     <th scope="col">날짜</th>
                                     <th scope="col">파티</th>
+                                    <th scope="col">결과</th>
                                     <th scope="col">P</th>
                                     <th scope="col">Char</th>
                                     <th scope="col">Lv</th>
@@ -583,11 +586,11 @@ const playDetailGameListNormal = (charId, div) => {
     var body = clone.find("tbody");
     const moreIcon = '<i class="fa fa-search-plus" style="font-size:15px;color:black;"></i>';
     rows.forEach(row => {
-        const {result, characterId, level} = row.playInfo;
+        const {result, characterId, level, playTypeName} = row.playInfo;
         let text = `
             <tr>
                 <td> ${row.date} </td>
-                <td><b>${winLoseKo(result)}</b></td>
+                <td><b>${winLoseKo(result, playTypeName)}</b></td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td onClick='searchMatchNormal("${row.matchId}", drawMatchDetailPopupNormal )'>${moreIcon}</td>
