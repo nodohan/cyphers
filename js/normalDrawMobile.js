@@ -15,7 +15,7 @@ const drawNormalUserInfo = (gameType, divName, data, nickname) => {
 
     defaultInfoNormal(userDivId, gameType, clone, data, divName != "con3_2");
 
-    var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+    var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
     //printChar(rows);
 
     //파티별
@@ -333,6 +333,7 @@ function drawInGameListNormal(data) {
         `<tr>
              <td>${data.date}</td>
              <td>${getPartyInfoText(playInfo.partyInfo)}</td>
+             <td>${winLoseKo(playInfo.result, playInfo.playTypeName)}</td>
              <td>${drawCharicter(playInfo.characterId)}</td>
              <td>${playInfo.level}</td>
              <td>
@@ -373,13 +374,14 @@ const playGameListNormal = (findId, div, nickname, showType, modalId) => {
     let clone = getTempModalTableNormal(modalId, labelId, title);
 
     rows.forEach(row => {
-        const { partyInfo, result, characterId, level } = row.playInfo;
+        const { partyInfo, result, characterId, level, playTypeName } = row.playInfo;
         
         let matchId = row.matchId;
         clone +=
             `<tr>
                 <td> ${row.date} </td>
                 <td>${getPartyInfoText(partyInfo)}</td>
+                <td>${winLoseKo(result, playTypeName)}</td>
                 <td>${drawCharicter(characterId)}</td>
                 <td>${level}</td>
                 <td>
@@ -425,6 +427,7 @@ const getTempModalTableNormal = (modalId, labelId, title) => {
                                 <tr>
                                     <th scope="col">날짜</th>
                                     <th scope="col">파티</th>
+                                    <th scope="col">결과</th>
                                     <th scope="col">P</th>
                                     <th scope="col">Char</th>
                                     <th scope="col">Lv</th>

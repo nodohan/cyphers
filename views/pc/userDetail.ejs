@@ -57,8 +57,8 @@
                 clone.attr("id", userDivId);
                 defaultInfo(gameType, clone, data);
 
-                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
-                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 //파티별
                 drawPartyType(userDivId, clone.find("#playParty"), rows);
@@ -150,7 +150,7 @@
             const drawRightInfo = (data) => {
                 var div = $("#template2").clone();
 
-                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
                 drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
@@ -174,8 +174,8 @@
                 clone.attr("id", userDivId);
                 defaultInfo(gameType, clone, data);
 
-                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
-                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                playRow = rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 
                 //파티별
                 drawPartyTypeNormal(userDivId, clone.find("#playParty"), rows);
@@ -200,7 +200,7 @@
             const drawRightInfoNormal = (data) => {
                 var div = $("#template2").clone();
 
-                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                var rows = data.matches.rows.filter(row => row.playInfo.playTypeName == "정상" || row.playInfo.result == "승리" || row.playInfo.result == "win" ).sort((a, b) => new Date(b.date) - new Date(a.date));
                 drawMapInfo(rows, div, 101, '리버포드', "#river"); //리버포트
                 drawMapInfo(rows, div, 102, '메트로폴리스', "#metro"); //메트로폴리스
                 drawMapInfo(rows, div, 103, '브리스톨', "#bristol"); //브리스톨
@@ -256,11 +256,11 @@
 
                 var body = clone.find("tbody");
                 rows.forEach(row => {
-                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint} = row.playInfo;
+                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint, playTypeName} = row.playInfo;
                     //date
                     let text = "<tr>";
                     text += `<td> ${row.date} </td>`;
-                    text += `<td><b>${winLoseKo(result)}</b></td>`;
+                    text += `<td><b>${winLoseKo(result, playTypeName)}</b></td>`;
                     text += "<td>" + drawCharicter(characterId) + "</td>";
                     text += "<td class='kda'>" + killCount + "/" + deathCount + "/" + assistCount + "</td>"
                     text += "<td class='kda'>" + (attackPoint / 1000).toFixed(0) + "k</td>";
@@ -293,11 +293,11 @@
                 var body = clone.find("tbody");
                 body.empty();
                 rows.forEach(row => {
-                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint} = row.playInfo;
+                    const {result, characterId, killCount, deathCount, assistCount, attackPoint, damagePoint, playTypeName} = row.playInfo;
                     //date
                     let text = "<tr>";
                     text += `<td> ${row.date} </td>`;
-                    text += `<td><b>${winLoseKo(result)}</b></td>`;
+                    text += `<td><b>${winLoseKo(result, playTypeName)}</b></td>`;
                     text += "<td>" + drawCharicter(characterId) + "</td>";
                     text += "<td class='kda'>" + killCount + "/" + deathCount + "/" + assistCount + "</td>"
                     text += "<td class='kda'>" + (attackPoint / 1000).toFixed(0) + "k</td>";
